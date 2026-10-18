@@ -1,6 +1,6 @@
 # Claude Code first message — Recipe Discovery
 
-Read `CLAUDE.md` and all documents under `docs/` (`SPEC.md`, `ARCHITECTURE.md`, `NUTRITION_CALCULATION.md`, `CONTENT_POLICY.md`, `DATA_SOURCES.md`, `IMPLEMENTATION_PLAN.md`, `DECISIONS.md`).
+Read `CLAUDE.md` and all documents under `docs/` (`SPEC.md`, `ARCHITECTURE.md`, `NUTRITION_CALCULATION.md`, `CONTENT_POLICY.md`, `DATA_SOURCES.md`, `IMPLEMENTATION_PLAN.md`, `DECISIONS.md`, `DEVELOPMENT.md`).
 
 We are building Recipe Discovery: a static web app in Japanese, English, and Spanish (`ja`, `en`, `es`) that helps nutrition-conscious users discover and compare curated recipes that fit their nutrition targets and conditions.
 

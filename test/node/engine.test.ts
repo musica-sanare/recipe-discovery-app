@@ -4,6 +4,7 @@ import { foods } from "../../content/foods.ts";
 import { recipes } from "../../content/recipes/index.ts";
 import { CONTENT_VERSION } from "../../content/version.ts";
 import { defaultState } from "../../domain/nutrition/amounts.ts";
+import { nutritionBasis } from "../../domain/nutrition/basis.ts";
 import { calculateRecipe } from "../../domain/nutrition/calculate.ts";
 import { engineDataFromBundle } from "../../domain/nutrition/data.ts";
 import { NUTRIENTS, calculateNutrition, type RecipeNutrition } from "../../domain/nutrition/engine.ts";
@@ -50,5 +51,20 @@ describe("engine on the repository content", () => {
 
   it("has no unknown displayed nutrient in any recipe", () => {
     for (const [id, result] of results) expect(Object.values(result.incomplete).flat(), id).toEqual([]);
+  });
+
+  it("states the assumptions of every recipe in the basis", () => {
+    const counts: Record<string, number> = {};
+    for (const recipe of calc.recipes) {
+      const nutrition = results.get(recipe.id);
+      if (!nutrition) throw new Error(recipe.id);
+      const basis = nutritionBasis(recipe, nutrition, data);
+      expect(basis.versions.composition.workbookUpdated).toBe(composition.source.workbookUpdated);
+      for (const ingredient of basis.ingredients) {
+        expect(ingredient.dataVersion).toBe(composition.source.workbookUpdated);
+        for (const assumption of ingredient.assumptions) counts[assumption.code] = (counts[assumption.code] ?? 0) + 1;
+      }
+    }
+    expect(counts).toEqual({ oil_counted_in_full: 17, included_in_cooked_value: 17, parts_removed_after_cooking: 1, energy_from_fat: 5, pinch_as_stated_grams: 9 });
   });
 });

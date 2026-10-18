@@ -182,6 +182,11 @@ Findings:
 - Tests: `domain/nutrition/engine.test.ts` (21 cases on hand-made composition data: every formula, reason, band, combination, threshold boundary, and unmeasured case) and `test/node/engine.test.ts` (repository content through the in-memory calculation bundle).
 - *Measured* (20 recipes, default state, calculation bundle): per-serving values of the five displayed nutrients equal the Phase 0 calculation to nine decimals. Counted reasons: 9 `raw_value_for_cooking`, 3 `related_cooked_value`, 1 `post_cooking_refuse`, 3 `fried`, 2 `slow_frying`, 0 `estimated_source_value`. Recipe classes: 5 exact, 14 approximation, 1 hard to estimate. Ranges shown: energy in 11 recipes, protein in 9, fat in 6, carbohydrate in 1, salt in none. The widest are the fried dishes (tonkatsu 835–1,034 kcal and 27.4–49.4 g fat per serving; karaage 654–755 kcal; salmon tempura 546–662 kcal).
 
+### Stage 2.4 display rounding and basis (2026-10-18)
+- `domain/nutrition/rounding.ts`: `roundForDisplay(nutrient, value)` rounds half up to the ADR-025 unit (10 kcal; 1 g; 0.1 g salt) after reducing the quotient to 12 significant digits, so binary noise cannot cross a half step (1.15 g → 1.2 g). Unknown stays `null`; no locale formatting.
+- `domain/nutrition/basis.ts`: `nutritionBasis(recipe, nutrition, data)` lists per ingredient the food ID, code, state, cooking method, substitution, composition data version, weight change rate, grams, class, reasons, notations, and assumption codes: `oil_counted_in_full` (counted ingredients with role `fat`, ADR-022), `included_in_cooked_value`, `parts_removed_after_cooking`, `energy_from_fat` (9 kcal/g), and `pinch_as_stated_grams`. Texts for these codes belong to the UI catalogs (Phase 4).
+- *Measured* (20 recipes, default state): 17 oils counted in full (all `fat` ingredients are olive, sesame, or vegetable oil), 17 ingredients contained in another cooked value, 1 removal after cooking, 5 fried or slow-fried ingredients with the energy factor, 9 pinches.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in

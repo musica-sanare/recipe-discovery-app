@@ -2,22 +2,19 @@ import { describe, expect, expectTypeOf, it } from "vitest";
 import * as z from "zod/mini";
 import { foods } from "../../content/foods.ts";
 import { recipes } from "../../content/recipes/index.ts";
-import { CONTENT_VERSION } from "../../content/version.ts";
 import { defaultState, type AmountRecipe, type RecipeState } from "../../domain/nutrition/amounts.ts";
 import { nutritionBasis } from "../../domain/nutrition/basis.ts";
-import { calculateRecipe } from "../../domain/nutrition/calculate.ts";
 import { engineDataFromBundle, type EngineData } from "../../domain/nutrition/data.ts";
 import { NUTRIENTS, calculateNutrition, type RecipeNutrition } from "../../domain/nutrition/engine.ts";
-import { bundleMismatches, calcBundleSchema, textBundleSchema } from "../../shared/bundle.ts";
+import { bundleMismatches, textBundleSchema } from "../../shared/bundle.ts";
 import { SUPPORTED_LOCALES, type Locale } from "../../shared/locales.ts";
-import { buildCalcBundle, buildTextBundle, serializeBundle, type BundleInput } from "../../tools/content/bundle.ts";
-import { composition, cooking, nutritionData } from "./nutritionData.ts";
+import { buildCalcBundle, buildTextBundle, serializeBundle } from "../../tools/content/bundle.ts";
+import { repositoryBundleInput, repositoryEngine } from "../../tools/content/repository.ts";
 
 // Engine input comes from the in-memory calculation bundle, as in the browser (ADR-028 E).
-const input: BundleInput = { foods, recipes, composition, cooking, contentVersion: CONTENT_VERSION };
-const calc = z.parse(calcBundleSchema, buildCalcBundle(input));
-const data = engineDataFromBundle(calc);
-const phase0 = nutritionData();
+const input = repositoryBundleInput();
+const { composition } = input;
+const { calc, data } = repositoryEngine(input);
 
 const results = new Map(
   calc.recipes.map((recipe): [string, RecipeNutrition] => {
@@ -26,21 +23,56 @@ const results = new Map(
     return [recipe.id, result.value];
   }),
 );
+const result = (id: string): RecipeNutrition => {
+  const found = results.get(id);
+  if (!found) throw new Error(id);
+  return found;
+};
 
-describe("engine on the repository content", () => {
-  it("gives the Phase 0 per-serving values at the default state", () => {
-    for (const recipe of recipes) {
-      const expected = calculateRecipe(recipe, phase0).perServing;
-      const actual = results.get(recipe.id)?.perServing;
-      for (const nutrient of NUTRIENTS) {
-        const value = expected[nutrient];
-        if (value === null) expect(actual?.[nutrient], `${recipe.id} ${nutrient}`).toBeNull();
-        else expect(actual?.[nutrient], `${recipe.id} ${nutrient}`).toBeCloseTo(value, 9);
-      }
-    }
+describe("hand-checked recipes", () => {
+  // Expected values computed by hand from data/composition (Stage 0.5 cross-check):
+  // sum over ingredients of value per 100 g x grams / 100 (x rate / 100 for cooked states).
+  it("chicken_lemon_herb_grill (cooked states with rates)", () => {
+    const { perServing } = result("chicken_lemon_herb_grill");
+    expect(perServing["PROT-"]).toBeCloseTo(43.915, 6);
+    expect(perServing["FAT-"]).toBeCloseTo(7.9865, 6);
+    expect(perServing.ENERC_KCAL).toBeCloseTo(472.689, 6);
   });
 
-  it("splits the Phase 0 approximation reasons as measured in Stage 1.3", () => {
+  it("tuna_tofu_bowl (no cooking)", () => {
+    const { perServing } = result("tuna_tofu_bowl");
+    expect(perServing["PROT-"]).toBeCloseTo(35.051, 6);
+    expect(perServing["FAT-"]).toBeCloseTo(9.735, 6);
+    expect(perServing.ENERC_KCAL).toBeCloseTo(454.63, 6);
+  });
+
+  it("divides batch recipes by servings", () => {
+    const batch = result("boiled_chicken_negi_salt");
+    expect(batch.servings).toBe(3);
+    expect(batch.perServing["PROT-"]).toBeCloseTo((batch.total["PROT-"] ?? Number.NaN) / 3, 10);
+  });
+});
+
+describe("classification and counting", () => {
+  it("does not count ingredients included in another cooked value", () => {
+    const karaage = result("chicken_thigh_karaage");
+    expect(karaage.ingredients.filter((ingredient) => ingredient.counted).map((ingredient) => ingredient.key)).toEqual(["chicken", "lemon", "cabbage", "rice"]);
+    expect(karaage.ingredients.find((ingredient) => ingredient.key === "chicken")).toMatchObject({ fried: true, reasons: ["fried"] });
+  });
+
+  it("classifies a raw value for an untabulated method and a tabulated cooked value", () => {
+    expect(result("boiled_chicken_negi_salt").ingredients.find((ingredient) => ingredient.key === "chicken")).toMatchObject({
+      class: "approximation",
+      reasons: ["raw_value_for_cooking"],
+      cooking: "boil",
+      state: "raw",
+    });
+    expect(result("chicken_lemon_herb_grill").ingredients.find((ingredient) => ingredient.key === "chicken")).toMatchObject({ class: "exact", reasons: [] });
+  });
+});
+
+describe("engine on the repository content", () => {
+  it("splits the approximation reasons of Stage 1.3 (ADR-028)", () => {
     const counts: Record<string, number> = {};
     for (const result of results.values()) {
       for (const ingredient of result.ingredients) {

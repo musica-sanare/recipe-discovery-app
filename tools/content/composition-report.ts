@@ -1,14 +1,14 @@
 /**
- * Composition coverage report (Phase 1 Stage 1.3): for each recipe ingredient, how
- * its nutrition is obtained — exact, approximation (with reasons), or hard to
- * estimate — and whether it is fried or not counted. The classification comes from
- * the calculation itself (docs/NUTRITION_CALCULATION.md §5–§7).
+ * Composition coverage report (Phase 1 Stage 1.3, migrated to the engine in Stage
+ * 2.6): for each recipe ingredient at the default state, how its nutrition is
+ * obtained — exact, approximation, or hard to estimate, with the engine's reasons
+ * (ADR-028) — and whether it is fried or not counted.
  */
-import { calculateIngredient, type ApproximationReason, type NutritionData } from "../../domain/nutrition/calculate.ts";
-import type { Recipe } from "../../shared/content.ts";
-import { isFriedIngredient } from "../../shared/recipe.ts";
+import { defaultState, type AmountRecipe } from "../../domain/nutrition/amounts.ts";
+import type { EngineData } from "../../domain/nutrition/data.ts";
+import { calculateNutrition, type Reason, type UncertaintyClass } from "../../domain/nutrition/engine.ts";
 
-export type CoverageClass = "exact" | "approximation" | "hard_to_estimate" | "not_counted";
+export type CoverageClass = UncertaintyClass | "not_counted";
 
 export interface IngredientCoverage {
   readonly key: string;
@@ -17,7 +17,7 @@ export interface IngredientCoverage {
   readonly code: string;
   readonly cooking: string | undefined;
   readonly coverage: CoverageClass;
-  readonly reasons: readonly (ApproximationReason | "slow_frying")[];
+  readonly reasons: readonly Reason[];
   readonly fried: boolean;
   readonly includedIn: string | undefined;
 }
@@ -29,28 +29,27 @@ export interface RecipeCoverage {
 }
 
 /** Throws, naming the recipe and ingredient, when a cooked state lacks its weight change rate. */
-export function compositionCoverage(recipe: Recipe, data: NutritionData): RecipeCoverage {
-  const ingredients = recipe.ingredients.map((ingredient): IngredientCoverage => {
-    let result;
-    try {
-      result = calculateIngredient(ingredient, data);
-    } catch (error) {
-      throw new Error(`${recipe.id} › ingredients.${ingredient.key}: ${error instanceof Error ? error.message : String(error)}`, { cause: error });
-    }
-    const counted = ingredient.includedIn === undefined;
-    const hard = ingredient.estimate !== undefined;
-    return {
+export function compositionCoverage(recipe: AmountRecipe & { readonly id: string }, data: EngineData): RecipeCoverage {
+  let result;
+  try {
+    result = calculateNutrition(recipe, defaultState(recipe), data);
+  } catch (error) {
+    throw new Error(`${recipe.id} › ${error instanceof Error ? error.message : String(error)}`, { cause: error });
+  }
+  if (!result.ok) throw new Error(`${recipe.id} › invalid default state: ${JSON.stringify(result.errors)}`);
+  const ingredients = result.value.ingredients.map(
+    (ingredient): IngredientCoverage => ({
       key: ingredient.key,
       food: ingredient.food,
       state: ingredient.state,
-      code: result.code,
+      code: ingredient.code,
       cooking: ingredient.cooking,
-      coverage: !counted ? "not_counted" : hard ? "hard_to_estimate" : result.mapping,
-      reasons: [...result.reasons, ...(ingredient.estimate ? [ingredient.estimate] : [])],
-      fried: counted && isFriedIngredient(ingredient),
+      coverage: ingredient.counted ? ingredient.class : "not_counted",
+      reasons: ingredient.reasons,
+      fried: ingredient.counted && ingredient.fried,
       includedIn: ingredient.includedIn,
-    };
-  });
+    }),
+  );
   const counts = { exact: 0, approximation: 0, hard_to_estimate: 0, not_counted: 0, fried: 0 };
   for (const ingredient of ingredients) {
     counts[ingredient.coverage] += 1;

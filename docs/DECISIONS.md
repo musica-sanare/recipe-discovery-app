@@ -194,6 +194,14 @@ Findings:
 - Determinism: deep-equal results across runs and with foods, composition values, and rates in reverse bundle order; reversing the ingredient order changes neither per-serving values nor ranges (to nine decimals) nor classes.
 - *Measured* recalculation time (Apple M1, MacBookPro17,1, 16 GB, macOS, Node.js 24.19.0; median of 31 batches after warm-up; scratch script, not in the repository): one recalculation of the largest recipe (`chicken_mapo_tofu`, 13 ingredients) 0.017–0.019 ms; all 20 recipes at the default state 0.27–0.28 ms; first cold pass over all 20 recipes 2.1 ms; `engineDataFromBundle` 0.10 ms cold. Browsers were not measured.
 
+### Stage 2.6 migration of consumers (2026-10-18)
+- The owner approved the Stage 2.5 snapshot differences (2026-10-18).
+- `tools/content/repository.ts` loads the content and tracked composition data (`repositoryBundleInput`) and builds the engine input from the in-memory calculation bundle (`repositoryEngine`). `tools/build-content.ts` uses the same loader; its four bundles are byte-identical to the previous output.
+- `npm run eval:coverage` now evaluates every candidate with `calculateNutrition` (states with grams or whole counts, sides switched off) instead of per-gram contributions and its own amount resolution. Its output is identical to the previous run, character for character.
+- `npm run report:composition` now classifies with the engine. Differences from the Stage 1.3 output: `cooking_not_tabulated` became `raw_value_for_cooking` (9 ingredients) or `related_cooked_value` (3); the tabulated fried ingredients (karaage, tonkatsu, salmon tempura) moved from exact to approximation with reason `fried` (ADR-028 G). Totals: exact 141 (was 144), approximation 16 (13), hard to estimate 2, not counted 17, fried 5.
+- Engine errors name the ingredient (`ingredients.<key>: …`); the report adds the recipe.
+- Removed: `domain/nutrition/calculate.ts` (Phase 0 calculation), `test/node/nutrition.test.ts` and its snapshot, and `test/node/nutritionData.ts`. The hand cross-checks and counting tests moved to `test/node/engine.test.ts`; formula, notation, and unmeasured-value tests live in `domain/nutrition/engine.test.ts`; locale invariance and the snapshot moved in Stage 2.5. The bundle test now checks that the bundle carries the source values, refuse rates, and weight change rates unchanged and covers every food state the recipes use, instead of comparing two Phase 0 calculations. The non-displayed columns (`PROTCAA`, `FATNLEA`, `CHOAVLDF-`, `FIB-`) stay in `data/composition/` but are no longer calculated per recipe.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in

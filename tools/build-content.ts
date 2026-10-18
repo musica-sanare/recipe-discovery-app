@@ -5,30 +5,17 @@
  *
  *   node tools/build-content.ts
  */
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { gzipSync } from "node:zlib";
 import * as z from "zod/mini";
-import { foods } from "../content/foods.ts";
-import { recipes } from "../content/recipes/index.ts";
-import { CONTENT_VERSION } from "../content/version.ts";
 import { calcBundleSchema, textBundleSchema } from "../shared/bundle.ts";
-import { compositionSubsetSchema } from "../shared/composition.ts";
-import { cookingDataSchema } from "../shared/cooking.ts";
 import { SUPPORTED_LOCALES } from "../shared/locales.ts";
-import { buildCalcBundle, buildTextBundle, serializeBundle, type BundleInput } from "./content/bundle.ts";
+import { buildCalcBundle, buildTextBundle, serializeBundle } from "./content/bundle.ts";
+import { repositoryBundleInput } from "./content/repository.ts";
 
-const root = path.join(import.meta.dirname, "..");
-const readJson = (name: string): unknown => JSON.parse(readFileSync(path.join(root, "data", "composition", name), "utf8"));
-const outDir = path.join(root, "generated", "content");
-
-const input: BundleInput = {
-  foods,
-  recipes,
-  composition: z.parse(compositionSubsetSchema, readJson("foods.json")),
-  cooking: z.parse(cookingDataSchema, readJson("cooking.json")),
-  contentVersion: CONTENT_VERSION,
-};
+const outDir = path.join(import.meta.dirname, "..", "generated", "content");
+const input = repositoryBundleInput();
 
 const files: [string, string][] = [["calc.json", serializeBundle(z.parse(calcBundleSchema, buildCalcBundle(input)))]];
 for (const locale of SUPPORTED_LOCALES) {

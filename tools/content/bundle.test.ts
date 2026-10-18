@@ -1,16 +1,13 @@
 import { describe, expect, it } from "vitest";
 import * as z from "zod/mini";
-import { foods } from "../../content/foods.ts";
-import { recipes } from "../../content/recipes/index.ts";
 import { CONTENT_VERSION } from "../../content/version.ts";
-import { calculateRecipe, type NutritionData } from "../../domain/nutrition/calculate.ts";
 import { BUNDLE_NUTRIENT_IDS, bundleMismatches, calcBundleSchema, textBundleSchema } from "../../shared/bundle.ts";
-import { NUTRIENT_IDS, type CompositionFood } from "../../shared/composition.ts";
 import { SUPPORTED_LOCALES } from "../../shared/locales.ts";
-import { composition, cooking, nutritionData } from "../../test/node/nutritionData.ts";
-import { buildCalcBundle, buildTextBundle, serializeBundle, type BundleInput } from "./bundle.ts";
+import { buildCalcBundle, buildTextBundle, serializeBundle } from "./bundle.ts";
+import { repositoryBundleInput } from "./repository.ts";
 
-const input: BundleInput = { foods, recipes, composition, cooking, contentVersion: CONTENT_VERSION };
+const input = repositoryBundleInput();
+const { composition, cooking } = input;
 const calc = z.parse(calcBundleSchema, buildCalcBundle(input));
 
 describe("content bundles", () => {
@@ -47,24 +44,33 @@ describe("content bundles", () => {
     ]);
   });
 
-  it("give the same nutrition as the source data for the displayed nutrients", () => {
-    const source = nutritionData();
-    const unmeasured = { value: null, notation: "unmeasured" } as const;
-    const fromBundle: NutritionData = {
-      foods: source.foods,
-      composition: new Map(
-        calc.compositionFoods.map((food): [string, CompositionFood] => [
-          food.code,
-          { code: food.code, nameJa: "", refuse: food.refuse, nutrients: Object.fromEntries(NUTRIENT_IDS.map((id) => [id, (food.nutrients as Record<string, CompositionFood["refuse"]>)[id] ?? unmeasured])) as CompositionFood["nutrients"] },
-        ]),
-      ),
-      rates: new Map(calc.rates.map((rate) => [rate.code, { ratePercent: rate.ratePercent, postCookingRefuse: rate.postCookingRefuse ? "yes" : undefined }])),
-    };
-    for (const recipe of recipes) {
-      const expected = calculateRecipe(recipe, source);
-      const actual = calculateRecipe(recipe, fromBundle);
-      for (const id of BUNDLE_NUTRIENT_IDS) expect(actual.total[id]).toBe(expected.total[id]);
-      expect(actual.ingredients.map((ingredient) => ingredient.reasons)).toEqual(expected.ingredients.map((ingredient) => ingredient.reasons));
+  it("carry the source values of the displayed nutrients, refuse rates, and weight change rates unchanged", () => {
+    const sourceFoods = new Map(composition.foods.map((food) => [food.code, food]));
+    for (const food of calc.compositionFoods) {
+      const source = sourceFoods.get(food.code);
+      expect(source, food.code).toBeDefined();
+      expect(food.refuse).toEqual(source?.refuse);
+      for (const id of BUNDLE_NUTRIENT_IDS) expect(food.nutrients[id], `${food.code} ${id}`).toEqual(source?.nutrients[id]);
+    }
+    const sourceRates = new Map(cooking.weightChangeRates.map((rate) => [rate.code, rate]));
+    for (const rate of calc.rates) {
+      const source = sourceRates.get(rate.code);
+      expect(rate.ratePercent, rate.code).toBe(source?.ratePercent);
+      expect(rate.postCookingRefuse === true, rate.code).toBe(source?.postCookingRefuse !== undefined);
+    }
+  });
+
+  it("contain the composition and rate of every food state the recipes use", () => {
+    const codes = new Set(calc.compositionFoods.map((food) => food.code));
+    const rated = new Set(calc.rates.map((rate) => rate.code));
+    const foodStates = new Map(calc.foods.map((food) => [food.id, food.composition]));
+    for (const recipe of calc.recipes) {
+      for (const used of [...recipe.ingredients, ...recipe.substitutions]) {
+        const code = foodStates.get(used.food)?.[used.state];
+        expect(code, `${recipe.id} ${used.food} ${used.state}`).toBeDefined();
+        expect(codes.has(code ?? "")).toBe(true);
+        if (used.state !== "raw" && used.state !== "as_is") expect(rated.has(code ?? ""), `${recipe.id} ${used.food} ${used.state}`).toBe(true);
+      }
     }
   });
 });

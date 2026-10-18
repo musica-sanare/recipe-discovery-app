@@ -3,27 +3,22 @@
  * fixed amounts and with bounded amount adjustment (docs/IMPLEMENTATION_PLAN.md
  * "Phase 0", item 6). Adjustment covers authored bounds, whole units, linked
  * ingredients, and sides the solver may switch off (ADR-024, ADR-026). Evaluation
- * only; the product's fit and adjustment logic is built in Phase 3.
+ * only; the product's fit and adjustment logic is built in Phase 3. Values come from
+ * the nutrition engine on the in-memory calculation bundle (ADR-028).
  *
  *   node tools/evaluate-coverage.ts
  */
-import { readFileSync } from "node:fs";
-import path from "node:path";
-import * as z from "zod/mini";
-import { foods } from "../content/foods.ts";
-import { recipes } from "../content/recipes/index.ts";
-import { calculateRecipe, type NutritionData } from "../domain/nutrition/calculate.ts";
-import { compositionSubsetSchema } from "../shared/composition.ts";
-import type { Allergen, Recipe, RecipeIngredient } from "../shared/content.ts";
-import { cookingDataSchema } from "../shared/cooking.ts";
+import { defaultState, type AmountRecipe, type RecipeState } from "../domain/nutrition/amounts.ts";
+import { calculateNutrition } from "../domain/nutrition/engine.ts";
+import type { BundleRecipe } from "../shared/bundle.ts";
+import type { Allergen } from "../shared/content.ts";
+import { repositoryEngine } from "./content/repository.ts";
 
-const dataDir = path.join(import.meta.dirname, "..", "data", "composition");
-const readJson = (name: string): unknown => JSON.parse(readFileSync(path.join(dataDir, name), "utf8"));
-const data: NutritionData = {
-  foods: new Map(foods.map((food) => [food.id, food])),
-  composition: new Map(z.parse(compositionSubsetSchema, readJson("foods.json")).foods.map((food) => [food.code, food])),
-  rates: new Map(z.parse(cookingDataSchema, readJson("cooking.json")).weightChangeRates.map((rate) => [rate.code, rate])),
-};
+const { calc, data } = repositoryEngine();
+const foodsById = new Map(calc.foods.map((food) => [food.id, food]));
+const recipes = calc.recipes;
+type Recipe = BundleRecipe;
+type RecipeIngredient = Recipe["ingredients"][number];
 
 interface Targets {
   readonly kcal: readonly [number, number];
@@ -75,36 +70,19 @@ function status(point: Point, targets: Targets): Status {
   return all.includes("not_met") ? "not_met" : all.includes("near") ? "near" : "met";
 }
 
-/** Per-serving contribution of each ingredient per gram, so amounts can vary linearly. */
-function perGram(recipe: Recipe): Map<string, Point> {
-  const result = calculateRecipe(recipe, data);
-  const contributions = new Map<string, Point>();
-  for (const [index, ingredient] of result.ingredients.entries()) {
-    const grams = recipe.ingredients[index]?.grams ?? 1;
-    const factor = ingredient.counted ? 1 / grams / recipe.servings : 0;
-    contributions.set(ingredient.key, {
-      kcal: (ingredient.amounts.ENERC_KCAL ?? 0) * factor,
-      protein: (ingredient.amounts["PROT-"] ?? 0) * factor,
-      fat: (ingredient.amounts["FAT-"] ?? 0) * factor,
-    });
-  }
-  return contributions;
-}
-
-function evaluate(recipe: Recipe, amounts: ReadonlyMap<string, number>, contributions: ReadonlyMap<string, Point>): Point {
-  let kcal = 0;
-  let protein = 0;
-  let fat = 0;
-  for (const ingredient of recipe.ingredients) {
-    const c = contributions.get(ingredient.key);
-    const grams = amounts.get(ingredient.key) ?? ingredient.grams;
-    if (c) {
-      kcal += c.kcal * grams;
-      protein += c.protein * grams;
-      fat += c.fat * grams;
-    }
-  }
-  return { kcal, protein, fat };
+/** Per-serving energy, protein, and fat from the nutrition engine, with the grams it resolved per ingredient. */
+function evaluate(recipe: AmountRecipe, state: RecipeState): { point: Point; grams: ReadonlyMap<string, number> } {
+  const result = calculateNutrition(recipe, state, data);
+  if (!result.ok) throw new Error(JSON.stringify(result.errors));
+  const { perServing, ingredients } = result.value;
+  const value = (amount: number | null) => {
+    if (amount === null) throw new Error("unmeasured value in an evaluated nutrient");
+    return amount;
+  };
+  return {
+    point: { kcal: value(perServing.ENERC_KCAL), protein: value(perServing["PROT-"]), fat: value(perServing["FAT-"]) },
+    grams: new Map(ingredients.map((ingredient) => [ingredient.key, ingredient.grams])),
+  };
 }
 
 interface Fit {
@@ -115,54 +93,38 @@ interface Fit {
 
 const RANK: Record<Status, number> = { met: 0, near: 1, not_met: 2 };
 
-/** Amounts the solver may choose for an adjustable ingredient: the grams grid or whole units. */
+/** Amounts the solver may choose for an adjustable ingredient, in state units: grams on the grid or whole counts. */
 function choices(ingredient: RecipeIngredient): number[] {
   const adjust = ingredient.adjust;
-  if (!adjust) return [ingredient.grams];
+  if (!adjust) return [];
   const values: number[] = [];
   if (adjust.kind === "grams") {
     for (let value = adjust.min; value <= adjust.max + 1e-9; value += adjust.step) values.push(Number(value.toFixed(6)));
   } else {
-    for (let count = adjust.min; count <= adjust.max; count++) values.push(count * adjust.unitGrams);
+    for (let count = adjust.min; count <= adjust.max; count++) values.push(count);
   }
   return values;
 }
 
-/** Grams of every ingredient for chosen leader amounts and switched-off sides; linked ingredients scale with their leader. */
-function resolve(recipe: Recipe, chosen: ReadonlyMap<string, number>, off: ReadonlySet<string>): Map<string, number> {
-  const removed = new Set(recipe.sides.filter((side) => off.has(side.key)).flatMap((side) => side.ingredients));
-  const direct = (ingredient: RecipeIngredient) => (removed.has(ingredient.key) ? 0 : (chosen.get(ingredient.key) ?? ingredient.grams));
-  const byKey = new Map(recipe.ingredients.map((ingredient) => [ingredient.key, ingredient]));
-  const amounts = new Map<string, number>();
-  for (const ingredient of recipe.ingredients) {
-    const leader = ingredient.linkedTo === undefined ? undefined : byKey.get(ingredient.linkedTo);
-    const grams = leader && !removed.has(ingredient.key) ? (ingredient.grams * direct(leader)) / leader.grams : direct(ingredient);
-    amounts.set(ingredient.key, grams);
-  }
-  return amounts;
-}
-
 /** Grid search inside authored bounds and side switches; best status first, then the smallest relative change. */
 function bestAdjusted(recipe: Recipe, targets: Targets): Fit {
-  const contributions = perGram(recipe);
   const adjustable = recipe.ingredients.filter((ingredient) => ingredient.adjust !== undefined);
   const removable = recipe.sides.filter((side) => side.solverMayRemove);
   const changeable = new Set([...adjustable.map((ingredient) => ingredient.key), ...removable.flatMap((side) => side.ingredients)]);
   const grids = adjustable.map(choices);
   let best: { fit: Fit; cost: number } | undefined;
-  const consider = (chosen: ReadonlyMap<string, number>, off: ReadonlySet<string>) => {
-    const amounts = resolve(recipe, chosen, off);
-    const point = evaluate(recipe, amounts, contributions);
+  const consider = (chosen: ReadonlyMap<string, number>, off: readonly string[]) => {
+    const { point, grams } = evaluate(recipe, { ...defaultState(recipe), sidesOff: off, amounts: Object.fromEntries(chosen) });
     const fitStatus = status(point, targets);
     const cost = recipe.ingredients
       .filter((ingredient) => changeable.has(ingredient.key))
-      .reduce((sum, ingredient) => sum + Math.abs((amounts.get(ingredient.key) ?? ingredient.grams) - ingredient.grams) / ingredient.grams, 0);
+      .reduce((sum, ingredient) => sum + Math.abs((grams.get(ingredient.key) ?? ingredient.grams) - ingredient.grams) / ingredient.grams, 0);
     if (!best || RANK[fitStatus] < RANK[best.fit.status] || (RANK[fitStatus] === RANK[best.fit.status] && cost < best.cost - 1e-9)) {
       const changes = [
-        ...removable.filter((side) => off.has(side.key)).map((side) => `${side.key} off`),
+        ...off.map((side) => `${side} off`),
         ...adjustable
-          .filter((ingredient) => (amounts.get(ingredient.key) ?? 0) > 0 && amounts.get(ingredient.key) !== ingredient.grams)
-          .map((ingredient) => `${ingredient.key} ${String(ingredient.grams)}→${String(amounts.get(ingredient.key))}`),
+          .filter((ingredient) => (grams.get(ingredient.key) ?? 0) > 0 && grams.get(ingredient.key) !== ingredient.grams)
+          .map((ingredient) => `${ingredient.key} ${String(ingredient.grams)}→${String(grams.get(ingredient.key))}`),
       ];
       best = { fit: { status: fitStatus, point, changes }, cost };
     }
@@ -170,7 +132,7 @@ function bestAdjusted(recipe: Recipe, targets: Targets): Fit {
   const choose = (index: number, chosen: Map<string, number>) => {
     if (index === adjustable.length) {
       for (let mask = 0; mask < 2 ** removable.length; mask++) {
-        consider(chosen, new Set(removable.filter((_, bit) => (mask >> bit) & 1).map((side) => side.key)));
+        consider(chosen, removable.filter((_, bit) => (mask >> bit) & 1).map((side) => side.key));
       }
       return;
     }
@@ -191,7 +153,7 @@ function eligible(recipe: Recipe, scenario: Scenario): boolean {
   if (scenario.excludeAllergen) {
     const allergen = scenario.excludeAllergen;
     const blocked = recipe.ingredients.some((ingredient) => {
-      const food = data.foods.get(ingredient.food);
+      const food = foodsById.get(ingredient.food);
       return !food || food.allergens === "unknown" || food.allergens.some((link) => link.allergen === allergen);
     });
     if (blocked) return false;
@@ -217,7 +179,7 @@ function neededFor90(p: number): number | null {
 console.log(`Validation recipes: ${String(recipes.length)}. Tolerance ±${String(TOLERANCE * 100)} %, protein −${String(PROTEIN_SHORTFALL)} g.\n`);
 for (const scenario of scenarios) {
   const pool = recipes.filter((recipe) => eligible(recipe, scenario));
-  const fixed = pool.map((recipe) => ({ recipe, fit: status(evaluate(recipe, new Map(), perGram(recipe)), scenario.targets) }));
+  const fixed = pool.map((recipe) => ({ recipe, fit: status(evaluate(recipe, defaultState(recipe)).point, scenario.targets) }));
   const adjusted = pool.map((recipe) => ({ recipe, fit: bestAdjusted(recipe, scenario.targets) }));
   const metFixed = fixed.filter((entry) => entry.fit === "met");
   const metAdjusted = adjusted.filter((entry) => entry.fit.status === "met");

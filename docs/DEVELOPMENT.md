@@ -21,7 +21,7 @@ npm ci
 | `npm run dev` | Generate the content bundles, then start the Vite dev server on http://localhost:5173 (no CSP; see ADR-018). Rerun `npm run content:build` after changing content |
 | `npm run content:build` | Write the content bundles to `generated/content/` and print their sizes (ADR-027) |
 | `npm run build` | Validate content, generate the content bundles, type-check, then build to `dist/` including the generated `_headers` |
-| `npm run report:composition` | Per recipe and ingredient: exact, approximation (with reason), hard to estimate, not counted, fried; fails when a cooked state has no weight change rate |
+| `npm run report:composition` | Per recipe and ingredient, from the nutrition engine: exact, approximation (with the ADR-028 reasons), hard to estimate, not counted, fried; fails when a cooked state has no weight change rate |
 | `npm run validate:content` | Content validation only (`tools/content/validate.ts`); prints one line per problem with file, recipe or food, field, and rule |
 | `npm run preview` | Serve `dist/` with the production security headers (http://localhost:4173) |
 | `npm run lint` | ESLint with type-aware rules and module boundaries |
@@ -39,6 +39,7 @@ There is intentionally no deploy script.
 ```text
 index.html, src/        UI (React); src/i18n/ holds the typed ja/en/es catalogs
 shared/                 Schemas, constants, and types shared by UI, domain, content, and tools
+domain/nutrition/       Pure, locale-free nutrition engine (ADR-028); tests next to the code
 content/                Food dictionary, recipes, glossary, content version (TypeScript, validated at build time)
 platform/               Hosting-specific output (security headers)
 tools/                  Build-time tools run directly by Node (TypeScript type stripping)
@@ -49,7 +50,7 @@ test/node/              Node-side tests
 docs/, prompts/         Documentation and phase prompts
 ```
 
-`domain/` is added in a later stage; its import rules are already in `eslint.config.js`. Files under `tools/` run with Node's built-in TypeScript type stripping, so they use only erasable syntax (`erasableSyntaxOnly`) and import local modules with the `.ts` extension.
+`domain/` may import only `shared/` (and content in tests); `eslint.config.js` enforces this. Tools and repository tests obtain engine input from the in-memory calculation bundle (`tools/content/repository.ts`). Files under `tools/` run with Node's built-in TypeScript type stripping, so they use only erasable syntax (`erasableSyntaxOnly`) and import local modules with the `.ts` extension.
 
 ## Adding content
 1. Add foods to `content/foods.ts` with codes from `node tools/extract-composition.ts --search <regex>`; add the codes (and cooked/raw pairs with transcribed rates) to `data/composition/` as described in `docs/DATA_SOURCES.md`.

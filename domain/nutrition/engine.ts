@@ -192,7 +192,13 @@ export function calculateNutrition(recipe: AmountRecipe, state: RecipeState, dat
   const resolved = resolveAmounts(recipe, state);
   if (!resolved.ok) return resolved;
   const { servings } = resolved.value;
-  const ingredients = resolved.value.ingredients.map((ingredient) => calculateIngredient(ingredient, data));
+  const ingredients = resolved.value.ingredients.map((ingredient) => {
+    try {
+      return calculateIngredient(ingredient, data);
+    } catch (error) {
+      throw new Error(`ingredients.${ingredient.key}: ${error instanceof Error ? error.message : String(error)}`, { cause: error });
+    }
+  });
   const counted = ingredients.filter((ingredient) => ingredient.counted);
 
   const incomplete = record((nutrient) => counted.filter((ingredient) => ingredient.amounts[nutrient] === null).map((ingredient) => ingredient.key));

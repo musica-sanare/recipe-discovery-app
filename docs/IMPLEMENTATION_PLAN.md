@@ -5,7 +5,8 @@ Status: **Draft (2026-10-18)**. Each phase ends with checks, a summary to the ow
 | Phase | Prompt file |
 |---|---|
 | 0 — Validation and foundation | `prompts/00-validation-and-foundation.md` |
-| 1–5 | Written before each phase starts |
+| 1 — Content model and build pipeline | `prompts/01-content-model-and-pipeline.md` |
+| 2–5 | Written before each phase starts |
 
 `prompts/FIRST_MESSAGE.md` is the kickoff message for a new Claude Code session.
 

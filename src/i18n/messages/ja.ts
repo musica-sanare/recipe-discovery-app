@@ -18,6 +18,12 @@ export const ja = {
   common: {
     skipToContent: "本文へ移動",
   },
+  content: {
+    loading: "コンテンツを読み込んでいます…",
+    error: "コンテンツを読み込めませんでした。通信状況を確認して、もう一度お試しください。",
+    retry: "再読み込み",
+    versions: "コンテンツ版 {{content}}・成分表データ {{composition}} 更新",
+  },
   home: {
     status: "現在準備中です。",
   },

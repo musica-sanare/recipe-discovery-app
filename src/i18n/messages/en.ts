@@ -19,6 +19,12 @@ export const en: Messages = {
   common: {
     skipToContent: "Skip to main content",
   },
+  content: {
+    loading: "Loading content…",
+    error: "The content could not be loaded. Check your connection and try again.",
+    retry: "Try again",
+    versions: "Content version {{content}} · Composition data updated {{composition}}",
+  },
   home: {
     status: "Coming soon.",
   },

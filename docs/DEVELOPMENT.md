@@ -18,8 +18,9 @@ npm ci
 
 | Command | Purpose |
 |---|---|
-| `npm run dev` | Vite dev server on http://localhost:5173 (no CSP; see ADR-018) |
-| `npm run build` | Validate content, type-check, then build to `dist/` including the generated `_headers` |
+| `npm run dev` | Generate the content bundles, then start the Vite dev server on http://localhost:5173 (no CSP; see ADR-018). Rerun `npm run content:build` after changing content |
+| `npm run content:build` | Write the content bundles to `generated/content/` and print their sizes (ADR-027) |
+| `npm run build` | Validate content, generate the content bundles, type-check, then build to `dist/` including the generated `_headers` |
 | `npm run report:composition` | Per recipe and ingredient: exact, approximation (with reason), hard to estimate, not counted, fried; fails when a cooked state has no weight change rate |
 | `npm run validate:content` | Content validation only (`tools/content/validate.ts`); prints one line per problem with file, recipe or food, field, and rule |
 | `npm run preview` | Serve `dist/` with the production security headers (http://localhost:4173) |
@@ -41,6 +42,7 @@ shared/                 Schemas, constants, and types shared by UI, domain, cont
 content/                Food dictionary, recipes, glossary, content version (TypeScript, validated at build time)
 platform/               Hosting-specific output (security headers)
 tools/                  Build-time tools run directly by Node (TypeScript type stripping)
+generated/content/      Content bundles written by tools/build-content.ts (git-ignored)
 data/composition/       Extraction manifest and the tracked composition subset
 data/raw/               Original source files (git-ignored)
 test/node/              Node-side tests

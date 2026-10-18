@@ -3,6 +3,8 @@ node_modules/
 
 # Build output
 dist/
+# Content bundles generated from content/ and data/ (tools/build-content.ts)
+generated/
 coverage/
 *.tsbuildinfo
 

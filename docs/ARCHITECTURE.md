@@ -85,11 +85,12 @@ Details are finalized in Phase 1 and documented in `docs/NUTRITION_CALCULATION.m
 2. **Content validation**: schemas; unique IDs; every ingredient maps to a food and every food to composition data; locale completeness; adjustment bounds valid; substitutions valid; allergen links present (or explicitly `unknown`).
 3. **Policy lint**: forbidden health or efficacy expressions in all locales (`docs/CONTENT_POLICY.md`).
 4. **Nutrition snapshots**: per-recipe calculated values are stored as test snapshots so that data or formula changes produce a reviewable diff.
-5. **Header generation**: security headers are defined once and written in the hosting platform's format.
+5. **Content bundles** (ADR-027): `tools/build-content.ts` writes a locale-neutral calculation bundle and one text bundle per locale to `generated/content/` (git-ignored); Vite adds a content hash to each file name.
+6. **Header generation**: security headers are defined once and written in the hosting platform's format.
 
 ## 6. Recommendation flow (browser)
 
-1. Load the versioned content bundle (static, cacheable).
+1. Load the calculation bundle and the text bundle of the active locale (static, content-hashed), validate them with `zod/mini` and against each other, and show the error state with a retry action when a bundle is unreachable or invalid (`src/content/`). Switching the locale loads only its text bundle.
 2. Validate user inputs; detect contradictory targets.
 3. Hard filters → fit evaluation (default amounts, then bounded adjustment) → fit tiers → diversification → stable ordering.
 4. Render candidates and deterministic reason texts from message templates.

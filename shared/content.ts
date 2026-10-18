@@ -6,9 +6,9 @@
 import * as z from "zod/mini";
 import { COOKING_METHODS } from "./cooking.ts";
 
-const nonBlank = z.string().check(z.refine((text) => text.trim() !== "", "Text must not be blank"));
-const slug = z.string().check(z.regex(/^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$/));
-const foodCode = z.string().check(z.regex(/^\d{5}$/));
+export const nonBlank = z.string().check(z.refine((text) => text.trim() !== "", "Text must not be blank"));
+export const slug = z.string().check(z.regex(/^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$/));
+export const foodCode = z.string().check(z.regex(/^\d{5}$/));
 
 export const localizedTextSchema = z.object({ ja: nonBlank, en: nonBlank, es: nonBlank });
 export type LocalizedText = z.infer<typeof localizedTextSchema>;

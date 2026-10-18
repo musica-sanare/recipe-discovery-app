@@ -1,6 +1,10 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { I18nextProvider } from "react-i18next";
+import calcUrl from "../generated/content/calc.json?url";
+import textEnUrl from "../generated/content/text-en.json?url";
+import textEsUrl from "../generated/content/text-es.json?url";
+import textJaUrl from "../generated/content/text-ja.json?url";
 import { App } from "./App";
 import { createI18n } from "./i18n/createI18n";
 import { resolveInitialLocale } from "./i18n/localePreference";
@@ -14,7 +18,7 @@ if (!root) {
 createRoot(root).render(
   <StrictMode>
     <I18nextProvider i18n={createI18n(resolveInitialLocale())}>
-      <App />
+      <App contentUrls={{ calc: calcUrl, text: { ja: textJaUrl, en: textEnUrl, es: textEsUrl } }} />
     </I18nextProvider>
   </StrictMode>,
 );

@@ -14,6 +14,10 @@ function securityHeaders(): Plugin {
 
 export default defineConfig({
   plugins: [react(), securityHeaders()],
+  build: {
+    // Content bundles are fetched; a data: URL would be blocked by `connect-src 'self'`.
+    assetsInlineLimit: (filePath) => (filePath.endsWith(".json") ? false : undefined),
+  },
   // The dev server is left without CSP because React Fast Refresh injects an
   // inline script; `vite preview` serves the production build with the same
   // headers as production.

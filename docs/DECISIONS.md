@@ -147,6 +147,13 @@ Findings:
 - *Measured* (20 recipes): 144 exact, 13 approximations, 2 hard to estimate, 17 not counted, 5 fried ingredients; 15 recipes have at least one approximated, hard-to-estimate, or fried ingredient (as in Stage 0.7). The approximations are 9 raw values for an untabulated method, 3 grilled values for sautéed meat, and 1 removal after cooking (peeled microwaved potato).
 - The calculation reports both raw values and related cooked values as `cooking_not_tabulated`, while `docs/NUTRITION_CALCULATION.md` §7 gives them different error bands (−15 % to +5 % versus ±5 %). Phase 2 needs to distinguish them when it implements ranges.
 
+### Stage 1.4 content bundle (2026-10-18)
+- Owner decisions: generation by a script with Vite `?url` hashing (option A), only the displayed nutrient columns in the calculation bundle, and household unit labels moved to Phase 4.
+- *Measured* bundle sizes (`npm run content:build`, 20 recipes, 50 foods): calculation 65.6 KiB (gzip 6.6 KiB); text `ja` 27.0 KiB (7.1), `en` 23.0 KiB (6.0), `es` 24.5 KiB (6.7). At about 60 recipes the text bundles would be roughly three times larger (estimate).
+- *Measured*: validating in the browser with `zod/mini` raised the app JavaScript from 272.5 kB (gzip 85.9 kB) to 309.9 kB (gzip 97.8 kB).
+- Calculating every recipe from the bundle's composition values and rates gives the same totals as the source data for the five displayed nutrients and the same approximation reasons (`tools/content/bundle.test.ts`).
+- Verified on 2026-10-18 with `vite preview` (production headers): the page fetched `calc-<hash>.json` and `text-ja-<hash>.json`, showed the content and composition versions in the footer, and switching to Spanish fetched only `text-es-<hash>.json` and showed the date as "27 de marzo de 2026"; no console errors. Screenshots and layout were not checked because the preview pane was hidden.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in
@@ -304,6 +311,16 @@ Findings:
   - **Versioning**: `content/version.ts` holds `CONTENT_VERSION` as `YYYY-MM-DD.n`, updated with every content change; bundle compatibility is a separate schema version (Stage 1.4).
 - Rationale: portion rules without unnatural amounts (Stage 0.6), traceable estimates for unrepresented cooking, and derived flags that cannot contradict the minutes or states.
 - Alternatives: a "staple" with a removable minimum portion (replaced by sides at the owner's request); semver for content (no meaningful major/minor distinction for content).
+
+## ADR-027: Content bundle format
+- Status: **Accepted** (owner, 2026-10-18, Stage 1.4)
+- Decision: `tools/build-content.ts` writes `generated/content/calc.json` (locale-neutral) and `text-ja.json`, `text-en.json`, `text-es.json`; the files are generated at build time and not committed. `src/main.tsx` imports them with `?url`, so Vite emits them with a content hash in the name; `assetsInlineLimit` keeps JSON out of `data:` URLs, which `connect-src 'self'` would block.
+  - Every bundle carries `schemaVersion` (`BUNDLE_SCHEMA_VERSION`, bumped on incompatible changes), the content version, and the composition versions (workbook update date and SHA-256, explanation PDF SHA-256).
+  - The calculation bundle has foods (ID, codes per state, allergens, protein group), the composition values of `ENERC_KCAL`, `PROT-`, `FAT-`, `CHOCDF-`, `NACL_EQ` with notations and the refuse rate, weight change rates (removal after cooking as a flag only), and recipes without texts. It contains no Japanese, English, or Spanish text.
+  - Text bundles key every text by food ID, recipe ID, and step, safety note, side, ingredient, and substitution keys.
+  - The browser validates each bundle with the `zod/mini` schemas in `shared/bundle.ts`, checks that the text bundle matches the locale, versions, and keys of the calculation bundle (`bundleMismatches`), and shows the error state with a retry action otherwise.
+- Rationale: plain static JSON that any host can serve (ADR-001); content hashes allow long caching; translations cannot affect the data the calculation uses.
+- Alternatives: a custom Vite plugin that emits hashed files and serves them in development (more code); content as dynamically imported JavaScript modules (simpler, but executable code instead of JSON).
 
 ---
 

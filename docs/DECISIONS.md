@@ -86,6 +86,18 @@ A simulation with **placeholder nutrient values (not from the tables)** and rand
 - Allergen categories in `shared/content.ts`: the CAA page states that cashew nut became mandatory on 2026-04-01 and that the last change to the recommended items (2024-03-28) added macadamia nut and removed matsutake; municipal notices state that pistachio was added to the recommended items in April 2026. The resulting lists (9 mandatory, 20 recommended) are derived from these statements because the CAA page shows the list only as an image; 要確認 against the CAA figure.
 - Checks added: schema, references to foods and extracted codes, weight change rates for every cooked state, a test that `cooking` is only used when the tables lack that method, `includedIn` references, adjustment bounds, substitutions, food safety notes, a glossary consistency test, and a forbidden-expression lint in three locales. Injected forbidden claims in `ja`, `en`, and `es` were detected on 2026-10-18; the glossary test caught one real inconsistency ("residual-heat").
 
+### Stage 0.5 calculation checks (2026-10-18)
+- Implemented a minimal pure calculation in `domain/nutrition/calculate.ts`: (c4) and (c5), notation handling (unmeasured → `null`, never zero), `includedIn` exclusion, approximation reasons (`cooking_not_tabulated`, `post_cooking_refuse`), fried flag, per-serving division. It takes no locale.
+- Hand cross-check: `chicken_lemon_herb_grill` (protein 43.915 g, fat 7.9865 g, 472.689 kcal per serving) and `tuna_tofu_bowl` (35.051 g, 9.735 g, 454.63 kcal) were computed by hand from `data/composition` and match the function to six decimals (`test/node/nutrition.test.ts`).
+- Locale invariance: every recipe calculated from content reduced to a single locale's texts gives identical results for `ja`, `en`, and `es`; the function takes two parameters (recipe, data). A snapshot records per-serving values of all 20 recipes.
+- *Measured* column comparison over the 20 recipes (per serving):
+  - Amino-acid-based protein (`PROTCAA`) is unmeasured for at least one ingredient in 17 of 20 recipes. With a fallback to `PROT-`, it reads 2.2–9.1 g lower than `PROT-` (median 6.1 g).
+  - Triacylglycerol-equivalent fat (`FATNLEA`) is incomplete in 18 of 20 recipes; with the same fallback it reads 0.4–3.6 g lower (median 1.4 g).
+  - `CHOAVLDF-` minus `CHOCDF-` ranges from −8.7 to +5.5 g (median +0.6 g). `CHOCDF-` is complete for every recipe.
+  - Dietary fiber (`FIB-`) is incomplete in 13 of 20 recipes because some ingredients have no fiber value.
+  - 4 × protein + 9 × fat + 4 × carbohydrate (`PROT-`, `FAT-`, `CHOCDF-`) exceeds `ENERC_KCAL` by −0.1 % to +10.0 % (median +4.2 %).
+- *Measured* cooking oil (rule 4 in `docs/NUTRITION_CALCULATION.md` §5): Table 14 rows with fat gain show 80–98 % of the pan oil retained (median 88 %). Counting all counted oil instead of 88 % raises fat by 0.3–0.9 g per serving across the 14 recipes with counted oil; the counted oil also includes dressings and finishing oil, which are eaten entirely.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in
@@ -137,8 +149,9 @@ A simulation with **placeholder nutrient values (not from the tables)** and rand
 - Decision: fried recipes are included. Uncertainty is classified in advance from data availability (cooked fried form exists or not), shown with a note and, where needed, a range. Ranges that straddle a target give "near / uncertain". Details: `docs/NUTRITION_CALCULATION.md` §6.
 
 ## ADR-011: Displayed nutrient columns
-- Status: **Proposed** (owner agreed to decide after checking real data; 2026-10-18)
-- Direction: energy `ENERC_KCAL`, protein `PROT-`, fat `FAT-`; carbohydrate column decided in Phase 0. Evidence: verification log (workbook measurements).
+- Status: **Accepted** (owner accepted the Stage 0.5 recommendation, 2026-10-18)
+- Decision: energy `ENERC_KCAL`; protein `PROT-` (たんぱく質); fat `FAT-` (脂質); carbohydrate `CHOCDF-` (炭水化物, includes dietary fiber). Dietary fiber is not displayed in the MVP. The detail view explains that energy is the table value and differs from 4P + 9F + 4C (median +4 %).
+- Evidence: verification log "Stage 0.5 calculation checks". The alternative columns are incomplete for most recipes and would show protein several grams lower than common labels; `CHOAVLDF-` adds residual "carbohydrate" to meat, fish, and eggs (Stage 0.2 log).
 
 ## ADR-012: Source data handling
 - Status: **Accepted** (owner, 2026-10-18)
@@ -204,11 +217,16 @@ A simulation with **placeholder nutrient values (not from the tables)** and rand
 - Imports between repository modules use the `.ts` extension everywhere (`allowImportingTsExtensions` in `tsconfig.base.json`), so the same files work in Vite, Vitest, and Node type stripping.
 - Alternatives: JSON (no comments, verbose), YAML (parser dependency).
 
+## ADR-022: Count cooking oil fully when no oil-cooked value is used
+- Status: **Accepted** (owner accepted the Stage 0.5 recommendation, 2026-10-18)
+- Decision: keep `docs/NUTRITION_CALCULATION.md` §5 rule 4: oil that is not already contained in an oil-cooked value is counted in full and shown as an assumption.
+- Rationale: using the Table 14 median retention (88 %) would lower fat by only 0.3–0.9 g per serving in the validation recipes; Table 14 has no meat rows; dressings and finishing oil are eaten entirely.
+
 ---
 
 ## Open questions (要確認)
 
-1. Carbohydrate column and its localized display name (ADR-011).
+1. ~~Carbohydrate column (ADR-011)~~: `CHOCDF-` accepted. Localized display names are set with the UI catalogs (Phase 4).
 2. Extraction method for Tables 12–14 from the PDF; use of chapter 3 group-level rates for missing cooked forms.
 3. Tolerance, display rounding, and range threshold values (`docs/SPEC.md` §16).
 4. Initial recipe count and the scope of automatic adjustment (Phase 0 evaluation with real recipes).

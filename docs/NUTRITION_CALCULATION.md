@@ -8,19 +8,21 @@ Status: **Draft (2026-10-18)**. Formulas quoted from the source tables are *Veri
 - *Verified*: all values are per 100 g of edible portion. The edible portion is the food as purchased minus the parts normally discarded; the refuse rate is the discarded share in mass %.
 - *Verified*: the tables list 2,538 foods, including cooked forms (for example boiled, grilled, stir-fried, sautéed, deep-fried, tempura, breaded and fried, steamed, microwaved).
 
-## 2. Nutrients and source columns (*Provisional*, ADR-011)
+## 2. Nutrients and source columns (ADR-011, accepted 2026-10-18)
 
 | Displayed nutrient | Column (component identifier) | Reason |
 |---|---|---|
 | Energy (kcal) | `ENERC_KCAL` | Complete for all 2,538 foods |
 | Protein | `PROT-` (たんぱく質) | Nearly complete (1 unmeasured); close to common nutrition labels |
 | Fat | `FAT-` (脂質) | Nearly complete (1 unmeasured); close to common nutrition labels |
-| Carbohydrate | To be decided in Phase 0: `CHOAVLDF-` (差引き法による利用可能炭水化物) or `CHOCDF-` (炭水化物) | Both nearly complete; they differ in meaning (available carbohydrate vs total) |
+| Carbohydrate | `CHOCDF-` (炭水化物, includes dietary fiber) | Complete for every validation recipe; does not add residual "carbohydrate" to meat, fish, and eggs as `CHOAVLDF-` does |
 | Salt equivalent (optional) | `NACL_EQ` | Nearly complete |
 
-Measured facts from the workbook (2026-10-18): the amino-acid-based protein column `PROTCAA` is unmeasured for 422 foods (17%) and estimated for 1,263; where both exist it is a median 15% lower than `PROT-`. The triacylglycerol-equivalent fat column `FATNLEA` is unmeasured for 436 foods (17%) and a median 8% lower than `FAT-`.
+Not displayed in the MVP: dietary fiber (`FIB-`, incomplete for 13 of 20 validation recipes) and the component-based columns `PROTCAA`, `FATNLEA`, `CHOAVLDF-` (incomplete for most recipes or misleading for protein-rich foods). They stay in the extracted subset for comparison.
 
-Consequence: the source energy values are computed from component-based values, so the displayed energy will generally not equal 4 × protein + 9 × fat + 4 × carbohydrate. The detail view explains this.
+Measured facts (2026-10-18): in the workbook, `PROTCAA` is unmeasured for 422 foods (17%) and a median 15% lower than `PROT-`; `FATNLEA` is unmeasured for 436 foods (17%) and a median 8% lower than `FAT-`. Over the 20 validation recipes, `PROTCAA` (with a fallback) would read 2.2–9.1 g lower protein per serving. Details: `docs/DECISIONS.md` "Stage 0.5 calculation checks".
+
+Energy is the table value, computed by MEXT from component-based values, so it does not equal 4 × protein + 9 × fat + 4 × carbohydrate (the validation recipes differ by −0.1% to +10%, median +4%). The detail view explains this.
 
 ## 3. Notation in the source tables and how it is handled
 
@@ -52,7 +54,7 @@ Rules:
 1. If the food and cooking method exist in the tables, use the cooked value with (c4). Mapping class: **exact**.
 2. If the cooked form does not exist (example: skinless young chicken breast has raw and grilled, but not boiled), use the raw value. Mapping class: **approximation**, with the reason shown. Whether to apply the group-level "rates of change of components by cooking" (chapter 3) is decided in Phase 0.
 3. **No double counting of cooking oil.** Cooked values for stir-fried, sautéed, and fried foods already include the oil absorbed during the analysis (Tables 13–14). When such a cooked value is used, the oil used for cooking that food is **not** added as a separate ingredient. *Verified* (Table 14): 100 g of raw vegetables stir-fried with 5.0 g of oil gained 2.7–4.6 g of fat; farmed Atlantic salmon sautéed with 5.0 g of oil lost 2.8 g.
-4. Cooking oil when no oil-cooked form is used (raw or other cooked values): *Provisional* — the authored amount of oil is counted as fully consumed (conservative for fat, about 0.5–2 g too high per 5 g of oil according to Table 14). Whether to use Table 14 absorption values for similar foods instead is decided in Phase 0 Stage 0.5.
+4. Cooking oil when no oil-cooked form is used (raw or other cooked values): the authored amount of oil is counted in full and shown as an assumption (ADR-022). Table 14 indicates 80–98% of pan oil stays in the food; for the validation recipes the difference is 0.3–0.9 g of fat per serving.
 5. Weight change rates are relative to the raw edible portion, except where the tables remove parts after cooking (`postCookingRefuse` in `data/composition/cooking.json`, for example the shell of boiled eggs or the peel of steamed potatoes). Those entries are approximations when the recipe states the raw edible mass.
 6. For starchy staples, recipes may state the mass in the state the tables provide (cooked rice, boiled or dry pasta); no weight change rate is needed then.
 
@@ -116,7 +118,7 @@ Nutrition and recommendation functions take no locale input. Tests calculate eve
 
 ## 13. Open items (要確認)
 
-1. Carbohydrate column (`CHOAVLDF-` or `CHOCDF-`) and its display name in three locales.
+1. ~~Carbohydrate column~~: `CHOCDF-` (ADR-011). Display names in three locales are set with the UI catalogs.
 2. How to extract Table 12 (weight change rates) and Tables 13–14 reliably from the PDF.
 3. Whether to use the chapter 3 group-level rates of change for missing cooked forms.
 4. Tolerance, rounding, and range threshold values (validated with the Phase 0 recipes).

@@ -142,6 +142,11 @@ Findings:
 - New checks beyond Phase 0: grid and whole-unit consistency, links, sides, step references, substitution references, protein groups, `no_cook` consistency, recipe files not registered in the index, duplicate allergens. Safety notes are now required only for meat, fish, eggs, or fried recipes (all 20 recipes have them).
 - Verified on 2026-10-18: injecting an off-grid amount and a wrong protein group into a recipe made `npm run build` fail with two messages naming the file, recipe, field, and rule.
 
+### Stage 1.3 composition coverage report (2026-10-18)
+- `npm run report:composition` (`tools/content/composition-report.ts`) classifies every recipe ingredient with the calculation's own result: exact, approximation with reasons, hard to estimate (`estimate`), or not counted (`includedIn`), plus a fried flag. A cooked state without a weight change rate fails with the recipe and ingredient named; `npm run build` already rejects it through the `cooking-state` validation rule.
+- *Measured* (20 recipes): 144 exact, 13 approximations, 2 hard to estimate, 17 not counted, 5 fried ingredients; 15 recipes have at least one approximated, hard-to-estimate, or fried ingredient (as in Stage 0.7). The approximations are 9 raw values for an untabulated method, 3 grilled values for sautéed meat, and 1 removal after cooking (peeled microwaved potato).
+- The calculation reports both raw values and related cooked values as `cooking_not_tabulated`, while `docs/NUTRITION_CALCULATION.md` §7 gives them different error bands (−15 % to +5 % versus ±5 %). Phase 2 needs to distinguish them when it implements ranges.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in

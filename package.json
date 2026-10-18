@@ -16,6 +16,7 @@
     "test:watch": "vitest",
     "check": "npm run lint && npm run typecheck && npm run test && npm run build",
     "validate:content": "node tools/validate-content.ts",
+    "report:composition": "node tools/report-composition.ts",
     "data:extract": "node tools/extract-composition.ts",
     "data:verify-cooking": "node tools/verify-cooking-transcription.ts",
     "eval:coverage": "node tools/evaluate-coverage.ts"

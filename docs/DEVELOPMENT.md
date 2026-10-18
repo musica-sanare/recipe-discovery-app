@@ -20,6 +20,7 @@ npm ci
 |---|---|
 | `npm run dev` | Vite dev server on http://localhost:5173 (no CSP; see ADR-018) |
 | `npm run build` | Validate content, type-check, then build to `dist/` including the generated `_headers` |
+| `npm run report:composition` | Per recipe and ingredient: exact, approximation (with reason), hard to estimate, not counted, fried; fails when a cooked state has no weight change rate |
 | `npm run validate:content` | Content validation only (`tools/content/validate.ts`); prints one line per problem with file, recipe or food, field, and rule |
 | `npm run preview` | Serve `dist/` with the production security headers (http://localhost:4173) |
 | `npm run lint` | ESLint with type-aware rules and module boundaries |

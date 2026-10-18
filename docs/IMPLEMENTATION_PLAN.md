@@ -1,6 +1,13 @@
 # Implementation Plan — Recipe Discovery
 
-Status: **Draft (2026-10-18)**. Each phase ends with checks, a summary to the owner in Japanese, and a commit proposal; the owner performs the commit. A prompt file for each phase (`prompts/`) is written and reviewed before that phase starts.
+Status: **Draft (2026-10-18)**. Each phase ends with checks, a summary to the owner in Japanese, and a commit proposal; a commit is made only after the owner approves it. A prompt file for each phase (`prompts/`) is written and reviewed before that phase starts.
+
+| Phase | Prompt file |
+|---|---|
+| 0 — Validation and foundation | `prompts/00-validation-and-foundation.md` |
+| 1–5 | Written before each phase starts |
+
+`prompts/FIRST_MESSAGE.md` is the kickoff message for a new Claude Code session.
 
 ## Phase 0 — Validation and foundation
 

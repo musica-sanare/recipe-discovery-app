@@ -33,7 +33,8 @@ If any path does not exist, report it rather than silently inventing its content
 
 ### Approval and repository hygiene
 - The repository is private.
-- The owner performs commits, branch creation, remote configuration, and pushes. Never stage, commit, push, create or switch branches, change remotes, rewrite history, or deploy unless the owner explicitly asks for that specific action. An approval covers only the action that was reviewed.
+- Commits require the owner's explicit approval each time. After the owner approves a specific proposed commit (message and file list), Claude may stage and create exactly that commit. An approval covers only the commit that was reviewed.
+- The owner performs branch creation, remote configuration, and pushes. Never push, create or switch branches, change remotes, rewrite history, or deploy unless the owner explicitly asks for that specific action.
 - Never commit secrets, `.env` files, personal data, real API tokens, or generated credentials. Include `.env.example` with placeholders only when environment variables exist.
 - Never commit original third-party data files (for example the MEXT Excel workbook). Only extracted subsets allowed by `docs/DATA_SOURCES.md` are tracked.
 - Keep commits focused. Do not mix unrelated changes.
@@ -56,7 +57,7 @@ If any path does not exist, report it rather than silently inventing its content
 
 ### Proposing a commit
 - Show the complete commit message (subject and full body) together with the list of files to be committed.
-- Wait for the owner, who decides whether and when to commit.
+- Wait for the owner's explicit approval. Then either the owner commits, or Claude creates exactly the approved commit and reports its hash.
 
 ## Engineering rules
 - Use TypeScript strict mode (see `docs/DECISIONS.md` for the exact compiler options once the toolchain is set up).

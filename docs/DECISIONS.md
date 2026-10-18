@@ -154,6 +154,14 @@ Findings:
 - Calculating every recipe from the bundle's composition values and rates gives the same totals as the source data for the five displayed nutrients and the same approximation reasons (`tools/content/bundle.test.ts`).
 - Verified on 2026-10-18 with `vite preview` (production headers): the page fetched `calc-<hash>.json` and `text-ja-<hash>.json`, showed the content and composition versions in the footer, and switching to Spanish fetched only `text-es-<hash>.json` and showed the date as "27 de marzo de 2026"; no console errors. Screenshots and layout were not checked because the preview pane was hidden.
 
+### Stage 1.5 migration and Phase 1 acceptance (2026-10-18)
+- Migration: the 20 validation recipes and the food dictionary were migrated in Stage 1.1 (commit `9ddf73d`). The nutrition snapshot is unchanged since Phase 0 (no differences to explain). `npm run eval:coverage` runs and reproduces the Stage 1.1 results.
+- Acceptance checks:
+  - Invalid content fails `npm run build` with clear messages: a blank Spanish recipe name gave `content/recipes/tortilla_espanola.ts › tortilla_espanola › texts.name.es: text is blank [locale]`. Every rule has a failing fixture (Stage 1.2).
+  - Bundles: two runs of `npm run content:build` produced byte-identical files; the browser validates them before use; sizes are recorded (Stage 1.4); versions are shown in the footer.
+  - `npm run check` (lint, type-check, 191 tests, content validation, build) passes.
+- Layout check with `vite preview` at 375 × 812 px (Spanish): no horizontal overflow (page width 375 px), and the footer with both versions wraps correctly. The error state was checked in UI tests only, not in a browser.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in
@@ -338,3 +346,6 @@ Findings:
 10. Raw-egg dishes and other regionally sensitive food safety rules across the three locales.
 11. Allergen item lists in `shared/content.ts` derived from CAA change notes and municipal notices; confirm against the CAA figure (Stage 0.4 log).
 12. Best-effort allergen lists for cooking sake, wholegrain mustard, Chinese-style stock granules, and karaage coating mix are based on typical ingredients, not product labels (Stage 0.6 log).
+13. Owner review of the English and Spanish texts added or rewritten in Phase 1: split steps, side labels, and the substitution step texts (Stage 1.1 log, ADR-007).
+14. Whether every food must have at least one search alias per locale; validation currently allows empty alias lists (Stage 1.2).
+15. Phase 2 must distinguish raw values from related cooked values for the error bands of `docs/NUTRITION_CALCULATION.md` §7 (Stage 1.3 log).

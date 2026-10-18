@@ -38,6 +38,8 @@ Acceptance:
 
 ## Phase 1 — Content model and build pipeline
 
+Status: **Complete (2026-10-18)**. Results: `docs/DECISIONS.md` "Stage 1.1" to "Stage 1.5" logs, ADR-024 (revised), ADR-026, and ADR-027. Items still open are listed in `docs/DECISIONS.md` "Open questions".
+
 - Content schemas (food, recipe, ingredient, substitution, adjustment rules, allergen links, localized texts, glossary).
 - Build-time validation: schemas, references, locale completeness, allergen links, adjustment bounds.
 - Policy lint for forbidden expressions in three locales.

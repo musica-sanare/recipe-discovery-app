@@ -107,8 +107,9 @@ The assumptions are labelled as such in the basis and revisited when better evid
 
 ## 10. Bounded amount adjustment
 
-- Only ingredients marked adjustable in the recipe can change, within their authored minimum, maximum, and step. Integer units stay integers.
-- Linked ingredients (for example seasonings in the same group) scale proportionally with their group leader.
+- Only ingredients marked adjustable in the recipe can change, within their authored minimum, maximum, and step. Integer units stay integers (amount = count × unit grams).
+- Linked ingredients (for example the seasonings of the main protein) scale proportionally with their leader: amount = default amount × leader amount / leader default amount.
+- Sides (ADR-024, ADR-026): a side that is switched off contributes 0 g, including the ingredients linked to it. The solver may switch off only sides marked for it; otherwise a side's adjustable ingredient stays within its range, whose minimum is the smallest natural portion.
 - The solver searches the allowed grid and picks the solution that meets the targets with the smallest relative change from the default amounts; ties use a stable order. The result is deterministic.
 - If no in-bounds solution meets all targets, the closest solution is shown as "near" with the remaining gaps.
 

@@ -5,6 +5,7 @@
 import { NUTRIENT_IDS, type CompositionFood, type Notation, type NutrientId } from "../../shared/composition.ts";
 import type { Food, FoodState, Recipe, RecipeIngredient } from "../../shared/content.ts";
 import type { CookingMethod } from "../../shared/cooking.ts";
+import { FRIED_STATES } from "../../shared/recipe.ts";
 
 export interface WeightChangeRate {
   readonly ratePercent: number;
@@ -18,9 +19,6 @@ export interface NutritionData {
   /** Weight change rate by cooked food code. */
   readonly rates: ReadonlyMap<string, WeightChangeRate>;
 }
-
-/** Fried states: values depend on oil absorption (docs/NUTRITION_CALCULATION.md §6). */
-const FRIED_STATES: ReadonlySet<FoodState> = new Set<FoodState>(["deep_fry", "tempura", "tonkatsu", "karaage"]);
 
 export type MappingClass = "exact" | "approximation";
 

@@ -5,6 +5,7 @@ import * as z from "zod/mini";
 import { forbiddenExpressions, glossary } from "../../content/glossary.ts";
 import { foods } from "../../content/foods.ts";
 import { recipes } from "../../content/recipes/index.ts";
+import { CONTENT_VERSION } from "../../content/version.ts";
 import { compositionSubsetSchema } from "../../shared/composition.ts";
 import { foodSchema, recipeSchema, type LocalizedText } from "../../shared/content.ts";
 import { cookingDataSchema } from "../../shared/cooking.ts";
@@ -83,23 +84,81 @@ describe.each(recipes.map((recipe) => [recipe.id, recipe] as const))("recipe %s"
     expect(invalid.map((ingredient) => ingredient.key)).toEqual([]);
   });
 
-  it("keeps default amounts inside their adjustment bounds", () => {
-    const outside = recipe.ingredients.filter(
-      ({ adjust, grams }) => adjust !== undefined && (adjust.min > grams || grams > adjust.max || adjust.min > adjust.max),
-    );
-    expect(outside.map((ingredient) => ingredient.key)).toEqual([]);
+  it("keeps default amounts on their adjustment grid and only adjusts main ingredients", () => {
+    const problems = recipe.ingredients.flatMap(({ key, grams, adjust, measure, role }) => {
+      if (!adjust) return [];
+      const issues: string[] = [];
+      if (role !== "main_protein" && role !== "main_carb") issues.push(`${key}: adjustable role ${role}`);
+      if (adjust.min > adjust.max) issues.push(`${key}: min above max`);
+      if (adjust.kind === "grams") {
+        const steps = (grams - adjust.min) / adjust.step;
+        if (grams > adjust.max || steps < 0 || Math.abs(steps - Math.round(steps)) > 1e-9) issues.push(`${key}: ${String(grams)} g off the grid`);
+      } else {
+        const units = grams / adjust.unitGrams;
+        if (!Number.isInteger(units) || units < adjust.min || units > adjust.max) issues.push(`${key}: ${String(grams)} g is not a count in bounds`);
+        if (measure && measure.quantity !== units) issues.push(`${key}: measure ${String(measure.quantity)} differs from count ${String(units)}`);
+      }
+      return issues;
+    });
+    expect(problems).toEqual([]);
   });
 
-  it("references existing ingredients and foods in substitutions", () => {
+  it("can be adjusted by at least one ingredient or side (ADR-023)", () => {
+    expect(recipe.ingredients.some((ingredient) => ingredient.adjust) || recipe.sides.some((side) => side.solverMayRemove)).toBe(true);
+  });
+
+  it("links ingredients only to adjustable leaders, one level deep", () => {
+    const byKey = new Map(recipe.ingredients.map((ingredient) => [ingredient.key, ingredient]));
+    const invalid = recipe.ingredients.filter((ingredient) => {
+      if (ingredient.linkedTo === undefined) return false;
+      const leader = byKey.get(ingredient.linkedTo);
+      return !leader || leader.adjust === undefined || leader.linkedTo !== undefined || ingredient.adjust !== undefined;
+    });
+    expect(invalid.map((ingredient) => ingredient.key)).toEqual([]);
+  });
+
+  it("has unique step, safety note, side, and substitution keys with valid references", () => {
+    const ingredientKeys = new Set(recipe.ingredients.map((ingredient) => ingredient.key));
+    const stepKeys = recipe.steps.map((step) => step.key);
+    const safetyKeys = recipe.safetyNotes.map((note) => note.key);
+    const sideKeys = recipe.sides.map((side) => side.key);
+    const sideIngredients = recipe.sides.flatMap((side) => side.ingredients);
+    for (const keys of [stepKeys, safetyKeys, sideKeys, sideIngredients, recipe.substitutions.map((substitution) => substitution.key)]) {
+      expect(new Set(keys).size).toBe(keys.length);
+    }
+    expect(sideIngredients.filter((key) => !ingredientKeys.has(key))).toEqual([]);
+    expect(recipe.steps.filter((step) => step.side !== undefined && !sideKeys.includes(step.side)).map((step) => step.key)).toEqual([]);
+    const notes = recipe.steps.flatMap((step) => step.notes ?? []);
+    expect(notes.filter((note) => !ingredientKeys.has(note.ingredient))).toEqual([]);
+  });
+
+  it("references existing ingredients, foods, steps, and safety notes in substitutions", () => {
     const keys = new Set(recipe.ingredients.map((ingredient) => ingredient.key));
+    const stepKeys = new Set(recipe.steps.map((step) => step.key));
+    const safetyKeys = new Set(recipe.safetyNotes.map((note) => note.key));
     const invalid = recipe.substitutions.filter(
-      (substitution) => !keys.has(substitution.ingredient) || !(substitution.state in (foodById.get(substitution.food)?.composition ?? {})),
+      (substitution) =>
+        !keys.has(substitution.ingredient) ||
+        !(substitution.state in (foodById.get(substitution.food)?.composition ?? {})) ||
+        (substitution.stepTexts ?? []).some((entry) => !stepKeys.has(entry.step)) ||
+        (substitution.safetyNotes?.replace ?? []).some((note) => !safetyKeys.has(note.key)),
     );
-    expect(invalid).toEqual([]);
+    expect(invalid.map((substitution) => substitution.key)).toEqual([]);
+  });
+
+  it("names a main protein group used by one of its main protein foods", () => {
+    const groups = recipe.ingredients.filter((ingredient) => ingredient.role === "main_protein").map((ingredient) => foodById.get(ingredient.food)?.proteinGroup);
+    expect(groups).toContain(recipe.mainProteinGroup);
   });
 
   it("has at least one food safety note when it handles meat, fish, eggs, or hot oil", () => {
     expect(recipe.safetyNotes.length).toBeGreaterThan(0);
+  });
+});
+
+describe("content version", () => {
+  it("uses the YYYY-MM-DD.n format", () => {
+    expect(CONTENT_VERSION).toMatch(/^\d{4}-\d{2}-\d{2}\.[1-9]\d*$/);
   });
 });
 

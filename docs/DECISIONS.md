@@ -127,6 +127,15 @@ Findings:
 - Approximated or fried ingredients contribute more than 10 % of energy, protein, or fat in 15 of 20 recipes (more than 30 % in 13); in recipes whose main protein is approximated, 76–89 % of the protein comes from it. A share threshold would therefore show ranges for most recipes.
 - Rounding the displayed values (kcal to 10, grams to integers) before evaluating fit changed the status in 2 of 60 recipe-preset combinations.
 
+### Phase 1 start (2026-10-18)
+- Re-check of ADR-016 (npm registry): no `i18next` release after 26.5.2 and no `react-i18next` release after 17.1.0; about 15 hours since the burst, so the pins stay.
+- Re-check of ADR-017 (npm registry): `typescript-eslint` 8.71.2 (latest) and 8.71.3-alpha.13 (canary) still declare peer `typescript >=4.8.4 <6.1.0`; TypeScript stays at `~6.0.3`.
+
+### Stage 1.1 content schema (2026-10-18)
+- The owner reviewed the schema proposal and decided: sides instead of a "staple" rule (below), quick derived from ≤ 20 minutes, egg counts for the two recipes without an adjustable ingredient, the slow-frying marker on the tortilla's potato and onion, `mainProteinGroup` by the larger protein source (mapo tofu: chicken; champuru: soy), a date-based content version, and the number alone for `piece` in English and Spanish. Details: ADR-026.
+- Migration of the 20 validation recipes: default amounts unchanged, so the nutrition snapshot is identical. 13 recipes are now quick (7 newly, all at 20 minutes). Steps that mixed the dish with its sides were split or reworded so that each side's preparation is its own step; serving lines no longer name sides (the UI lists the sides that are on). The tuna and tofu bowl treats its rice as part of the dish (minimum 100 g), unlike the earlier proposal.
+- `npm run eval:coverage` with sides (rice and potatoes only switched off by the solver), whole units, and links: the met counts after adjustment equal Stage 0.6 in every scenario (S1 10, S2 8, S3 11, S4 7, S5 10, S6 5, S7 1, S8 5); "near" rises in S3 (2 → 4), S6 (0 → 1), and S7 (0 → 1) because rice can no longer drop below 100 g per serving. No solution switches a side off. The unnatural steak result (rice 150 → 40 g) became beef 200 → 150 g. Distinct main proteins are now counted by group.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in
@@ -258,7 +267,8 @@ Findings:
 
 ## ADR-024: Bounded adjustment in the MVP
 - Status: **Accepted** (owner accepted the Stage 0.6 recommendation, 2026-10-18)
-- Decision: include deterministic "fit to my targets" in the MVP, limited to the authored adjustable ingredients (main protein and staple carbohydrate). Add portion rules before Phase 3: a staple is either 0 g or at least an authored minimum portion; linked seasonings scale with their group (Phase 1 schema). The selection keeps the best status and the smallest relative change, as in the evaluation tool.
+- Decision: include deterministic "fit to my targets" in the MVP, limited to the authored adjustable ingredients (main protein, and carbohydrates that are part of the dish or a side). Linked ingredients scale with their leader. The selection keeps the best status and the smallest relative change, as in the evaluation tool.
+- Revised (owner, 2026-10-18, Stage 1.1): the "staple is either 0 g or at least a minimum portion" rule is replaced by **sides** (ADR-026). Things served with the dish (rice, boiled potatoes, a vegetable side) can be switched on and off; "fit to my targets" may switch off only sides marked for it (carbohydrate sides) and otherwise keeps a side's amount within its authored range, whose minimum is the smallest natural portion (rice: 100 g per serving). Vegetable sides are switched off only by the user. Carbohydrates that belong to the dish (rice in a rice bowl, pasta, toast) are adjustable within bounds but never removed.
 - Evidence: Stage 0.6 log (adjustment roughly doubles the met recipes; unnatural results without portion rules).
 
 ## ADR-025: Fit tolerance, display rounding, ranges, and presets
@@ -268,6 +278,21 @@ Findings:
 - Ranges: per-ingredient error bands by approximation reason, summed per nutrient; a range is shown when wider than twice the display unit. Bands and their evidence: `docs/NUTRITION_CALCULATION.md` §7 (two bands are measured, three are assumptions).
 - Presets (per meal, labelled as examples): cut 450–650 kcal, protein ≥ 35 g, fat ≤ 15 g; maintain 550–750 kcal, ≥ 30 g, ≤ 20 g; bulk 750–950 kcal, ≥ 45 g, ≤ 30 g. With bounded adjustment, 7–11 of the 20 validation recipes meet each preset (Stage 0.6).
 - Evidence: Stage 0.3, 0.6, and 0.7 logs.
+
+## ADR-026: MVP content schema
+- Status: **Accepted** (owner, 2026-10-18, Stage 1.1)
+- Decision (`shared/content.ts`):
+  - **Adjustment**: `adjust` is `{ kind: "grams", min, max, step }` or `{ kind: "count", unitGrams, min, max }` for whole units (eggs, cans, slices); only `main_protein` and `main_carb` ingredients have it, and the default amount lies on the grid. `linkedTo` makes an ingredient scale in proportion to an adjustable leader (one level).
+  - **Sides**: `sides` lists things served with the dish, each with a localized label, its ingredients, and `solverMayRemove`. Switching a side off sets its ingredients and their linked ingredients to 0 g. Steps that only prepare a side carry `side` and are hidden when it is off. Cooking time and equipment stay those of the full recipe (a cautious limitation).
+  - **Hard to estimate**: `estimate: "slow_frying"` marks cooking that no table value represents (slow frying in a lot of oil); the range rules of `docs/NUTRITION_CALCULATION.md` §7 apply. It does not change the point value.
+  - **Household measures**: content stores the unit and quantity (a multiple of 1/12); labels come from the UI catalogs. Units: piece, tbsp, tsp, clove, slice, pinch, knob, block, can, stalk. For `piece`, English and Spanish show the number alone.
+  - **Steps and safety notes** have stable keys. Steps may carry notes shown from an amount upward (`atLeastGrams`, whole recipe after scaling).
+  - **Substitutions** have keys and may replace step texts and safety notes, add safety notes, change minutes, and give their own bounds.
+  - **Metadata**: `mainProteinGroup` (chicken, pork, beef, fish, egg, soy) must match the `proteinGroup` of one main-protein food; authored tags are `batch`, `no_cook`, `breakfast`. "Quick" (≤ 20 minutes) and "fried" are derived (`shared/recipe.ts`).
+  - **ADR-023 adjustability**: every recipe has an adjustable ingredient or a side the solver may switch off.
+  - **Versioning**: `content/version.ts` holds `CONTENT_VERSION` as `YYYY-MM-DD.n`, updated with every content change; bundle compatibility is a separate schema version (Stage 1.4).
+- Rationale: portion rules without unnatural amounts (Stage 0.6), traceable estimates for unrepresented cooking, and derived flags that cannot contradict the minutes or states.
+- Alternatives: a "staple" with a removable minimum portion (replaced by sides at the owner's request); semver for content (no meaningful major/minor distinction for content).
 
 ---
 

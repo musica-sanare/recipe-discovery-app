@@ -56,14 +56,16 @@ test/, e2e/             Tests
 docs/                   Documentation
 ```
 
-## 3. Data model (outline, *Proposed*)
+## 3. Data model (outline)
 
 Details are finalized in Phase 1 and documented in `docs/NUTRITION_CALCULATION.md` and the content schemas.
 
 - **Food**: locale-neutral `id` (stable slug); `composition` references (food code and data version per cooking state, for example `raw` and `grilled`); weight change rates per cooking method; refuse rate; allergen links with confidence (`contains`, `may_contain`, `unknown`); localized `names` and search `aliases` for `ja`, `en`, `es`.
-- **Recipe**: `id`; time; effort; cuisine and style tags; equipment; servings; ingredients; steps; food safety notes; substitutions; adjustment rules; localized texts.
-- **RecipeIngredient**: `foodId`; raw edible grams; cooking state and method; authored household measure for display (for example 1 egg = 50 g edible portion); role (main protein, main carbohydrate, vegetable, fat, seasoning); adjustment bounds and step; link group.
-- **Substitution**: from food to food with a ratio and localized notes.
+- **Recipe**: `id`; time; effort; cuisine; goals; main protein group; tags; equipment; servings; ingredients; sides; keyed steps and food safety notes; substitutions; localized texts. "Quick" and "fried" are derived.
+- **RecipeIngredient**: food ID; raw edible grams; cooking state and method; household measure (unit and quantity); role; adjustment bounds (grams or whole units); `linkedTo` leader; hard-to-estimate marker.
+- **Side**: localized label, ingredients, and whether "fit to my targets" may switch it off.
+- **Substitution**: from food to food with a ratio, optional bounds, and replaced step texts and safety notes.
+- Schema: `shared/content.ts` (ADR-026).
 - **Composition subset**: per food code, the selected nutrient values with their notation flags (`measured`, `estimated`, `trace`, `zero`, `unmeasured`), source version, and checksum manifest.
 
 ## 4. Localization

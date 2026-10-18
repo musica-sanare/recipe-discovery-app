@@ -120,7 +120,7 @@ Recipe detail:
 - All recalculation runs in the browser with deterministic functions and updates instantly, showing differences from the previous state (for example "protein +8 g, fat +3 g") and status changes.
 - Servings scale every ingredient.
 - Bounded adjustment: each recipe defines which ingredients may change, their minimum and maximum, step size, and linked ingredients (for example seasonings scale with the main ingredient). Integer units are respected (for example whole eggs). Steps may define notes that appear above a threshold (for example "use a larger pan").
-- "Fit to my targets" (in the MVP, ADR-024): selects the in-bounds amounts of the main protein and staple that meet the targets with the smallest change from the default amounts. A staple is either removed or kept at least at its authored minimum portion.
+- "Fit to my targets" (in the MVP, ADR-024): selects the in-bounds amounts of the main protein and carbohydrate that meet the targets with the smallest change from the default amounts. Sides (rice, potatoes, vegetable sides) can be switched on and off; the solver may switch off carbohydrate sides only, and a side that stays on keeps at least its authored minimum portion (ADR-026).
 - Substitutions come only from each recipe's predefined substitution list; they may switch related notes and times.
 
 ## 9. Nutrition display and uncertainty
@@ -196,7 +196,7 @@ Defined in `docs/CONTENT_POLICY.md`. Summary:
 | Display rounding | **decided**: kcal to 10, protein/fat/carbohydrate to whole grams; status from full precision (ADR-025) | Phase 0 |
 | Range display rule | **decided**: per-ingredient error bands by reason; range shown when wider than twice the display unit (ADR-025) | Phase 0 |
 | Initial recipe count | **decided**: about 60, with composition rules (ADR-023) | Phase 0 |
-| Amount adjustment scope | **decided**: main protein and staple only, with portion rules (ADR-024) | Phase 0 |
+| Amount adjustment scope | **decided**: main protein and carbohydrate only, with sides that can be switched off (ADR-024, revised in Phase 1) | Phase 0 |
 | Browser storage of targets and viewed recipes | undecided (opt-in local storage is a candidate) | Phase 4 |
 | Preset values | cut 450–650 kcal / P ≥ 35 g / F ≤ 15 g; maintain 550–750 / ≥ 30 / ≤ 20; bulk 750–950 / ≥ 45 / ≤ 30 | Phase 0 (decided, ADR-025) |
 

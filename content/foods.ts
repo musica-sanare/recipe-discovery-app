@@ -11,6 +11,7 @@ export const foods: readonly Food[] = [
     aliases: { ja: ["鶏むね", "とりむね", "鶏胸肉", "むね肉"], en: ["chicken breast"], es: ["pechuga de pollo", "pechuga"] },
     composition: { raw: "11220", grill: "11288" },
     allergens: [{ allergen: "chicken", confidence: "contains" }],
+    proteinGroup: "chicken",
   },
   {
     id: "chicken_thigh",
@@ -18,6 +19,7 @@ export const foods: readonly Food[] = [
     aliases: { ja: ["鶏もも", "とりもも", "もも肉"], en: ["chicken thigh"], es: ["muslo de pollo", "contramuslo"] },
     composition: { raw: "11224", boil: "11226", grill: "11225", karaage: "11290" },
     allergens: [{ allergen: "chicken", confidence: "contains" }],
+    proteinGroup: "chicken",
   },
   {
     id: "chicken_mince",
@@ -25,6 +27,7 @@ export const foods: readonly Food[] = [
     aliases: { ja: ["鶏ミンチ", "とりひき肉"], en: ["minced chicken", "chicken mince"], es: ["pollo picado", "carne molida de pollo"] },
     composition: { raw: "11230", grill: "11291" },
     allergens: [{ allergen: "chicken", confidence: "contains" }],
+    proteinGroup: "chicken",
   },
   {
     id: "pork_fillet",
@@ -32,6 +35,7 @@ export const foods: readonly Food[] = [
     aliases: { ja: ["豚ヒレ", "ヒレ肉", "豚フィレ"], en: ["pork fillet"], es: ["lomo de cerdo", "filete de cerdo"] },
     composition: { raw: "11140", grill: "11278", tonkatsu: "11279" },
     allergens: [{ allergen: "pork", confidence: "contains" }],
+    proteinGroup: "pork",
   },
   {
     id: "pork_leg",
@@ -39,6 +43,7 @@ export const foods: readonly Food[] = [
     aliases: { ja: ["豚もも", "ぶたもも"], en: ["pork leg", "lean pork"], es: ["pierna de cerdo", "jamón fresco de cerdo"] },
     composition: { raw: "11131", boil: "11133", grill: "11132" },
     allergens: [{ allergen: "pork", confidence: "contains" }],
+    proteinGroup: "pork",
   },
   {
     id: "pork_loin",
@@ -46,6 +51,7 @@ export const foods: readonly Food[] = [
     aliases: { ja: ["豚ロース", "ロース肉"], en: ["pork loin"], es: ["lomo de cerdo", "cinta de lomo"] },
     composition: { raw: "11127" },
     allergens: [{ allergen: "pork", confidence: "contains" }],
+    proteinGroup: "pork",
   },
   {
     id: "beef_round",
@@ -53,6 +59,7 @@ export const foods: readonly Food[] = [
     aliases: { ja: ["牛もも", "ぎゅうもも"], en: ["beef round", "lean beef"], es: ["ternera magra", "carne de res magra", "bola de res"] },
     composition: { raw: "11076", boil: "11271", grill: "11270" },
     allergens: [{ allergen: "beef", confidence: "contains" }],
+    proteinGroup: "beef",
   },
   {
     id: "salmon",
@@ -60,6 +67,7 @@ export const foods: readonly Food[] = [
     aliases: { ja: ["サーモン", "鮭", "さけ", "しゃけ"], en: ["salmon"], es: ["salmón"] },
     composition: { raw: "10438", simmer: "10439", steam: "10440", microwave: "10441", grill: "10442", saute: "10443", tempura: "10444" },
     allergens: [{ allergen: "salmon", confidence: "contains" }],
+    proteinGroup: "fish",
   },
   {
     id: "cod",
@@ -67,6 +75,7 @@ export const foods: readonly Food[] = [
     aliases: { ja: ["たら", "鱈", "まだら"], en: ["cod"], es: ["bacalao"] },
     composition: { raw: "10205", grill: "10206" },
     allergens: [],
+    proteinGroup: "fish",
   },
   {
     id: "tuna_canned",
@@ -74,6 +83,7 @@ export const foods: readonly Food[] = [
     aliases: { ja: ["ツナ", "ツナ缶", "シーチキン"], en: ["tuna", "canned tuna"], es: ["atún", "atún al natural"] },
     composition: { as_is: "10260" },
     allergens: [{ allergen: "soybean", confidence: "may_contain" }],
+    proteinGroup: "fish",
   },
   {
     id: "egg",
@@ -81,6 +91,7 @@ export const foods: readonly Food[] = [
     aliases: { ja: ["たまご", "玉子", "鶏卵"], en: ["eggs", "whole egg"], es: ["huevos"] },
     composition: { raw: "12004", boil: "12005", poach: "12006", fry_egg: "12021", scramble: "12022", deep_fry: "12023" },
     allergens: [{ allergen: "egg", confidence: "contains" }],
+    proteinGroup: "egg",
   },
   {
     id: "tofu_firm",
@@ -88,6 +99,7 @@ export const foods: readonly Food[] = [
     aliases: { ja: ["豆腐", "もめん豆腐"], en: ["tofu"], es: ["tofu"] },
     composition: { raw: "04032" },
     allergens: [{ allergen: "soybean", confidence: "contains" }],
+    proteinGroup: "soy",
   },
   {
     id: "tofu_silken",
@@ -95,6 +107,7 @@ export const foods: readonly Food[] = [
     aliases: { ja: ["豆腐", "きぬ豆腐"], en: ["soft tofu", "tofu"], es: ["tofu suave", "tofu"] },
     composition: { raw: "04033" },
     allergens: [{ allergen: "soybean", confidence: "contains" }],
+    proteinGroup: "soy",
   },
   {
     id: "rice_cooked",

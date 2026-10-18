@@ -49,9 +49,10 @@ docs/, prompts/         Documentation and phase prompts
 
 ## Adding content
 1. Add foods to `content/foods.ts` with codes from `node tools/extract-composition.ts --search <regex>`; add the codes (and cooked/raw pairs with transcribed rates) to `data/composition/` as described in `docs/DATA_SOURCES.md`.
-2. Add a recipe file under `content/recipes/` and register it in `content/recipes/index.ts`.
-3. Write `ja`, `en`, and `es` texts; follow `content/glossary.ts` and `docs/CONTENT_POLICY.md`.
-4. `npm test` validates references, states, bounds, glossary use, and forbidden expressions.
+2. Add a recipe file under `content/recipes/` and register it in `content/recipes/index.ts`. The schema is `shared/content.ts` (ADR-026): give steps and safety notes keys, list what is served with the dish under `sides`, link seasonings to the ingredient they scale with (`linkedTo`), and give every recipe at least one adjustable ingredient or solver-removable side.
+3. Write `ja`, `en`, and `es` texts; follow `content/glossary.ts` and `docs/CONTENT_POLICY.md`. Serving steps do not name sides; the UI lists the sides that are on.
+4. Update `CONTENT_VERSION` in `content/version.ts`.
+5. `npm test` validates references, states, bounds, links, sides, glossary use, and forbidden expressions.
 
 ## Adding UI text
 1. Add the key and Japanese text to `src/i18n/messages/ja.ts`.

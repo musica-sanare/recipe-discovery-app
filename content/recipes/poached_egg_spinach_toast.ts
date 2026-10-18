@@ -12,14 +12,15 @@ export const recipe: Recipe = {
   },
   cuisine: "western",
   goals: ["maintain"],
-  tags: ["quick", "breakfast"],
+  mainProteinGroup: "egg",
+  tags: ["breakfast"],
   minutes: 10,
   effort: 2,
   equipment: ["stove", "frying_pan", "pot", "oven_toaster"],
   servings: 1,
   ingredients: [
-    { key: "bread", food: "bread", grams: 60, state: "as_is", measure: { unit: "slice", quantity: 1 }, role: "main_carb" },
-    { key: "egg", food: "egg", grams: 100, state: "poach", measure: { unit: "piece", quantity: 2 }, role: "main_protein" },
+    { key: "bread", food: "bread", grams: 60, state: "as_is", measure: { unit: "slice", quantity: 1 }, role: "main_carb", adjust: { kind: "count", unitGrams: 60, min: 1, max: 2 } },
+    { key: "egg", food: "egg", grams: 100, state: "poach", measure: { unit: "piece", quantity: 2 }, role: "main_protein", adjust: { kind: "count", unitGrams: 50, min: 1, max: 3 } },
     {
       key: "vinegar",
       food: "rice_vinegar",
@@ -40,33 +41,49 @@ export const recipe: Recipe = {
     { key: "salt", food: "salt", grams: 0.5, state: "as_is", measure: { unit: "pinch", quantity: 1 }, role: "seasoning" },
     { key: "pepper", food: "black_pepper", grams: 0.2, state: "as_is", measure: { unit: "pinch", quantity: 1 }, role: "seasoning" },
   ],
+  sides: [],
   steps: [
     {
-      ja: "鍋に湯を沸かして酢を加え、火を弱めて卵を1個ずつそっと割り入れ、白身が固まるまで3〜4分ゆでて取り出します。",
-      en: "Bring water to a simmer with the vinegar, gently crack in the eggs one at a time, and poach for 3 to 4 minutes until the whites are set.",
-      es: "Lleva agua con el vinagre a un hervor suave, casca los huevos de uno en uno con cuidado y escálfalos de 3 a 4 minutos hasta que cuajen las claras.",
+      key: "poach",
+      text: {
+        ja: "鍋に湯を沸かして酢を加え、火を弱めて卵を1個ずつそっと割り入れ、白身が固まるまで3〜4分ゆでて取り出します。",
+        en: "Bring water to a simmer with the vinegar, gently crack in the eggs one at a time, and poach for 3 to 4 minutes until the whites are set.",
+        es: "Lleva agua con el vinagre a un hervor suave, casca los huevos de uno en uno con cuidado y escálfalos de 3 a 4 minutos hasta que cuajen las claras.",
+      },
     },
     {
-      ja: "ほうれん草をオリーブ油でしんなりするまで炒め、塩をふります。",
-      en: "Sauté the spinach in olive oil until wilted and season with salt.",
-      es: "Saltea las espinacas en aceite de oliva hasta que se ablanden y sálalas.",
+      key: "spinach",
+      text: {
+        ja: "ほうれん草をオリーブ油でしんなりするまで炒め、塩をふります。",
+        en: "Sauté the spinach in olive oil until wilted and season with salt.",
+        es: "Saltea las espinacas en aceite de oliva hasta que se ablanden y sálalas.",
+      },
     },
     {
-      ja: "食パンにチーズをのせてトースターで焼きます。",
-      en: "Top the bread with the cheese and toast it in the toaster oven.",
-      es: "Pon el queso sobre el pan y tuéstalo en el horno tostador.",
+      key: "toast",
+      text: {
+        ja: "食パンにチーズをのせてトースターで焼きます。",
+        en: "Top the bread with the cheese and toast it in the toaster oven.",
+        es: "Pon el queso sobre el pan y tuéstalo en el horno tostador.",
+      },
     },
     {
-      ja: "ほうれん草とポーチドエッグをのせ、こしょうをふります。",
-      en: "Add the spinach and poached eggs and finish with pepper.",
-      es: "Añade las espinacas y los huevos escalfados y termina con pimienta.",
+      key: "assemble",
+      text: {
+        ja: "ほうれん草とポーチドエッグをのせ、こしょうをふります。",
+        en: "Add the spinach and poached eggs and finish with pepper.",
+        es: "Añade las espinacas y los huevos escalfados y termina con pimienta.",
+      },
     },
   ],
   safetyNotes: [
     {
-      ja: "黄身がやわらかい卵は、妊娠中の方、乳幼児、高齢の方、体調のすぐれない方には向きません。その場合は黄身まで固まるまで加熱してください。",
-      en: "Eggs with runny yolks are not recommended for pregnant people, young children, older adults, or anyone unwell; for them, cook until the yolks are firm.",
-      es: "Los huevos con la yema líquida no se recomiendan para embarazadas, niños pequeños, personas mayores o enfermas; en esos casos, cocínalos hasta que la yema esté firme.",
+      key: "soft_yolk",
+      text: {
+        ja: "黄身がやわらかい卵は、妊娠中の方、乳幼児、高齢の方、体調のすぐれない方には向きません。その場合は黄身まで固まるまで加熱してください。",
+        en: "Eggs with runny yolks are not recommended for pregnant people, young children, older adults, or anyone unwell; for them, cook until the yolks are firm.",
+        es: "Los huevos con la yema líquida no se recomiendan para embarazadas, niños pequeños, personas mayores o enfermas; en esos casos, cocínalos hasta que la yema esté firme.",
+      },
     },
   ],
   substitutions: [],

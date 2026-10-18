@@ -1,8 +1,9 @@
 /**
  * Phase 0 Stage 0.6: how many validation recipes meet representative targets with
  * fixed amounts and with bounded amount adjustment (docs/IMPLEMENTATION_PLAN.md
- * "Phase 0", item 6). Evaluation only; the product's fit and adjustment logic is
- * built in Phase 3.
+ * "Phase 0", item 6). Adjustment covers authored bounds, whole units, linked
+ * ingredients, and sides the solver may switch off (ADR-024, ADR-026). Evaluation
+ * only; the product's fit and adjustment logic is built in Phase 3.
  *
  *   node tools/evaluate-coverage.ts
  */
@@ -13,7 +14,7 @@ import { foods } from "../content/foods.ts";
 import { recipes } from "../content/recipes/index.ts";
 import { calculateRecipe, type NutritionData } from "../domain/nutrition/calculate.ts";
 import { compositionSubsetSchema } from "../shared/composition.ts";
-import type { Allergen, Recipe } from "../shared/content.ts";
+import type { Allergen, Recipe, RecipeIngredient } from "../shared/content.ts";
 import { cookingDataSchema } from "../shared/cooking.ts";
 
 const dataDir = path.join(import.meta.dirname, "..", "data", "composition");
@@ -114,34 +115,69 @@ interface Fit {
 
 const RANK: Record<Status, number> = { met: 0, near: 1, not_met: 2 };
 
-/** Grid search inside authored bounds; best status first, then the smallest relative change. */
+/** Amounts the solver may choose for an adjustable ingredient: the grams grid or whole units. */
+function choices(ingredient: RecipeIngredient): number[] {
+  const adjust = ingredient.adjust;
+  if (!adjust) return [ingredient.grams];
+  const values: number[] = [];
+  if (adjust.kind === "grams") {
+    for (let value = adjust.min; value <= adjust.max + 1e-9; value += adjust.step) values.push(Number(value.toFixed(6)));
+  } else {
+    for (let count = adjust.min; count <= adjust.max; count++) values.push(count * adjust.unitGrams);
+  }
+  return values;
+}
+
+/** Grams of every ingredient for chosen leader amounts and switched-off sides; linked ingredients scale with their leader. */
+function resolve(recipe: Recipe, chosen: ReadonlyMap<string, number>, off: ReadonlySet<string>): Map<string, number> {
+  const removed = new Set(recipe.sides.filter((side) => off.has(side.key)).flatMap((side) => side.ingredients));
+  const direct = (ingredient: RecipeIngredient) => (removed.has(ingredient.key) ? 0 : (chosen.get(ingredient.key) ?? ingredient.grams));
+  const byKey = new Map(recipe.ingredients.map((ingredient) => [ingredient.key, ingredient]));
+  const amounts = new Map<string, number>();
+  for (const ingredient of recipe.ingredients) {
+    const leader = ingredient.linkedTo === undefined ? undefined : byKey.get(ingredient.linkedTo);
+    const grams = leader && !removed.has(ingredient.key) ? (ingredient.grams * direct(leader)) / leader.grams : direct(ingredient);
+    amounts.set(ingredient.key, grams);
+  }
+  return amounts;
+}
+
+/** Grid search inside authored bounds and side switches; best status first, then the smallest relative change. */
 function bestAdjusted(recipe: Recipe, targets: Targets): Fit {
   const contributions = perGram(recipe);
   const adjustable = recipe.ingredients.filter((ingredient) => ingredient.adjust !== undefined);
-  const grids = adjustable.map((ingredient) => {
-    const { min, max, step } = ingredient.adjust ?? { min: ingredient.grams, max: ingredient.grams, step: 1 };
-    const values: number[] = [];
-    for (let value = min; value <= max + 1e-9; value += step) values.push(Number(value.toFixed(6)));
-    return values;
-  });
+  const removable = recipe.sides.filter((side) => side.solverMayRemove);
+  const changeable = new Set([...adjustable.map((ingredient) => ingredient.key), ...removable.flatMap((side) => side.ingredients)]);
+  const grids = adjustable.map(choices);
   let best: { fit: Fit; cost: number } | undefined;
-  const choose = (index: number, amounts: Map<string, number>) => {
+  const consider = (chosen: ReadonlyMap<string, number>, off: ReadonlySet<string>) => {
+    const amounts = resolve(recipe, chosen, off);
+    const point = evaluate(recipe, amounts, contributions);
+    const fitStatus = status(point, targets);
+    const cost = recipe.ingredients
+      .filter((ingredient) => changeable.has(ingredient.key))
+      .reduce((sum, ingredient) => sum + Math.abs((amounts.get(ingredient.key) ?? ingredient.grams) - ingredient.grams) / ingredient.grams, 0);
+    if (!best || RANK[fitStatus] < RANK[best.fit.status] || (RANK[fitStatus] === RANK[best.fit.status] && cost < best.cost - 1e-9)) {
+      const changes = [
+        ...removable.filter((side) => off.has(side.key)).map((side) => `${side.key} off`),
+        ...adjustable
+          .filter((ingredient) => (amounts.get(ingredient.key) ?? 0) > 0 && amounts.get(ingredient.key) !== ingredient.grams)
+          .map((ingredient) => `${ingredient.key} ${String(ingredient.grams)}→${String(amounts.get(ingredient.key))}`),
+      ];
+      best = { fit: { status: fitStatus, point, changes }, cost };
+    }
+  };
+  const choose = (index: number, chosen: Map<string, number>) => {
     if (index === adjustable.length) {
-      const point = evaluate(recipe, amounts, contributions);
-      const fitStatus = status(point, targets);
-      const cost = adjustable.reduce((sum, ingredient) => sum + Math.abs((amounts.get(ingredient.key) ?? ingredient.grams) - ingredient.grams) / ingredient.grams, 0);
-      if (!best || RANK[fitStatus] < RANK[best.fit.status] || (RANK[fitStatus] === RANK[best.fit.status] && cost < best.cost - 1e-9)) {
-        const changes = adjustable
-          .filter((ingredient) => amounts.get(ingredient.key) !== ingredient.grams)
-          .map((ingredient) => `${ingredient.key} ${String(ingredient.grams)}→${String(amounts.get(ingredient.key))}`);
-        best = { fit: { status: fitStatus, point, changes }, cost };
+      for (let mask = 0; mask < 2 ** removable.length; mask++) {
+        consider(chosen, new Set(removable.filter((_, bit) => (mask >> bit) & 1).map((side) => side.key)));
       }
       return;
     }
     for (const value of grids[index] ?? []) {
       const ingredient = adjustable[index];
-      if (ingredient) amounts.set(ingredient.key, value);
-      choose(index + 1, amounts);
+      if (ingredient) chosen.set(ingredient.key, value);
+      choose(index + 1, chosen);
     }
   };
   choose(0, new Map());
@@ -162,8 +198,6 @@ function eligible(recipe: Recipe, scenario: Scenario): boolean {
   }
   return true;
 }
-
-const mainProtein = (recipe: Recipe) => recipe.ingredients.find((ingredient) => ingredient.role === "main_protein")?.food ?? "?";
 
 /** Smallest library size N with P(X >= 3) >= 0.9 for X ~ Binomial(N, p). */
 function neededFor90(p: number): number | null {
@@ -188,10 +222,10 @@ for (const scenario of scenarios) {
   const metFixed = fixed.filter((entry) => entry.fit === "met");
   const metAdjusted = adjusted.filter((entry) => entry.fit.status === "met");
   const nearAdjusted = adjusted.filter((entry) => entry.fit.status === "near");
-  const distinct = new Set(metAdjusted.map((entry) => mainProtein(entry.recipe))).size;
+  const distinct = new Set(metAdjusted.map((entry) => entry.recipe.mainProteinGroup)).size;
   const p = metAdjusted.length / recipes.length;
   console.log(scenario.name);
-  console.log(`  eligible ${String(pool.length)}/${String(recipes.length)}; met fixed ${String(metFixed.length)}; met adjusted ${String(metAdjusted.length)} (near ${String(nearAdjusted.length)}); distinct main proteins among met ${String(distinct)}`);
+  console.log(`  eligible ${String(pool.length)}/${String(recipes.length)}; met fixed ${String(metFixed.length)}; met adjusted ${String(metAdjusted.length)} (near ${String(nearAdjusted.length)}); distinct main protein groups among met ${String(distinct)}`);
   console.log(`  share of library met with adjustment ${(p * 100).toFixed(0)} %; library size for >=3 met with 90 % probability ≈ ${String(neededFor90(p) ?? "n/a")}`);
   for (const entry of metAdjusted) {
     const { point, changes } = entry.fit;

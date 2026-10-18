@@ -12,13 +12,14 @@ export const recipe: Recipe = {
   },
   cuisine: "japanese",
   goals: ["bulk"],
-  tags: ["fried"],
+  mainProteinGroup: "pork",
+  tags: [],
   minutes: 35,
   effort: 3,
   equipment: ["stove", "deep_pan"],
   servings: 1,
   ingredients: [
-    { key: "pork", food: "pork_fillet", grams: 150, state: "tonkatsu", role: "main_protein", adjust: { min: 120, max: 220, step: 10 } },
+    { key: "pork", food: "pork_fillet", grams: 150, state: "tonkatsu", role: "main_protein", adjust: { kind: "grams", min: 120, max: 220, step: 10 } },
     {
       key: "batter",
       food: "tempura_flour",
@@ -26,6 +27,7 @@ export const recipe: Recipe = {
       state: "as_is",
       measure: { unit: "tbsp", quantity: 1 },
       role: "coating",
+      linkedTo: "pork",
       includedIn: "pork",
       note: {
         ja: "水で溶いて衣にします。成分表のとんかつも同じ衣を使っています。",
@@ -33,7 +35,7 @@ export const recipe: Recipe = {
         es: "Mézclala con agua para hacer el rebozado. El tonkatsu de las tablas usa el mismo rebozado.",
       },
     },
-    { key: "panko", food: "panko", grams: 16, state: "as_is", measure: { unit: "tbsp", quantity: 5 }, role: "coating", includedIn: "pork" },
+    { key: "panko", food: "panko", grams: 16, state: "as_is", measure: { unit: "tbsp", quantity: 5 }, role: "coating", linkedTo: "pork", includedIn: "pork" },
     {
       key: "frying_oil",
       food: "vegetable_oil",
@@ -49,41 +51,72 @@ export const recipe: Recipe = {
     },
     { key: "cabbage", food: "cabbage", grams: 80, state: "raw", role: "vegetable" },
     { key: "tomato", food: "tomato", grams: 50, state: "raw", role: "vegetable" },
-    { key: "mustard", food: "grain_mustard", grams: 5, state: "as_is", measure: { unit: "tsp", quantity: 1 }, role: "seasoning" },
-    { key: "rice", food: "rice_cooked", grams: 220, state: "as_is", role: "main_carb", adjust: { min: 0, max: 330, step: 10 } },
+    { key: "mustard", food: "grain_mustard", grams: 5, state: "as_is", measure: { unit: "tsp", quantity: 1 }, role: "seasoning", linkedTo: "pork" },
+    { key: "rice", food: "rice_cooked", grams: 220, state: "as_is", role: "main_carb", adjust: { kind: "grams", min: 100, max: 330, step: 10 } },
+  ],
+  sides: [
+    { key: "rice", label: { ja: "ご飯", en: "Rice", es: "Arroz" }, ingredients: ["rice"], solverMayRemove: true },
+    { key: "cabbage_tomato", label: { ja: "せん切りキャベツとトマト", en: "Shredded cabbage and tomato", es: "Repollo en juliana y tomate" }, ingredients: ["cabbage", "tomato"], solverMayRemove: false },
   ],
   steps: [
     {
-      ja: "豚ヒレ肉を1.5cm厚さに切り、軽くたたいて厚みをそろえます。",
-      en: "Cut the pork tenderloin into 1.5 cm slices and pound lightly to an even thickness.",
-      es: "Corta el solomillo en filetes de 1,5 cm y golpéalos ligeramente para igualar el grosor.",
+      key: "prep",
+      text: {
+        ja: "豚ヒレ肉を1.5cm厚さに切り、軽くたたいて厚みをそろえます。",
+        en: "Cut the pork tenderloin into 1.5 cm slices and pound lightly to an even thickness.",
+        es: "Corta el solomillo en filetes de 1,5 cm y golpéalos ligeramente para igualar el grosor.",
+      },
     },
     {
-      ja: "天ぷら粉を同量の水で溶き、豚肉にからめてからパン粉をしっかりつけます。",
-      en: "Mix the tempura flour with an equal amount of water, dip the pork in it, and press on the panko.",
-      es: "Mezcla la harina para tempura con la misma cantidad de agua, pasa el cerdo por ella y cúbrelo bien con el panko.",
+      key: "coat",
+      text: {
+        ja: "天ぷら粉を同量の水で溶き、豚肉にからめてからパン粉をしっかりつけます。",
+        en: "Mix the tempura flour with an equal amount of water, dip the pork in it, and press on the panko.",
+        es: "Mezcla la harina para tempura con la misma cantidad de agua, pasa el cerdo por ella y cúbrelo bien con el panko.",
+      },
     },
     {
-      ja: "揚げ油を170℃に熱し、4〜5分かけてきつね色に揚げ、油を切ります。",
-      en: "Heat the oil to 170 °C and deep-fry for 4 to 5 minutes until golden, then drain.",
-      es: "Calienta el aceite a 170 °C y fríe de 4 a 5 minutos hasta que esté dorado; luego escúrrelo.",
+      key: "fry",
+      text: {
+        ja: "揚げ油を170℃に熱し、4〜5分かけてきつね色に揚げ、油を切ります。",
+        en: "Heat the oil to 170 °C and deep-fry for 4 to 5 minutes until golden, then drain.",
+        es: "Calienta el aceite a 170 °C y fríe de 4 a 5 minutos hasta que esté dorado; luego escúrrelo.",
+      },
     },
     {
-      ja: "切り分けて、せん切りキャベツ、トマト、粒マスタード、ご飯を添えます。",
-      en: "Slice and serve with shredded cabbage, tomato, mustard, and rice.",
-      es: "Córtalo y sírvelo con repollo en juliana, tomate, mostaza y arroz.",
+      key: "cabbage_tomato",
+      side: "cabbage_tomato",
+      text: {
+        ja: "キャベツをせん切りにし、トマトをくし形に切ります。",
+        en: "Finely shred the cabbage and cut the tomato into wedges.",
+        es: "Corta el repollo en juliana fina y el tomate en gajos.",
+      },
+    },
+    {
+      key: "serve",
+      text: {
+        ja: "切り分けて、粒マスタードを添えます。",
+        en: "Slice and serve with the mustard.",
+        es: "Córtalo y sírvelo con la mostaza.",
+      },
     },
   ],
   safetyNotes: [
     {
-      ja: "揚げ油から目を離さないでください。高温の油は発火やけがの原因になります。",
-      en: "Never leave hot oil unattended; it can catch fire or cause burns.",
-      es: "No dejes nunca el aceite caliente sin vigilancia: puede prenderse o causar quemaduras.",
+      key: "hot_oil",
+      text: {
+        ja: "揚げ油から目を離さないでください。高温の油は発火やけがの原因になります。",
+        en: "Never leave hot oil unattended; it can catch fire or cause burns.",
+        es: "No dejes nunca el aceite caliente sin vigilancia: puede prenderse o causar quemaduras.",
+      },
     },
     {
-      ja: "豚肉は中心まで火を通してください。切り口に赤みがないことを確認します。",
-      en: "Cook pork all the way through. Check that the center is no longer pink.",
-      es: "Cocina el cerdo completamente. Comprueba que el centro ya no esté rosado.",
+      key: "pork_doneness",
+      text: {
+        ja: "豚肉は中心まで火を通してください。切り口に赤みがないことを確認します。",
+        en: "Cook pork all the way through. Check that the center is no longer pink.",
+        es: "Cocina el cerdo completamente. Comprueba que el centro ya no esté rosado.",
+      },
     },
   ],
   substitutions: [],

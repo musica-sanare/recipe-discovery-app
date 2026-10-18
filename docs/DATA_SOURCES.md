@@ -36,6 +36,14 @@ Status: **Draft (2026-10-18)**. Terms and facts below were read from the cited p
 - A test validates the tracked subset against the schema and the manifest without needing the workbook.
 - Attribution wording and placement: `docs/CONTENT_POLICY.md` §5.
 
+### Cooking tables (implemented in Phase 0 Stage 0.3)
+- Tables 12 (weight change rates), 13 (fried foods), and 14 (stir-fried and sautéed foods) exist only in the explanation PDF. Its text layer scrambles table columns, so the needed rows are **transcribed by hand** from rendered page images into `data/composition/cooking.json`, with the page number of every entry and the PDF's SHA-256 (`d1196cc8…f116`, file `data/raw/mext/20260327-mxt_kagsei-mext-000029402_0001.pdf`, git-ignored).
+- `rawCode` (the raw food paired with each cooked food) is assigned by this project; all numbers are MEXT's, transcribed as printed (one known inconsistency in the source: food 11290 has 82 % in Table 12 and 81 g in Table 13).
+- Verification:
+  1. `npm run data:verify-cooking` (macOS only; uses PDFKit through `tools/macos/pdf-page-text.swift`) checks that every transcribed number and food code occurs on the cited page of the PDF text layer. Weakness: the text layer is column-ordered, so a number that also appears elsewhere on the page passes.
+  2. Tests in `test/node/cooking-data.test.ts` run on every check without the PDF: protein retention of non-coated foods (60–115 %), fat change in Tables 13–14 recomputed from the composition values (within 1 g), cooked mass consistent between Table 12 and Tables 13–14, and coated-basis rates below main-food rates. Injected transcription errors (61 → 16, 4.6 → 6.4) were caught by these tests on 2026-10-18.
+- Adding a food: render the page, transcribe the row with its page number, add the raw and cooked codes to the manifest, run `npm run data:extract`, `npm run data:verify-cooking`, and the tests.
+
 ### Known limitations
 - No official English food names for the eighth edition. *Verified* in the PDF (chapter on future work): an English version or translation features are "under consideration". The 2015 edition was published in Japanese and English; whether its English names and food codes can serve as a reference is 要確認.
 - Weight change rates (Table 12) and frying/stir-frying fat data (Tables 13–14) are in the PDF, not in the workbook.

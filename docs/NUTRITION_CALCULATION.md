@@ -51,7 +51,12 @@ Consequence: the source energy values are computed from component-based values, 
 Rules:
 1. If the food and cooking method exist in the tables, use the cooked value with (c4). Mapping class: **exact**.
 2. If the cooked form does not exist (example: skinless young chicken breast has raw and grilled, but not boiled), use the raw value. Mapping class: **approximation**, with the reason shown. Whether to apply the group-level "rates of change of components by cooking" (chapter 3) is decided in Phase 0.
-3. Cooking oil for stir-frying and sautéing: the authored amount of oil is counted as fully consumed (conservative for fat). Using the per-food oil data of Table 14 is a possible refinement.
+3. **No double counting of cooking oil.** Cooked values for stir-fried, sautéed, and fried foods already include the oil absorbed during the analysis (Tables 13–14). When such a cooked value is used, the oil used for cooking that food is **not** added as a separate ingredient. *Verified* (Table 14): 100 g of raw vegetables stir-fried with 5.0 g of oil gained 2.7–4.6 g of fat; farmed Atlantic salmon sautéed with 5.0 g of oil lost 2.8 g.
+4. Cooking oil when no oil-cooked form is used (raw or other cooked values): *Provisional* — the authored amount of oil is counted as fully consumed (conservative for fat, about 0.5–2 g too high per 5 g of oil according to Table 14). Whether to use Table 14 absorption values for similar foods instead is decided in Phase 0 Stage 0.5.
+5. Weight change rates are relative to the raw edible portion, except where the tables remove parts after cooking (`postCookingRefuse` in `data/composition/cooking.json`, for example the shell of boiled eggs or the peel of steamed potatoes). Those entries are approximations when the recipe states the raw edible mass.
+6. For starchy staples, recipes may state the mass in the state the tables provide (cooked rice, boiled or dry pasta); no weight change rate is needed then.
+
+Cooking data: weight change rates and Tables 13–14 rows are transcribed into `data/composition/cooking.json` (`docs/DATA_SOURCES.md` "Cooking tables").
 
 ## 6. Fried foods (ADR-010)
 
@@ -61,7 +66,7 @@ Fried recipes are allowed in the MVP and always labelled as estimates.
 |---|---|---|
 | Cooked fried form exists for the food and method (example: tempura of farmed Atlantic salmon) | Cooked value with (c4) | "Estimate: fried foods vary with oil absorption" |
 | No fried form | Raw value plus an oil absorption assumption derived from Table 13 for a similar food | Same note, plus a **range** |
-| Frying oil in the pan | Not counted; only absorbed oil is counted | Assumption shown in the basis |
+| Frying oil in the pan | Not counted; only absorbed oil is counted (already included in fried cooked values, §5 rule 3) | Assumption shown in the basis |
 
 A range that straddles a target boundary yields "near / uncertain", never "met".
 

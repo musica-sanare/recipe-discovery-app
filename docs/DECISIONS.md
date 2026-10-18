@@ -54,6 +54,30 @@ A simulation with **placeholder nutrient values (not from the tables)** and rand
 - *Measured, relevant to ADR-011*: the difference-method available carbohydrate `CHOAVLDF-` is 3–5 g per 100 g for lean meat, fish, and eggs (for example skinless young chicken breast raw 3.4 g, grilled 4.7 g; chum salmon raw 3.9 g; whole egg raw 3.4 g), while `CHOCDF-` is 0.1–0.4 g for the same foods. The difference method assigns the residual of the other components to carbohydrate. Displaying `CHOAVLDF-` would add several grams of carbohydrate to protein-heavy dishes. To be decided in Stage 0.5 with the validation recipes.
 - Skinless young chicken breast (`11220` raw, `11288` grilled) has no boiled form, confirming that boiled chicken breast, a common body-make dish, needs the approximation rule (`docs/NUTRITION_CALCULATION.md` §5).
 
+### Stage 0.3 cooking data (2026-10-18)
+- *Verified*: MEXT publishes Tables 12–14 only in the explanation PDF; no machine-readable version was found. The PDF text layer is column-ordered and cannot be parsed into rows reliably; rendered page images are clearly legible.
+- Transcribed (ADR-020): 44 weight change rates, 7 rows of Table 13, and 8 rows of Table 14 for the representative foods; all 59 entries pass the text-layer check, and the plausibility tests pass.
+- *Measured* protein retention (cooked value × rate / raw value) for non-coated foods: 0.67–1.07; boiled vegetables lose the most (cabbage 0.67, onion 0.71), meat and fish 0.87–1.03.
+- *Verified* (Table 14): stir-frying 100 g of raw food with 5.0 g of oil changed fat by +2.7 to +4.9 g for vegetables, mushrooms, and eggs, and by −2.8 g for farmed Atlantic salmon (sauté). Cooked oil-cooked values already include this, which led to the no-double-counting rule (`docs/NUTRITION_CALCULATION.md` §5 rule 3).
+- Coverage of representative food × method pairs in the tables:
+
+  | Food | Cooked forms in the tables | Not in the tables (approximation) |
+  |---|---|---|
+  | Chicken breast, skinless (young) | raw, grilled | boiled, steamed, microwaved, stir-fried |
+  | Chicken thigh, skinless (young) | raw, boiled, grilled, karaage | stir-fried |
+  | Pork loin, lean | raw only | all cooked forms |
+  | Pork leg, without subcutaneous fat | raw, boiled, grilled | stir-fried |
+  | Pork fillet, lean | raw, grilled, tonkatsu | boiled |
+  | Beef round (imported), without subcutaneous fat | raw, boiled, grilled | stir-fried |
+  | Salmon | chum: raw, simmered, grilled; farmed Atlantic (skinless): simmered, steamed, microwaved, grilled, sautéed, tempura | — |
+  | Pacific cod | raw, grilled | steamed, simmered |
+  | Whole egg | raw, boiled, poached, fried, scrambled, deep-fried | — |
+  | Tofu (firm, silken) | uncooked only | all heated forms |
+  | Rice, pasta | cooked rice; dry, boiled, and sautéed pasta | — (state the cooked or dry mass) |
+  | Potato, skinless | raw, simmered, steamed, microwaved, fried | — |
+  | Broccoli | raw, boiled, microwaved, grilled, stir-fried | — |
+  | Spinach, cabbage, onion, shimeji | raw, boiled, stir-fried (shimeji also deep-fried and tempura) | microwaved |
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in
@@ -158,6 +182,12 @@ A simulation with **placeholder nutrient values (not from the tables)** and rand
 - Rationale: one trusted input file read at build time does not justify a spreadsheet library and its supply-chain surface; the code is small and fully tested with synthetic fixtures.
 - Alternatives: a spreadsheet package from npm (more features, more dependencies to review); converting the workbook to CSV by hand (not reproducible).
 - Revisit if the workbook format changes in ways the reader cannot handle.
+
+## ADR-020: Hand transcription of cooking tables with automated checks
+- Status: **Accepted** (owner, 2026-10-18)
+- Decision: transcribe only the needed rows of Tables 12–14 from rendered PDF pages into `data/composition/cooking.json`, cite the page of every entry, and verify with (1) a macOS-only text-layer check and (2) composition-based plausibility tests that run everywhere. Details: `docs/DATA_SOURCES.md` "Cooking tables".
+- Alternatives: automated PDF table parsing (new dependency, error-prone on this layout); asking MEXT for machine-readable data (possible in parallel, outcome uncertain); ignoring weight change rates (protein 6–13 % too high for cooked meat).
+- Limits: the text-layer check cannot detect a wrong number that also appears elsewhere on the page; the plausibility tests cover that for protein and fat but not for every field (for example coating masses).
 
 ---
 

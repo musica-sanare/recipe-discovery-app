@@ -19,7 +19,8 @@ npm ci
 | Command | Purpose |
 |---|---|
 | `npm run dev` | Vite dev server on http://localhost:5173 (no CSP; see ADR-018) |
-| `npm run build` | Type-check, then build to `dist/` including the generated `_headers` |
+| `npm run build` | Validate content, type-check, then build to `dist/` including the generated `_headers` |
+| `npm run validate:content` | Content validation only (`tools/content/validate.ts`); prints one line per problem with file, recipe or food, field, and rule |
 | `npm run preview` | Serve `dist/` with the production security headers (http://localhost:4173) |
 | `npm run lint` | ESLint with type-aware rules and module boundaries |
 | `npm run typecheck` | TypeScript project build without emit |
@@ -36,7 +37,7 @@ There is intentionally no deploy script.
 ```text
 index.html, src/        UI (React); src/i18n/ holds the typed ja/en/es catalogs
 shared/                 Schemas, constants, and types shared by UI, domain, content, and tools
-content/                Food dictionary, recipes, glossary (TypeScript, validated by tests)
+content/                Food dictionary, recipes, glossary, content version (TypeScript, validated at build time)
 platform/               Hosting-specific output (security headers)
 tools/                  Build-time tools run directly by Node (TypeScript type stripping)
 data/composition/       Extraction manifest and the tracked composition subset
@@ -52,7 +53,7 @@ docs/, prompts/         Documentation and phase prompts
 2. Add a recipe file under `content/recipes/` and register it in `content/recipes/index.ts`. The schema is `shared/content.ts` (ADR-026): give steps and safety notes keys, list what is served with the dish under `sides`, link seasonings to the ingredient they scale with (`linkedTo`), and give every recipe at least one adjustable ingredient or solver-removable side.
 3. Write `ja`, `en`, and `es` texts; follow `content/glossary.ts` and `docs/CONTENT_POLICY.md`. Serving steps do not name sides; the UI lists the sides that are on.
 4. Update `CONTENT_VERSION` in `content/version.ts`.
-5. `npm test` validates references, states, bounds, links, sides, glossary use, and forbidden expressions.
+5. `npm run validate:content` (also part of `npm run build`) checks schemas, locales, IDs, references, cooking states, adjustment bounds, links, sides, substitutions, allergens, safety notes, protein groups, tags, glossary use, forbidden expressions, and the version. When adding a rule, add a failing fixture to `tools/content/validate.test.ts`.
 
 ## Adding UI text
 1. Add the key and Japanese text to `src/i18n/messages/ja.ts`.

@@ -136,6 +136,12 @@ Findings:
 - Migration of the 20 validation recipes: default amounts unchanged, so the nutrition snapshot is identical. 13 recipes are now quick (7 newly, all at 20 minutes). Steps that mixed the dish with its sides were split or reworded so that each side's preparation is its own step; serving lines no longer name sides (the UI lists the sides that are on). The tuna and tofu bowl treats its rice as part of the dish (minimum 100 g), unlike the earlier proposal.
 - `npm run eval:coverage` with sides (rice and potatoes only switched off by the solver), whole units, and links: the met counts after adjustment equal Stage 0.6 in every scenario (S1 10, S2 8, S3 11, S4 7, S5 10, S6 5, S7 1, S8 5); "near" rises in S3 (2 → 4), S6 (0 → 1), and S7 (0 → 1) because rice can no longer drop below 100 g per serving. No solution switches a side off. The unnatural steak result (rice 150 → 40 g) became beef 200 → 150 g. Distinct main proteins are now counted by group.
 
+### Stage 1.2 content validation (2026-10-18)
+- `tools/content/validate.ts` checks 17 rules (schema, locale, unique-id, registry, reference, cooking-state, adjustment, link, side, substitution, allergen, safety-note, protein-group, tag, glossary, forbidden-expression, version). Each problem names the file, the recipe or food, the field, and the rule. `npm run build` runs it first, so `npm run check` does too.
+- `tools/content/validate.test.ts` has a valid fixture and one broken copy per case (30 cases, every rule covered); each case must produce exactly one issue of its rule. The per-recipe checks of `test/node/content.test.ts` moved into the tool; that file now only requires the repository content to pass, so the test count fell from 361 to 169 without losing checks.
+- New checks beyond Phase 0: grid and whole-unit consistency, links, sides, step references, substitution references, protein groups, `no_cook` consistency, recipe files not registered in the index, duplicate allergens. Safety notes are now required only for meat, fish, eggs, or fried recipes (all 20 recipes have them).
+- Verified on 2026-10-18: injecting an off-grid amount and a wrong protein group into a recipe made `npm run build` fail with two messages naming the file, recipe, field, and rule.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in

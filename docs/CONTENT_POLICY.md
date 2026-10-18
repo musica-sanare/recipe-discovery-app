@@ -34,7 +34,7 @@ Status: **Draft (2026-10-18)**. Applies to all recipes, food dictionary entries,
 - Presets are labelled as examples, not recommendations or advice.
 - The target settings include a notice that people under medical or dietitian guidance should follow it.
 - *Verified* (municipal and Ministry guidance, checked 2026-10-18): Japan's Health Promotion Act, Article 65(1), prohibits anyone from making representations about the health effects of foods that are significantly different from fact or significantly misleading. Its scope is advertising of foods offered for sale; whether it applies to this app is 要確認. This policy applies the stricter rule regardless. The relation to the Pharmaceutical and Medical Device Act (unapproved drug advertising) was not checked (要確認).
-- A build-time policy lint checks all locales for forbidden expressions; the word list is maintained alongside the glossary.
+- A policy lint (`test/node/content.test.ts`) checks all locales for forbidden expressions; the word list is in `content/glossary.ts`.
 
 ## 5. Nutrition statements
 
@@ -47,7 +47,7 @@ Status: **Draft (2026-10-18)**. Applies to all recipes, food dictionary entries,
 - Translations are canonical content stored in the repository; nothing is machine-translated at runtime.
 - Workflow: content is authored, Claude drafts `en` and `es` at authoring time, the owner reviews the diff and reports problems, Claude fixes them. The owner's approval of the commit is the review record.
 - Spanish uses neutral wording; regional variants are added as search aliases (for example `patata` / `papa`, `gamba` / `camarón`).
-- A glossary (`content/glossary/`) fixes cooking terms, heat levels, units, allergen names, disclaimer texts, and forbidden expressions in all three locales.
+- A glossary (`content/glossary.ts`) fixes cooking terms, heat levels, units, allergen names, disclaimer texts, and forbidden expressions in all three locales.
 - Safety-relevant texts (allergen warnings, doneness checks, frying cautions, disclaimers) use short, plain sentences and are back-translated during review to detect meaning drift.
 - Japanese-specific ingredients that may be hard to find abroad get a note; regional availability is otherwise out of scope.
 

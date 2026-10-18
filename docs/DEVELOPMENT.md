@@ -34,7 +34,8 @@ There is intentionally no deploy script.
 
 ```text
 index.html, src/        UI (React); src/i18n/ holds the typed ja/en/es catalogs
-shared/                 Constants and types shared by UI, domain, and tools
+shared/                 Schemas, constants, and types shared by UI, domain, content, and tools
+content/                Food dictionary, recipes, glossary (TypeScript, validated by tests)
 platform/               Hosting-specific output (security headers)
 tools/                  Build-time tools run directly by Node (TypeScript type stripping)
 data/composition/       Extraction manifest and the tracked composition subset
@@ -44,6 +45,12 @@ docs/, prompts/         Documentation and phase prompts
 ```
 
 `domain/` is added in a later stage; its import rules are already in `eslint.config.js`. Files under `tools/` run with Node's built-in TypeScript type stripping, so they use only erasable syntax (`erasableSyntaxOnly`) and import local modules with the `.ts` extension.
+
+## Adding content
+1. Add foods to `content/foods.ts` with codes from `node tools/extract-composition.ts --search <regex>`; add the codes (and cooked/raw pairs with transcribed rates) to `data/composition/` as described in `docs/DATA_SOURCES.md`.
+2. Add a recipe file under `content/recipes/` and register it in `content/recipes/index.ts`.
+3. Write `ja`, `en`, and `es` texts; follow `content/glossary.ts` and `docs/CONTENT_POLICY.md`.
+4. `npm test` validates references, states, bounds, glossary use, and forbidden expressions.
 
 ## Adding UI text
 1. Add the key and Japanese text to `src/i18n/messages/ja.ts`.

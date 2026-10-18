@@ -17,6 +17,11 @@ const SHARED_FORBIDDEN_IMPORTS = [
   { group: ["**/src/**", "**/domain/**", ...BUILD_AND_PLATFORM], message: "Shared code must not depend on other layers." },
   { group: UI_PACKAGES, message: "Shared code must not depend on UI or i18n packages." },
 ];
+// Content is data: it may use shared types only.
+const CONTENT_FORBIDDEN_IMPORTS = [
+  { group: ["**/src/**", "**/domain/**", ...BUILD_AND_PLATFORM], message: "Content may import shared types only." },
+  { group: UI_PACKAGES, message: "Content must not depend on UI or i18n packages." },
+];
 const UI_FORBIDDEN_IMPORTS = [{ group: BUILD_AND_PLATFORM, message: "UI code must not import build-time or platform code." }];
 
 export default tseslint.config(
@@ -41,6 +46,10 @@ export default tseslint.config(
   {
     files: ["domain/**/*.ts"],
     rules: { "no-restricted-imports": ["error", { patterns: DOMAIN_FORBIDDEN_IMPORTS }] },
+  },
+  {
+    files: ["content/**/*.ts"],
+    rules: { "no-restricted-imports": ["error", { patterns: CONTENT_FORBIDDEN_IMPORTS }] },
   },
   {
     files: ["shared/**/*.ts"],

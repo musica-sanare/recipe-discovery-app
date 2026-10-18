@@ -45,6 +45,7 @@
     { "code": "11226", "rawCode": "11224", "method": "boil", "ratePercent": 70, "page": 58 },
     { "code": "11225", "rawCode": "11224", "method": "grill", "ratePercent": 72, "page": 59 },
     { "code": "11290", "rawCode": "11224", "method": "karaage", "ratePercent": 82, "coatedBasisPercent": 70, "page": 59 },
+    { "code": "11291", "rawCode": "11230", "method": "grill", "ratePercent": 62, "page": 59 },
     { "code": "12005", "rawCode": "12004", "method": "boil", "ratePercent": 99.7, "postCookingRefuse": "殻", "page": 59 },
     { "code": "12006", "rawCode": "12004", "method": "poach", "ratePercent": 95, "page": 59 },
     { "code": "12021", "rawCode": "12004", "method": "fry_egg", "ratePercent": 86, "page": 59 },

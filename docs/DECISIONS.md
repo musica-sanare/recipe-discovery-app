@@ -78,6 +78,14 @@ A simulation with **placeholder nutrient values (not from the tables)** and rand
   | Broccoli | raw, boiled, microwaved, grilled, stir-fried | — |
   | Spinach, cabbage, onion, shimeji | raw, boiled, stir-fried (shimeji also deep-fried and tempura) | microwaved |
 
+### Stage 0.4 validation recipes and food dictionary (2026-10-18)
+- Content: 20 original validation recipes (`content/recipes/`) and a food dictionary of 50 foods (`content/foods.ts`), each with `ja`/`en`/`es` texts; the recipe list was approved by the owner before the translations were written. Translations were drafted by Claude for owner review (ADR-007).
+- Coverage: goals cut 7, maintain 9, bulk 5 (one recipe has two); cuisines Japanese, Chinese, Korean-style, Western, Spanish, Okinawan; 4 fried dishes, 6 quick dishes, 1 batch recipe, 1 no-cook recipe, 1 breakfast. 12 ingredients in 10 recipes carry a `cooking` method that differs from the tabulated state (9 use the raw value; 3 use the grilled value for pan-sautéed meat).
+- Composition subset extended to 96 foods; one more weight change rate transcribed (11291 ground chicken, grilled, 62 %, page 59; text-layer check 60/60).
+- Rough per-serving values from an authoring calculator (raw value × mass, or cooked value × mass × weight change rate; not the Phase 2 engine): cut recipes 372–596 kcal and 35–46 g protein; bulk recipes 653–934 kcal; the salmon dishes and the Spanish omelette stay below 30 g protein, which keeps "near" and "not met" cases for Stage 0.6.
+- Allergen categories in `shared/content.ts`: the CAA page states that cashew nut became mandatory on 2026-04-01 and that the last change to the recommended items (2024-03-28) added macadamia nut and removed matsutake; municipal notices state that pistachio was added to the recommended items in April 2026. The resulting lists (9 mandatory, 20 recommended) are derived from these statements because the CAA page shows the list only as an image; 要確認 against the CAA figure.
+- Checks added: schema, references to foods and extracted codes, weight change rates for every cooked state, a test that `cooking` is only used when the tables lack that method, `includedIn` references, adjustment bounds, substitutions, food safety notes, a glossary consistency test, and a forbidden-expression lint in three locales. Injected forbidden claims in `ja`, `en`, and `es` were detected on 2026-10-18; the glossary test caught one real inconsistency ("residual-heat").
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in
@@ -189,6 +197,13 @@ A simulation with **placeholder nutrient values (not from the tables)** and rand
 - Alternatives: automated PDF table parsing (new dependency, error-prone on this layout); asking MEXT for machine-readable data (possible in parallel, outcome uncertain); ignoring weight change rates (protein 6–13 % too high for cooked meat).
 - Limits: the text-layer check cannot detect a wrong number that also appears elsewhere on the page; the plausibility tests cover that for protein and fat but not for every field (for example coating masses).
 
+## ADR-021: Provisional content format
+- Status: **Accepted for Phase 0** (owner, 2026-10-18); refined in Phase 1.
+- Decision: content is TypeScript (`content/foods.ts`, one file per recipe in `content/recipes/`, `content/glossary.ts`) typed with and validated by the `zod/mini` schemas in `shared/content.ts`. Recipes state raw edible grams (or grams as sold for `as_is` foods) and the composition state used; `cooking` records the real method when the tables lack it; `includedIn` lists ingredients already contained in another ingredient's cooked value (frying oil, coatings, discarded cooking water additions).
+- Rationale: compile-time types plus runtime validation without a parser dependency; diffs are reviewable.
+- Imports between repository modules use the `.ts` extension everywhere (`allowImportingTsExtensions` in `tsconfig.base.json`), so the same files work in Vite, Vitest, and Node type stripping.
+- Alternatives: JSON (no comments, verbose), YAML (parser dependency).
+
 ---
 
 ## Open questions (要確認)
@@ -203,3 +218,4 @@ A simulation with **placeholder nutrient values (not from the tables)** and rand
 8. Copyright status of recipes under Japanese law (primary sources not checked).
 9. Spanish review capacity (ADR-007).
 10. Raw-egg dishes and other regionally sensitive food safety rules across the three locales.
+11. Allergen item lists in `shared/content.ts` derived from CAA change notes and municipal notices; confirm against the CAA figure (Stage 0.4 log).

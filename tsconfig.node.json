@@ -8,7 +8,6 @@
     "types": [
       "node"
     ],
-    "allowImportingTsExtensions": true,
     "erasableSyntaxOnly": true
   },
   "include": [

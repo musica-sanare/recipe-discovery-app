@@ -46,8 +46,8 @@ domain/nutrition/       Pure nutrition engine
 domain/recommendation/  Pure ranking, diversity, adjustment
 shared/                 Schemas (Zod), types, units, constants
 content/recipes/        One file per recipe (structured, localized texts)
-content/foods/          Food dictionary (locale-neutral IDs, mappings, names, aliases, allergens)
-content/glossary/       Translation glossary (cooking terms, units, allergen names)
+content/foods.ts        Food dictionary (locale-neutral IDs, mappings, names, aliases, allergens)
+content/glossary.ts     Translation glossary and forbidden expressions
 data/composition/       Extracted composition subset (generated, tracked) + manifest
 data/raw/               MEXT workbook (git-ignored)
 tools/                  Extraction, validation, lint, snapshots

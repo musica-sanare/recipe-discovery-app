@@ -187,6 +187,13 @@ Findings:
 - `domain/nutrition/basis.ts`: `nutritionBasis(recipe, nutrition, data)` lists per ingredient the food ID, code, state, cooking method, substitution, composition data version, weight change rate, grams, class, reasons, notations, and assumption codes: `oil_counted_in_full` (counted ingredients with role `fat`, ADR-022), `included_in_cooked_value`, `parts_removed_after_cooking`, `energy_from_fat` (9 kcal/g), and `pinch_as_stated_grams`. Texts for these codes belong to the UI catalogs (Phase 4).
 - *Measured* (20 recipes, default state): 17 oils counted in full (all `fat` ingredients are olive, sesame, or vegetable oil), 17 ingredients contained in another cooked value, 1 removal after cooking, 5 fried or slow-fried ingredients with the energy factor, 9 pinches.
 
+### Stage 2.5 snapshot, locale invariance, determinism, performance (2026-10-18)
+- New snapshot (`test/node/__snapshots__/engine.test.ts.snap`): per recipe at the default state, the class, per-serving values and ranges of the five displayed nutrients (two decimals; "shown" marks ranges above the threshold), the reasons of counted ingredients, and incompleteness.
+- Difference from the Phase 0 snapshot (`nutrition.test.ts.snap`), explained to the owner per recipe and nutrient: the per-serving values of `ENERC_KCAL`, `PROT-`, `FAT-`, `CHOCDF-`, and `NACL_EQ` are identical for all 20 recipes (0 of 100 values differ). The columns `PROTCAA`, `FATNLEA`, `CHOAVLDF-`, and `FIB-` are not in the new snapshot because the engine reads only the displayed nutrients of the calculation bundle (ADR-011, ADR-027); the Phase 0 snapshot keeps them until Stage 2.6. Classes, reasons, ranges, and incompleteness are new (Stage 2.3 log).
+- Locale invariance: `calculateNutrition` takes `(recipe, state, data)` (type-level test); every recipe gives identical results with each text bundle loaded, and content reduced to any single locale's texts builds a byte-identical calculation bundle.
+- Determinism: deep-equal results across runs and with foods, composition values, and rates in reverse bundle order; reversing the ingredient order changes neither per-serving values nor ranges (to nine decimals) nor classes.
+- *Measured* recalculation time (Apple M1, MacBookPro17,1, 16 GB, macOS, Node.js 24.19.0; median of 31 batches after warm-up; scratch script, not in the repository): one recalculation of the largest recipe (`chicken_mapo_tofu`, 13 ingredients) 0.017–0.019 ms; all 20 recipes at the default state 0.27–0.28 ms; first cold pass over all 20 recipes 2.1 ms; `engineDataFromBundle` 0.10 ms cold. Browsers were not measured.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in

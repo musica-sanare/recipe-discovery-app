@@ -98,6 +98,30 @@ A simulation with **placeholder nutrient values (not from the tables)** and rand
   - 4 × protein + 9 × fat + 4 × carbohydrate (`PROT-`, `FAT-`, `CHOCDF-`) exceeds `ENERC_KCAL` by −0.1 % to +10.0 % (median +4.2 %).
 - *Measured* cooking oil (rule 4 in `docs/NUTRITION_CALCULATION.md` §5): Table 14 rows with fat gain show 80–98 % of the pan oil retained (median 88 %). Counting all counted oil instead of 88 % raises fat by 0.3–0.9 g per serving across the 14 recipes with counted oil; the counted oil also includes dressings and finishing oil, which are eaten entirely.
 
+### Stage 0.6 coverage and adjustment (2026-10-18)
+`npm run eval:coverage` (`tools/evaluate-coverage.ts`) evaluates the 20 validation recipes with the provisional presets and tolerance (`docs/SPEC.md` §16), comparing default amounts with a grid search inside each recipe's authored bounds (smallest relative change among the best status). Seasonings are not linked yet (Phase 1).
+
+| Scenario | Eligible | Met, fixed | Met, adjusted (near) | Distinct main proteins among met | Library size for ≥ 3 met at 90 %* |
+|---|---|---|---|---|---|
+| S1 cut | 20 | 6 | 10 (0) | 7 | 9 |
+| S2 cut, ≤ 20 min | 13 | 6 | 8 (0) | 7 | 12 |
+| S3 maintain | 20 | 4 | 11 (2) | 8 | 8 |
+| S4 bulk | 20 | 2 | 7 (4) | 5 | 14 |
+| S5 cut, no egg | 6 | 3 | 4 (0) | 4 | 25 |
+| S6 maintain, chicken required | 6 | 3 | 5 (0) | 2 | 20 |
+| S7 maintain, tofu required | 3 | 0 | 1 (0) | 1 | 105 |
+| S8 bulk, ≤ 25 min | 15 | 1 | 5 (4) | 5 | 20 |
+
+\* Binomial estimate with the share of the 20 recipes that met the targets after adjustment; it assumes the library keeps the same mix and is only an order of magnitude.
+
+Findings:
+- Bounded adjustment raises the number of recipes that meet the targets by 2–7 per scenario; without it, bulking targets are met by 1–2 recipes.
+- Most adjustments change only the staple carbohydrate (rice or potatoes); protein amounts change for bulking and for some cutting cases.
+- Some adjusted amounts are unnatural, for example rice 150 → 40 g for the steak, because the authored minimum for rice is 0 g. The adjustment needs portion rules (a carbohydrate is either removed or kept at a minimum portion) in addition to bounds.
+- Allergen exclusion is the strongest filter: with egg excluded only 6 of 20 recipes remain, mainly because four seasonings have `allergens: "unknown"` (cooking sake, wholegrain mustard, Chinese-style stock granules, karaage coating mix), used by 10 recipes, and are excluded by every allergen filter.
+- Required ingredients depend on how many recipes contain the ingredient (tofu appears in 3 of 20), not on the total number of recipes.
+- Follow-up (owner-approved): the four seasonings now have best-effort allergen lists based on their typical ingredients (cooking sake and wholegrain mustard: none of the listed allergens; Chinese-style stock granules: may contain wheat, milk, soybean, sesame, chicken, pork, beef; karaage coating mix: contains wheat, may contain milk, soybean, sesame, chicken). These are general assumptions about typical products, not checked against product labels (要確認). With them, S5 (cut, no egg) has 14 eligible recipes, 6 met with default amounts, and 10 met after adjustment.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in
@@ -222,6 +246,16 @@ A simulation with **placeholder nutrient values (not from the tables)** and rand
 - Decision: keep `docs/NUTRITION_CALCULATION.md` §5 rule 4: oil that is not already contained in an oil-cooked value is counted in full and shown as an assumption.
 - Rationale: using the Table 14 median retention (88 %) would lower fat by only 0.3–0.9 g per serving in the validation recipes; Table 14 has no meat rows; dressings and finishing oil are eaten entirely.
 
+## ADR-023: Initial recipe library size and composition
+- Status: **Accepted** (owner accepted the Stage 0.6 recommendation, 2026-10-18)
+- Decision: about 60 recipes for the MVP, with composition rules: each goal (cut, maintain, bulk) has at least 15 recipes; each main protein group (chicken, pork, beef, fish, eggs, soy foods) appears in at least 8 recipes; at least 30 % quick (≤ 20 min); fried dishes at most 15 %; every recipe has at least one adjustable main protein or staple.
+- Evidence: Stage 0.6 log. About 60 recipes give ≥ 3 met candidates for the general scenarios with a wide margin (estimated need 8–20), and the per-ingredient rule targets the required-ingredient bottleneck.
+
+## ADR-024: Bounded adjustment in the MVP
+- Status: **Accepted** (owner accepted the Stage 0.6 recommendation, 2026-10-18)
+- Decision: include deterministic "fit to my targets" in the MVP, limited to the authored adjustable ingredients (main protein and staple carbohydrate). Add portion rules before Phase 3: a staple is either 0 g or at least an authored minimum portion; linked seasonings scale with their group (Phase 1 schema). The selection keeps the best status and the smallest relative change, as in the evaluation tool.
+- Evidence: Stage 0.6 log (adjustment roughly doubles the met recipes; unnatural results without portion rules).
+
 ---
 
 ## Open questions (要確認)
@@ -229,7 +263,7 @@ A simulation with **placeholder nutrient values (not from the tables)** and rand
 1. ~~Carbohydrate column (ADR-011)~~: `CHOCDF-` accepted. Localized display names are set with the UI catalogs (Phase 4).
 2. Extraction method for Tables 12–14 from the PDF; use of chapter 3 group-level rates for missing cooked forms.
 3. Tolerance, display rounding, and range threshold values (`docs/SPEC.md` §16).
-4. Initial recipe count and the scope of automatic adjustment (Phase 0 evaluation with real recipes).
+4. ~~Initial recipe count and the scope of automatic adjustment~~: accepted in ADR-023 and ADR-024 (Stage 0.6); portion rules and linked seasonings are designed in Phase 1/3.
 5. Browser storage of targets and viewed recipes.
 6. Whether the 2015 English edition's names and food codes can serve as a reference for English names.
 7. Applicability of the Health Promotion Act and the Pharmaceutical and Medical Device Act to this app; applicability of allergen labelling rules (policy already applies the stricter interpretation).
@@ -237,3 +271,4 @@ A simulation with **placeholder nutrient values (not from the tables)** and rand
 9. Spanish review capacity (ADR-007).
 10. Raw-egg dishes and other regionally sensitive food safety rules across the three locales.
 11. Allergen item lists in `shared/content.ts` derived from CAA change notes and municipal notices; confirm against the CAA figure (Stage 0.4 log).
+12. Best-effort allergen lists for cooking sake, wholegrain mustard, Chinese-style stock granules, and karaage coating mix are based on typical ingredients, not product labels (Stage 0.6 log).

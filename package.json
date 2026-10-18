@@ -16,7 +16,8 @@
     "test:watch": "vitest",
     "check": "npm run lint && npm run typecheck && npm run test && npm run build",
     "data:extract": "node tools/extract-composition.ts",
-    "data:verify-cooking": "node tools/verify-cooking-transcription.ts"
+    "data:verify-cooking": "node tools/verify-cooking-transcription.ts",
+    "eval:coverage": "node tools/evaluate-coverage.ts"
   },
   "dependencies": {
     "i18next": "26.4.7",

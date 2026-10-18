@@ -279,7 +279,7 @@ export const foods: readonly Food[] = [
     names: { ja: "料理酒", en: "Cooking sake", es: "Sake de cocina" },
     aliases: { ja: ["酒"], en: ["sake"], es: ["sake"] },
     composition: { as_is: "17138" },
-    allergens: "unknown",
+    allergens: [],
   },
   {
     id: "sugar",
@@ -307,7 +307,7 @@ export const foods: readonly Food[] = [
     names: { ja: "粒マスタード", en: "Wholegrain mustard", es: "Mostaza en grano" },
     aliases: { ja: ["マスタード"], en: ["mustard"], es: ["mostaza antigua", "mostaza"] },
     composition: { as_is: "17060" },
-    allergens: "unknown",
+    allergens: [],
   },
   {
     id: "rice_vinegar",
@@ -321,7 +321,15 @@ export const foods: readonly Food[] = [
     names: { ja: "顆粒中華だし", en: "Chinese-style stock granules", es: "Caldo chino en gránulos" },
     aliases: { ja: ["中華だし", "鶏がらスープの素"], en: ["chicken stock powder"], es: ["caldo de pollo en polvo"] },
     composition: { as_is: "17093" },
-    allergens: "unknown",
+    allergens: [
+      { allergen: "wheat", confidence: "may_contain" },
+      { allergen: "milk", confidence: "may_contain" },
+      { allergen: "soybean", confidence: "may_contain" },
+      { allergen: "sesame", confidence: "may_contain" },
+      { allergen: "chicken", confidence: "may_contain" },
+      { allergen: "pork", confidence: "may_contain" },
+      { allergen: "beef", confidence: "may_contain" },
+    ],
   },
   {
     id: "doubanjiang",
@@ -349,7 +357,13 @@ export const foods: readonly Food[] = [
     names: { ja: "から揚げ粉", en: "Karaage coating mix", es: "Mezcla para karaage" },
     aliases: { ja: ["唐揚げ粉"], en: ["fried chicken coating mix"], es: ["rebozado para pollo frito"] },
     composition: { as_is: "01147" },
-    allergens: "unknown",
+    allergens: [
+      { allergen: "wheat", confidence: "contains" },
+      { allergen: "milk", confidence: "may_contain" },
+      { allergen: "soybean", confidence: "may_contain" },
+      { allergen: "sesame", confidence: "may_contain" },
+      { allergen: "chicken", confidence: "may_contain" },
+    ],
   },
   {
     id: "panko",

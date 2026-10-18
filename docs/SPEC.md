@@ -120,7 +120,7 @@ Recipe detail:
 - All recalculation runs in the browser with deterministic functions and updates instantly, showing differences from the previous state (for example "protein +8 g, fat +3 g") and status changes.
 - Servings scale every ingredient.
 - Bounded adjustment: each recipe defines which ingredients may change, their minimum and maximum, step size, and linked ingredients (for example seasonings scale with the main ingredient). Integer units are respected (for example whole eggs). Steps may define notes that appear above a threshold (for example "use a larger pan").
-- "Fit to my targets": selects the in-bounds amounts that meet the targets with the smallest change from the default amounts. *Provisional*: how much of this is in the MVP is decided after Phase 0.
+- "Fit to my targets" (in the MVP, ADR-024): selects the in-bounds amounts of the main protein and staple that meet the targets with the smallest change from the default amounts. A staple is either removed or kept at least at its authored minimum portion.
 - Substitutions come only from each recipe's predefined substitution list; they may switch related notes and times.
 
 ## 9. Nutrition display and uncertainty
@@ -195,8 +195,8 @@ Defined in `docs/CONTENT_POLICY.md`. Summary:
 | Fit tolerance | ±10% (protein: up to 3 g below the minimum) | Phase 3 |
 | Display rounding | kcal to 10, protein/fat/carbohydrate to whole grams | Phase 2 |
 | Range display threshold | approximation share above ~10% of a value | Phase 2 |
-| Initial recipe count | around 60, including diversity needs | Phase 0 |
-| Amount adjustment scope | main protein and main carbohydrate only | Phase 0 |
+| Initial recipe count | **decided**: about 60, with composition rules (ADR-023) | Phase 0 |
+| Amount adjustment scope | **decided**: main protein and staple only, with portion rules (ADR-024) | Phase 0 |
 | Browser storage of targets and viewed recipes | undecided (opt-in local storage is a candidate) | Phase 4 |
 | Preset values | cut 450–650 kcal / P ≥ 35 g / F ≤ 15 g; maintain 550–750 / ≥ 30 / ≤ 20; bulk 750–950 / ≥ 45 / ≤ 30 | Phase 3 |
 

@@ -26,6 +26,7 @@ npm ci
 | `npm test` | Vitest (Node by default; UI tests use jsdom per file) |
 | `npm run check` | Lint, type-check, tests, and build in sequence |
 | `npm run data:extract` | Regenerate `data/composition/foods.json` from the MEXT workbook in `data/raw/` (`docs/DATA_SOURCES.md` "Extraction") |
+| `npm run eval:coverage` | Phase 0 evaluation: how many validation recipes meet representative targets with fixed and adjusted amounts (`docs/DECISIONS.md` "Stage 0.6") |
 | `npm run data:verify-cooking` | macOS only: check `data/composition/cooking.json` against the MEXT explanation PDF text (`docs/DATA_SOURCES.md` "Cooking tables") |
 
 There is intentionally no deploy script.

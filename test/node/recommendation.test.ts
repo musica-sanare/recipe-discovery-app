@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
+import { defaultState } from "../../domain/nutrition/amounts.ts";
+import { calculateNutrition, type RecipeNutrition } from "../../domain/nutrition/engine.ts";
 import { recommendationDataFromBundle } from "../../domain/recommendation/data.ts";
+import { evaluateFit, type Tier } from "../../domain/recommendation/fit.ts";
 import { applyHardFilters } from "../../domain/recommendation/filters.ts";
-import type { Conditions } from "../../domain/recommendation/types.ts";
+import type { Conditions, Preset } from "../../domain/recommendation/types.ts";
 import { presetTargets, validatePoolRequest } from "../../domain/recommendation/validate.ts";
 import { repositoryEngine } from "../../tools/content/repository.ts";
 
@@ -89,5 +92,49 @@ describe("hard filters on the validation recipes", () => {
     const result = filter({}, ["salmon_tempura"]);
     expect(result.eligible.map((entry) => entry.recipe.id)).not.toContain("salmon_tempura");
     expect(result.exclusions).toEqual([{ item: { constraint: "sessionExcluded" }, count: 1, onlyThis: 1 }]);
+  });
+});
+
+describe("fit of the validation recipes at default amounts", () => {
+  const PRESETS: readonly Preset[] = ["cut", "maintain", "bulk"];
+  const nutrition = new Map(
+    data.recipes.map((recipe): [string, RecipeNutrition] => {
+      const result = calculateNutrition(recipe, defaultState(recipe), data.engine);
+      if (!result.ok) throw new Error(recipe.id);
+      return [recipe.id, result.value];
+    }),
+  );
+  const tally = (tiers: readonly Tier[]) => ({
+    met: tiers.filter((tier) => tier === "met").length,
+    near: tiers.filter((tier) => tier === "near").length,
+    not_met: tiers.filter((tier) => tier === "not_met").length,
+  });
+  const withoutRanges = (value: RecipeNutrition): Pick<RecipeNutrition, "perServing" | "ranges"> => ({
+    perServing: value.perServing,
+    ranges: Object.fromEntries(Object.entries(value.ranges).map(([key, range]) => [key, range && { ...range, shown: false }])) as RecipeNutrition["ranges"],
+  });
+
+  it("matches the Stage 0.7 counts when ranges are ignored", () => {
+    const counts = PRESETS.map((preset) => tally([...nutrition.values()].map((value) => evaluateFit(withoutRanges(value), presetTargets(preset)).tier)));
+    expect(counts).toEqual([
+      { met: 6, near: 2, not_met: 12 },
+      { met: 4, near: 2, not_met: 14 },
+      { met: 2, near: 1, not_met: 17 },
+    ]);
+  });
+
+  it("keeps the reviewed statuses with shown ranges", () => {
+    const statuses = Object.fromEntries(
+      data.recipes.map((recipe) => {
+        const value = nutrition.get(recipe.id);
+        if (!value) throw new Error(recipe.id);
+        const fits = PRESETS.map((preset) => {
+          const fit = evaluateFit(value, presetTargets(preset));
+          return `${preset} ${fit.tier} (${fit.nutrients.map((entry) => `${entry.target} ${entry.status}${entry.basis === "range" ? " range" : ""}`).join(", ")})`;
+        });
+        return [recipe.id, fits];
+      }),
+    );
+    expect(statuses).toMatchSnapshot();
   });
 });

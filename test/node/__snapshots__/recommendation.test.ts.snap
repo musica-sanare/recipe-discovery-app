@@ -1,0 +1,106 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`fit of the validation recipes at default amounts > keeps the reviewed statuses with shown ranges 1`] = `
+{
+  "beef_shimeji_bowl": [
+    "cut not_met (kcal not_met range, protein met range, fat not_met range)",
+    "maintain not_met (kcal near range, protein met range, fat not_met range)",
+    "bulk near (kcal met range, protein near range, fat met range)",
+  ],
+  "beef_steak_potatoes": [
+    "cut not_met (kcal not_met range, protein met range, fat not_met)",
+    "maintain not_met (kcal near range, protein met range, fat not_met)",
+    "bulk near (kcal near range, protein met range, fat met)",
+  ],
+  "boiled_chicken_negi_salt": [
+    "cut near (kcal near range, protein near range, fat met)",
+    "maintain not_met (kcal not_met range, protein met range, fat met)",
+    "bulk not_met (kcal not_met range, protein not_met range, fat met)",
+  ],
+  "chicken_broccoli_stir_fry": [
+    "cut near (kcal met range, protein met range, fat near)",
+    "maintain met (kcal met range, protein met range, fat met)",
+    "bulk not_met (kcal not_met range, protein near range, fat met)",
+  ],
+  "chicken_lemon_herb_grill": [
+    "cut met (kcal met, protein met, fat met)",
+    "maintain not_met (kcal not_met, protein met, fat met)",
+    "bulk not_met (kcal not_met, protein near, fat met)",
+  ],
+  "chicken_mapo_tofu": [
+    "cut not_met (kcal near range, protein near range, fat not_met range)",
+    "maintain not_met (kcal met range, protein met range, fat not_met range)",
+    "bulk not_met (kcal near range, protein not_met range, fat met range)",
+  ],
+  "chicken_thigh_karaage": [
+    "cut near (kcal near range, protein met, fat near range)",
+    "maintain near (kcal near range, protein met, fat near range)",
+    "bulk near (kcal near range, protein met, fat met range)",
+  ],
+  "chicken_thigh_teriyaki": [
+    "cut met (kcal met, protein met range, fat met)",
+    "maintain met (kcal met, protein met range, fat met)",
+    "bulk not_met (kcal not_met, protein not_met range, fat met)",
+  ],
+  "cod_herb_crust": [
+    "cut not_met (kcal not_met, protein met, fat met)",
+    "maintain not_met (kcal not_met, protein met, fat met)",
+    "bulk not_met (kcal not_met, protein not_met, fat met)",
+  ],
+  "poached_egg_spinach_toast": [
+    "cut not_met (kcal near, protein not_met, fat not_met)",
+    "maintain not_met (kcal not_met, protein not_met, fat not_met)",
+    "bulk not_met (kcal not_met, protein not_met, fat met)",
+  ],
+  "pork_fillet_mustard_saute": [
+    "cut met (kcal met, protein met range, fat met)",
+    "maintain near (kcal near, protein met range, fat met)",
+    "bulk not_met (kcal not_met, protein near range, fat met)",
+  ],
+  "pork_fillet_tonkatsu": [
+    "cut not_met (kcal not_met range, protein met, fat not_met range)",
+    "maintain not_met (kcal not_met range, protein met, fat not_met range)",
+    "bulk near (kcal near range, protein near, fat near range)",
+  ],
+  "pork_loin_ginger": [
+    "cut met (kcal met range, protein met range, fat met)",
+    "maintain met (kcal met range, protein met range, fat met)",
+    "bulk not_met (kcal not_met range, protein near range, fat met)",
+  ],
+  "pork_shabu_salad": [
+    "cut met (kcal met, protein met, fat met)",
+    "maintain near (kcal near, protein met, fat met)",
+    "bulk not_met (kcal not_met, protein not_met, fat met)",
+  ],
+  "salmon_cabbage_microwave": [
+    "cut not_met (kcal met, protein not_met, fat met)",
+    "maintain not_met (kcal not_met, protein not_met, fat met)",
+    "bulk not_met (kcal not_met, protein not_met, fat met)",
+  ],
+  "salmon_tempura": [
+    "cut not_met (kcal near range, protein not_met, fat near range)",
+    "maintain near (kcal near range, protein near, fat near range)",
+    "bulk not_met (kcal not_met range, protein not_met, fat met range)",
+  ],
+  "salmon_tomato_pasta": [
+    "cut not_met (kcal near, protein met, fat not_met)",
+    "maintain not_met (kcal met, protein met, fat not_met)",
+    "bulk not_met (kcal not_met, protein not_met, fat met)",
+  ],
+  "tofu_egg_champuru": [
+    "cut not_met (kcal near range, protein near range, fat not_met)",
+    "maintain not_met (kcal met range, protein met range, fat not_met)",
+    "bulk not_met (kcal near range, protein not_met range, fat not_met)",
+  ],
+  "tortilla_espanola": [
+    "cut not_met (kcal near range, protein not_met, fat not_met range)",
+    "maintain not_met (kcal not_met range, protein not_met, fat not_met range)",
+    "bulk not_met (kcal not_met range, protein not_met, fat near range)",
+  ],
+  "tuna_tofu_bowl": [
+    "cut met (kcal met, protein met, fat met)",
+    "maintain not_met (kcal not_met, protein met, fat met)",
+    "bulk not_met (kcal not_met, protein not_met, fat met)",
+  ],
+}
+`;

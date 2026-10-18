@@ -188,17 +188,17 @@ Defined in `docs/CONTENT_POLICY.md`. Summary:
 - Attribution to the source tables is shown.
 - Lint, type-check, unit tests, content validation, E2E tests, accessibility checks in three locales, and the production build pass.
 
-## 16. Provisional values (not final)
+## 16. Provisional and decided values
 
 | Item | Provisional value | Decided in |
 |---|---|---|
-| Fit tolerance | ±10% (protein: up to 3 g below the minimum) | Phase 3 |
-| Display rounding | kcal to 10, protein/fat/carbohydrate to whole grams | Phase 2 |
-| Range display threshold | approximation share above ~10% of a value | Phase 2 |
+| Fit tolerance | **decided**: ±10% (protein: up to 3 g below the minimum) (ADR-025) | Phase 0 |
+| Display rounding | **decided**: kcal to 10, protein/fat/carbohydrate to whole grams; status from full precision (ADR-025) | Phase 0 |
+| Range display rule | **decided**: per-ingredient error bands by reason; range shown when wider than twice the display unit (ADR-025) | Phase 0 |
 | Initial recipe count | **decided**: about 60, with composition rules (ADR-023) | Phase 0 |
 | Amount adjustment scope | **decided**: main protein and staple only, with portion rules (ADR-024) | Phase 0 |
 | Browser storage of targets and viewed recipes | undecided (opt-in local storage is a candidate) | Phase 4 |
-| Preset values | cut 450–650 kcal / P ≥ 35 g / F ≤ 15 g; maintain 550–750 / ≥ 30 / ≤ 20; bulk 750–950 / ≥ 45 / ≤ 30 | Phase 3 |
+| Preset values | cut 450–650 kcal / P ≥ 35 g / F ≤ 15 g; maintain 550–750 / ≥ 30 / ≤ 20; bulk 750–950 / ≥ 45 / ≤ 30 | Phase 0 (decided, ADR-025) |
 
 ## 17. Open questions (要確認)
 

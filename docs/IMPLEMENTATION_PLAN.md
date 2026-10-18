@@ -11,6 +11,8 @@ Status: **Draft (2026-10-18)**. Each phase ends with checks, a summary to the ow
 
 ## Phase 0 — Validation and foundation
 
+Status: **Complete (2026-10-18)**. Results: `docs/DECISIONS.md` "Stage 0.1" to "Stage 0.7" logs and ADR-016 to ADR-025. Items still open are listed in `docs/DECISIONS.md` "Open questions".
+
 Goal: confirm the technical hypotheses that the specification depends on, and set up a minimal, reproducible toolchain.
 
 Foundation:

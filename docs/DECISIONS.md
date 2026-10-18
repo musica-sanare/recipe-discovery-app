@@ -122,6 +122,11 @@ Findings:
 - Required ingredients depend on how many recipes contain the ingredient (tofu appears in 3 of 20), not on the total number of recipes.
 - Follow-up (owner-approved): the four seasonings now have best-effort allergen lists based on their typical ingredients (cooking sake and wholegrain mustard: none of the listed allergens; Chinese-style stock granules: may contain wheat, milk, soybean, sesame, chicken, pork, beef; karaage coating mix: contains wheat, may contain milk, soybean, sesame, chicken). These are general assumptions about typical products, not checked against product labels (要確認). With them, S5 (cut, no egg) has 14 eligible recipes, 6 met with default amounts, and 10 met after adjustment.
 
+### Stage 0.7 provisional values (2026-10-18)
+- Tolerance sensitivity at default amounts (met / near / not met over 20 recipes): cut 6/2/12 for ±5 %/−2 g, ±10 %/−3 g, and ±15 %/−5 g alike; maintain 4/0/16, 4/2/14, 4/5/11; bulk 2/0/18, 2/1/17, 2/1/17.
+- Approximated or fried ingredients contribute more than 10 % of energy, protein, or fat in 15 of 20 recipes (more than 30 % in 13); in recipes whose main protein is approximated, 76–89 % of the protein comes from it. A share threshold would therefore show ranges for most recipes.
+- Rounding the displayed values (kcal to 10, grams to integers) before evaluating fit changed the status in 2 of 60 recipe-preset combinations.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in
@@ -256,13 +261,21 @@ Findings:
 - Decision: include deterministic "fit to my targets" in the MVP, limited to the authored adjustable ingredients (main protein and staple carbohydrate). Add portion rules before Phase 3: a staple is either 0 g or at least an authored minimum portion; linked seasonings scale with their group (Phase 1 schema). The selection keeps the best status and the smallest relative change, as in the evaluation tool.
 - Evidence: Stage 0.6 log (adjustment roughly doubles the met recipes; unnatural results without portion rules).
 
+## ADR-025: Fit tolerance, display rounding, ranges, and presets
+- Status: **Accepted** (owner accepted the Stage 0.7 recommendation, 2026-10-18)
+- Tolerance: ±10 % of a bound; protein up to 3 g below its minimum.
+- Rounding: kcal to the nearest 10; protein, fat, and carbohydrate to whole grams; salt to 0.1 g. Fit status is computed from full-precision values; contradictions caused by rounding are explained in the detail view.
+- Ranges: per-ingredient error bands by approximation reason, summed per nutrient; a range is shown when wider than twice the display unit. Bands and their evidence: `docs/NUTRITION_CALCULATION.md` §7 (two bands are measured, three are assumptions).
+- Presets (per meal, labelled as examples): cut 450–650 kcal, protein ≥ 35 g, fat ≤ 15 g; maintain 550–750 kcal, ≥ 30 g, ≤ 20 g; bulk 750–950 kcal, ≥ 45 g, ≤ 30 g. With bounded adjustment, 7–11 of the 20 validation recipes meet each preset (Stage 0.6).
+- Evidence: Stage 0.3, 0.6, and 0.7 logs.
+
 ---
 
 ## Open questions (要確認)
 
 1. ~~Carbohydrate column (ADR-011)~~: `CHOCDF-` accepted. Localized display names are set with the UI catalogs (Phase 4).
 2. Extraction method for Tables 12–14 from the PDF; use of chapter 3 group-level rates for missing cooked forms.
-3. Tolerance, display rounding, and range threshold values (`docs/SPEC.md` §16).
+3. ~~Tolerance, display rounding, and range threshold values~~: ADR-025. Evidence for the assumed error bands is still needed.
 4. ~~Initial recipe count and the scope of automatic adjustment~~: accepted in ADR-023 and ADR-024 (Stage 0.6); portion rules and linked seasonings are designed in Phase 1/3.
 5. Browser storage of targets and viewed recipes.
 6. Whether the 2015 English edition's names and food codes can serve as a reference for English names.

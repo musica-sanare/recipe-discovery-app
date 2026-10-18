@@ -80,19 +80,29 @@ A range that straddles a target boundary yields "near / uncertain", never "met".
 | Approximation | Similar food used, raw value for a cooked ingredient, household measure conversion, estimated `( )` values | "approx." and reason in the basis |
 | Hard to estimate | Absorbed frying oil, "a pinch", liquid discarded after cooking | Assumption stated; range shown when significant |
 
-*Provisional*: show a range when approximation or hard-to-estimate items contribute more than about 10% of a displayed value.
+Ranges (ADR-025, accepted 2026-10-18). A share-based threshold does not work: in 15 of 20 validation recipes, approximated or fried ingredients contribute more than 10% of the energy, protein, or fat, mostly because the main protein itself is an approximation (76–89% of the protein in those recipes). Instead, each counted ingredient gets an error band by reason, the bands are added per nutrient, and a range is shown when its width exceeds twice the display unit (20 kcal; 2 g for protein, fat, and carbohydrate).
+
+| Reason | Error band applied to the ingredient's contribution | Basis |
+|---|---|---|
+| Cooking method not in the tables, raw value used | −15 % to +5 % | *Measured*: cooked-to-raw protein retention 0.87–1.03 for meat and fish (Stage 0.3) |
+| Related cooked value used (for example grilled for sautéed), or parts removed after cooking | ±5 % | *Assumption* |
+| Fried state (oil absorption) | ±30 % of the ingredient's fat and of the energy from that fat | *Assumption* |
+| Slow frying in a large amount of oil (authored as hard to estimate) | 0 to +50 % of the ingredient's fat and of the energy from that fat | *Assumption* |
+
+The assumptions are labelled as such in the basis and revisited when better evidence exists. A range that straddles a target boundary yields "near", never "met" (§9).
 
 ## 8. Per-serving values and rounding
 
 - Internal calculation uses full precision; rounding applies only to displayed values.
 - Per-serving values = recipe totals / servings.
-- *Provisional* display rounding: kcal to the nearest 10; protein, fat, and carbohydrate to whole grams; salt to 0.1 g.
+- Display rounding (ADR-025): kcal to the nearest 10; protein, fat, and carbohydrate to whole grams; salt to 0.1 g. Energy is shown in steps of 10 because the table energy and the 4P + 9F + 4C estimate already differ by a median of 4 %.
+- Fit status is always computed from full-precision values, never from rounded ones (rounded values changed the status in 2 of 60 recipe-preset combinations). When the rounded display looks like it meets a bound that the full value misses (for example 34.6 g shown as 35 g against a 35 g minimum), the detail view shows the value to one decimal with "just below the target".
 - Formatting (decimal separator, unit labels) is locale-specific; values are not.
 
 ## 9. Target fit
 
 - Each target is a range or a bound. Status per nutrient: **met** (inside), **near** (outside but within tolerance), **not met**.
-- *Provisional* tolerance: ±10% of the bound; protein up to 3 g below its minimum.
+- Tolerance (ADR-025): ±10% of the bound; protein up to 3 g below its minimum. It matches the size of the main approximation error (up to about 13% for meat calculated from raw values); ±15% made "near" much more frequent for the maintenance preset (2 → 5 of 20 recipes) without adding information.
 - Uncertain values: evaluated on the range when a range is shown; straddling a boundary gives "near".
 
 ## 10. Bounded amount adjustment
@@ -121,5 +131,5 @@ Nutrition and recommendation functions take no locale input. Tests calculate eve
 1. ~~Carbohydrate column~~: `CHOCDF-` (ADR-011). Display names in three locales are set with the UI catalogs.
 2. How to extract Table 12 (weight change rates) and Tables 13–14 reliably from the PDF.
 3. Whether to use the chapter 3 group-level rates of change for missing cooked forms.
-4. Tolerance, rounding, and range threshold values (validated with the Phase 0 recipes).
+4. ~~Tolerance, rounding, and range threshold values~~: decided in ADR-025. The error bands marked *Assumption* need evidence.
 5. Expected accuracy versus real cooking cannot be quantified without measurement; the UI states the limits instead.

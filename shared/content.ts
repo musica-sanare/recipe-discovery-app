@@ -51,6 +51,7 @@ export type Allergen = (typeof ALLERGENS)[number];
  * excluded by every allergen filter.
  */
 export const allergenLinkSchema = z.object({ allergen: z.enum(ALLERGENS), confidence: z.enum(["contains", "may_contain"]) });
+export type AllergenLink = z.infer<typeof allergenLinkSchema>;
 
 /** States a food can be used in: `raw`, `as_is` (eaten as sold, e.g. cooked rice, canned tuna), or a cooking method. */
 export const FOOD_STATES = ["raw", "as_is", ...COOKING_METHODS] as const;
@@ -192,6 +193,8 @@ export type Substitution = z.infer<typeof substitutionSchema>;
 export const CUISINES = ["japanese", "chinese", "korean", "western", "spanish", "okinawan"] as const;
 export const GOALS = ["cut", "maintain", "bulk"] as const;
 export const EQUIPMENT = ["stove", "microwave", "oven_toaster", "pot", "frying_pan", "deep_pan"] as const;
+export type Cuisine = (typeof CUISINES)[number];
+export type Equipment = (typeof EQUIPMENT)[number];
 /** Authored tags. "Quick" and "fried" are derived (shared/recipe.ts). */
 export const RECIPE_TAGS = ["batch", "no_cook", "breakfast"] as const;
 

@@ -16,6 +16,7 @@ Before changing code or content, read:
 - `docs/DATA_SOURCES.md`
 - `docs/IMPLEMENTATION_PLAN.md`
 - `docs/DECISIONS.md`
+- `docs/DEVELOPMENT.md`
 
 If any path does not exist, report it rather than silently inventing its contents.
 

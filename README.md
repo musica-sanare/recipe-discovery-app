@@ -6,7 +6,7 @@ The app supports Japanese, English, and Spanish (`ja`, `en`, `es`) from the MVP.
 
 ## Status
 
-Planning. No application code exists yet. The product specification and design documents are the current baseline:
+Phase 0 (validation and foundation). A minimal app shell with the `ja`/`en`/`es` language switcher exists; product features are not implemented yet. Local setup: [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md). The product specification and design documents are the current baseline:
 
 | Document | Contents |
 |---|---|
@@ -17,6 +17,7 @@ Planning. No application code exists yet. The product specification and design d
 | [`docs/DATA_SOURCES.md`](docs/DATA_SOURCES.md) | External data sources, terms, attribution, and handling rules |
 | [`docs/DECISIONS.md`](docs/DECISIONS.md) | Verification log and architecture decision records |
 | [`docs/IMPLEMENTATION_PLAN.md`](docs/IMPLEMENTATION_PLAN.md) | Phased plan from validation to MVP |
+| [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md) | Local setup and commands |
 
 Contributor and AI-assistant rules are in [`CLAUDE.md`](CLAUDE.md).
 

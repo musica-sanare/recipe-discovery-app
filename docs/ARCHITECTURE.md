@@ -28,8 +28,8 @@ Repository content (recipes, food dictionary, translations)
 
 | Layer | Responsibility | Must not depend on |
 |---|---|---|
-| `domain/nutrition` | Per-ingredient and per-recipe nutrition, cooking-state handling, uncertainty classification, rounding for display values | UI, i18n, locale, platform, network |
-| `domain/recommendation` | Hard filters, fit evaluation, fit tiers, diversification, seeded re-suggestion, bounded adjustment solver, substitutions, relaxation suggestions, contradiction checks | UI, i18n, locale, platform, network |
+| `domain/nutrition` | Amount resolution for a recipe state (servings, sides, linked ingredients, chosen substitutions), per-ingredient and per-recipe nutrition, cooking-state handling, uncertainty classification, ranges, rounding for display values (ADR-028) | UI, i18n, locale, platform, network |
+| `domain/recommendation` | Hard filters, fit evaluation, fit tiers, diversification, seeded re-suggestion, bounded adjustment solver, substitution suggestions, relaxation suggestions, contradiction checks | UI, i18n, locale, platform, network |
 | `shared` | Content schemas and types, IDs, units, constants used by build tools, domain, and UI | UI, platform |
 | `content/` (data) | Recipes, food dictionary, allergen links, substitutions, localized texts, glossary | — |
 | `tools/` (build time) | Composition extraction, content validation, policy lint, nutrition snapshots, header generation | UI |

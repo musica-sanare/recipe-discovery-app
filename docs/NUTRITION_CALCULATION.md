@@ -77,17 +77,27 @@ A range that straddles a target boundary yields "near / uncertain", never "met".
 | Class | Examples | Display |
 |---|---|---|
 | Exact | Direct food code match, grams stated, cooked form available | Normal ("estimate" label always applies) |
-| Approximation | Similar food used, raw value for a cooked ingredient, household measure conversion, estimated `( )` values | "approx." and reason in the basis |
-| Hard to estimate | Absorbed frying oil, "a pinch", liquid discarded after cooking | Assumption stated; range shown when significant |
+| Approximation | Similar food used, raw value or related cooked value for a cooked ingredient, parts removed after cooking, tabulated fried form, estimated `( )` values | "approx." and reason in the basis |
+| Hard to estimate | Slow frying in a large amount of oil, absorbed frying oil without a tabulated fried form, liquid discarded after cooking | Assumption stated; range shown when significant |
+
+Household measures such as "a pinch" do not change the class: recipes state grams, and the measure is a display aid noted in the basis. Trace and estimated-zero values (`Tr`, `(0)`, `(Tr)`) are flags only (§3). An ingredient's class is the most severe class of its reasons (ADR-028).
 
 Ranges (ADR-025, accepted 2026-10-18). A share-based threshold does not work: in 15 of 20 validation recipes, approximated or fried ingredients contribute more than 10% of the energy, protein, or fat, mostly because the main protein itself is an approximation (76–89% of the protein in those recipes). Instead, each counted ingredient gets an error band by reason, the bands are added per nutrient, and a range is shown when its width exceeds twice the display unit (20 kcal; 2 g for protein, fat, and carbohydrate).
 
-| Reason | Error band applied to the ingredient's contribution | Basis |
-|---|---|---|
-| Cooking method not in the tables, raw value used | −15 % to +5 % | *Measured*: cooked-to-raw protein retention 0.87–1.03 for meat and fish (Stage 0.3) |
-| Related cooked value used (for example grilled for sautéed), or parts removed after cooking | ±5 % | *Assumption* |
-| Fried state (oil absorption) | ±30 % of the ingredient's fat and of the energy from that fat | *Assumption* |
-| Slow frying in a large amount of oil (authored as hard to estimate) | 0 to +50 % of the ingredient's fat and of the energy from that fat | *Assumption* |
+| Reason (engine identifier) | Class | Error band applied to the ingredient's contribution | Basis |
+|---|---|---|---|
+| Cooking method not in the tables, raw value used (`raw_value_for_cooking`) | Approximation | −15 % to +5 % | *Measured*: cooked-to-raw protein retention 0.87–1.03 for meat and fish (Stage 0.3) |
+| Related cooked value used, for example grilled for sautéed (`related_cooked_value`) | Approximation | ±5 % | *Assumption* |
+| Parts removed after cooking (`post_cooking_refuse`) | Approximation | ±5 % | *Assumption* |
+| Fried state, oil absorption (`fried`) | Approximation | ±30 % of the ingredient's fat and of the energy from that fat | *Assumption* |
+| Slow frying in a large amount of oil, authored as hard to estimate (`slow_frying`) | Hard to estimate | 0 to +50 % of the ingredient's fat and of the energy from that fat | *Assumption* |
+| Estimated `( )` value in a displayed nutrient (`estimated_source_value`) | Approximation | None (flag and reason only) | No evidence for a band yet |
+
+Rules (ADR-028):
+- Energy from fat is fat × 9 kcal/g (*Assumption*, stated in the basis).
+- Bands of several reasons on one ingredient add up, except that `slow_frying` replaces the `fried` band.
+- Bands are summed per nutrient over counted ingredients. Whether a range is shown is decided on the per-serving range: shown when wider than twice the display unit (20 kcal; 2 g for protein, fat, and carbohydrate; 0.2 g for salt).
+- A nutrient with an unmeasured counted value has no point value and no range (§3).
 
 The assumptions are labelled as such in the basis and revisited when better evidence exists. A range that straddles a target boundary yields "near", never "met" (§9).
 
@@ -109,6 +119,8 @@ The assumptions are labelled as such in the basis and revisited when better evid
 
 - Only ingredients marked adjustable in the recipe can change, within their authored minimum, maximum, and step. Integer units stay integers (amount = count × unit grams).
 - Linked ingredients (for example the seasonings of the main protein) scale proportionally with their leader: amount = default amount × leader amount / leader default amount.
+- Amounts and bounds refer to the recipe's authored servings; a servings change multiplies every resolved amount afterwards, so per-serving values do not depend on the number of servings (ADR-028).
+- A chosen substitution replaces the ingredient's food, state, cooking method, and amount (default × ratio, with its own bounds if given) during amount resolution; ingredients linked to it keep their proportion (ADR-028).
 - Sides (ADR-024, ADR-026): a side that is switched off contributes 0 g, including the ingredients linked to it. The solver may switch off only sides marked for it; otherwise a side's adjustable ingredient stays within its range, whose minimum is the smallest natural portion.
 - The solver searches the allowed grid and picks the solution that meets the targets with the smallest relative change from the default amounts; ties use a stable order. The result is deterministic.
 - If no in-bounds solution meets all targets, the closest solution is shown as "near" with the remaining gaps.

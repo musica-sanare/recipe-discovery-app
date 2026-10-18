@@ -128,7 +128,7 @@ Recipe detail:
 Rules are in `docs/NUTRITION_CALCULATION.md`. User-facing behavior:
 - Values are labelled as estimates.
 - Each ingredient's contribution, food code, data version, and cooking state are visible.
-- Uncertainty classes: exact mapping, approximation (similar food, raw value used for a cooked ingredient, household measure conversion), and hard-to-estimate (fried foods, "a pinch"). Approximations are explained; large uncertainty is shown as a range.
+- Uncertainty classes: exact mapping, approximation (similar food, raw or related cooked value used for a cooked ingredient, fried foods with a tabulated fried form), and hard-to-estimate (slow frying in a lot of oil, fried foods without a tabulated form). Household measures such as "a pinch" are display aids; the calculation uses the stated grams. Approximations are explained; large uncertainty is shown as a range.
 - When a value range straddles a target boundary, the status is "near / uncertain", never "met".
 - Energy is taken from the source tables and may not equal 4P + 9F + 4C; the detail view explains why.
 

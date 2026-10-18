@@ -162,6 +162,15 @@ Findings:
   - `npm run check` (lint, type-check, 191 tests, content validation, build) passes.
 - Layout check with `vite preview` at 375 × 812 px (Spanish): no horizontal overflow (page width 375 px), and the footer with both versions wraps correctly. The error state was checked in UI tests only, not in a browser.
 
+### Phase 2 start (2026-10-18)
+- Re-check of ADR-016 (npm registry, 11:56 UTC): no `i18next` release after 26.5.2 (2026-10-17 21:24 UTC) and no `react-i18next` release after 17.1.0 (2026-10-17 19:01 UTC). Less than 48 hours have passed since the burst, so the pins stay; re-check after 2026-10-19 21:24 UTC.
+- Re-check of ADR-017 (npm registry): `typescript` latest is 7.0.2 and the latest 6.x is 6.0.3; `typescript-eslint` 8.71.2 (latest) and 8.71.3-alpha.13 (canary) still declare peer `typescript >=4.8.4 <6.1.0`. TypeScript stays at `~6.0.3`.
+
+### Stage 2.1 engine design (2026-10-18)
+- The owner approved the engine design and decisions A–G (ADR-028).
+- *Measured* (20 recipes, counted ingredients, displayed nutrients): no `( )` estimated values and no unmeasured values; non-measured notations are `0` (181 values), `Tr` (7, all fat), and `(0)` (10). Approximation triggers: 9 raw values for an untabulated method, 3 related cooked values (grilled for sautéed), 1 removal after cooking, 2 slow-frying ingredients. 9 ingredients use the "pinch" measure (pepper 0.2–0.3 g, salt 0.5 g). The library has 1 substitution.
+- Expected snapshot impact (to be confirmed in Stage 2.5): default-state point values of the displayed nutrients are unchanged; the non-displayed columns (`PROTCAA`, `FATNLEA`, `CHOAVLDF-`, `FIB-`) leave the snapshot because the engine reads the calculation bundle; ranges, classes, and incompleteness are added. Ingredients with a tabulated fried form move from exact to approximation (decision G).
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in
@@ -330,6 +339,36 @@ Findings:
 - Rationale: plain static JSON that any host can serve (ADR-001); content hashes allow long caching; translations cannot affect the data the calculation uses.
 - Alternatives: a custom Vite plugin that emits hashed files and serves them in development (more code); content as dynamically imported JavaScript modules (simpler, but executable code instead of JSON).
 
+## ADR-028: Nutrition engine design, approximation reasons, and error bands
+- Status: **Accepted** (owner, 2026-10-18, Stage 2.1)
+- API (`domain/nutrition`, no locale parameter):
+  - `engineDataFromBundle(calc)` turns the calculation bundle into lookup maps (foods, composition of the five displayed nutrients, weight change rates, versions).
+  - `resolveAmounts(recipe, state, data)` and `calculateRecipe(recipe, state, data)` take a recipe state: `servings`, `sidesOff` (side keys), `amounts` (grams for `grams` adjustment, a count for `count` adjustment, keyed by ingredient), and `substitutions` (substitution keys).
+  - Invalid user states (amount outside the bounds or off the grid, a non-integer count, an unknown key) return a typed error result. Data inconsistencies (missing food code or weight change rate) throw, because build-time validation rules them out.
+  - Output per ingredient: resolved grams, effective grams, food code, state, cooking method, weight change rate, counted or the reason it is not (`included_in`, `side_off`), class, reasons, notations, amounts, error band, assumptions. Per recipe: totals, per-serving values, per-nutrient ranges with a "shown" flag, incompleteness (ingredient keys with unmeasured values per nutrient), and the basis (content version, workbook date and SHA-256, explanation PDF SHA-256).
+- Reasons, classes, and bands (resolves open question 15; `docs/NUTRITION_CALCULATION.md` §7):
+
+  | Reason | Trigger | Class | Band |
+  |---|---|---|---|
+  | `raw_value_for_cooking` | `cooking` set, state `raw` | approximation | −15 % to +5 % of every nutrient |
+  | `related_cooked_value` | `cooking` set, state is a cooking method | approximation | ±5 % |
+  | `post_cooking_refuse` | weight change rate removes parts after cooking | approximation | ±5 % |
+  | `fried` | fried state or fried cooking method | approximation | ±30 % of fat and of the energy from that fat |
+  | `slow_frying` | `estimate: "slow_frying"` | hard to estimate | 0 to +50 % of fat and of the energy from that fat |
+  | `estimated_source_value` | `( )` value in a displayed nutrient | approximation | none |
+
+- Decisions:
+  - **A. Substitutions** are applied during amount resolution in Phase 2 (food, state, cooking, ratio, bounds; reasons are re-evaluated for the new food). Offering and choosing substitutions stays in Phase 3 (`domain/recommendation`). Links keep their proportion because the leader's default scales with the ratio.
+  - **B. Energy from fat** in the fried and slow-frying bands uses 9 kcal/g. This is an *assumption*, stated in the basis.
+  - **C. Notations**: `( )` estimated values give the approximation reason `estimated_source_value` with no band. `Tr`, `(0)`, and `(Tr)` count as 0 and are flags only (class unchanged).
+  - **D. Household measures** such as "a pinch" do not make an ingredient hard to estimate: the recipe states grams, and the measure is a display aid. The basis notes this.
+  - **E. Tools and tests** obtain engine input from the in-memory calculation bundle (`buildCalcBundle` then `engineDataFromBundle`), so they test exactly what the browser uses. Hand cross-checks keep computing independently from `data/composition/`.
+  - **F. Servings**: `amounts` and adjustment bounds refer to the authored servings; a servings change multiplies all resolved grams afterwards. Per-serving values therefore do not depend on servings. A scaled count may be fractional; the display is decided in Phase 4.
+  - **G. Combination**: bands of several reasons on one ingredient add up, except that `slow_frying` replaces the `fried` band. The class is the most severe of the reasons (exact < approximation < hard to estimate), so an ingredient with a tabulated fried form is an approximation. Bands are summed per nutrient; whether a range is shown is decided on the per-serving range, with threshold twice the display unit (20 kcal; 2 g for protein, fat, and carbohydrate; 0.2 g for salt, ADR-025).
+- Rationale: one pure engine shared by the browser and the tools; the two §7 bands for untabulated cooking can now apply separately; no new numbers except the stated energy factor.
+- Alternatives: substitutions only in Phase 3 (the detail view could not recalculate them in Phase 2); trace and estimated values as approximations with an invented band; "a pinch" as hard to estimate (contradicts the authored grams); computing tools from the full source subset (would not test the browser's data).
+- Evidence: verification log "Stage 1.3" and "Stage 2.1 engine design".
+
 ---
 
 ## Open questions (要確認)
@@ -348,4 +387,5 @@ Findings:
 12. Best-effort allergen lists for cooking sake, wholegrain mustard, Chinese-style stock granules, and karaage coating mix are based on typical ingredients, not product labels (Stage 0.6 log).
 13. Owner review of the English and Spanish texts added or rewritten in Phase 1: split steps, side labels, and the substitution step texts (Stage 1.1 log, ADR-007).
 14. Whether every food must have at least one search alias per locale; validation currently allows empty alias lists (Stage 1.2).
-15. Phase 2 must distinguish raw values from related cooked values for the error bands of `docs/NUTRITION_CALCULATION.md` §7 (Stage 1.3 log).
+15. ~~Phase 2 must distinguish raw values from related cooked values for the error bands~~: separate reasons `raw_value_for_cooking` and `related_cooked_value` (ADR-028).
+16. Re-check the `i18next`/`react-i18next` pins after 2026-10-19 21:24 UTC (ADR-016, "Phase 2 start").

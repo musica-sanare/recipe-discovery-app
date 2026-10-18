@@ -50,6 +50,8 @@ Acceptance: invalid content fails the build with clear messages; tests cover eac
 
 ## Phase 2 — Nutrition engine
 
+Status: **Complete (2026-10-18)**. Results: `docs/DECISIONS.md` "Phase 2 start" and "Stage 2.1" to "Stage 2.6" logs, and ADR-028. Items still open are listed in `docs/DECISIONS.md` "Open questions".
+
 - Pure `domain/nutrition`: formulas (c4, c5), cooking states, notation handling, uncertainty classes, ranges, rounding for display.
 - Nutrition snapshot tests for all recipes; locale invariance test.
 

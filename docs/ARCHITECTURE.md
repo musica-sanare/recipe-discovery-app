@@ -94,7 +94,7 @@ Details are finalized in Phase 1 and documented in `docs/NUTRITION_CALCULATION.m
 2. Validate user inputs; detect contradictory targets.
 3. Hard filters → fit evaluation (default amounts, then bounded adjustment) → fit tiers → diversification → stable ordering.
 4. Render candidates and deterministic reason texts from message templates.
-5. Recalculate on every adjustment; the engine is pure and fast enough to run on each change (to be measured in Phase 2).
+5. Recalculate on every adjustment; the engine is pure and fast enough to run on each change (about 0.02 ms per recipe in Node; `docs/DECISIONS.md` "Stage 2.5").
 
 ## 7. Platform independence
 

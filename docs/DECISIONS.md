@@ -202,6 +202,12 @@ Findings:
 - Engine errors name the ingredient (`ingredients.<key>: …`); the report adds the recipe.
 - Removed: `domain/nutrition/calculate.ts` (Phase 0 calculation), `test/node/nutrition.test.ts` and its snapshot, and `test/node/nutritionData.ts`. The hand cross-checks and counting tests moved to `test/node/engine.test.ts`; formula, notation, and unmeasured-value tests live in `domain/nutrition/engine.test.ts`; locale invariance and the snapshot moved in Stage 2.5. The bundle test now checks that the bundle carries the source values, refuse rates, and weight change rates unchanged and covers every food state the recipes use, instead of comparing two Phase 0 calculations. The non-displayed columns (`PROTCAA`, `FATNLEA`, `CHOAVLDF-`, `FIB-`) stay in `data/composition/` but are no longer calculated per recipe.
 
+### Phase 2 acceptance (2026-10-18)
+- Amount resolution, formula, notation, uncertainty, range, rounding, locale invariance, and determinism tests pass (`domain/nutrition/*.test.ts`, `test/node/engine.test.ts`).
+- The snapshot of all 20 recipes was reviewed and approved by the owner; every difference from Phase 0 is explained in the Stage 2.5 log (no point value changed).
+- Recalculation time is measured and recorded (Stage 2.5).
+- `npm run check` (lint, type-check, 250 tests, content validation, build) passes; `npm run eval:coverage` and `npm run report:composition` run, with their output changes explained in the Stage 2.6 log.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in
@@ -420,3 +426,5 @@ Findings:
 14. Whether every food must have at least one search alias per locale; validation currently allows empty alias lists (Stage 1.2).
 15. ~~Phase 2 must distinguish raw values from related cooked values for the error bands~~: separate reasons `raw_value_for_cooking` and `related_cooked_value` (ADR-028).
 16. Re-check the `i18next`/`react-i18next` pins after 2026-10-19 21:24 UTC (ADR-016, "Phase 2 start").
+17. Recalculation time in browsers, especially on phones; Phase 2 measured Node.js only (Stage 2.5). Check with the UI in Phase 4.
+18. The fried and slow-frying bands are assumptions and give wide ranges for fried dishes (tonkatsu 835–1,034 kcal per serving, Stage 2.3); they decide "near" for those recipes in Phase 3.

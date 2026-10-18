@@ -177,6 +177,11 @@ Findings:
 - A linked ingredient outside a side follows its leader to 0 g when the leader's side is off, and is marked `switchedOff`.
 - Tests (`domain/nutrition/amounts.test.ts`, 21 cases): every rule, invalid states, determinism across reordered input, and all 20 repository recipes at default state resolve to their authored grams. The Phase 0 calculation and `tools/evaluate-coverage.ts` are unchanged until Stage 2.6.
 
+### Stage 2.3 calculation and uncertainty (2026-10-18)
+- `domain/nutrition/data.ts` (`engineDataFromBundle`) and `domain/nutrition/engine.ts` (`calculateNutrition`): (c4), (c5), notations, `includedIn`, sides switched off, the reasons, classes, and bands of ADR-028, per-serving ranges with the display thresholds, and incompleteness. A fried ingredient whose fat is unmeasured has no energy or fat range.
+- Tests: `domain/nutrition/engine.test.ts` (21 cases on hand-made composition data: every formula, reason, band, combination, threshold boundary, and unmeasured case) and `test/node/engine.test.ts` (repository content through the in-memory calculation bundle).
+- *Measured* (20 recipes, default state, calculation bundle): per-serving values of the five displayed nutrients equal the Phase 0 calculation to nine decimals. Counted reasons: 9 `raw_value_for_cooking`, 3 `related_cooked_value`, 1 `post_cooking_refuse`, 3 `fried`, 2 `slow_frying`, 0 `estimated_source_value`. Recipe classes: 5 exact, 14 approximation, 1 hard to estimate. Ranges shown: energy in 11 recipes, protein in 9, fat in 6, carbohydrate in 1, salt in none. The widest are the fried dishes (tonkatsu 835–1,034 kcal and 27.4–49.4 g fat per serving; karaage 654–755 kcal; salmon tempura 546–662 kcal).
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in

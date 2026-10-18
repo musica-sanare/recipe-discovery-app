@@ -171,6 +171,12 @@ Findings:
 - *Measured* (20 recipes, counted ingredients, displayed nutrients): no `( )` estimated values and no unmeasured values; non-measured notations are `0` (181 values), `Tr` (7, all fat), and `(0)` (10). Approximation triggers: 9 raw values for an untabulated method, 3 related cooked values (grilled for sautéed), 1 removal after cooking, 2 slow-frying ingredients. 9 ingredients use the "pinch" measure (pepper 0.2–0.3 g, salt 0.5 g). The library has 1 substitution.
 - Expected snapshot impact (to be confirmed in Stage 2.5): default-state point values of the displayed nutrients are unchanged; the non-displayed columns (`PROTCAA`, `FATNLEA`, `CHOAVLDF-`, `FIB-`) leave the snapshot because the engine reads the calculation bundle; ranges, classes, and incompleteness are added. Ingredients with a tabulated fried form move from exact to approximation (decision G).
 
+### Stage 2.2 amount resolution (2026-10-18)
+- `domain/nutrition/amounts.ts`: `resolveAmounts(recipe, state)` applies substitutions, chosen amounts, links, sides switched off, and servings scaling (ADR-028). Invalid states return all errors as typed values in a stable order (`invalid_servings`, `unknown_side`, `unknown_substitution`, `conflicting_substitutions`, `unknown_ingredient`, `not_adjustable`, `invalid_number`, `out_of_bounds`, `off_grid`, `not_whole_units`).
+- The recipe parameter is a structural subset that both content recipes and calculation-bundle recipes satisfy.
+- A linked ingredient outside a side follows its leader to 0 g when the leader's side is off, and is marked `switchedOff`.
+- Tests (`domain/nutrition/amounts.test.ts`, 21 cases): every rule, invalid states, determinism across reordered input, and all 20 repository recipes at default state resolve to their authored grams. The Phase 0 calculation and `tools/evaluate-coverage.ts` are unchanged until Stage 2.6.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in

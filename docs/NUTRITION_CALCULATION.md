@@ -113,7 +113,8 @@ The assumptions are labelled as such in the basis and revisited when better evid
 
 - Each target is a range or a bound. Status per nutrient: **met** (inside), **near** (outside but within tolerance), **not met**.
 - Tolerance (ADR-025): ±10% of the bound; protein up to 3 g below its minimum. It matches the size of the main approximation error (up to about 13% for meat calculated from raw values); ±15% made "near" much more frequent for the maintenance preset (2 → 5 of 20 recipes) without adding information.
-- Uncertain values: evaluated on the range when a range is shown; straddling a boundary gives "near".
+- Uncertain values: evaluated on the range when a range is shown; straddling a boundary gives "near". A range that is not shown is evaluated as its point value (ADR-029 D1).
+- A nutrient with an unmeasured counted value has the status "unknown" and is never "met" (ADR-029 D2).
 
 ## 10. Bounded amount adjustment
 
@@ -122,7 +123,7 @@ The assumptions are labelled as such in the basis and revisited when better evid
 - Amounts and bounds refer to the recipe's authored servings; a servings change multiplies every resolved amount afterwards, so per-serving values do not depend on the number of servings (ADR-028).
 - A chosen substitution replaces the ingredient's food, state, cooking method, and amount (default × ratio, with its own bounds if given) during amount resolution; ingredients linked to it keep their proportion (ADR-028).
 - Sides (ADR-024, ADR-026): a side that is switched off contributes 0 g, including the ingredients linked to it. The solver may switch off only sides marked for it; otherwise a side's adjustable ingredient stays within its range, whose minimum is the smallest natural portion.
-- The solver searches the allowed grid and picks the solution that meets the targets with the smallest relative change from the default amounts; ties use a stable order. The result is deterministic.
+- The solver searches the allowed grid and picks the solution that meets the targets with the smallest relative change from the default amounts; ties use a stable order. The result is deterministic. Search method, objective, and tie-breaking: ADR-029 D4.
 - If no in-bounds solution meets all targets, the closest solution is shown as "near" with the remaining gaps.
 
 ## 11. Locale invariance

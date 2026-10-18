@@ -92,16 +92,16 @@ Home
 1. Apply hard constraints.
 2. For each remaining recipe, evaluate the target fit at the default amounts and, where allowed, with bounded amount adjustment (section 8).
 3. Group recipes into fit tiers: all targets met, some targets near (within tolerance), some targets not met.
-4. Within the best available tier, select candidates with a deterministic diversification step so that the set varies in main protein source, cuisine, and cooking method. Remaining ties use preference scores and then a stable identifier order.
+4. Within the best available tier, select candidates with a deterministic diversification step so that the set varies in main protein source, cuisine, and cooking method. Remaining ties use preference scores, then the smaller amount change, then a seeded order with the recipe ID as the last tie-break.
 5. "Show a different type" draws the next diverse set from the same eligible pool with a seeded, reproducible order, excluding candidates already shown in the session.
 
-The exact tolerance, preference weights, and diversification rule are defined in Phase 3 and recorded in `docs/DECISIONS.md`.
+Tolerance: ADR-025. Fit evaluation with ranges, tiers, the solver objective, diversification (with a derived cooking-method family), preferences as a lexicographic key without weights, the seeded order, hard filters, relaxation, and contradiction checks: ADR-029.
 
 ## 7. Candidate card and recipe detail
 
 Candidate card:
 - Recipe name, time, effort.
-- kcal / protein / fat / carbohydrate per serving, each shown against the target band with a status (met / near / not met).
+- kcal / protein / fat / carbohydrate per serving, each shown against the target band with a status (met / near / not met; unknown when a source value is unmeasured).
 - "Adjusted" badge with the adjustment summary when amounts were adjusted (for example "chicken breast 120 g → 160 g").
 - One-line deterministic reason (for example "Meets the protein target with the lowest fat of these candidates").
 - Uncertainty badge when the estimate includes approximations; allergen notice when relevant.

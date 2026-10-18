@@ -1,0 +1,2311 @@
+{
+  "source": {
+    "title": "日本食品標準成分表（八訂）増補2023年",
+    "url": "https://www.mext.go.jp/content/20260327-mxt_kagsei-mext-000029402_02.xlsx",
+    "workbookUpdated": "2026-03-27",
+    "sha256": "0d5a77077dd6cd91cbc2e6e317b8b218a38728c409eed452f1c10635a0d3099c",
+    "sheet": "表全体"
+  },
+  "foods": [
+    {
+      "code": "01063",
+      "nameJa": "こむぎ ［マカロニ・スパゲッティ類］ マカロニ・スパゲッティ 乾",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 347,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 12.9,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 12,
+          "notation": "measured"
+        },
+        "FAT-": {
+          "value": 1.8,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 1.5,
+          "notation": "measured"
+        },
+        "CHOAVLDF-": {
+          "value": 68.9,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 73.1,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 5.4,
+          "notation": "measured"
+        },
+        "NACL_EQ": {
+          "value": 0,
+          "notation": "zero"
+        }
+      }
+    },
+    {
+      "code": "01064",
+      "nameJa": "こむぎ ［マカロニ・スパゲッティ類］ マカロニ・スパゲッティ ゆで",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 150,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 5.8,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 5.3,
+          "notation": "measured"
+        },
+        "FAT-": {
+          "value": 0.9,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 0.7,
+          "notation": "measured"
+        },
+        "CHOAVLDF-": {
+          "value": 29.7,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 32.2,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 3,
+          "notation": "measured"
+        },
+        "NACL_EQ": {
+          "value": 1.2,
+          "notation": "measured"
+        }
+      }
+    },
+    {
+      "code": "01088",
+      "nameJa": "こめ ［水稲めし］ 精白米 うるち米",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 156,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 2.5,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 2,
+          "notation": "measured"
+        },
+        "FAT-": {
+          "value": 0.3,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 0.2,
+          "notation": "measured"
+        },
+        "CHOAVLDF-": {
+          "value": 36.1,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 37.1,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 1.5,
+          "notation": "measured"
+        },
+        "NACL_EQ": {
+          "value": 0,
+          "notation": "zero"
+        }
+      }
+    },
+    {
+      "code": "02017",
+      "nameJa": "＜いも類＞ じゃがいも 塊茎 皮なし 生",
+      "refuse": {
+        "value": 10,
+        "notation": "measured"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 59,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 1.8,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 1.3,
+          "notation": "measured"
+        },
+        "FAT-": {
+          "value": 0.1,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 0,
+          "notation": "trace"
+        },
+        "CHOAVLDF-": {
+          "value": 8.5,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 17.3,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 8.9,
+          "notation": "measured"
+        },
+        "NACL_EQ": {
+          "value": 0,
+          "notation": "zero"
+        }
+      }
+    },
+    {
+      "code": "02019",
+      "nameJa": "＜いも類＞ じゃがいも 塊茎 皮なし 水煮",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 71,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 1.7,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 1.4,
+          "notation": "measured"
+        },
+        "FAT-": {
+          "value": 0.1,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 0,
+          "notation": "estimated_trace"
+        },
+        "CHOAVLDF-": {
+          "value": 13.9,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 16.9,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 3.1,
+          "notation": "measured"
+        },
+        "NACL_EQ": {
+          "value": 0,
+          "notation": "zero"
+        }
+      }
+    },
+    {
+      "code": "02066",
+      "nameJa": "＜いも類＞ じゃがいも 塊茎 皮なし 電子レンジ調理",
+      "refuse": {
+        "value": 6,
+        "notation": "measured"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 78,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 1.9,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 1.5,
+          "notation": "measured"
+        },
+        "FAT-": {
+          "value": 0.1,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 0,
+          "notation": "trace"
+        },
+        "CHOAVLDF-": {
+          "value": 15.5,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 19,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 3.5,
+          "notation": "measured"
+        },
+        "NACL_EQ": {
+          "value": 0,
+          "notation": "zero"
+        }
+      }
+    },
+    {
+      "code": "02067",
+      "nameJa": "＜いも類＞ じゃがいも 塊茎 皮なし フライドポテト （生を揚げたもの）",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 159,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 2.7,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 2.1,
+          "notation": "measured"
+        },
+        "FAT-": {
+          "value": 5.9,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 5.5,
+          "notation": "measured"
+        },
+        "CHOAVLDF-": {
+          "value": 22.6,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 26.2,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 3.9,
+          "notation": "measured"
+        },
+        "NACL_EQ": {
+          "value": 0,
+          "notation": "zero"
+        }
+      }
+    },
+    {
+      "code": "04032",
+      "nameJa": "だいず ［豆腐・油揚げ類］ 木綿豆腐",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 73,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 7,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 6.7,
+          "notation": "measured"
+        },
+        "FAT-": {
+          "value": 4.9,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 4.5,
+          "notation": "measured"
+        },
+        "CHOAVLDF-": {
+          "value": 0.9,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 1.5,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 1.1,
+          "notation": "measured"
+        },
+        "NACL_EQ": {
+          "value": 0,
+          "notation": "zero"
+        }
+      }
+    },
+    {
+      "code": "04033",
+      "nameJa": "だいず ［豆腐・油揚げ類］ 絹ごし豆腐",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 56,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 5.3,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 5.3,
+          "notation": "measured"
+        },
+        "FAT-": {
+          "value": 3.5,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 3.2,
+          "notation": "estimated"
+        },
+        "CHOAVLDF-": {
+          "value": 1.1,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 2,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 0.9,
+          "notation": "measured"
+        },
+        "NACL_EQ": {
+          "value": 0,
+          "notation": "zero"
+        }
+      }
+    },
+    {
+      "code": "06153",
+      "nameJa": "（たまねぎ類） たまねぎ りん茎 生",
+      "refuse": {
+        "value": 6,
+        "notation": "measured"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 33,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 1,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 0.7,
+          "notation": "measured"
+        },
+        "FAT-": {
+          "value": 0.1,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 0,
+          "notation": "trace"
+        },
+        "CHOAVLDF-": {
+          "value": 7.1,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 8.4,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 1.5,
+          "notation": "measured"
+        },
+        "NACL_EQ": {
+          "value": 0,
+          "notation": "zero"
+        }
+      }
+    },
+    {
+      "code": "06155",
+      "nameJa": "（たまねぎ類） たまねぎ りん茎 ゆで",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 30,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 0.8,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 0.5,
+          "notation": "estimated"
+        },
+        "FAT-": {
+          "value": 0.1,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 0,
+          "notation": "estimated_trace"
+        },
+        "CHOAVLDF-": {
+          "value": 5.9,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 7.3,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 1.7,
+          "notation": "measured"
+        },
+        "NACL_EQ": {
+          "value": 0,
+          "notation": "zero"
+        }
+      }
+    },
+    {
+      "code": "06263",
+      "nameJa": "ブロッコリー 花序 生",
+      "refuse": {
+        "value": 35,
+        "notation": "measured"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 37,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 5.4,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 3.8,
+          "notation": "measured"
+        },
+        "FAT-": {
+          "value": 0.6,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 0.3,
+          "notation": "measured"
+        },
+        "CHOAVLDF-": {
+          "value": 3.1,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 6.6,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 5.1,
+          "notation": "measured"
+        },
+        "NACL_EQ": {
+          "value": 0,
+          "notation": "zero"
+        }
+      }
+    },
+    {
+      "code": "06264",
+      "nameJa": "ブロッコリー 花序 ゆで",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 30,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 3.9,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 2.6,
+          "notation": "estimated"
+        },
+        "FAT-": {
+          "value": 0.4,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 0.2,
+          "notation": "estimated"
+        },
+        "CHOAVLDF-": {
+          "value": 2.3,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 5.2,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 4.3,
+          "notation": "measured"
+        },
+        "NACL_EQ": {
+          "value": 0,
+          "notation": "zero"
+        }
+      }
+    },
+    {
+      "code": "06267",
+      "nameJa": "ほうれんそう 葉 通年平均 生",
+      "refuse": {
+        "value": 10,
+        "notation": "measured"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 18,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 2.2,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 1.7,
+          "notation": "measured"
+        },
+        "FAT-": {
+          "value": 0.4,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 0.2,
+          "notation": "measured"
+        },
+        "CHOAVLDF-": {
+          "value": 0.1,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 3.1,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 2.8,
+          "notation": "measured"
+        },
+        "NACL_EQ": {
+          "value": 0,
+          "notation": "zero"
+        }
+      }
+    },
+    {
+      "code": "06268",
+      "nameJa": "ほうれんそう 葉 通年平均 ゆで",
+      "refuse": {
+        "value": 5,
+        "notation": "measured"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 23,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 2.6,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 2.1,
+          "notation": "measured"
+        },
+        "FAT-": {
+          "value": 0.5,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 0.3,
+          "notation": "estimated"
+        },
+        "CHOAVLDF-": {
+          "value": 1.2,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 4,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 3.6,
+          "notation": "measured"
+        },
+        "NACL_EQ": {
+          "value": 0,
+          "notation": "zero"
+        }
+      }
+    },
+    {
+      "code": "06336",
+      "nameJa": "（たまねぎ類） たまねぎ りん茎 油いため",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 100,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 1.4,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 0.9,
+          "notation": "estimated"
+        },
+        "FAT-": {
+          "value": 5.9,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 5.7,
+          "notation": "estimated"
+        },
+        "CHOAVLDF-": {
+          "value": 10.1,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 12,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 2.7,
+          "notation": "measured"
+        },
+        "NACL_EQ": {
+          "value": 0,
+          "notation": "zero"
+        }
+      }
+    },
+    {
+      "code": "06359",
+      "nameJa": "ほうれんそう 葉 通年平均 油いため",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 91,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 3.8,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 3,
+          "notation": "estimated"
+        },
+        "FAT-": {
+          "value": 8.1,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 7.6,
+          "notation": "estimated"
+        },
+        "CHOAVLDF-": {
+          "value": 1.1,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 4.4,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 4.6,
+          "notation": "measured"
+        },
+        "NACL_EQ": {
+          "value": 0,
+          "notation": "zero"
+        }
+      }
+    },
+    {
+      "code": "06395",
+      "nameJa": "ブロッコリー 花序 電子レンジ調理",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 56,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 5.7,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 4,
+          "notation": "estimated"
+        },
+        "FAT-": {
+          "value": 0.7,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": null,
+          "notation": "unmeasured"
+        },
+        "CHOAVLDF-": {
+          "value": 8.4,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 7,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": null,
+          "notation": "unmeasured"
+        },
+        "NACL_EQ": {
+          "value": 0,
+          "notation": "zero"
+        }
+      }
+    },
+    {
+      "code": "06396",
+      "nameJa": "ブロッコリー 花序 焼き",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 83,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 9.9,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 6.9,
+          "notation": "estimated"
+        },
+        "FAT-": {
+          "value": 1.2,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": null,
+          "notation": "unmeasured"
+        },
+        "CHOAVLDF-": {
+          "value": 11.3,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 8.4,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": null,
+          "notation": "unmeasured"
+        },
+        "NACL_EQ": {
+          "value": 0,
+          "notation": "zero"
+        }
+      }
+    },
+    {
+      "code": "06397",
+      "nameJa": "ブロッコリー 花序 油いため",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 109,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 6.9,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 4.8,
+          "notation": "estimated"
+        },
+        "FAT-": {
+          "value": 6.3,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": null,
+          "notation": "unmeasured"
+        },
+        "CHOAVLDF-": {
+          "value": 8.2,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 6.1,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": null,
+          "notation": "unmeasured"
+        },
+        "NACL_EQ": {
+          "value": 0,
+          "notation": "zero"
+        }
+      }
+    },
+    {
+      "code": "08016",
+      "nameJa": "（しめじ類） ぶなしめじ 生",
+      "refuse": {
+        "value": 10,
+        "notation": "measured"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 26,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 2.7,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 1.6,
+          "notation": "measured"
+        },
+        "FAT-": {
+          "value": 0.5,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 0.2,
+          "notation": "measured"
+        },
+        "CHOAVLDF-": {
+          "value": 2.5,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 4.8,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 3,
+          "notation": "measured"
+        },
+        "NACL_EQ": {
+          "value": 0,
+          "notation": "zero"
+        }
+      }
+    },
+    {
+      "code": "08017",
+      "nameJa": "（しめじ類） ぶなしめじ ゆで",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 22,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 2.7,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 1.6,
+          "notation": "estimated"
+        },
+        "FAT-": {
+          "value": 0.2,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 0.1,
+          "notation": "estimated"
+        },
+        "CHOAVLDF-": {
+          "value": 1.6,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 5.2,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 4.2,
+          "notation": "measured"
+        },
+        "NACL_EQ": {
+          "value": 0,
+          "notation": "zero"
+        }
+      }
+    },
+    {
+      "code": "08046",
+      "nameJa": "（しめじ類） ぶなしめじ 油いため",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 65,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 3,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 1.7,
+          "notation": "estimated"
+        },
+        "FAT-": {
+          "value": 5.5,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 4.9,
+          "notation": "estimated"
+        },
+        "CHOAVLDF-": {
+          "value": 2.2,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 4.8,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 3.7,
+          "notation": "measured"
+        },
+        "NACL_EQ": {
+          "value": 0,
+          "notation": "zero"
+        }
+      }
+    },
+    {
+      "code": "08056",
+      "nameJa": "（しめじ類） ぶなしめじ 天ぷら",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 248,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 3.4,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 2.5,
+          "notation": "measured"
+        },
+        "FAT-": {
+          "value": 17.1,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 16.5,
+          "notation": "measured"
+        },
+        "CHOAVLDF-": {
+          "value": 19.4,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 23.2,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 4.8,
+          "notation": "measured"
+        },
+        "NACL_EQ": {
+          "value": 0.1,
+          "notation": "measured"
+        }
+      }
+    },
+    {
+      "code": "10134",
+      "nameJa": "＜魚類＞ （さけ・ます類） しろさけ 生",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 124,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 22.3,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 18.9,
+          "notation": "measured"
+        },
+        "FAT-": {
+          "value": 4.1,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 3.7,
+          "notation": "measured"
+        },
+        "CHOAVLDF-": {
+          "value": 3.9,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 0.1,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 0,
+          "notation": "estimated_zero"
+        },
+        "NACL_EQ": {
+          "value": 0.2,
+          "notation": "measured"
+        }
+      }
+    },
+    {
+      "code": "10136",
+      "nameJa": "＜魚類＞ （さけ・ます類） しろさけ 焼き",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 160,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 29.1,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 23.7,
+          "notation": "measured"
+        },
+        "FAT-": {
+          "value": 5.1,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 4.6,
+          "notation": "measured"
+        },
+        "CHOAVLDF-": {
+          "value": 6,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 0.1,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 0,
+          "notation": "estimated_zero"
+        },
+        "NACL_EQ": {
+          "value": 0.2,
+          "notation": "measured"
+        }
+      }
+    },
+    {
+      "code": "10205",
+      "nameJa": "＜魚類＞ （たら類） まだら 生",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 72,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 17.6,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 14.2,
+          "notation": "measured"
+        },
+        "FAT-": {
+          "value": 0.2,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 0.1,
+          "notation": "measured"
+        },
+        "CHOAVLDF-": {
+          "value": 3.5,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 0.1,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 0,
+          "notation": "estimated_zero"
+        },
+        "NACL_EQ": {
+          "value": 0.3,
+          "notation": "measured"
+        }
+      }
+    },
+    {
+      "code": "10206",
+      "nameJa": "＜魚類＞ （たら類） まだら 焼き",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 103,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 25.2,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 20.4,
+          "notation": "estimated"
+        },
+        "FAT-": {
+          "value": 0.2,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 0.2,
+          "notation": "measured"
+        },
+        "CHOAVLDF-": {
+          "value": 5,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 0.2,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 0,
+          "notation": "estimated_zero"
+        },
+        "NACL_EQ": {
+          "value": 0.4,
+          "notation": "measured"
+        }
+      }
+    },
+    {
+      "code": "10260",
+      "nameJa": "＜魚類＞ （まぐろ類） 缶詰 水煮 フレーク ライト",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 70,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 16,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 13,
+          "notation": "estimated"
+        },
+        "FAT-": {
+          "value": 0.7,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 0.5,
+          "notation": "measured"
+        },
+        "CHOAVLDF-": {
+          "value": 3.4,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 0.2,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 0,
+          "notation": "estimated_zero"
+        },
+        "NACL_EQ": {
+          "value": 0.5,
+          "notation": "measured"
+        }
+      }
+    },
+    {
+      "code": "11076",
+      "nameJa": "＜畜肉類＞ うし ［輸入牛肉］ もも 皮下脂肪なし 生",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 133,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 20,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 17.2,
+          "notation": "measured"
+        },
+        "FAT-": {
+          "value": 6.7,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 5.7,
+          "notation": "measured"
+        },
+        "CHOAVLDF-": {
+          "value": 3.1,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 0.4,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 0,
+          "notation": "estimated_zero"
+        },
+        "NACL_EQ": {
+          "value": 0.1,
+          "notation": "measured"
+        }
+      }
+    },
+    {
+      "code": "11127",
+      "nameJa": "＜畜肉類＞ ぶた ［大型種肉］ ロース 赤肉 生",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 140,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 22.7,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 19.7,
+          "notation": "measured"
+        },
+        "FAT-": {
+          "value": 5.6,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 5.1,
+          "notation": "measured"
+        },
+        "CHOAVLDF-": {
+          "value": 3.8,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 0.3,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 0,
+          "notation": "estimated_zero"
+        },
+        "NACL_EQ": {
+          "value": 0.1,
+          "notation": "measured"
+        }
+      }
+    },
+    {
+      "code": "11140",
+      "nameJa": "＜畜肉類＞ ぶた ［大型種肉］ ヒレ 赤肉 生",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 118,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 22.2,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 18.5,
+          "notation": "measured"
+        },
+        "FAT-": {
+          "value": 3.7,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 3.3,
+          "notation": "measured"
+        },
+        "CHOAVLDF-": {
+          "value": 3.7,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 0.3,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 0,
+          "notation": "estimated_zero"
+        },
+        "NACL_EQ": {
+          "value": 0.1,
+          "notation": "measured"
+        }
+      }
+    },
+    {
+      "code": "11220",
+      "nameJa": "＜鳥肉類＞ にわとり ［若どり・主品目］ むね 皮なし 生",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 105,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 23.3,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 19.2,
+          "notation": "measured"
+        },
+        "FAT-": {
+          "value": 1.9,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 1.6,
+          "notation": "measured"
+        },
+        "CHOAVLDF-": {
+          "value": 3.4,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 0.1,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 0,
+          "notation": "estimated_zero"
+        },
+        "NACL_EQ": {
+          "value": 0.1,
+          "notation": "measured"
+        }
+      }
+    },
+    {
+      "code": "11224",
+      "nameJa": "＜鳥肉類＞ にわとり ［若どり・主品目］ もも 皮なし 生",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 113,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 19,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 16.3,
+          "notation": "measured"
+        },
+        "FAT-": {
+          "value": 5,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 4.3,
+          "notation": "measured"
+        },
+        "CHOAVLDF-": {
+          "value": 2.3,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 0,
+          "notation": "zero"
+        },
+        "FIB-": {
+          "value": 0,
+          "notation": "estimated_zero"
+        },
+        "NACL_EQ": {
+          "value": 0.2,
+          "notation": "measured"
+        }
+      }
+    },
+    {
+      "code": "11225",
+      "nameJa": "＜鳥肉類＞ にわとり ［若どり・主品目］ もも 皮なし 焼き",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 145,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 25.5,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 21.5,
+          "notation": "estimated"
+        },
+        "FAT-": {
+          "value": 5.7,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 4.5,
+          "notation": "measured"
+        },
+        "CHOAVLDF-": {
+          "value": 4.7,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 0,
+          "notation": "zero"
+        },
+        "FIB-": {
+          "value": 0,
+          "notation": "estimated_zero"
+        },
+        "NACL_EQ": {
+          "value": 0.2,
+          "notation": "measured"
+        }
+      }
+    },
+    {
+      "code": "11226",
+      "nameJa": "＜鳥肉類＞ にわとり ［若どり・主品目］ もも 皮なし ゆで",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 141,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 25.1,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 21.1,
+          "notation": "estimated"
+        },
+        "FAT-": {
+          "value": 5.2,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 4.2,
+          "notation": "measured"
+        },
+        "CHOAVLDF-": {
+          "value": 4.6,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 0,
+          "notation": "zero"
+        },
+        "FIB-": {
+          "value": 0,
+          "notation": "estimated_zero"
+        },
+        "NACL_EQ": {
+          "value": 0.1,
+          "notation": "measured"
+        }
+      }
+    },
+    {
+      "code": "11270",
+      "nameJa": "＜畜肉類＞ うし ［輸入牛肉］ もも 皮下脂肪なし 焼き",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 205,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 28,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 24.1,
+          "notation": "measured"
+        },
+        "FAT-": {
+          "value": 14.1,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 11.9,
+          "notation": "measured"
+        },
+        "CHOAVLDF-": {
+          "value": 2.5,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 0.4,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 0,
+          "notation": "estimated_zero"
+        },
+        "NACL_EQ": {
+          "value": 0.1,
+          "notation": "measured"
+        }
+      }
+    },
+    {
+      "code": "11271",
+      "nameJa": "＜畜肉類＞ うし ［輸入牛肉］ もも 皮下脂肪なし ゆで",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 204,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 30,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 27.1,
+          "notation": "measured"
+        },
+        "FAT-": {
+          "value": 11,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 9.2,
+          "notation": "measured"
+        },
+        "CHOAVLDF-": {
+          "value": 3.1,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 0.2,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 0,
+          "notation": "estimated_zero"
+        },
+        "NACL_EQ": {
+          "value": 0,
+          "notation": "zero"
+        }
+      }
+    },
+    {
+      "code": "11278",
+      "nameJa": "＜畜肉類＞ ぶた ［大型種肉］ ヒレ 赤肉 焼き",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 202,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 39.3,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 33.2,
+          "notation": "measured"
+        },
+        "FAT-": {
+          "value": 5.9,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 4.9,
+          "notation": "measured"
+        },
+        "CHOAVLDF-": {
+          "value": 6.1,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 0.4,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 0,
+          "notation": "estimated_zero"
+        },
+        "NACL_EQ": {
+          "value": 0.2,
+          "notation": "measured"
+        }
+      }
+    },
+    {
+      "code": "11279",
+      "nameJa": "＜畜肉類＞ ぶた ［大型種肉］ ヒレ 赤肉 とんかつ",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 379,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 25.1,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 21.8,
+          "notation": "measured"
+        },
+        "FAT-": {
+          "value": 25.3,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 24,
+          "notation": "measured"
+        },
+        "CHOAVLDF-": {
+          "value": 18.5,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 14.9,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 0.9,
+          "notation": "measured"
+        },
+        "NACL_EQ": {
+          "value": 0.4,
+          "notation": "measured"
+        }
+      }
+    },
+    {
+      "code": "11288",
+      "nameJa": "＜鳥肉類＞ にわとり ［若どり・主品目］ むね 皮なし 焼き",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 177,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 38.8,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 33.2,
+          "notation": "measured"
+        },
+        "FAT-": {
+          "value": 3.3,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 2.8,
+          "notation": "measured"
+        },
+        "CHOAVLDF-": {
+          "value": 4.7,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 0.1,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 0,
+          "notation": "estimated_zero"
+        },
+        "NACL_EQ": {
+          "value": 0.2,
+          "notation": "measured"
+        }
+      }
+    },
+    {
+      "code": "11290",
+      "nameJa": "＜鳥肉類＞ にわとり ［若どり・主品目］ もも 皮なし から揚げ",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 249,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 25.4,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 20.8,
+          "notation": "measured"
+        },
+        "FAT-": {
+          "value": 11.4,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 10.5,
+          "notation": "measured"
+        },
+        "CHOAVLDF-": {
+          "value": 17.3,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 12.7,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 0.9,
+          "notation": "measured"
+        },
+        "NACL_EQ": {
+          "value": 2.7,
+          "notation": "measured"
+        }
+      }
+    },
+    {
+      "code": "12004",
+      "nameJa": "鶏卵 全卵 生",
+      "refuse": {
+        "value": 14,
+        "notation": "measured"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 142,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 12.2,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 11.3,
+          "notation": "measured"
+        },
+        "FAT-": {
+          "value": 10.2,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 9.3,
+          "notation": "measured"
+        },
+        "CHOAVLDF-": {
+          "value": 3.4,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 0.4,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 0,
+          "notation": "zero"
+        },
+        "NACL_EQ": {
+          "value": 0.4,
+          "notation": "measured"
+        }
+      }
+    },
+    {
+      "code": "12005",
+      "nameJa": "鶏卵 全卵 ゆで",
+      "refuse": {
+        "value": 11,
+        "notation": "measured"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 134,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 12.5,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 11.2,
+          "notation": "measured"
+        },
+        "FAT-": {
+          "value": 10.4,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 9,
+          "notation": "measured"
+        },
+        "CHOAVLDF-": {
+          "value": 2.1,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 0.3,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 0,
+          "notation": "zero"
+        },
+        "NACL_EQ": {
+          "value": 0.3,
+          "notation": "measured"
+        }
+      }
+    },
+    {
+      "code": "12021",
+      "nameJa": "鶏卵 全卵 目玉焼き",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 205,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 14.8,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 12.7,
+          "notation": "measured"
+        },
+        "FAT-": {
+          "value": 17.6,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 15.5,
+          "notation": "measured"
+        },
+        "CHOAVLDF-": {
+          "value": 3.9,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 0.3,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 0,
+          "notation": "zero"
+        },
+        "NACL_EQ": {
+          "value": 0.5,
+          "notation": "measured"
+        }
+      }
+    },
+    {
+      "code": "12022",
+      "nameJa": "鶏卵 全卵 いり",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 190,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 13.3,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 12.1,
+          "notation": "measured"
+        },
+        "FAT-": {
+          "value": 16.7,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 14.6,
+          "notation": "measured"
+        },
+        "CHOAVLDF-": {
+          "value": 2.5,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 0.3,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 0,
+          "notation": "zero"
+        },
+        "NACL_EQ": {
+          "value": 0.4,
+          "notation": "measured"
+        }
+      }
+    },
+    {
+      "code": "12023",
+      "nameJa": "鶏卵 全卵 素揚げ",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 321,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 14.3,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 12.8,
+          "notation": "measured"
+        },
+        "FAT-": {
+          "value": 31.9,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 29.9,
+          "notation": "measured"
+        },
+        "CHOAVLDF-": {
+          "value": 1.7,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 0.3,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 0,
+          "notation": "zero"
+        },
+        "NACL_EQ": {
+          "value": 0.5,
+          "notation": "measured"
+        }
+      }
+    },
+    {
+      "code": "14001",
+      "nameJa": "（植物油脂類） オリーブ油",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 894,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 0,
+          "notation": "zero"
+        },
+        "PROTCAA": {
+          "value": null,
+          "notation": "unmeasured"
+        },
+        "FAT-": {
+          "value": 100,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 98.9,
+          "notation": "measured"
+        },
+        "CHOAVLDF-": {
+          "value": 1.1,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 0,
+          "notation": "zero"
+        },
+        "FIB-": {
+          "value": 0,
+          "notation": "zero"
+        },
+        "NACL_EQ": {
+          "value": 0,
+          "notation": "zero"
+        }
+      }
+    },
+    {
+      "code": "14006",
+      "nameJa": "（植物油脂類） 調合油",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 886,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 0,
+          "notation": "zero"
+        },
+        "PROTCAA": {
+          "value": null,
+          "notation": "unmeasured"
+        },
+        "FAT-": {
+          "value": 100,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 97.2,
+          "notation": "measured"
+        },
+        "CHOAVLDF-": {
+          "value": 2.8,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 0,
+          "notation": "zero"
+        },
+        "FIB-": {
+          "value": 0,
+          "notation": "zero"
+        },
+        "NACL_EQ": {
+          "value": 0,
+          "notation": "zero"
+        }
+      }
+    },
+    {
+      "code": "17007",
+      "nameJa": "＜調味料類＞ （しょうゆ類） こいくちしょうゆ",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 76,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 7.7,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 6.1,
+          "notation": "measured"
+        },
+        "FAT-": {
+          "value": 0,
+          "notation": "zero"
+        },
+        "FATNLEA": {
+          "value": null,
+          "notation": "unmeasured"
+        },
+        "CHOAVLDF-": {
+          "value": 8.6,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 7.9,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 0,
+          "notation": "estimated_trace"
+        },
+        "NACL_EQ": {
+          "value": 14.5,
+          "notation": "measured"
+        }
+      }
+    }
+  ]
+}

@@ -26,6 +26,14 @@ Status: **Draft (2026-10-18)**. Terms and facts below were read from the cited p
 - A script extracts only the food codes referenced by the food dictionary and only the columns used by the app, keeping notation flags (`-`, `Tr`, `(0)`, `(Tr)`, `( )`).
 - The extracted subset and a manifest (source URL, workbook update date, SHA-256, extraction script version, extraction date) are tracked in Git so that builds are reproducible without the original file.
 - Updating the source: download the new file, update the manifest, rerun the extraction, review the nutrition snapshot diff, and record the change in `docs/DECISIONS.md`.
+
+### Extraction (implemented in Phase 0 Stage 0.2)
+- Place the workbook at the path given by `rawFile` in `data/composition/manifest.json` (currently `data/raw/mext/20260327-mxt_kagsei-mext-000029402_02.xlsx`, git-ignored).
+- `npm run data:extract` checks the SHA-256 against the manifest, reads the sheet named in the manifest (`表全体`), and writes `data/composition/foods.json` with the codes listed in `requestedCodes`. The output is deterministic (sorted by food code, no timestamps).
+- `node tools/extract-composition.ts --search <regex>` lists matching food codes and names, to help choose codes.
+- Columns are located by the component identifier row and the Japanese headers, not by position. Extracted identifiers: `REFUSE`, `ENERC_KCAL`, `PROT-`, `PROTCAA`, `FAT-`, `FATNLEA`, `CHOAVLDF-`, `CHOCDF-`, `FIB-`, `NACL_EQ` (`shared/composition.ts`). Each value keeps its notation (`measured`, `zero`, `trace`, `estimated`, `estimated_zero`, `estimated_trace`, `unmeasured`); unrecognized cell contents stop the extraction.
+- Food names are kept in Japanese only, as published; display names in three locales belong to the food dictionary (Stage 0.4).
+- A test validates the tracked subset against the schema and the manifest without needing the workbook.
 - Attribution wording and placement: `docs/CONTENT_POLICY.md` §5.
 
 ### Known limitations

@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react()],
   test: {
     environment: "node",
-    include: ["src/**/*.test.{ts,tsx}", "shared/**/*.test.ts", "domain/**/*.test.ts", "test/node/**/*.test.ts"],
+    include: ["src/**/*.test.{ts,tsx}", "shared/**/*.test.ts", "domain/**/*.test.ts", "tools/**/*.test.ts", "test/node/**/*.test.ts"],
     restoreMocks: true,
   },
 });

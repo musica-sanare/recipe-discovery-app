@@ -47,7 +47,7 @@ export default tseslint.config(
     rules: { "no-restricted-imports": ["error", { patterns: SHARED_FORBIDDEN_IMPORTS }] },
   },
   {
-    files: ["*.config.{js,ts}", "platform/**/*.ts", "test/node/**/*.ts"],
+    files: ["*.config.{js,ts}", "platform/**/*.ts", "tools/**/*.ts", "test/node/**/*.ts"],
     languageOptions: { globals: globals.node },
   },
   {

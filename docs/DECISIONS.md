@@ -265,6 +265,14 @@ Findings:
 - *Measured* (Apple M1, MacBookPro17,1, Node.js 24.19.0, median of 15 runs after warm-up; scratch script, not in the repository; the synthetic library is three copies of the 20 recipes with new IDs and is never shipped). Full recommendation (`evaluatePool` and `selectCandidates`): 20 recipes 6.8–8.0 ms for cut and bulk, 3.8–6.5 ms with relaxation (tofu required; bulk at ≤ 15 minutes); 60 recipes 18.7–19.1 ms for cut and bulk, 3.5–3.8 ms for the filtered requests. "Show a different type" (`selectCandidates` on the same pool): 0.01–0.12 ms. The first call including `recommendationDataFromBundle` takes 6.7 ms. Browsers and phones were not measured (open question 17).
 - Observation for owner review: with P4 only 5 recipes meet the targets and all appear in the first set, so "show a different type" returns no candidate; the close alternatives (2 near recipes, then not met) fill the set.
 
+### Phase 3 acceptance (2026-10-19)
+- The owner reviewed and approved the scenario snapshot of Stage 3.7 (2026-10-19), including the P4 behavior, the fit snapshot (Stage 3.3), and the adjustment snapshot (Stage 3.4); differences from Stage 0.6 and Stage 1.1 are explained in the Stage 3.3, 3.4, and 3.7 logs.
+- Determinism and edge cases pass: empty pools, fewer than three candidates, ties (solver, diversification, seeded order), contradictions, required ingredients that leave no recipe, and allergens with unknown data (unit tests, because no dictionary food has unknown data).
+- Fit evaluation, solver, diversification, re-suggestion, relaxation, and locale invariance tests pass (`domain/recommendation/*.test.ts`, `test/node/recommendation.test.ts`, `test/node/recommendation-scenarios.test.ts`).
+- Performance is measured and recorded (Stage 3.4 and 3.7 logs).
+- Substitutions: the solver never chooses them (ADR-029 D4); excluded foods may force one (D7). Offering the authored substitutions to the user belongs to the detail view in Phase 4, which recalculates them with the nutrition engine.
+- `npm run check` (lint, type-check, 359 tests, content validation, build) passes; `npm run eval:coverage` runs on the recommendation engine with its output changes explained in the Stage 3.7 log.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in

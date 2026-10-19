@@ -60,6 +60,8 @@ Acceptance: formula, notation, uncertainty, and invariance tests pass; snapshots
 
 ## Phase 3 — Recommendation engine
 
+Status: **Complete (2026-10-19)**. Results: `docs/DECISIONS.md` "Phase 3 start" and "Stage 3.1" to "Stage 3.7" logs, "Phase 3 acceptance", and ADR-029. Items still open are listed in `docs/DECISIONS.md` "Open questions".
+
 - Hard filters, fit tiers, tolerance, diversification, seeded re-suggestion, bounded adjustment solver, substitutions, relaxation suggestions, contradiction checks.
 - Deterministic reason data for message templates.
 

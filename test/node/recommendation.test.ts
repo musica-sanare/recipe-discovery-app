@@ -3,6 +3,7 @@ import { defaultState } from "../../domain/nutrition/amounts.ts";
 import { calculateNutrition, type RecipeNutrition } from "../../domain/nutrition/engine.ts";
 import { recommendationDataFromBundle } from "../../domain/recommendation/data.ts";
 import { evaluateFit, type Tier } from "../../domain/recommendation/fit.ts";
+import { solve, solveExhaustive, type SolveInput } from "../../domain/recommendation/solver.ts";
 import { applyHardFilters } from "../../domain/recommendation/filters.ts";
 import type { Conditions, Preset } from "../../domain/recommendation/types.ts";
 import { presetTargets, validatePoolRequest } from "../../domain/recommendation/validate.ts";
@@ -136,5 +137,56 @@ describe("fit of the validation recipes at default amounts", () => {
       }),
     );
     expect(statuses).toMatchSnapshot();
+  });
+});
+
+describe("bounded adjustment on the validation recipes", () => {
+  const PRESETS: readonly Preset[] = ["cut", "maintain", "bulk"];
+  const solveAll = (conditions: Partial<Conditions>, preset: Preset) =>
+    filter(conditions).eligible.map((entry) => {
+      const input: SolveInput = { recipe: entry.recipe, targets: presetTargets(preset), servings: entry.recipe.servings, forced: entry.forced, lockedSides: [] };
+      return { id: entry.recipe.id, input, solution: solve(input, data.engine) };
+    });
+  const count = (results: ReturnType<typeof solveAll>) => ({
+    met: results.filter((entry) => entry.solution.fit.tier === "met").length,
+    near: results.filter((entry) => entry.solution.fit.tier === "near").length,
+  });
+
+  it("chooses the same states as the exhaustive search, without falling back", () => {
+    for (const conditions of [{}, { excludedFoods: ["rice_cooked"] }]) {
+      for (const preset of PRESETS) {
+        for (const { id, input, solution } of solveAll(conditions, preset)) {
+          expect(solution.method, `${preset} ${id}`).toBe("linear");
+          expect({ ...solution, method: "exhaustive" }).toEqual(solveExhaustive(input, data.engine));
+        }
+      }
+    }
+  });
+
+  // Stage 3.4 log: the coverage evaluation scenarios with ranges evaluated (ADR-029 D1).
+  it("gives the reviewed met and near counts per scenario", () => {
+    expect(count(solveAll({}, "cut"))).toEqual({ met: 9, near: 1 });
+    expect(count(solveAll({ maxMinutes: 20 }, "cut"))).toEqual({ met: 8, near: 0 });
+    expect(count(solveAll({}, "maintain"))).toEqual({ met: 11, near: 5 });
+    expect(count(solveAll({}, "bulk"))).toEqual({ met: 7, near: 6 });
+    expect(count(solveAll({ excludedAllergens: ["egg"] }, "cut"))).toEqual({ met: 9, near: 1 });
+    expect(count(solveAll({ requiredFoods: [CHICKEN] }, "maintain"))).toEqual({ met: 5, near: 1 });
+    expect(count(solveAll({ requiredFoods: [TOFU] }, "maintain"))).toEqual({ met: 1, near: 1 });
+    expect(count(solveAll({ maxMinutes: 25 }, "bulk"))).toEqual({ met: 5, near: 5 });
+  });
+
+  it("keeps the reviewed adjustments", () => {
+    const adjustments = Object.fromEntries(
+      PRESETS.map((preset) => [
+        preset,
+        Object.fromEntries(
+          solveAll({}, preset).map(({ id, solution }) => [
+            id,
+            `${solution.fit.tier}: ${[...solution.changes.map((change) => `${change.ingredient} ${String(change.from)}→${String(change.to)}`), ...solution.sidesOff.map((side) => `${side} off`)].join(", ") || "default amounts"}`,
+          ]),
+        ),
+      ]),
+    );
+    expect(adjustments).toMatchSnapshot();
   });
 });

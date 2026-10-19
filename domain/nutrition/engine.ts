@@ -81,7 +81,8 @@ export interface RecipeNutrition {
   readonly class: UncertaintyClass;
 }
 
-const RANGE_EPSILON = 1e-9;
+/** Margin of the range display threshold against binary noise. */
+export const RANGE_EPSILON = 1e-9;
 
 function record<T>(make: (nutrient: Nutrient) => T): Record<Nutrient, T> {
   return Object.fromEntries(NUTRIENTS.map((nutrient) => [nutrient, make(nutrient)])) as Record<Nutrient, T>;

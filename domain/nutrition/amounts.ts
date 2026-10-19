@@ -85,7 +85,7 @@ export function defaultState(recipe: Pick<AmountRecipe, "servings">): RecipeStat
 }
 
 /** Bounds of a substituted ingredient: its own, or the original grams bounds scaled by the ratio. */
-function substitutedAdjust(adjust: Adjust | undefined, substitution: Pick<BundleSubstitution, "ratio" | "adjust">): Adjust | undefined {
+export function substitutedAdjust(adjust: Adjust | undefined, substitution: Pick<BundleSubstitution, "ratio" | "adjust">): Adjust | undefined {
   if (substitution.adjust) return substitution.adjust;
   if (adjust?.kind !== "grams") return undefined;
   const { ratio } = substitution;

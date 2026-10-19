@@ -241,7 +241,8 @@ States:
 | `disclaimer` | Estimates, allergens, strict control (P4: weigh and check labels) |
 | `attribution` | The MEXT wording in Japanese in every locale, followed by the localized equivalent, the data version, and "this app's own calculations" |
 
-- Counts use i18next plural suffixes (`_one`, `_other`); `ja` uses `_other` only.
+- Counts use i18next plural suffixes (`_one`, `_other`). Every locale defines both keys because `ja` defines the catalog type; Japanese plural rules select `_other` only, so both hold the same Japanese text.
+- Household units choose the singular up to one unit ("1/2 clove", "1 1/2 cloves"); quantities are shown as fractions of twelfths ("1/2", "1 1/2"; Japanese "1と1/2", Spanish "1 y 1/2").
 - A test requires a key for every engine code (input errors, contradictions, statuses, reasons, constraint items, relaxations, uncertainty reasons, assumptions, units, allergens, cuisines, equipment) in each locale.
 - The forbidden-expression check of `content/glossary.ts` is extended to the UI catalogs.
 

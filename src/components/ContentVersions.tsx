@@ -6,5 +6,5 @@ export function ContentVersions({ versions }: { readonly versions: BundleVersion
   const { t, i18n } = useTranslation();
   const updated = new Intl.DateTimeFormat(i18n.resolvedLanguage, { dateStyle: "long", timeZone: "UTC" }).format(new Date(`${versions.composition.workbookUpdated}T00:00:00Z`));
 
-  return <p className="content-versions">{t("content.versions", { content: versions.contentVersion, composition: updated })}</p>;
+  return <p className="m-0">{t("content.versions", { content: versions.contentVersion, composition: updated })}</p>;
 }

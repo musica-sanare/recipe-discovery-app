@@ -1,3 +1,4 @@
+import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { defineConfig, type Plugin } from "vite";
 import { renderCloudflareHeaders, SECURITY_HEADERS } from "./platform/headers.ts";
@@ -13,7 +14,7 @@ function securityHeaders(): Plugin {
 }
 
 export default defineConfig({
-  plugins: [react(), securityHeaders()],
+  plugins: [react(), tailwindcss(), securityHeaders()],
   build: {
     // Content bundles are fetched; a data: URL would be blocked by `connect-src 'self'`.
     assetsInlineLimit: (filePath) => (filePath.endsWith(".json") ? false : undefined),

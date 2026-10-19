@@ -37,7 +37,9 @@ There is intentionally no deploy script.
 ## Layout (current)
 
 ```text
-index.html, src/        UI (React); src/i18n/ holds the typed ja/en/es catalogs
+index.html, src/        UI (React, Tailwind CSS; docs/UI_DESIGN.md): i18n/ typed ja/en/es catalogs and engine code lists,
+                        format/ locale formatting, navigation/ History API views, state/ reducer and engine calls,
+                        views/ screens, testing/ axe-core helper
 shared/                 Schemas, constants, and types shared by UI, domain, content, and tools
 domain/nutrition/       Pure, locale-free nutrition engine (ADR-028); tests next to the code
 domain/recommendation/  Pure, locale-free recommendation engine (ADR-029); tests next to the code
@@ -64,3 +66,6 @@ docs/, prompts/         Documentation and phase prompts
 1. Add the key and Japanese text to `src/i18n/messages/ja.ts`.
 2. Add the same key to `en.ts` and `es.ts`; the type checker fails until all three match, and a test rejects blank strings.
 3. Use `t("your.key")`; never hard-code UI strings in components.
+4. Texts for engine codes (input errors, contradictions, statuses, reasons, exclusions, relaxations, uncertainty, assumptions, units, allergens, cuisines, equipment) are keyed by the code; `src/i18n/engineCodes.ts` lists every code and `src/i18n/engineCodes.test.ts` requires an entry in each locale. A new code in an engine union fails the type check until it is added to the list.
+5. Counts use `_one` and `_other` keys in every locale. `src/i18n/policy.test.ts` applies the forbidden expressions of `content/glossary.ts` to the catalogs.
+6. Format numbers with `src/format/format.ts` (values from `roundForDisplay`, separators from `Intl`).

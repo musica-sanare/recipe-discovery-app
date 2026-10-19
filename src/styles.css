@@ -1,109 +1,70 @@
-:root {
-  color-scheme: light dark;
-  --color-bg: #ffffff;
-  --color-text: #1a1a1a;
-  --color-muted: #555555;
-  --color-border: #d0d0d0;
+@import "tailwindcss";
+
+/*
+ * Design tokens (docs/UI_DESIGN.md §5). Only these colors exist; the default palette is
+ * removed so that every color passes the contrast test in src/styles.test.ts.
+ */
+@theme {
+  --color-*: initial;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f5f5f4;
+  --color-text: #1c1917;
+  --color-muted: #57534e;
+  --color-border: #78716c;
   --color-focus: #0b57d0;
-  font-family: system-ui, -apple-system, "Segoe UI", "Hiragino Sans", "Noto Sans JP", sans-serif;
-  line-height: 1.6;
+  --color-accent: #1d4ed8;
+  --color-on-accent: #ffffff;
+  --color-met: #15803d;
+  --color-near: #b45309;
+  --color-not-met: #b91c1c;
+  --color-unknown: #57534e;
+  --color-warning: #92400e;
+  --color-warning-surface: #fffbeb;
+
+  --font-*: initial;
+  --font-sans: system-ui, -apple-system, "Segoe UI", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic UI", sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --color-bg: #121212;
-    --color-text: #ececec;
-    --color-muted: #b0b0b0;
-    --color-border: #3a3a3a;
-    --color-focus: #8ab4f8;
+    color-scheme: light dark;
   }
-}
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-surface: #121212;
+      --color-surface-muted: #1f1f1f;
+      --color-text: #ececec;
+      --color-muted: #b0b0b0;
+      --color-border: #8a8a8a;
+      --color-focus: #8ab4f8;
+      --color-accent: #8ab4f8;
+      --color-on-accent: #0b1220;
+      --color-met: #4ade80;
+      --color-near: #fbbf24;
+      --color-not-met: #f87171;
+      --color-unknown: #b0b0b0;
+      --color-warning: #fcd34d;
+      --color-warning-surface: #2a2111;
+    }
+  }
 
-body {
-  margin: 0;
-  background: var(--color-bg);
-  color: var(--color-text);
-}
+  body {
+    @apply bg-surface text-text font-sans leading-relaxed;
+  }
 
-:focus-visible {
-  outline: 3px solid var(--color-focus);
-  outline-offset: 2px;
-}
+  :focus-visible {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 2px;
+  }
 
-.skip-link {
-  position: absolute;
-  left: 1rem;
-  top: -3rem;
-  padding: 0.5rem 1rem;
-  background: var(--color-bg);
-  color: var(--color-text);
-}
-
-.skip-link:focus {
-  top: 1rem;
-}
-
-.site-header {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1rem;
-  border-bottom: 1px solid var(--color-border);
-}
-
-.site-name {
-  margin: 0;
-  font-weight: 700;
-}
-
-.language-switcher {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-}
-
-main {
-  max-width: 48rem;
-  margin: 0 auto;
-  padding: 1.5rem 1rem;
-}
-
-main h1 {
-  font-size: 1.5rem;
-  line-height: 1.4;
-}
-
-.content-error button {
-  padding: 0.5rem 1rem;
-  font: inherit;
-}
-
-.site-footer {
-  max-width: 48rem;
-  margin: 0 auto;
-  padding: 1rem;
-  border-top: 1px solid var(--color-border);
-  color: var(--color-muted);
-  font-size: 0.875rem;
-}
-
-.content-versions {
-  margin: 0;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }

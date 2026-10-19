@@ -8,10 +8,11 @@ export function LanguageSwitcher() {
   const id = useId();
 
   return (
-    <div className="language-switcher">
+    <div className="flex items-center gap-2">
       <label htmlFor={id}>{t("language.label")}</label>
       <select
         id={id}
+        className="rounded border border-border bg-surface px-2 py-1 text-text"
         value={i18n.resolvedLanguage}
         onChange={(event) => {
           const locale = event.target.value;

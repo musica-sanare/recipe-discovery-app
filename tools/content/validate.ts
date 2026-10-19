@@ -6,6 +6,7 @@
 import * as z from "zod/mini";
 import { foodSchema, recipeSchema, type Food, type LocalizedText, type Recipe, type RecipeIngredient } from "../../shared/content.ts";
 import { isFried } from "../../shared/recipe.ts";
+import { forbiddenIn } from "../../shared/policy.ts";
 
 export const RULES = [
   "schema",
@@ -265,9 +266,9 @@ function languageIssues(value: unknown, file: string, subject: string, input: Co
       if (!es.toLowerCase().includes(term.es.toLowerCase())) issues.push({ file, subject, field: `${path}.es`, rule: "glossary", message: `"${term.ja}" must be "${term.es}"` });
     }
     const found = [
-      ...input.forbiddenExpressions.ja.filter((word) => ja.includes(word)).map((word) => ["ja", word] as const),
-      ...input.forbiddenExpressions.en.filter((word) => new RegExp(`\\b${word}`, "i").test(en)).map((word) => ["en", word] as const),
-      ...input.forbiddenExpressions.es.filter((word) => new RegExp(`(^|[^\\p{L}])${word}`, "iu").test(es)).map((word) => ["es", word] as const),
+      ...forbiddenIn("ja", ja, input.forbiddenExpressions.ja).map((word) => ["ja", word] as const),
+      ...forbiddenIn("en", en, input.forbiddenExpressions.en).map((word) => ["en", word] as const),
+      ...forbiddenIn("es", es, input.forbiddenExpressions.es).map((word) => ["es", word] as const),
     ];
     for (const [locale, word] of found) issues.push({ file, subject, field: `${path}.${locale}`, rule: "forbidden-expression", message: `contains "${word}" (docs/CONTENT_POLICY.md §2, §4)` });
   }

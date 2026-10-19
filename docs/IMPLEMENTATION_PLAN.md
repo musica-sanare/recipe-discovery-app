@@ -70,6 +70,8 @@ Acceptance: determinism and edge-case tests (empty, few, ties, contradictions, r
 
 ## Phase 4 — UI and localization
 
+Status: **In progress (2026-10-19)**. UI design: `docs/UI_DESIGN.md` and ADR-030 (Stage 4.1).
+
 - Targets and conditions screen (quick and advanced), candidates, comparison, detail, adjustment, re-suggestion, exceptional states.
 - Localized UI and content in `ja`, `en`, `es`; formatting; document language metadata; accessibility.
 - Household unit labels in the UI catalogs, with plural forms; `piece` shows the number alone in `en` and `es` (ADR-026; moved from Phase 1 Stage 1.4).

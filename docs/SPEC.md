@@ -62,7 +62,7 @@ Home
 ```
 
 - The flow state stays in memory. Targets and conditions are never put in the URL, so body-related targets do not end up in history or referrers.
-- Whether targets or viewed recipes are stored in the browser is undecided (section 16).
+- Nothing except the locale preference is stored in the browser in the MVP (section 16, ADR-030 D9).
 
 ## 5. Inputs
 
@@ -197,7 +197,7 @@ Defined in `docs/CONTENT_POLICY.md`. Summary:
 | Range display rule | **decided**: per-ingredient error bands by reason; range shown when wider than twice the display unit (ADR-025) | Phase 0 |
 | Initial recipe count | **decided**: about 60, with composition rules (ADR-023) | Phase 0 |
 | Amount adjustment scope | **decided**: main protein and carbohydrate only, with sides that can be switched off (ADR-024, revised in Phase 1) | Phase 0 |
-| Browser storage of targets and viewed recipes | undecided (opt-in local storage is a candidate) | Phase 4 |
+| Browser storage of targets and viewed recipes | **decided**: none in the MVP; only the locale preference is stored (ADR-030) | Phase 4 |
 | Preset values | cut 450–650 kcal / P ≥ 35 g / F ≤ 15 g; maintain 550–750 / ≥ 30 / ≤ 20; bulk 750–950 / ≥ 45 / ≤ 30 | Phase 0 (decided, ADR-025) |
 
 ## 17. Open questions (要確認)

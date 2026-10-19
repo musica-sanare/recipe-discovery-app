@@ -273,6 +273,17 @@ Findings:
 - Substitutions: the solver never chooses them (ADR-029 D4); excluded foods may force one (D7). Offering the authored substitutions to the user belongs to the detail view in Phase 4, which recalculates them with the nutrition engine.
 - `npm run check` (lint, type-check, 359 tests, content validation, build) passes; `npm run eval:coverage` runs on the recommendation engine with its output changes explained in the Stage 3.7 log.
 
+### Phase 4 start (2026-10-19)
+- Re-check of ADR-016 (npm registry, 02:50 UTC): no `i18next` release after 26.5.2 (2026-10-17 21:24 UTC) and no `react-i18next` release after 17.1.0 (2026-10-17 19:01 UTC). The agreed re-check time (2026-10-19 21:24 UTC) has not passed, so the pins stay; re-check at the first stage that starts after it, and propose any upgrade as its own commit.
+- Re-check of ADR-017 (npm registry): `typescript` latest is 7.0.2 (`next` is 7.1.0-dev.20261018.1) and the latest 6.x is 6.0.3; `typescript-eslint` 8.71.2 (latest) and 8.71.3-alpha.14 (canary) still declare peer `typescript >=4.8.4 <6.1.0`. TypeScript stays at `~6.0.3`.
+- The owner decided that the English and Spanish texts of Phase 1 (open question 13) are reviewed together with the UI once the prototype is largely complete, and that Phase 4 proceeds without waiting for that review.
+
+### Stage 4.1 UI design (2026-10-19)
+- The owner approved the UI design and decisions D1–D13 as recommended (ADR-030, `docs/UI_DESIGN.md`).
+- *Verified* (npm registry, 2026-10-19): `tailwindcss` 4.3.3 and `@tailwindcss/vite` 4.3.3 (both released 2026-07-16, no later release); `@tailwindcss/vite` declares peer `vite ^5.2.0 || ^6 || ^7 || ^8` and depends on `@tailwindcss/node` and `@tailwindcss/oxide` 4.3.3; `@tailwindcss/node` pins `lightningcss` 1.32.0 (Vite 8.3.4 uses 1.33.0, so both are installed). `axe-core` 4.14.0 (released 2026-10-05; previous 4.13.0 on 2026-08-05), no dependencies, license MPL-2.0 (development only, not shipped). No release burst for any of them.
+- *Measured* (trial install in a scratch directory with `strict-allow-scripts=true`, npm 11.17.0, macOS arm64, 2026-10-19): the only install script among these packages and their dependencies is `fsevents@2.3.3`, already denied (ADR-018). Native code comes from platform-specific optional dependencies with prebuilt binaries: `@tailwindcss/oxide-darwin-arm64` (2.8 MB) and `lightningcss-darwin-arm64` (8.1 MB for 1.32.0). Installed sizes: `axe-core` 3.3 MB, `tailwindcss` 0.9 MB, `@tailwindcss/node` 0.2 MB. `npm audit`: 0 vulnerabilities. Tailwind runs at build time only; the browser receives one generated CSS file served from `'self'`.
+- Repository facts used by the design: 9 foods have an empty alias list in at least one locale (open question 14); no search normalization exists yet in `src/` or `shared/`; recipe equipment combinations are mostly a stove with a frying pan (7) or with a frying pan and a pot (4), and one recipe needs a microwave only.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in
@@ -317,7 +328,7 @@ Findings:
 ## ADR-009: Discovery-first ranking; required ingredients as an optional hard filter
 - Status: **Accepted** (owner, 2026-10-18)
 - Decision: the main value is discovering dishes the user would not think of. Pantry input is not required. Users may optionally specify required ingredients, which act as a hard filter. Candidate sets are diversified deterministically (main protein, cuisine, cooking method); "show a different type" gives a reproducible next set.
-- Open: whether viewed recipes are remembered in the browser (with the storage decision, Phase 4).
+- Viewed recipes are remembered only in memory for the session; nothing is stored in the browser (ADR-030 D9).
 
 ## ADR-010: Fried foods allowed as labelled estimates
 - Status: **Accepted** (owner, 2026-10-18)
@@ -342,7 +353,7 @@ Findings:
 
 ## ADR-015: No accounts and no server-side user data
 - Status: **Accepted** (owner, 2026-10-18)
-- Decision: no accounts; targets and conditions stay in the browser and are not put in URLs. Browser storage of targets or history is undecided (Phase 4).
+- Decision: no accounts; targets and conditions stay in the browser and are not put in URLs. Browser storage of targets or history: none in the MVP (ADR-030 D9).
 
 ## ADR-016: Dependency version policy
 - Status: **Accepted** (owner, 2026-10-18)
@@ -494,6 +505,26 @@ Findings:
 - Alternatives: point-based "met" with a range guard (changes ADR-025 and `docs/NUTRITION_CALCULATION.md` §9); `unknown` as near or not met; exhaustive engine calls only; a weighted preference score; an authored `method` field; a PRNG stream; rebuilding the whole set on "exclude this one"; rescuing allergen recipes by switching sides off; excluding every recipe that contains an excluded food.
 - Evidence: verification log "Stage 3.1 recommendation design".
 
+## ADR-030: MVP user interface design
+- Status: **Accepted** (owner, 2026-10-19, Stage 4.1)
+- Screens, wireframes, navigation, state, styling, and catalog structure: `docs/UI_DESIGN.md`. The UI changes no engine behavior, formula, tolerance, limit, or threshold.
+- Decisions:
+  - **D1. Views**: targets and conditions (quick inputs and a collapsible advanced section), candidates (3–5 cards, up to 3 selected for comparison), comparison, and recipe detail with adjustment; every exceptional state of `docs/SPEC.md` §12 is a state of these views.
+  - **D2. Navigation**: no router library; a small History API wrapper in `src/navigation/`. Only the recipe detail has its own path (`/recipes/<id>`); the other views use `/` with the view name in `history.state`. Targets and conditions are never in the URL or in `history.state`. After a reload, candidates and comparison fall back to the targets view with a notice; the detail view shows the recipe at its default amounts without fit statuses. State lives in one `useReducer` behind a context; no store library.
+  - **D3. Styling**: Tailwind CSS v4 (`tailwindcss`, `@tailwindcss/vite`) with tokens in CSS, system fonts only, WCAG 2.2 AA contrast checked by a test over the token pairs, and status markers with distinct shapes and texts.
+  - **D4. Input limits and contradiction thresholds** (open question 19): unchanged (`INPUT_LIMITS`, ADR-029 D9). Input errors appear at their fields and in a summary on submit; a blocking contradiction stops the search with an explanation; a warning is shown and the search runs.
+  - **D5. "Show a different type" when no new recipe meets the targets** (Stage 3.7 observation): the current set stays on screen with a notice that every recipe meeting the targets has been shown, plus "show close alternatives" and "change conditions". A result with only alternatives does not replace the set.
+  - **D6. Ingredient input** (open question 14): an ARIA combobox over the active locale's names and aliases, normalized per locale (`docs/ARCHITECTURE.md` §4); no match shows "not supported". Aliases stay optional because names are always searchable. Protein groups are offered as "any cut" items: a required group is one any-of item; an excluded group adds every food of the group.
+  - **D7. Relaxation and equipment** (open question 20): no engine change. Relaxation options are listed with their met and near gains and an "apply" action. Equipment is chosen as "no limit" (default), "microwave only", or individual items; when no single relaxation exists, the UI suggests reviewing the equipment and links to that field.
+  - **D8. Adjustment**: servings, steppers on the authored grid and whole units, side switches, substitutions from the recipe's list, "fit to my targets" (the pool entry's solver state; only after a search), and reset. Differences from the previous state are the differences of the displayed (rounded) values, so that the shown numbers add up, and status changes are listed.
+  - **D9. Browser storage** (open question 5): nothing except the locale preference is stored in the MVP. Opt-in storage of targets or viewed recipes may be proposed later with its own privacy review.
+  - **D10. Where the recommendation runs** (open question 17): the main thread. Stage 4.7 measures a full recommendation, a re-suggestion, and a recalculation in the browser, including a phone-class CPU throttling profile if the browser offers one; a worker is proposed only if a full recommendation exceeds about 50 ms there.
+  - **D11. Accessibility tests**: `axe-core` in Vitest with jsdom for every view and state in `ja`, `en`, and `es`; color contrast is covered by the token test because jsdom cannot compute it. Playwright stays in Phase 5.
+  - **D12. Card reason line**: at most two reasons besides the fit status, in this order: `highest_among_candidates` / `lowest_among_candidates`, `uses_required_foods`, `new_attribute`, `matches_cuisine`, `quick`, `within_effort`; when none applies, `meets_all_targets` or `meets_with_adjustment`. Close alternatives show all their gap reasons (`near_target`, `misses_target`, `unknown_value`, `range_straddles`).
+  - **D13. Seed**: 0 for every new search, +1 for each "show a different type" (ADR-029 D6).
+- Dependencies (verification log "Stage 4.1 UI design"): `tailwindcss` 4.3.3 and `@tailwindcss/vite` 4.3.3 (dev), `axe-core` 4.14.0 (dev). No new install script; no router.
+- Alternatives: React Router or wouter (more than two views with URLs are not needed, and targets must stay out of URLs); plain CSS (the owner's other apps use Tailwind); opt-in local storage (privacy review not needed for the MVP flow); a worker from the start (Node timings are far below a frame budget); combined equipment relaxation in the engine (needs an ADR-029 change for one rare case); differences of full-precision values (shown numbers would not add up).
+
 ---
 
 ## Open questions (要確認)
@@ -502,7 +533,7 @@ Findings:
 2. Extraction method for Tables 12–14 from the PDF; use of chapter 3 group-level rates for missing cooked forms.
 3. ~~Tolerance, display rounding, and range threshold values~~: ADR-025. Evidence for the assumed error bands is still needed.
 4. ~~Initial recipe count and the scope of automatic adjustment~~: accepted in ADR-023 and ADR-024 (Stage 0.6); portion rules and linked seasonings are designed in Phase 1/3.
-5. Browser storage of targets and viewed recipes.
+5. ~~Browser storage of targets and viewed recipes~~: nothing except the locale preference in the MVP (ADR-030 D9).
 6. Whether the 2015 English edition's names and food codes can serve as a reference for English names.
 7. Applicability of the Health Promotion Act and the Pharmaceutical and Medical Device Act to this app; applicability of allergen labelling rules (policy already applies the stricter interpretation).
 8. Copyright status of recipes under Japanese law (primary sources not checked).
@@ -510,11 +541,11 @@ Findings:
 10. Raw-egg dishes and other regionally sensitive food safety rules across the three locales.
 11. Allergen item lists in `shared/content.ts` derived from CAA change notes and municipal notices; confirm against the CAA figure (Stage 0.4 log).
 12. Best-effort allergen lists for cooking sake, wholegrain mustard, Chinese-style stock granules, and karaage coating mix are based on typical ingredients, not product labels (Stage 0.6 log).
-13. Owner review of the English and Spanish texts added or rewritten in Phase 1: split steps, side labels, and the substitution step texts (Stage 1.1 log, ADR-007).
-14. Whether every food must have at least one search alias per locale; validation currently allows empty alias lists (Stage 1.2).
+13. Owner review of the English and Spanish texts added or rewritten in Phase 1: split steps, side labels, and the substitution step texts (Stage 1.1 log, ADR-007). Deferred by the owner to a review together with the UI once the prototype is largely complete ("Phase 4 start").
+14. ~~Whether every food must have at least one search alias per locale~~: aliases stay optional (ADR-030 D6).
 15. ~~Phase 2 must distinguish raw values from related cooked values for the error bands~~: separate reasons `raw_value_for_cooking` and `related_cooked_value` (ADR-028).
 16. Re-check the `i18next`/`react-i18next` pins after 2026-10-19 21:24 UTC (ADR-016, "Phase 2 start").
-17. Recalculation time in browsers, especially on phones; Phase 2 measured Node.js only (Stage 2.5). Check with the UI in Phase 4.
+17. Recalculation time in browsers, especially on phones; Phase 2 measured Node.js only (Stage 2.5). Measured in Stage 4.7 with the plan of ADR-030 D10.
 18. ~~Fried dishes with wide ranges become "near"~~: intended (ADR-029 D10). The fried and slow-frying bands remain assumptions (open question 3).
-19. Provisional input limits and contradiction thresholds (ADR-029 API and D9); revisit with the targets screen in Phase 4.
-20. Relaxation changes one constraint at a time, so it cannot offer combined equipment such as a stove and a frying pan (Stage 3.6); decide with the conditions screen in Phase 4.
+19. ~~Provisional input limits and contradiction thresholds~~: unchanged (ADR-030 D4).
+20. ~~Combined equipment relaxation~~: no engine change; equipment modes and a link to the equipment field instead (ADR-030 D7).

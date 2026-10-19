@@ -33,7 +33,7 @@ Repository content (recipes, food dictionary, translations)
 | `shared` | Content schemas and types, IDs, units, constants used by build tools, domain, and UI | UI, platform |
 | `content/` (data) | Recipes, food dictionary, allergen links, substitutions, localized texts, glossary | — |
 | `tools/` (build time) | Composition extraction, content validation, policy lint, nutrition snapshots, header generation | UI |
-| `src/` (UI) | React app, routing, i18n, formatting, state, accessibility | Platform-specific APIs |
+| `src/` (UI) | React app, navigation, i18n, formatting, state, accessibility (`docs/UI_DESIGN.md`) | Platform-specific APIs |
 | `platform/` | Hosting configuration (Cloudflare) and generated security headers | Domain logic |
 
 Boundaries are enforced with lint import restrictions and a boundary test, as in the owner's other projects.

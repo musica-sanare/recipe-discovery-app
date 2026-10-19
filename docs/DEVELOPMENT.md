@@ -29,7 +29,7 @@ npm ci
 | `npm test` | Vitest (Node by default; UI tests use jsdom per file) |
 | `npm run check` | Lint, type-check, tests, and build in sequence |
 | `npm run data:extract` | Regenerate `data/composition/foods.json` from the MEXT workbook in `data/raw/` (`docs/DATA_SOURCES.md` "Extraction") |
-| `npm run eval:coverage` | Phase 0 evaluation: how many validation recipes meet representative targets with fixed and adjusted amounts (`docs/DECISIONS.md` "Stage 0.6") |
+| `npm run eval:coverage` | How many validation recipes meet representative targets with default and adjusted amounts, computed by the recommendation engine (`docs/DECISIONS.md` "Stage 0.6", "Stage 3.7") |
 | `npm run data:verify-cooking` | macOS only: check `data/composition/cooking.json` against the MEXT explanation PDF text (`docs/DATA_SOURCES.md` "Cooking tables") |
 
 There is intentionally no deploy script.
@@ -40,6 +40,7 @@ There is intentionally no deploy script.
 index.html, src/        UI (React); src/i18n/ holds the typed ja/en/es catalogs
 shared/                 Schemas, constants, and types shared by UI, domain, content, and tools
 domain/nutrition/       Pure, locale-free nutrition engine (ADR-028); tests next to the code
+domain/recommendation/  Pure, locale-free recommendation engine (ADR-029); tests next to the code
 content/                Food dictionary, recipes, glossary, content version (TypeScript, validated at build time)
 platform/               Hosting-specific output (security headers)
 tools/                  Build-time tools run directly by Node (TypeScript type stripping)

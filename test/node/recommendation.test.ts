@@ -3,10 +3,12 @@ import { defaultState } from "../../domain/nutrition/amounts.ts";
 import { calculateNutrition, type RecipeNutrition } from "../../domain/nutrition/engine.ts";
 import { recommendationDataFromBundle } from "../../domain/recommendation/data.ts";
 import { evaluateFit, type Tier } from "../../domain/recommendation/fit.ts";
+import { evaluatePool, selectCandidates, type EvaluatedPool, type Selection } from "../../domain/recommendation/recommend.ts";
 import { solve, solveExhaustive, type SolveInput } from "../../domain/recommendation/solver.ts";
 import { applyHardFilters } from "../../domain/recommendation/filters.ts";
-import type { Conditions, Preset } from "../../domain/recommendation/types.ts";
+import type { Conditions, Preset, Session } from "../../domain/recommendation/types.ts";
 import { presetTargets, validatePoolRequest } from "../../domain/recommendation/validate.ts";
+import { METHOD_FAMILIES, methodFamily } from "../../shared/recipe.ts";
 import { repositoryEngine } from "../../tools/content/repository.ts";
 
 // Recommendation input from the in-memory calculation bundle, as in the browser.
@@ -188,5 +190,100 @@ describe("bounded adjustment on the validation recipes", () => {
       ]),
     );
     expect(adjustments).toMatchSnapshot();
+  });
+});
+
+describe("cooking-method families", () => {
+  it("derives the families of the Stage 3.1 log", () => {
+    const counts = new Map(METHOD_FAMILIES.map((family) => [family, 0]));
+    for (const recipe of data.recipes) {
+      const family = methodFamily(recipe, (food) => data.foods.get(food)?.proteinGroup);
+      counts.set(family, (counts.get(family) ?? 0) + 1);
+    }
+    expect(Object.fromEntries(counts)).toEqual({ grill: 2, simmer: 3, steam: 1, stir_fry: 4, pan: 5, fry: 4, no_cook: 1 });
+  });
+});
+
+describe("candidates and re-suggestion", () => {
+  const emptySession: Session = { shown: [], excluded: [], previous: [], keep: [] };
+  const poolFor = (preset: Preset, conditions: Partial<Conditions> = {}): EvaluatedPool => {
+    const result = evaluatePool({ targets: presetTargets(preset), servings: 1, conditions: { ...none, ...conditions } }, data);
+    if (!result.ok) throw new Error(JSON.stringify(result.errors));
+    return result.value;
+  };
+  const select = (pool: EvaluatedPool, session: Session, seed: number): Selection => {
+    const result = selectCandidates(pool, session, seed);
+    if (!result.ok) throw new Error(JSON.stringify(result.errors));
+    return result.value;
+  };
+  const ids = (selection: Selection) => selection.candidates.map((entry) => entry.recipe);
+  const cut = poolFor("cut");
+
+  it("returns up to five distinct recipes that meet the targets, with varied attributes", () => {
+    const selection = select(cut, emptySession, 0);
+    expect(selection.tiers).toEqual({ met: 9, near: 1, not_met: 10 });
+    expect(ids(selection)).toHaveLength(5);
+    expect(new Set(ids(selection)).size).toBe(5);
+    for (const entry of selection.candidates) expect(entry.solution.fit.tier).toBe("met");
+    const values = (key: "proteinGroup" | "cuisine" | "method") => new Set(selection.candidates.map((entry) => entry.attributes[key])).size;
+    expect(values("method")).toBe(5);
+    expect(values("proteinGroup")).toBeGreaterThanOrEqual(3);
+  });
+
+  it("gives the same candidates in the same order for the same input and seed", () => {
+    expect(select(poolFor("cut"), emptySession, 4)).toEqual(select(cut, emptySession, 4));
+  });
+
+  it("gives reproducible, different sets for different seeds", () => {
+    const sets = new Set(Array.from({ length: 30 }, (_, seed) => [...ids(select(cut, emptySession, seed))].sort().join()));
+    expect(sets.size).toBeGreaterThan(1);
+    expect(ids(select(cut, emptySession, 17))).toEqual(ids(select(cut, emptySession, 17)));
+  });
+
+  it("does not repeat shown recipes until the pool is exhausted", () => {
+    const first = select(cut, emptySession, 0);
+    const secondSession: Session = { ...emptySession, shown: ids(first), previous: ids(first) };
+    const second = select(cut, secondSession, 1);
+    expect(second.exhausted).toBe(false);
+    expect(ids(second)).toHaveLength(4);
+    expect(ids(second).filter((id) => ids(first).includes(id))).toEqual([]);
+    // All nine met recipes have been shown: the next set comes from the first set again.
+    const third = select(cut, { ...emptySession, shown: [...ids(first), ...ids(second)], previous: ids(second) }, 2);
+    expect(third.exhausted).toBe(true);
+    expect([...ids(third)].sort()).toEqual([...ids(first)].sort());
+  });
+
+  it("replaces only an excluded card and counts the exclusion", () => {
+    const first = select(cut, emptySession, 0);
+    const [removed, ...others] = ids(first);
+    if (removed === undefined) throw new Error("no candidate");
+    const next = select(cut, { shown: ids(first), excluded: [removed], previous: ids(first), keep: others }, 1);
+    expect(ids(next).slice(0, 4)).toEqual(others);
+    expect(ids(next)).toHaveLength(5);
+    expect(ids(next)).not.toContain(removed);
+    expect(next.tiers).toEqual({ met: 8, near: 1, not_met: 10 });
+    expect(next.exclusions).toEqual([{ item: { constraint: "sessionExcluded" }, count: 1, onlyThis: 1 }]);
+  });
+
+  it("raises preferred recipes when diversity ties", () => {
+    const korean = select(poolFor("bulk", { cuisines: ["korean"] }), emptySession, 0);
+    expect(ids(korean)[0]).toBe("beef_shimeji_bowl");
+  });
+
+  it("returns no candidates for blocking contradictions", () => {
+    const result = evaluatePool({ targets: { kcal: { min: 300, max: 400 }, proteinMin: 150 }, servings: 1, conditions: none }, data);
+    expect(result.ok && result.value.blocked).toBe(true);
+    expect(result.ok && result.value.entries).toEqual([]);
+    expect(result.ok && result.value.contradictions.map((entry) => entry.severity)).toEqual(["blocking"]);
+  });
+
+  it("rejects invalid sessions and seeds", () => {
+    expect(selectCandidates(cut, { ...emptySession, keep: ["missing"] }, 0)).toEqual({ ok: false, errors: [{ code: "unknown_recipe", field: "keep", recipe: "missing" }] });
+    expect(selectCandidates(cut, emptySession, -1).ok).toBe(false);
+  });
+
+  it("keeps a side that holds a required food on", () => {
+    const pool = poolFor("cut", { requiredFoods: [["rice_cooked"]] });
+    for (const entry of pool.entries) expect(entry.solution.sidesOff, entry.recipe).not.toContain("rice");
   });
 });

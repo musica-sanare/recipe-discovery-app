@@ -287,3 +287,108 @@ describe("candidates and re-suggestion", () => {
     for (const entry of pool.entries) expect(entry.solution.sidesOff, entry.recipe).not.toContain("rice");
   });
 });
+
+describe("few or no candidates, relaxation, reasons", () => {
+  const emptySession: Session = { shown: [], excluded: [], previous: [], keep: [] };
+  const run = (preset: Preset, conditions: Partial<Conditions>, session: Session = emptySession, seed = 0) => {
+    const pool = evaluatePool({ targets: presetTargets(preset), servings: 1, conditions: { ...none, ...conditions } }, data);
+    if (!pool.ok) throw new Error(JSON.stringify(pool.errors));
+    const selection = selectCandidates(pool.value, session, seed);
+    if (!selection.ok) throw new Error(JSON.stringify(selection.errors));
+    return selection.value;
+  };
+  const metCount = (preset: Preset, conditions: Partial<Conditions>, excluded: readonly string[] = []) =>
+    run(preset, conditions, { ...emptySession, excluded }).tiers.met;
+  const nearCount = (preset: Preset, conditions: Partial<Conditions>, excluded: readonly string[] = []) =>
+    run(preset, conditions, { ...emptySession, excluded }).tiers.near;
+
+  it("adds close alternatives up to three recipes, best fit first", () => {
+    const selection = run("maintain", { requiredFoods: [TOFU] });
+    expect(selection.candidates.map((entry) => entry.recipe)).toEqual(["tuna_tofu_bowl"]);
+    expect(selection.alternatives.map((entry) => [entry.recipe, entry.solution.fit.tier])).toEqual([
+      ["chicken_mapo_tofu", "near"],
+      ["tofu_egg_champuru", "not_met"],
+    ]);
+  });
+
+  it("has no alternatives or relaxations when at least three recipes meet the targets", () => {
+    const selection = run("cut", {});
+    expect(selection.alternatives).toEqual([]);
+    expect(selection.relaxations).toEqual([]);
+  });
+
+  it("returns an empty set with exclusion counts and relaxations when nothing passes the filters", () => {
+    const conditions = { requiredFoods: [TOFU, ["salmon"]] };
+    const selection = run("maintain", conditions);
+    expect(selection.candidates).toEqual([]);
+    expect(selection.alternatives).toEqual([]);
+    expect(selection.tiers).toEqual({ met: 0, near: 0, not_met: 0 });
+    expect(selection.relaxations).toEqual([
+      { constraint: "requiredFood", index: 0, gain: { met: metCount("maintain", { requiredFoods: [["salmon"]] }), near: nearCount("maintain", { requiredFoods: [["salmon"]] }) } },
+      { constraint: "requiredFood", index: 1, gain: { met: metCount("maintain", { requiredFoods: [TOFU] }), near: nearCount("maintain", { requiredFoods: [TOFU] }) } },
+    ]);
+  });
+
+  it("offers the smallest time that adds a met recipe, with exactly recomputed gains", () => {
+    const selection = run("bulk", { maxMinutes: 15 });
+    const [time] = selection.relaxations;
+    expect(time?.constraint).toBe("maxMinutes");
+    if (time?.constraint !== "maxMinutes") throw new Error("no time relaxation");
+    expect(time.to).toBe(20);
+    expect(time.gain).toEqual({
+      met: metCount("bulk", { maxMinutes: 20 }) - metCount("bulk", { maxMinutes: 15 }),
+      near: nearCount("bulk", { maxMinutes: 20 }) - nearCount("bulk", { maxMinutes: 15 }),
+    });
+    expect(metCount("bulk", { maxMinutes: 19 })).toBe(metCount("bulk", { maxMinutes: 15 }));
+  });
+
+  it("recomputes every gain exactly and never relaxes allergens or the user's exclusions", () => {
+    const conditions: Partial<Conditions> = { equipment: ["microwave", "pot", "stove"], excludedAllergens: ["egg"], excludedFoods: ["rice_cooked", "broccoli"], maxMinutes: 15 };
+    const excluded = ["pork_shabu_salad"];
+    const selection = run("cut", conditions, { ...emptySession, excluded });
+    expect(selection.tiers.met).toBeLessThan(3);
+    expect(selection.relaxations.length).toBeGreaterThan(0);
+    const base = { met: metCount("cut", conditions, excluded), near: nearCount("cut", conditions, excluded) };
+    for (const relaxation of selection.relaxations) {
+      expect(["maxMinutes", "equipment", "requiredFood", "excludedFood"]).toContain(relaxation.constraint);
+      let relaxed: Partial<Conditions> = conditions;
+      if (relaxation.constraint === "maxMinutes") relaxed = { ...conditions, maxMinutes: relaxation.to };
+      if (relaxation.constraint === "equipment") relaxed = { ...conditions, equipment: [...(conditions.equipment ?? []), relaxation.add] };
+      if (relaxation.constraint === "excludedFood") relaxed = { ...conditions, excludedFoods: conditions.excludedFoods?.filter((food) => food !== relaxation.food) ?? [] };
+      expect(relaxation.gain).toEqual({ met: metCount("cut", relaxed, excluded) - base.met, near: nearCount("cut", relaxed, excluded) - base.near });
+    }
+    const gains = selection.relaxations.map((relaxation) => [relaxation.gain.met, relaxation.gain.near]);
+    expect(gains).toEqual([...gains].sort((a, b) => (b[0] ?? 0) - (a[0] ?? 0) || (b[1] ?? 0) - (a[1] ?? 0)));
+  });
+
+  it("gives typed reason data for the candidates", () => {
+    const first = run("cut", { cuisines: ["japanese"], effort: 2, requiredFoods: [["pork_fillet", "pork_leg", "pork_loin", "chicken_breast"]] });
+    const reasons = first.candidates.flatMap((entry) => entry.reasons.map((reason) => reason.code));
+    expect(reasons.filter((code) => code === "highest_among_candidates")).toHaveLength(1);
+    expect(reasons.filter((code) => code === "lowest_among_candidates")).toHaveLength(1);
+    for (const entry of first.candidates) {
+      const codes = entry.reasons.map((reason) => reason.code);
+      expect(codes).toContain(entry.solution.changes.length > 0 || entry.solution.sidesOff.length > 0 ? "meets_with_adjustment" : "meets_all_targets");
+      expect(codes.includes("matches_cuisine")).toBe(entry.attributes.cuisine === "japanese");
+      expect(codes.includes("within_effort")).toBe(entry.effort <= 2);
+      expect(codes.includes("quick")).toBe(entry.minutes <= 20);
+      expect(entry.reasons.find((reason) => reason.code === "uses_required_foods")).toBeDefined();
+      expect(codes).not.toContain("new_attribute");
+    }
+    const ids = first.candidates.map((entry) => entry.recipe);
+    const second = run("cut", {}, { ...emptySession, shown: ids, previous: ids }, 1);
+    const previous = first.candidates.map((entry) => entry.attributes);
+    for (const entry of second.candidates) {
+      const fresh = entry.reasons.flatMap((reason) => (reason.code === "new_attribute" ? [reason.attribute] : []));
+      expect(fresh).toEqual((["proteinGroup", "cuisine", "method"] as const).filter((key) => !previous.some((other) => other[key] === entry.attributes[key])));
+    }
+  });
+
+  it("reports near and missed targets with gaps for alternatives", () => {
+    const [mapo, champuru] = run("maintain", { requiredFoods: [TOFU] }).alternatives;
+    expect(mapo?.reasons).toContainEqual({ code: "range_straddles", target: "protein" });
+    const fat = champuru?.reasons.find((reason) => reason.code === "misses_target" && reason.target === "fat");
+    expect(fat?.code === "misses_target" && fat.gap).toBeGreaterThan(2);
+    expect(champuru?.reasons.map((reason) => reason.code)).not.toContain("meets_all_targets");
+  });
+});

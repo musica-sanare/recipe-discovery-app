@@ -8,7 +8,7 @@ export const foods: readonly Food[] = [
   {
     id: "chicken_breast",
     names: { ja: "鶏むね肉（皮なし）", en: "Chicken breast (skinless)", es: "Pechuga de pollo (sin piel)" },
-    aliases: { ja: ["鶏むね", "とりむね", "鶏胸肉", "むね肉"], en: ["chicken breast"], es: ["pechuga de pollo", "pechuga"] },
+    aliases: { ja: ["鶏むね", "とりむね", "鶏胸肉", "むね肉", "とりむねにく"], en: ["chicken breast"], es: ["pechuga de pollo", "pechuga"] },
     composition: { raw: "11220", grill: "11288" },
     allergens: [{ allergen: "chicken", confidence: "contains" }],
     proteinGroup: "chicken",
@@ -16,7 +16,7 @@ export const foods: readonly Food[] = [
   {
     id: "chicken_thigh",
     names: { ja: "鶏もも肉（皮なし）", en: "Chicken thigh (skinless)", es: "Muslo de pollo (sin piel)" },
-    aliases: { ja: ["鶏もも", "とりもも", "もも肉"], en: ["chicken thigh"], es: ["muslo de pollo", "contramuslo"] },
+    aliases: { ja: ["鶏もも", "とりもも", "もも肉", "とりももにく"], en: ["chicken thigh"], es: ["muslo de pollo", "contramuslo"] },
     composition: { raw: "11224", boil: "11226", grill: "11225", karaage: "11290" },
     allergens: [{ allergen: "chicken", confidence: "contains" }],
     proteinGroup: "chicken",
@@ -24,7 +24,7 @@ export const foods: readonly Food[] = [
   {
     id: "chicken_mince",
     names: { ja: "鶏ひき肉", en: "Ground chicken", es: "Carne picada de pollo" },
-    aliases: { ja: ["鶏ミンチ", "とりひき肉"], en: ["minced chicken", "chicken mince"], es: ["pollo picado", "carne molida de pollo"] },
+    aliases: { ja: ["鶏ミンチ", "とりひき肉", "とりひきにく"], en: ["minced chicken", "chicken mince"], es: ["pollo picado", "carne molida de pollo"] },
     composition: { raw: "11230", grill: "11291" },
     allergens: [{ allergen: "chicken", confidence: "contains" }],
     proteinGroup: "chicken",
@@ -32,7 +32,7 @@ export const foods: readonly Food[] = [
   {
     id: "pork_fillet",
     names: { ja: "豚ヒレ肉", en: "Pork tenderloin", es: "Solomillo de cerdo" },
-    aliases: { ja: ["豚ヒレ", "ヒレ肉", "豚フィレ"], en: ["pork fillet"], es: ["lomo de cerdo", "filete de cerdo"] },
+    aliases: { ja: ["豚ヒレ", "ヒレ肉", "豚フィレ", "ぶたひれ", "ひれにく"], en: ["pork fillet"], es: ["lomo de cerdo", "filete de cerdo"] },
     composition: { raw: "11140", grill: "11278", tonkatsu: "11279" },
     allergens: [{ allergen: "pork", confidence: "contains" }],
     proteinGroup: "pork",
@@ -40,7 +40,7 @@ export const foods: readonly Food[] = [
   {
     id: "pork_leg",
     names: { ja: "豚もも肉（脂身なし）", en: "Pork leg (lean)", es: "Pierna de cerdo (magra)" },
-    aliases: { ja: ["豚もも", "ぶたもも"], en: ["pork leg", "lean pork"], es: ["pierna de cerdo", "jamón fresco de cerdo"] },
+    aliases: { ja: ["豚もも", "ぶたもも", "ぶたももにく"], en: ["pork leg", "lean pork"], es: ["pierna de cerdo", "jamón fresco de cerdo"] },
     composition: { raw: "11131", boil: "11133", grill: "11132" },
     allergens: [{ allergen: "pork", confidence: "contains" }],
     proteinGroup: "pork",
@@ -48,7 +48,7 @@ export const foods: readonly Food[] = [
   {
     id: "pork_loin",
     names: { ja: "豚ロース肉（赤身）", en: "Pork loin (lean)", es: "Lomo de cerdo (magro)" },
-    aliases: { ja: ["豚ロース", "ロース肉"], en: ["pork loin"], es: ["lomo de cerdo", "cinta de lomo"] },
+    aliases: { ja: ["豚ロース", "ロース肉", "ぶたろーす"], en: ["pork loin"], es: ["lomo de cerdo", "cinta de lomo"] },
     composition: { raw: "11127" },
     allergens: [{ allergen: "pork", confidence: "contains" }],
     proteinGroup: "pork",
@@ -56,7 +56,7 @@ export const foods: readonly Food[] = [
   {
     id: "beef_round",
     names: { ja: "牛もも肉（脂身なし）", en: "Beef round (lean)", es: "Babilla de ternera (magra)" },
-    aliases: { ja: ["牛もも", "ぎゅうもも"], en: ["beef round", "lean beef"], es: ["ternera magra", "carne de res magra", "bola de res"] },
+    aliases: { ja: ["牛もも", "ぎゅうもも", "ぎゅうももにく"], en: ["beef round", "lean beef"], es: ["ternera magra", "carne de res magra", "bola de res"] },
     composition: { raw: "11076", boil: "11271", grill: "11270" },
     allergens: [{ allergen: "beef", confidence: "contains" }],
     proteinGroup: "beef",
@@ -96,7 +96,7 @@ export const foods: readonly Food[] = [
   {
     id: "tofu_firm",
     names: { ja: "木綿豆腐", en: "Firm tofu", es: "Tofu firme" },
-    aliases: { ja: ["豆腐", "もめん豆腐"], en: ["tofu"], es: ["tofu"] },
+    aliases: { ja: ["豆腐", "もめん豆腐", "とうふ", "もめんどうふ"], en: ["tofu"], es: ["tofu"] },
     composition: { raw: "04032" },
     allergens: [{ allergen: "soybean", confidence: "contains" }],
     proteinGroup: "soy",
@@ -104,7 +104,7 @@ export const foods: readonly Food[] = [
   {
     id: "tofu_silken",
     names: { ja: "絹ごし豆腐", en: "Silken tofu", es: "Tofu sedoso" },
-    aliases: { ja: ["豆腐", "きぬ豆腐"], en: ["soft tofu", "tofu"], es: ["tofu suave", "tofu"] },
+    aliases: { ja: ["豆腐", "きぬ豆腐", "とうふ", "きぬごしどうふ"], en: ["soft tofu", "tofu"], es: ["tofu suave", "tofu"] },
     composition: { raw: "04033" },
     allergens: [{ allergen: "soybean", confidence: "contains" }],
     proteinGroup: "soy",
@@ -112,7 +112,7 @@ export const foods: readonly Food[] = [
   {
     id: "rice_cooked",
     names: { ja: "ご飯（精白米）", en: "Cooked white rice", es: "Arroz blanco cocido" },
-    aliases: { ja: ["ごはん", "白米", "米", "ライス"], en: ["rice", "steamed rice"], es: ["arroz"] },
+    aliases: { ja: ["ごはん", "白米", "米", "ライス", "はくまい", "こめ"], en: ["rice", "steamed rice"], es: ["arroz"] },
     composition: { as_is: "01088" },
     allergens: [],
   },
@@ -126,7 +126,7 @@ export const foods: readonly Food[] = [
   {
     id: "bread",
     names: { ja: "食パン", en: "White sandwich bread", es: "Pan de molde" },
-    aliases: { ja: ["パン", "トースト"], en: ["bread", "white bread"], es: ["pan", "pan blanco"] },
+    aliases: { ja: ["パン", "トースト", "しょくぱん"], en: ["bread", "white bread"], es: ["pan", "pan blanco"] },
     composition: { as_is: "01026" },
     allergens: [
       { allergen: "wheat", confidence: "contains" },
@@ -220,14 +220,14 @@ export const foods: readonly Food[] = [
   {
     id: "long_onion",
     names: { ja: "長ねぎ", en: "Japanese leek (naganegi)", es: "Puerro japonés (naganegi)" },
-    aliases: { ja: ["ねぎ", "白ねぎ", "根深ねぎ"], en: ["leek", "welsh onion"], es: ["puerro", "cebollino japonés"] },
+    aliases: { ja: ["ねぎ", "白ねぎ", "根深ねぎ", "ながねぎ"], en: ["leek", "welsh onion"], es: ["puerro", "cebollino japonés"] },
     composition: { raw: "06226" },
     allergens: [],
   },
   {
     id: "green_onion",
     names: { ja: "青ねぎ", en: "Green onion", es: "Cebolleta" },
-    aliases: { ja: ["小ねぎ", "万能ねぎ", "葉ねぎ"], en: ["scallion", "spring onion"], es: ["cebollín", "cebolla de verdeo"] },
+    aliases: { ja: ["小ねぎ", "万能ねぎ", "葉ねぎ", "あおねぎ", "こねぎ"], en: ["scallion", "spring onion"], es: ["cebollín", "cebolla de verdeo"] },
     composition: { raw: "06227" },
     allergens: [],
   },
@@ -262,14 +262,14 @@ export const foods: readonly Food[] = [
   {
     id: "vegetable_oil",
     names: { ja: "サラダ油", en: "Vegetable oil", es: "Aceite vegetal" },
-    aliases: { ja: ["調合油", "植物油"], en: ["cooking oil"], es: ["aceite de girasol", "aceite"] },
+    aliases: { ja: ["調合油", "植物油", "さらだゆ"], en: ["cooking oil"], es: ["aceite de girasol", "aceite"] },
     composition: { as_is: "14006" },
     allergens: [{ allergen: "soybean", confidence: "may_contain" }, { allergen: "sesame", confidence: "may_contain" }],
   },
   {
     id: "sesame_oil",
     names: { ja: "ごま油", en: "Sesame oil", es: "Aceite de sésamo" },
-    aliases: { ja: ["胡麻油"], en: [], es: ["aceite de ajonjolí"] },
+    aliases: { ja: ["胡麻油", "ごまあぶら"], en: [], es: ["aceite de ajonjolí"] },
     composition: { as_is: "14002" },
     allergens: [{ allergen: "sesame", confidence: "contains" }],
   },
@@ -290,49 +290,49 @@ export const foods: readonly Food[] = [
   {
     id: "cooking_sake",
     names: { ja: "料理酒", en: "Cooking sake", es: "Sake de cocina" },
-    aliases: { ja: ["酒"], en: ["sake"], es: ["sake"] },
+    aliases: { ja: ["酒", "りょうりしゅ"], en: ["sake"], es: ["sake"] },
     composition: { as_is: "17138" },
     allergens: [],
   },
   {
     id: "sugar",
     names: { ja: "砂糖（上白糖）", en: "Sugar", es: "Azúcar" },
-    aliases: { ja: ["砂糖", "上白糖"], en: ["white sugar"], es: ["azúcar blanco"] },
+    aliases: { ja: ["砂糖", "上白糖", "さとう"], en: ["white sugar"], es: ["azúcar blanco"] },
     composition: { as_is: "03003" },
     allergens: [],
   },
   {
     id: "salt",
     names: { ja: "塩", en: "Salt", es: "Sal" },
-    aliases: { ja: ["食塩"], en: [], es: [] },
+    aliases: { ja: ["食塩", "しお"], en: [], es: [] },
     composition: { as_is: "17012" },
     allergens: [],
   },
   {
     id: "black_pepper",
     names: { ja: "黒こしょう", en: "Black pepper", es: "Pimienta negra" },
-    aliases: { ja: ["こしょう", "胡椒"], en: ["pepper"], es: ["pimienta"] },
+    aliases: { ja: ["こしょう", "胡椒", "くろこしょう"], en: ["pepper"], es: ["pimienta"] },
     composition: { as_is: "17063" },
     allergens: [],
   },
   {
     id: "grain_mustard",
     names: { ja: "粒マスタード", en: "Wholegrain mustard", es: "Mostaza en grano" },
-    aliases: { ja: ["マスタード"], en: ["mustard"], es: ["mostaza antigua", "mostaza"] },
+    aliases: { ja: ["マスタード", "つぶますたーど"], en: ["mustard"], es: ["mostaza antigua", "mostaza"] },
     composition: { as_is: "17060" },
     allergens: [],
   },
   {
     id: "rice_vinegar",
     names: { ja: "米酢", en: "Rice vinegar", es: "Vinagre de arroz" },
-    aliases: { ja: ["酢", "お酢"], en: ["vinegar"], es: ["vinagre"] },
+    aliases: { ja: ["酢", "お酢", "こめず"], en: ["vinegar"], es: ["vinagre"] },
     composition: { as_is: "17016" },
     allergens: [],
   },
   {
     id: "chinese_stock_granules",
     names: { ja: "顆粒中華だし", en: "Chinese-style stock granules", es: "Caldo chino en gránulos" },
-    aliases: { ja: ["中華だし", "鶏がらスープの素"], en: ["chicken stock powder"], es: ["caldo de pollo en polvo"] },
+    aliases: { ja: ["中華だし", "鶏がらスープの素", "ちゅうかだし", "とりがらすーぷのもと"], en: ["chicken stock powder"], es: ["caldo de pollo en polvo"] },
     composition: { as_is: "17093" },
     allergens: [
       { allergen: "wheat", confidence: "may_contain" },
@@ -354,21 +354,21 @@ export const foods: readonly Food[] = [
   {
     id: "potato_starch",
     names: { ja: "片栗粉", en: "Potato starch", es: "Fécula de patata" },
-    aliases: { ja: ["かたくり粉"], en: ["katakuriko", "starch"], es: ["almidón de papa", "fécula"] },
+    aliases: { ja: ["かたくり粉", "かたくりこ"], en: ["katakuriko", "starch"], es: ["almidón de papa", "fécula"] },
     composition: { as_is: "02034" },
     allergens: [],
   },
   {
     id: "tempura_flour",
     names: { ja: "天ぷら粉", en: "Tempura flour mix", es: "Harina para tempura" },
-    aliases: { ja: ["てんぷら粉"], en: ["tempura batter mix"], es: ["mezcla para tempura"] },
+    aliases: { ja: ["てんぷら粉", "てんぷらこ"], en: ["tempura batter mix"], es: ["mezcla para tempura"] },
     composition: { as_is: "01025" },
     allergens: [{ allergen: "wheat", confidence: "contains" }, { allergen: "egg", confidence: "may_contain" }, { allergen: "soybean", confidence: "may_contain" }],
   },
   {
     id: "karaage_flour",
     names: { ja: "から揚げ粉", en: "Karaage coating mix", es: "Mezcla para karaage" },
-    aliases: { ja: ["唐揚げ粉"], en: ["fried chicken coating mix"], es: ["rebozado para pollo frito"] },
+    aliases: { ja: ["唐揚げ粉", "からあげこ"], en: ["fried chicken coating mix"], es: ["rebozado para pollo frito"] },
     composition: { as_is: "01147" },
     allergens: [
       { allergen: "wheat", confidence: "contains" },
@@ -381,7 +381,7 @@ export const foods: readonly Food[] = [
   {
     id: "panko",
     names: { ja: "パン粉（乾燥）", en: "Panko (dry breadcrumbs)", es: "Panko (pan rallado seco)" },
-    aliases: { ja: ["パン粉"], en: ["breadcrumbs"], es: ["pan rallado"] },
+    aliases: { ja: ["パン粉", "ぱんこ"], en: ["breadcrumbs"], es: ["pan rallado"] },
     composition: { as_is: "01079" },
     allergens: [{ allergen: "wheat", confidence: "contains" }, { allergen: "milk", confidence: "may_contain" }, { allergen: "soybean", confidence: "may_contain" }],
   },

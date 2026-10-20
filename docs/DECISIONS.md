@@ -582,4 +582,4 @@ Findings:
 18. ~~Fried dishes with wide ranges become "near"~~: intended (ADR-029 D10). The fried and slow-frying bands remain assumptions (open question 3).
 19. ~~Provisional input limits and contradiction thresholds~~: unchanged (ADR-030 D4).
 20. ~~Combined equipment relaxation~~: no engine change; equipment modes and a link to the equipment field instead (ADR-030 D7).
-21. Japanese search by reading: many foods have no hiragana alias (for example tofu has 豆腐 but not とうふ), so typing a reading finds nothing (Stage 4.3). Adding readings to `content/foods.ts` is a content change for owner approval; katakana is already folded to hiragana.
+21. ~~Japanese search by reading~~: the owner approved adding hiragana readings as Japanese aliases (2026-10-20); 26 foods gained readings in content version 2026-10-20.1, and `test/node/food-search.test.ts` checks reading search. A long-vowel mark typed in katakana ("トーフ") still does not match a reading written with う ("とうふ").

@@ -314,6 +314,9 @@ Findings:
 - Tests: `draft.test.ts`, `foodSearch.test.ts`, `errors.test.ts` (every input error and both contradiction severities have a complete message in each locale), and `TargetsView.test.tsx` (presets, steppers, values reaching the engine unchanged, the kept draft, error summary and focus, inverted range, warning and blocking contradictions, keyboard autocomplete, "not supported", accent folding, group items, axe in `ja`, `en`, and `es`). The UI test fixtures now contain four foods.
 - Browser check (`npm run preview`, built-in browser, 2026-10-20): the form at 375 px in `ja` and `es` (advanced section open, no element wider than the viewport) and at desktop width in dark mode; keyboard selection of an ingredient, a search that opens the candidates view with focus on its heading and no targets in the URL, back navigation with the draft kept, Spanish accent folding ("papá" finds "Patata"), and chosen ingredients relabelled after a language switch; no console messages. Found: Japanese searches by reading fail when the dictionary has no kana alias ("とうふ" and "トーフ" do not find tofu; "豆腐" does) — open question 21. The advanced section closes after a language switch (the view remounts while the text bundle loads); the draft is kept.
 
+### Dependency update: typescript-eslint 8.72.0 (2026-10-20)
+- `typescript-eslint` 8.71.2 → 8.72.0 (latest, released 2026-10-19 17:08 UTC; weekly cadence since 8.71.0, so no release burst under ADR-016). Peer ranges unchanged: `eslint ^8.57.0 || ^9.0.0 || ^10.0.0`, `typescript >=4.8.4 <6.1.0` (ADR-017 unchanged). `npm install` under `strict-allow-scripts` reported no new install script; `npm audit`: 0 vulnerabilities; `npm run lint` reports no new problem.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in

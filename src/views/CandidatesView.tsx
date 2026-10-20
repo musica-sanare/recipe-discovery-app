@@ -1,31 +1,289 @@
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import type { SearchState } from "../state/reducer";
+import type { Recommended } from "../../domain/recommendation/recommend";
+import { MIN_CANDIDATES } from "../../domain/recommendation/recommend";
+import type { Relaxation } from "../../domain/recommendation/relax";
 import { ViewHeading } from "../components/ViewHeading";
+import { formatNumber, formatNutrientRange } from "../format/format";
 import { useNavigation } from "../navigation/context";
 import { ViewLink } from "../navigation/ViewLink";
-import { useLoadedContent } from "../state/context";
+import { useAppState, useLoadedContent } from "../state/context";
+import { differentType, excludeOne, search } from "../state/recommendation";
+import { MAX_COMPARE, type SearchState } from "../state/reducer";
+import { RecipeCard } from "./candidates/RecipeCard";
+import { exclusionText, listText, minutesText, relaxationText } from "./candidates/texts";
+import { defaultDraft, draftToRequest, relaxedDraft } from "./targets/draft";
+import { contradictionMessage } from "./targets/errors";
+import { useTextContext } from "./useTextContext";
 
-/** Candidates (docs/UI_DESIGN.md §3.2). Cards and re-suggestion arrive in Stage 4.4. */
-export function CandidatesView({ search }: { readonly search: SearchState }) {
+/** Candidates, close alternatives, re-suggestion, and the exceptional states (docs/UI_DESIGN.md §3.2, ADR-030 D5, D7). */
+export function CandidatesView({ search: current }: { readonly search: SearchState }) {
   const { t } = useTranslation();
-  const { navigated } = useNavigation();
-  const { text } = useLoadedContent();
+  const { navigated, navigate } = useNavigation();
+  const { calc, text, data } = useLoadedContent();
+  const { state, dispatch } = useAppState();
+  const context = useTextContext();
+  const { locale } = context;
+  const [announcement, setAnnouncement] = useState("");
+  // The element to focus after the next render: a new card, or the heading after a new search.
+  const focusTarget = useRef<string | undefined>(undefined);
+  const [showHeld, setShowHeld] = useState(false);
+
+  const recipes = useMemo(() => new Map(calc.recipes.map((recipe) => [recipe.id, recipe])), [calc]);
+  const { selection, pool } = current;
+  const request = pool.request;
+  const byId = new Map(selection.candidates.map((entry) => [entry.recipe, entry]));
+  const candidates = current.order.flatMap((id) => {
+    const entry = byId.get(id);
+    return entry ? [entry] : [];
+  });
+  const name = (recipe: string) => text.recipes[recipe]?.name ?? recipe;
+
+  useEffect(() => {
+    if (focusTarget.current === undefined) return;
+    document.getElementById(focusTarget.current)?.focus();
+    focusTarget.current = undefined;
+  });
+
+  const onDifferentType = () => {
+    const result = differentType(current);
+    if (!result.ok) return;
+    dispatch({ type: "resuggested", ...result.value });
+    setShowHeld(false);
+    const first = result.value.selection.candidates[0];
+    if (first === undefined) {
+      setAnnouncement(t("candidates.allShown"));
+      return;
+    }
+    setAnnouncement(t("candidates.announce", { count: result.value.selection.candidates.length }));
+    focusTarget.current = `card-${first.recipe}`;
+  };
+
+  const onExclude = (recipe: string) => {
+    const result = excludeOne(current, recipe);
+    if (!result.ok) return;
+    dispatch({ type: "resuggested", ...result.value });
+    const fresh = result.value.selection.candidates.find((entry) => !current.order.includes(entry.recipe));
+    setAnnouncement(fresh === undefined ? t("candidates.announce", { count: result.value.selection.candidates.length }) : t("candidates.replaced", { old: name(recipe), new: name(fresh.recipe) }));
+    const index = current.order.indexOf(recipe);
+    const nextFocus = fresh?.recipe ?? current.order.filter((id) => id !== recipe)[Math.max(0, index - 1)];
+    focusTarget.current = nextFocus === undefined ? "main" : `card-${nextFocus}`;
+  };
+
+  const onRelax = (relaxation: Relaxation) => {
+    const draft = relaxedDraft(state.draft ?? defaultDraft(), relaxation);
+    const result = search(draftToRequest(draft), data);
+    if (!result.ok) return;
+    dispatch({ type: "draftChanged", draft });
+    dispatch({ type: "searched", pool: result.value.pool, selection: result.value.selection });
+    setAnnouncement(t("candidates.announce", { count: result.value.selection.candidates.length }));
+    focusTarget.current = "view-heading";
+  };
+
+  const conditionParts = [
+    t("candidates.targetKcal", { range: formatNutrientRange(locale, "ENERC_KCAL", request.targets.kcal.min, request.targets.kcal.max) }),
+    request.targets.proteinMin === undefined ? undefined : t("candidates.targetProtein", { value: formatNumber(locale, request.targets.proteinMin) }),
+    request.targets.fatMax === undefined ? undefined : t("candidates.targetFat", { value: formatNumber(locale, request.targets.fatMax) }),
+    request.targets.carbohydrate === undefined ? undefined : t("candidates.targetCarbohydrate", { range: formatNutrientRange(locale, "CHOCDF-", request.targets.carbohydrate.min, request.targets.carbohydrate.max) }),
+    request.conditions.maxMinutes === undefined ? undefined : t("candidates.withinMinutes", { minutes: minutesText(t, locale, request.conditions.maxMinutes) }),
+    t("candidates.servings", { count: request.servings }),
+  ].filter((part) => part !== undefined);
+
+  const card = (entry: Recommended, mode: "candidate" | "alternative") => {
+    const recipe = recipes.get(entry.recipe);
+    if (recipe === undefined) return null;
+    const checked = state.compare.includes(entry.recipe);
+    return (
+      <li key={entry.recipe}>
+        <RecipeCard
+          entry={entry}
+          recipe={recipe}
+          calc={calc}
+          text={text}
+          targets={request.targets}
+          context={context}
+          mode={mode}
+          {...(mode === "candidate"
+            ? {
+                compare: {
+                  checked,
+                  disabled: !checked && state.compare.length >= MAX_COMPARE,
+                  onToggle: () => {
+                    dispatch({ type: "toggledCompare", recipe: entry.recipe });
+                  },
+                },
+                onExclude: () => {
+                  onExclude(entry.recipe);
+                },
+              }
+            : {})}
+        />
+      </li>
+    );
+  };
+
+  const alternatives = selection.alternatives;
+  const fewer = candidates.length < MIN_CANDIDATES;
+  const exclusions = selection.exclusions.filter((item) => item.count > 0);
+  const equipmentLimited = request.conditions.equipment !== undefined;
+  const noEquipmentOption = !selection.relaxations.some((relaxation) => relaxation.constraint === "equipment");
+  const warnings = pool.contradictions.filter((contradiction) => contradiction.severity === "warning");
 
   return (
     <div className="flex flex-col gap-4">
-      <ViewHeading title={t("nav.views.candidates")} focusOnMount={navigated} />
-      <ul className="flex flex-col gap-2">
-        {search.selection.candidates.map((entry) => (
-          <li key={entry.recipe}>
-            <ViewLink to={{ name: "detail", recipe: entry.recipe }} className="text-accent underline">
-              {text.recipes[entry.recipe]?.name ?? entry.recipe}
-            </ViewLink>
-          </li>
-        ))}
-      </ul>
-      <ViewLink to={{ name: "targets" }} className="text-accent underline">
-        {t("nav.toTargets")}
-      </ViewLink>
+      <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <ViewHeading title={t("nav.views.candidates")} focusOnMount={navigated} />
+        <ViewLink to={{ name: "targets" }} className="text-accent underline">
+          {t("candidates.editConditions")}
+        </ViewLink>
+      </div>
+      <p className="m-0 text-sm text-muted">
+        {t("candidates.conditionsSummary", { list: listText(t, conditionParts) })}
+      </p>
+      <p className="sr-only" aria-live="polite">
+        {announcement}
+      </p>
+
+      {warnings.map((contradiction) => (
+        <p key={contradiction.severity} className="m-0 rounded border-l-4 border-warning bg-warning-surface p-3">
+          <span aria-hidden="true">⚠ </span>
+          {contradictionMessage(contradiction, t, locale)}
+        </p>
+      ))}
+
+      {current.notice === "all_shown" && (
+        <div role="status" className="flex flex-col items-start gap-2 rounded border border-border bg-surface-muted p-3">
+          <p className="m-0">{current.heldAlternatives.length > 0 || selection.candidates.length === 0 ? t("candidates.allShown") : t("candidates.allShownRepeat")}</p>
+          {current.heldAlternatives.length > 0 && (
+            <button
+              type="button"
+              aria-expanded={showHeld}
+              onClick={() => {
+                setShowHeld((shown) => !shown);
+              }}
+              className="rounded border border-accent px-3 py-2 text-accent"
+            >
+              {t("candidates.showAlternatives")}
+            </button>
+          )}
+          <ViewLink to={{ name: "targets" }} className="text-accent underline">
+            {t("candidates.editConditions")}
+          </ViewLink>
+        </div>
+      )}
+
+      {candidates.length === 0 ? (
+        <section aria-labelledby="none-heading" className="flex flex-col gap-2">
+          <h2 id="none-heading" className="m-0 text-xl font-bold">
+            {t("candidates.noneHeading")}
+          </h2>
+          <p className="m-0">{t("candidates.noneMet")}</p>
+        </section>
+      ) : (
+        <>
+          <h2 id="candidates-heading" className="m-0 text-xl font-bold">
+            {t("candidates.listHeading", { label: t("candidates.listLabel"), count: t("candidates.count", { count: candidates.length }) })}
+          </h2>
+          <ol aria-labelledby="candidates-heading" className="m-0 grid list-none gap-4 p-0 md:grid-cols-2 xl:grid-cols-3">
+            {candidates.map((entry) => card(entry, "candidate"))}
+          </ol>
+          <button type="button" onClick={onDifferentType} className="self-start rounded border border-accent px-4 py-2 text-accent">
+            {t("candidates.differentType")}
+          </button>
+          <div className="sticky bottom-0 z-10 -mx-4 border-t border-border bg-surface">
+            <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-3 px-4 py-3">
+              <button
+                type="button"
+                disabled={state.compare.length < 2}
+                onClick={() => {
+                  navigate({ name: "comparison" });
+                }}
+                className="rounded bg-accent px-4 py-2 text-on-accent disabled:opacity-60"
+              >
+                {t("candidates.compareButton", { count: state.compare.length })}
+              </button>
+              <span className="text-sm">{state.compare.length >= MAX_COMPARE ? t("candidates.compareLimit") : t("candidates.compareHint")}</span>
+            </div>
+          </div>
+        </>
+      )}
+
+      {showHeld && current.heldAlternatives.length > 0 && (
+        <section aria-labelledby="held-heading" className="flex flex-col gap-2">
+          <h2 id="held-heading" className="m-0 text-xl font-bold">
+            {t("candidates.alternativesHeading")}
+          </h2>
+          <ol className="m-0 grid list-none gap-4 p-0 md:grid-cols-2 xl:grid-cols-3">{current.heldAlternatives.map((entry) => card(entry, "alternative"))}</ol>
+        </section>
+      )}
+
+      {alternatives.length > 0 && (
+        <section aria-labelledby="alternatives-heading" className="flex flex-col gap-2 border-t-4 border-border pt-4">
+          <h2 id="alternatives-heading" className="m-0 text-xl font-bold">
+            {t("candidates.alternativesHeading")}
+          </h2>
+          <p className="m-0 text-sm text-muted">{t("candidates.alternativesHint")}</p>
+          <ol className="m-0 grid list-none gap-4 p-0 md:grid-cols-2 xl:grid-cols-3">{alternatives.map((entry) => card(entry, "alternative"))}</ol>
+        </section>
+      )}
+
+      {fewer && selection.relaxations.length > 0 && (
+        <section aria-labelledby="relax-heading" className="flex flex-col gap-2">
+          <h2 id="relax-heading" className="m-0 text-xl font-bold">
+            {t("candidates.relaxHeading")}
+          </h2>
+          <ul className="m-0 flex list-none flex-col gap-2 p-0">
+            {selection.relaxations.map((relaxation) => {
+              const texts = relaxationText(relaxation, context);
+              return (
+                <li key={JSON.stringify(relaxation)} className="flex flex-wrap items-center justify-between gap-2 rounded border border-border p-3">
+                  <span>{t("candidates.relaxItem", { action: texts.action, gains: texts.gains })}</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onRelax(relaxation);
+                    }}
+                    className="rounded bg-accent px-3 py-2 text-on-accent"
+                    aria-label={`${t("candidates.apply")}: ${texts.action}`}
+                  >
+                    {t("candidates.apply")}
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      )}
+
+      {fewer && equipmentLimited && noEquipmentOption && (
+        <p className="m-0 rounded border-l-4 border-warning bg-warning-surface p-3">
+          {t("candidates.reviewEquipment")}{" "}
+          <ViewLink to={{ name: "targets" }} className="text-accent underline">
+            {t("candidates.reviewConditions")}
+          </ViewLink>
+        </p>
+      )}
+
+      {fewer && exclusions.length > 0 && (
+        <section aria-labelledby="exclusions-heading" className="flex flex-col gap-2">
+          <h2 id="exclusions-heading" className="m-0 text-xl font-bold">
+            {t("candidates.exclusionsHeading")}
+          </h2>
+          <p className="m-0 text-sm text-muted">{t("candidates.exclusionsHint")}</p>
+          <ul className="m-0 list-disc pl-6">
+            {exclusions.map((exclusion) => (
+              <li key={JSON.stringify(exclusion.item)}>{exclusionText(exclusion, context)}</li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      <div className="flex flex-col gap-2 text-sm text-muted">
+        <p className="m-0">{t("disclaimer.estimates")}</p>
+        <p className="m-0">{t("disclaimer.allergens")}</p>
+        <p className="m-0">{t("disclaimer.strictControl")}</p>
+      </div>
+
     </div>
   );
 }

@@ -60,6 +60,11 @@ export default tseslint.config(
     languageOptions: { globals: globals.node },
   },
   {
+    // UI integration tests: jsdom with the repository content built in Node.
+    files: ["test/ui/**/*.{ts,tsx}"],
+    languageOptions: { globals: { ...globals.browser, ...globals.node } },
+  },
+  {
     files: ["**/*.js"],
     extends: [tseslint.configs.disableTypeChecked],
   },

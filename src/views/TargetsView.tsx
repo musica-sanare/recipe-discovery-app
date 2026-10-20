@@ -12,9 +12,10 @@ import { useNavigation } from "../navigation/context";
 import { useAppState, useLoadedContent } from "../state/context";
 import { search } from "../state/recommendation";
 import { effortKey, PRESETS } from "../i18n/engineCodes";
-import { defaultDraft, draftToRequest, stepped, withNumber, withPreset, type EquipmentMode, type FoodChoice, type NumberField as Field, type TargetsDraft } from "./targets/draft";
+import { defaultDraft, draftToRequest, stepped, withNumber, withPreset, type EquipmentMode, type NumberField as Field, type TargetsDraft } from "./targets/draft";
 import { contradictionMessage, errorTarget, fieldId, inputErrorMessage, type FormTarget } from "./targets/errors";
 import { foodOptions } from "./targets/foodSearch";
+import { useTextContext } from "./useTextContext";
 
 /** The engine field whose name the stepper labels use; the others use their own label. */
 const SPOKEN_NAME: Readonly<Partial<Record<Field, InputField>>> = {
@@ -72,11 +73,7 @@ export function TargetsView({ reloaded }: { readonly reloaded: boolean }) {
   };
 
   const options = useMemo(() => foodOptions(calc, text, (group) => t("conditions.foodGroup", { group: t(`proteinGroup.${group}`) })), [calc, text, t]);
-  const labelOf = (choice: FoodChoice) => {
-    const option = options.find((candidate) => candidate.key === choice.key);
-    if (option?.kind === "group" && option.group !== undefined) return t("conditions.foodGroup", { group: t(`proteinGroup.${option.group}`) });
-    return option?.name ?? choice.key;
-  };
+  const { choiceLabel: labelOf } = useTextContext();
 
   // Contradictions are checked live with the engine, once the targets are numbers.
   const request = draftToRequest(draft);
@@ -105,6 +102,7 @@ export function TargetsView({ reloaded }: { readonly reloaded: boolean }) {
       requestAnimationFrame(() => blockedRef.current?.focus());
       return;
     }
+    dispatch({ type: "draftChanged", draft });
     dispatch({ type: "searched", pool: result.value.pool, selection: result.value.selection });
     navigate({ name: "candidates" });
   };

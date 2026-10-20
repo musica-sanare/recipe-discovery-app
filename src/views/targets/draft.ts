@@ -3,6 +3,7 @@
  * user typed; `draftToRequest` turns them into the engine request without changing any
  * value. Invalid numbers become NaN so that the engine reports `invalid_number`.
  */
+import type { Relaxation } from "../../../domain/recommendation/relax";
 import type { FoodId, PoolRequest, Preset } from "../../../domain/recommendation/types";
 import { INPUT_LIMITS, presetTargets } from "../../../domain/recommendation/validate";
 import type { Allergen, Cuisine, Equipment } from "../../../shared/content";
@@ -158,4 +159,30 @@ export function draftToRequest(draft: TargetsDraft): PoolRequest {
       cuisines: draft.cuisines,
     },
   };
+}
+
+/**
+ * The draft with one relaxation applied (ADR-029 D8, ADR-030 D7). A group choice that
+ * loses one of its foods is split into its remaining foods, so no chip names a group
+ * that is no longer complete.
+ */
+export function relaxedDraft(draft: TargetsDraft, relaxation: Relaxation): TargetsDraft {
+  switch (relaxation.constraint) {
+    case "maxMinutes":
+      return { ...draft, numbers: { ...draft.numbers, maxMinutes: String(relaxation.to) } };
+    case "equipment": {
+      const current = draft.equipmentMode === "choose" ? draft.equipment : (EQUIPMENT_FOR_MODE[draft.equipmentMode] ?? []);
+      return { ...draft, equipmentMode: "choose", equipment: [...new Set([...current, relaxation.add])] };
+    }
+    case "requiredFood":
+      return { ...draft, required: draft.required.filter((_, index) => index !== relaxation.index) };
+    case "excludedFood":
+      return {
+        ...draft,
+        excluded: draft.excluded.flatMap((choice) => {
+          if (!choice.foods.includes(relaxation.food)) return [choice];
+          return choice.foods.filter((food) => food !== relaxation.food).map((food) => ({ key: food, foods: [food] }));
+        }),
+      };
+  }
 }

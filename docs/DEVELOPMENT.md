@@ -26,7 +26,7 @@ npm ci
 | `npm run preview` | Serve `dist/` with the production security headers (http://localhost:4173) |
 | `npm run lint` | ESLint with type-aware rules and module boundaries |
 | `npm run typecheck` | TypeScript project build without emit |
-| `npm test` | Vitest (Node by default; UI tests use jsdom per file) |
+| `npm test` | Vitest (Node by default; UI tests use jsdom per file; `test/ui/` runs the app on the repository content) |
 | `npm run check` | Lint, type-check, tests, and build in sequence |
 | `npm run data:extract` | Regenerate `data/composition/foods.json` from the MEXT workbook in `data/raw/` (`docs/DATA_SOURCES.md` "Extraction") |
 | `npm run eval:coverage` | How many validation recipes meet representative targets with default and adjusted amounts, computed by the recommendation engine (`docs/DECISIONS.md` "Stage 0.6", "Stage 3.7") |
@@ -50,6 +50,7 @@ generated/content/      Content bundles written by tools/build-content.ts (git-i
 data/composition/       Extraction manifest and the tracked composition subset
 data/raw/               Original source files (git-ignored)
 test/node/              Node-side tests
+test/ui/                jsdom tests of the app on the repository content (tsconfig.ui.json)
 docs/, prompts/         Documentation and phase prompts
 ```
 

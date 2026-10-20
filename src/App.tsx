@@ -104,7 +104,7 @@ function CurrentView() {
     case "candidates":
       return state.search ? <CandidatesView search={state.search} /> : null;
     case "comparison":
-      return <ComparisonView />;
+      return state.search ? <ComparisonView search={state.search} /> : null;
     case "detail":
       return <DetailView key={view.recipe} recipe={view.recipe} />;
   }

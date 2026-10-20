@@ -5,7 +5,7 @@
  */
 import type { RecipeState } from "../../domain/nutrition/amounts";
 import type { EvaluatedPool } from "../../domain/recommendation/pool";
-import type { Selection } from "../../domain/recommendation/recommend";
+import type { Recommended, Selection } from "../../domain/recommendation/recommend";
 import type { RecipeId, Session } from "../../domain/recommendation/types";
 import type { TargetsDraft } from "../views/targets/draft";
 
@@ -21,7 +21,29 @@ export interface SearchState {
   readonly session: Session;
   readonly seed: number;
   readonly selection: Selection;
+  /** Card order on screen: "exclude this one" puts the new recipe in the removed card's place. */
+  readonly order: readonly RecipeId[];
   readonly notice: SetNotice | undefined;
+  /**
+   * Close alternatives of a re-suggestion that found no recipe meeting the targets; the
+   * set on screen stays and these are offered on request (ADR-030 D5).
+   */
+  readonly heldAlternatives: readonly Recommended[];
+}
+
+/**
+ * "Exclude this one" keeps the other cards where they were: the new recipe takes the
+ * removed card's place, and any further new recipes follow.
+ */
+export function orderInPlace(previous: readonly RecipeId[], next: readonly RecipeId[]): RecipeId[] {
+  const nextSet = new Set(next);
+  const fresh = next.filter((id) => !previous.includes(id));
+  const ordered = previous.flatMap((id) => {
+    if (nextSet.has(id)) return [id];
+    const replacement = fresh.shift();
+    return replacement === undefined ? [] : [replacement];
+  });
+  return [...ordered, ...fresh];
 }
 
 export interface AppState {
@@ -51,7 +73,15 @@ export function appReducer(state: AppState, action: AppAction): AppState {
     case "searched":
       return {
         draft: state.draft,
-        search: { pool: action.pool, session: EMPTY_SESSION, seed: 0, selection: action.selection, notice: undefined },
+        search: {
+          pool: action.pool,
+          session: EMPTY_SESSION,
+          seed: 0,
+          selection: action.selection,
+          order: action.selection.candidates.map((entry) => entry.recipe),
+          notice: undefined,
+          heldAlternatives: [],
+        },
         compare: [],
         adjustments: {},
       };
@@ -59,11 +89,21 @@ export function appReducer(state: AppState, action: AppAction): AppState {
       const search = state.search;
       if (search === undefined) return state;
       // A result without any recipe that meets the targets does not replace the set on screen.
-      if (action.selection.candidates.length === 0) return { ...state, search: { ...search, notice: "all_shown" } };
-      const onScreen = new Set(action.selection.candidates.map((entry) => entry.recipe));
+      if (action.selection.candidates.length === 0) return { ...state, search: { ...search, notice: "all_shown", heldAlternatives: action.selection.alternatives } };
+      const ids = action.selection.candidates.map((entry) => entry.recipe);
+      const onScreen = new Set(ids);
+      const order = action.session.keep.length > 0 ? orderInPlace(search.order, ids) : ids;
       return {
         ...state,
-        search: { pool: search.pool, session: action.session, seed: action.seed, selection: action.selection, notice: action.selection.exhausted ? "all_shown" : undefined },
+        search: {
+          pool: search.pool,
+          session: action.session,
+          seed: action.seed,
+          selection: action.selection,
+          order,
+          notice: action.selection.exhausted ? "all_shown" : undefined,
+          heldAlternatives: [],
+        },
         compare: state.compare.filter((recipe) => onScreen.has(recipe)),
       };
     }

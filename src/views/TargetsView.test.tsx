@@ -95,7 +95,7 @@ describe("targets form", () => {
     fireEvent.change(input("調理時間の上限（分）"), { target: { value: "25" } });
     fireEvent.click(screen.getByRole("button", { name: "レシピを探す" }));
     await screen.findByRole("heading", { level: 1, name: "候補" });
-    fireEvent.click(screen.getByRole("link", { name: "目標と条件へ" }));
+    fireEvent.click(screen.getAllByRole("link", { name: "条件を変更" })[0] as HTMLElement);
     expect((input("調理時間の上限（分）") as HTMLInputElement).value).toBe("25");
   });
 });

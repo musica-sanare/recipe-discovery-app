@@ -1,9 +1,10 @@
 import { useId } from "react";
 import { useTranslation } from "react-i18next";
-import { isLocale, SUPPORTED_LOCALES } from "../../shared/locales";
+import { isLocale, SUPPORTED_LOCALES, type Locale } from "../../shared/locales";
 import { storeLocale } from "../i18n/localePreference";
 
-export function LanguageSwitcher() {
+/** `prepare` loads the new locale's content before the switch (`useContent`). */
+export function LanguageSwitcher({ prepare }: { readonly prepare?: (locale: Locale) => Promise<void> }) {
   const { t, i18n } = useTranslation();
   const id = useId();
 
@@ -18,7 +19,7 @@ export function LanguageSwitcher() {
           const locale = event.target.value;
           if (isLocale(locale)) {
             storeLocale(locale);
-            void i18n.changeLanguage(locale);
+            void (prepare?.(locale) ?? Promise.resolve()).then(() => i18n.changeLanguage(locale));
           }
         }}
       >

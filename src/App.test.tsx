@@ -49,12 +49,29 @@ describe("App shell", () => {
 
     fireEvent.change(screen.getByLabelText("言語"), { target: { value: locale } });
 
-    expect(screen.getByLabelText(label)).toBeDefined();
+    expect(await screen.findByLabelText(label)).toBeDefined();
     expect(document.documentElement.lang).toBe(locale);
     expect(localStorage.getItem(LOCALE_STORAGE_KEY)).toBe(locale);
     expect(await screen.findByText(versions)).toBeDefined();
     expect(document.title).toBe(`${resources[locale].translation.nav.views.targets} — Recipe Discovery`);
     expect(fetch).toHaveBeenCalledWith(fixtureUrls.text[locale]);
+  });
+});
+
+describe("language switch", () => {
+  it("keeps the view mounted: an open section stays open and no loading state appears", async () => {
+    renderApp();
+    await screen.findByRole("heading", { level: 1 });
+    const details = document.querySelector("details");
+    if (details === null) throw new Error("no details");
+    fireEvent.click(details.querySelector("summary") as HTMLElement);
+    expect(details.open).toBe(true);
+
+    fireEvent.change(screen.getByLabelText("言語"), { target: { value: "es" } });
+    expect(screen.queryByText("Cargando el contenido…")).toBeNull();
+    await screen.findByRole("heading", { level: 1, name: "Objetivos y condiciones" });
+    expect(document.querySelector("details")).toBe(details);
+    expect(details.open).toBe(true);
   });
 });
 

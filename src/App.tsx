@@ -29,7 +29,7 @@ export function App({ contentUrls }: { readonly contentUrls: ContentUrls }) {
 function Shell({ contentUrls }: { readonly contentUrls: ContentUrls }) {
   const { t, i18n } = useTranslation();
   const locale = isLocale(i18n.resolvedLanguage) ? i18n.resolvedLanguage : DEFAULT_LOCALE;
-  const { state, retry } = useContent(contentUrls, locale);
+  const { state, retry, prepare } = useContent(contentUrls, locale);
   const appTitle = t("meta.title");
   const ready = state.status === "ready";
 
@@ -49,7 +49,7 @@ function Shell({ contentUrls }: { readonly contentUrls: ContentUrls }) {
           <ViewLink to={{ name: "targets" }} className="font-bold text-text no-underline">
             {t("app.name")}
           </ViewLink>
-          <LanguageSwitcher />
+          <LanguageSwitcher prepare={prepare} />
         </div>
       </header>
       <main id="main" tabIndex={-1} className="mx-auto w-full max-w-5xl flex-1 px-4 py-6">

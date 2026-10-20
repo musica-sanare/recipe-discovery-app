@@ -244,7 +244,7 @@ export const es: Messages = {
     raw: "Crudo",
     as_is: "Tal como se vende",
     boil: "Hervido",
-    simmer: "Guisado",
+    simmer: "Cocido",
     steam: "Al vapor",
     microwave: "Al microondas",
     grill: "A la parrilla",
@@ -351,15 +351,15 @@ export const es: Messages = {
     meets_all_targets: "Cumple todos los objetivos que has fijado",
     meets_with_adjustment: "Cumple todos los objetivos que has fijado con cantidades ajustadas",
     near_target: {
-      below: "A {{target}} le faltan {{gap}} para el objetivo",
+      below: "{{target}}: faltan {{gap}} para el objetivo",
       above: "{{target}}: {{gap}} por encima del objetivo",
     },
     misses_target: {
-      below: "A {{target}} le faltan {{gap}} para el objetivo",
+      below: "{{target}}: faltan {{gap}} para el objetivo",
       above: "{{target}}: {{gap}} por encima del objetivo",
     },
-    unknown_value: "Parte del valor de {{target}} es desconocido",
-    range_straddles: "El rango estimado de {{target}} cruza un límite del objetivo",
+    unknown_value: "{{target}}: parte del valor es desconocida",
+    range_straddles: "{{target}}: el rango estimado cruza un límite del objetivo",
     highest_among_candidates: "La que más proteínas tiene de estas candidatas ({{value}})",
     lowest_among_candidates: "La que menos grasas tiene de estas candidatas ({{value}})",
     new_attribute: {
@@ -389,7 +389,7 @@ export const es: Messages = {
   relaxation: {
     maxMinutes: "Permitir hasta {{minutes}}",
     equipment: "Añadir {{equipment}} a tus utensilios",
-    requiredFood: "Dejar de exigir {{foods}}",
+    requiredFood: "Quitar {{foods}} de los ingredientes que quieres",
     excludedFood: "Dejar de evitar {{food}}",
     gainMet_one: "+{{count}} receta que cumple los objetivos",
     gainMet_other: "+{{count}} recetas que cumplen los objetivos",

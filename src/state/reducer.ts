@@ -7,6 +7,7 @@ import type { RecipeState } from "../../domain/nutrition/amounts";
 import type { EvaluatedPool } from "../../domain/recommendation/pool";
 import type { Selection } from "../../domain/recommendation/recommend";
 import type { RecipeId, Session } from "../../domain/recommendation/types";
+import type { TargetsDraft } from "../views/targets/draft";
 
 export const MAX_COMPARE = 3;
 
@@ -24,6 +25,8 @@ export interface SearchState {
 }
 
 export interface AppState {
+  /** The targets form as typed, so it survives view changes (not reloads). */
+  readonly draft: TargetsDraft | undefined;
   readonly search: SearchState | undefined;
   /** Recipes selected for comparison, in selection order. */
   readonly compare: readonly RecipeId[];
@@ -31,9 +34,10 @@ export interface AppState {
   readonly adjustments: Readonly<Partial<Record<RecipeId, RecipeState>>>;
 }
 
-export const INITIAL_STATE: AppState = { search: undefined, compare: [], adjustments: {} };
+export const INITIAL_STATE: AppState = { draft: undefined, search: undefined, compare: [], adjustments: {} };
 
 export type AppAction =
+  | { readonly type: "draftChanged"; readonly draft: TargetsDraft }
   | { readonly type: "searched"; readonly pool: EvaluatedPool; readonly selection: Selection }
   | { readonly type: "resuggested"; readonly session: Session; readonly seed: number; readonly selection: Selection }
   | { readonly type: "toggledCompare"; readonly recipe: RecipeId }
@@ -42,8 +46,11 @@ export type AppAction =
 
 export function appReducer(state: AppState, action: AppAction): AppState {
   switch (action.type) {
+    case "draftChanged":
+      return { ...state, draft: action.draft };
     case "searched":
       return {
+        draft: state.draft,
         search: { pool: action.pool, session: EMPTY_SESSION, seed: 0, selection: action.selection, notice: undefined },
         compare: [],
         adjustments: {},

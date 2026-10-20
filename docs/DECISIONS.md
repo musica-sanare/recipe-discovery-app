@@ -298,6 +298,22 @@ Findings:
 - Accessibility: `src/testing/axe.ts` runs axe-core in jsdom without the contrast rule; the targets view, the reload notice, the not-found detail, and the content error state have no violations in `ja`, `en`, and `es`; a sanity test confirms that axe reports real violations in jsdom.
 - Browser check (`npm run preview` with production headers, built-in browser, 2026-10-19): deep link `/recipes/<id>`, link navigation with focus on the `h1`, the back button, and the reload fallback with its notice work; desktop (dark) and 375 px (light) widths in `ja`, `en`, and `es` have no horizontal overflow; the language select was given a visible border after the check; no console messages; every request goes to the same origin. Not checked: a real phone, screen readers, and forced-colors mode.
 
+### Stage 4.3 start (2026-10-19, 23:49 UTC)
+- Re-check of ADR-016 (npm registry): `i18next` 26.5.3 was published on 2026-10-19 17:24 UTC, the fourth release since 26.5.0 (2026-10-17 18:59 UTC) within about 46 hours, so the burst continues and the pins stay. `react-i18next` has no release after 17.1.0 (2026-10-17 19:01 UTC). Re-check after 2026-10-21 17:24 UTC (48 hours after 26.5.3) and move both packages together if no further release follows.
+- Re-check of ADR-017: `typescript-eslint` 8.72.0 (latest, 2026-10-19 17:08 UTC, weekly cadence) and 8.72.1-alpha.1 (canary) still declare peer `typescript >=4.8.4 <6.1.0`; TypeScript stays at `~6.0.3`. The lockfile has 8.71.2; moving to 8.72.0 is a separate dependency commit.
+
+### Stage 4.3 targets and conditions (2026-10-20)
+- `src/views/TargetsView.tsx` with `src/views/targets/` (`draft.ts`: form text to engine request; `errors.ts`: placement and wording of engine input errors and contradictions; `foodSearch.ts`: options and normalized search), `src/components/NumberField.tsx` (text input with labelled steppers), and `src/components/FoodPicker.tsx` (ARIA 1.2 combobox with list autocomplete and automatic selection of the first option). The form draft lives in the reducer, so it survives view changes but not reloads.
+- Details settled within ADR-030:
+  - Numbers are typed as text; full-width digits and a decimal comma are accepted. Empty optional targets are not set; an invalid number reaches the engine as NaN so that `validatePoolRequest` reports `invalid_number`. A carbohydrate range with one side empty uses the input limit (0 or 400 g) for that side.
+  - Steppers move by 10 kcal, 1 g (protein, fat), 5 g (carbohydrate), 5 minutes, and 1 serving, clamped to `INPUT_LIMITS`.
+  - The preset stays selected until a target differs from it; then the form shows the preset name with "(edited)".
+  - Contradictions are checked live with `checkContradictions` once the targets are numbers; the search runs only through `evaluatePool`, and a blocking contradiction shows an alert that receives focus. Input errors appear at their fields and in a focused summary with links; the advanced section opens when an error is inside it.
+  - Units are part of the visible label ("Protein minimum (g)"), so the accessible name includes them.
+  - Protein groups with more than one food are offered as "(any cut or kind)" options; groups are listed first.
+- Tests: `draft.test.ts`, `foodSearch.test.ts`, `errors.test.ts` (every input error and both contradiction severities have a complete message in each locale), and `TargetsView.test.tsx` (presets, steppers, values reaching the engine unchanged, the kept draft, error summary and focus, inverted range, warning and blocking contradictions, keyboard autocomplete, "not supported", accent folding, group items, axe in `ja`, `en`, and `es`). The UI test fixtures now contain four foods.
+- Browser check (`npm run preview`, built-in browser, 2026-10-20): the form at 375 px in `ja` and `es` (advanced section open, no element wider than the viewport) and at desktop width in dark mode; keyboard selection of an ingredient, a search that opens the candidates view with focus on its heading and no targets in the URL, back navigation with the draft kept, Spanish accent folding ("papá" finds "Patata"), and chosen ingredients relabelled after a language switch; no console messages. Found: Japanese searches by reading fail when the dictionary has no kana alias ("とうふ" and "トーフ" do not find tofu; "豆腐" does) — open question 21. The advanced section closes after a language switch (the view remounts while the text bundle loads); the draft is kept.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in
@@ -558,8 +574,9 @@ Findings:
 13. Owner review of the English and Spanish texts added or rewritten in Phase 1: split steps, side labels, and the substitution step texts (Stage 1.1 log, ADR-007). Deferred by the owner to a review together with the UI once the prototype is largely complete ("Phase 4 start").
 14. ~~Whether every food must have at least one search alias per locale~~: aliases stay optional (ADR-030 D6).
 15. ~~Phase 2 must distinguish raw values from related cooked values for the error bands~~: separate reasons `raw_value_for_cooking` and `related_cooked_value` (ADR-028).
-16. Re-check the `i18next`/`react-i18next` pins after 2026-10-19 21:24 UTC (ADR-016, "Phase 2 start").
+16. Re-check the `i18next`/`react-i18next` pins after 2026-10-21 17:24 UTC (ADR-016, "Stage 4.3 start").
 17. Recalculation time in browsers, especially on phones; Phase 2 measured Node.js only (Stage 2.5). Measured in Stage 4.7 with the plan of ADR-030 D10.
 18. ~~Fried dishes with wide ranges become "near"~~: intended (ADR-029 D10). The fried and slow-frying bands remain assumptions (open question 3).
 19. ~~Provisional input limits and contradiction thresholds~~: unchanged (ADR-030 D4).
 20. ~~Combined equipment relaxation~~: no engine change; equipment modes and a link to the equipment field instead (ADR-030 D7).
+21. Japanese search by reading: many foods have no hiragana alias (for example tofu has 豆腐 but not とうふ), so typing a reading finds nothing (Stage 4.3). Adding readings to `content/foods.ts` is a content change for owner approval; katakana is already folded to hiragana.

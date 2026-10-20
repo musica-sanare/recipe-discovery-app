@@ -42,7 +42,7 @@ function requiredPaths(): string[][] {
     ...each(["equipment"], codes.EQUIPMENT),
     ...each(["proteinGroup"], codes.PROTEIN_GROUPS),
     ...each(["methodFamily"], codes.METHOD_FAMILIES),
-    ...each(["effort"], [1, 2, 3]),
+    ...each(["effort"], codes.EFFORT_LEVELS),
     ...plural(["unit", "household"], codes.HOUSEHOLD_UNITS),
   ];
 }

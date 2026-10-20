@@ -76,5 +76,10 @@ export const ASSUMPTION_CODES = all<Assumption["code"]>()([
   "pinch_as_stated_grams",
 ]);
 export const PRESETS = all<Preset>()(["cut", "maintain", "bulk"]);
+/** Catalog keys of the effort levels 1, 2, and 3. */
+export const EFFORT_LEVELS = ["low", "medium", "high"] as const;
+export function effortKey(effort: 1 | 2 | 3): (typeof EFFORT_LEVELS)[number] {
+  return EFFORT_LEVELS[effort - 1] ?? "high";
+}
 export const ALLERGEN_CONFIDENCES = ["contains", "may_contain", "unknown"] as const;
 export { ALLERGENS, CUISINES, EQUIPMENT, HOUSEHOLD_UNITS, METHOD_FAMILIES, PROTEIN_GROUPS };

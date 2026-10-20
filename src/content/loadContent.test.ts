@@ -43,7 +43,7 @@ describe("loadTextBundle", () => {
   });
 
   it("rejects a bundle that misses texts for the calculation bundle", async () => {
-    const calc = { ...fixtureCalc, foods: [{ id: "egg", composition: { raw: "12004" }, allergens: [] }] };
-    expect(await loadTextBundle("/text-ja.json", "ja", calc, serving(fixtureText("ja")))).toMatchObject({ ok: false, kind: "invalid", detail: "/text-ja.json: foods.egg" });
+    const calc = { ...fixtureCalc, foods: [...fixtureCalc.foods, { id: "salmon", composition: { raw: "10134" }, allergens: [] }] };
+    expect(await loadTextBundle("/text-ja.json", "ja", calc, serving(fixtureText("ja")))).toMatchObject({ ok: false, kind: "invalid", detail: "/text-ja.json: foods.salmon" });
   });
 });

@@ -44,6 +44,8 @@ function requiredPaths(): string[][] {
     ...each(["methodFamily"], codes.METHOD_FAMILIES),
     ...each(["effort"], codes.EFFORT_LEVELS),
     ...plural(["unit", "household"], codes.HOUSEHOLD_UNITS),
+    ...each(["foodState"], codes.FOOD_STATES),
+    ...each(["detail", "notCounted"], codes.NOT_COUNTED),
   ];
 }
 

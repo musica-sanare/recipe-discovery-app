@@ -31,7 +31,7 @@ export function RecipeCard({ entry, recipe, calc, text, targets, context, mode, 
   const headingId = `card-${entry.recipe}`;
   const { fit, nutrition } = entry.solution;
   const adjustments = adjustmentItems(entry, recipe);
-  const { allergens, unknownFoods } = allergenNotices(entry, calc);
+  const { allergens, unknownFoods } = allergenNotices(entry.solution.nutrition, calc);
   const reasons = (mode === "candidate" ? cardReasons(entry.reasons) : gapReasons(entry.reasons))
     .map((reason) => reasonText(reason, fit.nutrients, context))
     .filter((reason) => reason !== undefined);

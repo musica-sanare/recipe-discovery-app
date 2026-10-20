@@ -74,7 +74,7 @@ export function ComparisonView({ search }: { readonly search: SearchState }) {
       key: "allergens",
       label: t("comparison.allergens"),
       cells: entries.map(({ entry }) => {
-        const { allergens, unknownFoods } = allergenNotices(entry, calc);
+        const { allergens, unknownFoods } = allergenNotices(entry.solution.nutrition, calc);
         const names = allergens.map((item) => (item.confidence === "contains" ? t(`allergen.names.${item.allergen}`) : t("card.allergenMay", { name: t(`allergen.names.${item.allergen}`) })));
         return listText(t, [...names, ...(unknownFoods.length > 0 ? [t("card.allergenUnknown")] : [])]);
       }),

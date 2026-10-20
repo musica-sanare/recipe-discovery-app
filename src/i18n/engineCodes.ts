@@ -5,14 +5,14 @@
  */
 import type { Assumption } from "../../domain/nutrition/basis";
 import type { Nutrient } from "../../domain/nutrition/data";
-import type { Reason, UncertaintyClass } from "../../domain/nutrition/engine";
+import type { NotCounted, Reason, UncertaintyClass } from "../../domain/nutrition/engine";
 import type { NutrientStatus, TargetKey, Tier } from "../../domain/recommendation/fit";
 import type { ReasonData } from "../../domain/recommendation/reasons";
 import type { Relaxation } from "../../domain/recommendation/relax";
 import type { Attributes } from "../../domain/recommendation/select";
 import type { ConstraintItem, Contradiction, InputError, InputField, Preset } from "../../domain/recommendation/types";
 import { BUNDLE_NUTRIENT_IDS } from "../../shared/bundle";
-import { ALLERGENS, CUISINES, EQUIPMENT, HOUSEHOLD_UNITS, PROTEIN_GROUPS } from "../../shared/content";
+import { ALLERGENS, CUISINES, EQUIPMENT, FOOD_STATES, HOUSEHOLD_UNITS, PROTEIN_GROUPS } from "../../shared/content";
 import { METHOD_FAMILIES } from "../../shared/recipe";
 
 /** Returns the list unchanged; fails to type-check unless it holds every member of `T`. */
@@ -82,4 +82,5 @@ export function effortKey(effort: 1 | 2 | 3): (typeof EFFORT_LEVELS)[number] {
   return EFFORT_LEVELS[effort - 1] ?? "high";
 }
 export const ALLERGEN_CONFIDENCES = ["contains", "may_contain", "unknown"] as const;
-export { ALLERGENS, CUISINES, EQUIPMENT, HOUSEHOLD_UNITS, METHOD_FAMILIES, PROTEIN_GROUPS };
+export { ALLERGENS, CUISINES, EQUIPMENT, FOOD_STATES, HOUSEHOLD_UNITS, METHOD_FAMILIES, PROTEIN_GROUPS };
+export const NOT_COUNTED = all<NotCounted>()(["included_in", "side_off"]);

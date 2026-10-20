@@ -48,11 +48,20 @@ export function formatGap(locale: Locale, nutrient: Nutrient, gap: number): stri
  * (ADR-030 D8), with a sign, e.g. "+8"; `null` when either value is unknown.
  */
 export function formatDifference(locale: Locale, nutrient: Nutrient, previous: number | null, next: number | null): string | null {
+  const difference = displayedDifference(nutrient, previous, next);
+  return difference === null ? null : numberFormat(locale, DISPLAY_DECIMALS[nutrient], { signDisplay: "exceptZero" }).format(difference);
+}
+
+/** The difference of the displayed values, or `null` when either is unknown. */
+export function displayedDifference(nutrient: Nutrient, previous: number | null, next: number | null): number | null {
   const [before, after] = [roundForDisplay(nutrient, previous), roundForDisplay(nutrient, next)];
   if (before === null || after === null) return null;
-  const decimals = DISPLAY_DECIMALS[nutrient];
-  const difference = Number((after - before).toFixed(decimals)) + 0;
-  return numberFormat(locale, decimals, { signDisplay: "exceptZero" }).format(difference);
+  return Number((after - before).toFixed(DISPLAY_DECIMALS[nutrient])) + 0;
+}
+
+/** An ingredient amount in grams (not a nutrient value): up to one decimal. */
+export function formatGrams(locale: Locale, grams: number): string {
+  return new Intl.NumberFormat(locale, { maximumFractionDigits: 1 }).format(grams);
 }
 
 export function formatPercent(locale: Locale, ratio: number): string {

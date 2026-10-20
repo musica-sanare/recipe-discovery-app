@@ -4,6 +4,7 @@
  * what the engines returned.
  */
 import type { Nutrient } from "../../../domain/nutrition/data";
+import type { RecipeNutrition } from "../../../domain/nutrition/engine";
 import type { NutrientFit, TargetKey } from "../../../domain/recommendation/fit";
 import { TARGET_NUTRIENT } from "../../../domain/recommendation/fit";
 import type { PoolEntry } from "../../../domain/recommendation/pool";
@@ -93,11 +94,11 @@ export interface AllergenNotice {
  * sides that are off excluded), strongest confidence first. Foods without reviewed
  * information are reported separately; they are never shown as free of allergens.
  */
-export function allergenNotices(entry: PoolEntry, calc: CalcBundle): { readonly allergens: AllergenNotice[]; readonly unknownFoods: string[] } {
+export function allergenNotices(nutrition: Pick<RecipeNutrition, "ingredients">, calc: CalcBundle): { readonly allergens: AllergenNotice[]; readonly unknownFoods: string[] } {
   const foods = new Map(calc.foods.map((food) => [food.id, food]));
   const confidence = new Map<Allergen, "contains" | "may_contain">();
   const unknownFoods = new Set<string>();
-  for (const ingredient of entry.solution.nutrition.ingredients) {
+  for (const ingredient of nutrition.ingredients) {
     if (ingredient.switchedOff) continue;
     const food = foods.get(ingredient.food);
     if (food === undefined || food.allergens === "unknown") {

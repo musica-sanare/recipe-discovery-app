@@ -22,7 +22,7 @@ Status: **Draft (2026-10-18)**. Applies to all recipes, food dictionary entries,
 ## 3. Food safety
 
 - Meat and poultry are cooked through; recipes state a visible doneness check (for example no pink juices) rather than relying on time alone. No recipes with raw or undercooked poultry or pork.
-- Eggs: raw-egg dishes are not included in the MVP (*Provisional*; regional norms differ across the three locales).
+- Eggs: raw-egg dishes are not included in the MVP. Eggs with soft or runny yolks are allowed and always carry the `soft_yolk` safety note (owner, 2026-10-23; `docs/DECISIONS.md` "Stage 5.1 release plan" P3).
 - Frying: notes on oil temperature, fire risk, and never leaving hot oil unattended.
 - Batch cooking: general cooling and refrigeration guidance only; no specific storage durations are promised.
 - Microwave recipes: note on even heating and covering.

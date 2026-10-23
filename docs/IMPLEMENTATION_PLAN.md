@@ -81,6 +81,8 @@ Acceptance: the full flow works on mobile and desktop in three locales; accessib
 
 ## Phase 5 — Quality and release preparation
 
+Status: **In progress**. The release plan was approved on 2026-10-23 (`docs/DECISIONS.md` "Phase 5 start" and "Stage 5.1 release plan").
+
 - E2E tests (desktop and mobile, three locales, long strings, locale switching, exceptional states).
 - Security headers and CSP verification; dependency and secret scans.
 - MVP content set authored and reviewed (translations, allergens, food safety).

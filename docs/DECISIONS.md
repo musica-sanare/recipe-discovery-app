@@ -367,6 +367,9 @@ Findings:
 - Browser timing is measured and recorded on a desktop; a phone-class measurement is still open (open question 17). The storage decision is recorded (ADR-030 D9).
 - `npm run check` (lint, type-check, 590 tests, content validation, build) passes.
 
+### ADR-016 re-check before Phase 5 (2026-10-23, 22:24 UTC)
+- npm registry: `i18next` latest is 26.5.7 (26.5.5 and 26.5.6 on 2026-10-22, 26.5.7 on 2026-10-23 17:46 UTC); `react-i18next` latest is 17.1.5 (17.1.3 on 2026-10-22, 17.1.4 and 17.1.5 on 2026-10-23, the last at 18:00 UTC), peer `i18next >= 26.2.0`. Releases continue within 48 hours, so the burst exception still applies and the pins stay (`i18next` 26.4.7, `react-i18next` 17.0.20). Re-check after 2026-10-25 18:00 UTC and move both packages together, as their own commit, if no further release follows.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in
@@ -627,7 +630,7 @@ Findings:
 13. Owner review of the English and Spanish texts added or rewritten in Phase 1: split steps, side labels, and the substitution step texts (Stage 1.1 log, ADR-007). Deferred by the owner to a review together with the UI once the prototype is largely complete ("Phase 4 start").
 14. ~~Whether every food must have at least one search alias per locale~~: aliases stay optional (ADR-030 D6).
 15. ~~Phase 2 must distinguish raw values from related cooked values for the error bands~~: separate reasons `raw_value_for_cooking` and `related_cooked_value` (ADR-028).
-16. Re-check the `i18next`/`react-i18next` pins after 2026-10-21 17:24 UTC (ADR-016, "Stage 4.3 start").
+16. Re-check the `i18next`/`react-i18next` pins after 2026-10-25 18:00 UTC (ADR-016, "ADR-016 re-check before Phase 5").
 17. Recommendation and recalculation time on phones: desktop browser timings are recorded (Stage 4.7); a phone or a phone-class CPU profile (for example Playwright with CPU throttling in Phase 5) decides whether the recommendation moves to a worker (ADR-030 D10).
 18. ~~Fried dishes with wide ranges become "near"~~: intended (ADR-029 D10). The fried and slow-frying bands remain assumptions (open question 3).
 19. ~~Provisional input limits and contradiction thresholds~~: unchanged (ADR-030 D4).

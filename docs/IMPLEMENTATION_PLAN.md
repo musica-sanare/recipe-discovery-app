@@ -9,7 +9,7 @@ Status: **Draft (2026-10-18)**. Each phase ends with checks, a summary to the ow
 | 2 — Nutrition engine | `prompts/02-nutrition-engine.md` |
 | 3 — Recommendation engine | `prompts/03-recommendation-engine.md` |
 | 4 — UI and localization | `prompts/04-ui-and-localization.md` |
-| 5 | Written before the phase starts |
+| 5 — Quality and release preparation | `prompts/05-quality-and-release.md` |
 
 `prompts/FIRST_MESSAGE.md` is the kickoff message for a new Claude Code session.
 

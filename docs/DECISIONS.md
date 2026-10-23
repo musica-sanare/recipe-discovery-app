@@ -349,6 +349,24 @@ Findings:
 - Layout with long Spanish strings at 375 px (`npm run preview`, built-in browser, 2026-10-20): targets form with the advanced section open, candidates with alternatives, relaxations, and exclusion counts (tofu required), cut candidates with three selected and the compare bar, the comparison, and (Stage 4.5) the detail view: no element wider than the viewport outside the table regions, which scroll inside themselves; no console messages. The comparison caption scrolls with its table.
 - Not done here: owner review of the English and Spanish texts of Phase 1 and Phase 4 (open question 13, planned with the prototype review); a katakana long-vowel mark still does not match a reading written with う (open question 21 note).
 
+### Stage 4.7 accessibility, browser checks, timing (2026-10-20)
+- Accessibility: `test/ui/accessibility.test.tsx` adds axe-core checks in `ja`, `en`, and `es` for the blocked contradiction, the "all shown" notice with the held alternatives open (P4), the state where nothing meets the targets (exclusion counts, equipment review), and the recipe detail after a search with statuses. Together with the Stage 4.2–4.5 tests, every view and exceptional state of `docs/SPEC.md` §12 is checked in the three locales; color contrast is covered by the token test. Keyboard operation is tested for the steppers, the ingredient combobox, focus after view changes, re-suggestion, and exclusion; visible focus is the global `:focus-visible` ring (checked in the browser in Stage 4.2).
+- Full flow in the browser (`npm run preview`, production build and headers, built-in browser Chromium 152, Apple M1, 2026-10-20): targets with the advanced section open → search → "show a different type" → "exclude this one" → comparison of two → detail → amount change with differences and a status change → back, in `ja`, `en`, and `es`, at desktop width and at 375 px, light and dark: no element wider than the viewport outside the table regions, no console messages, every request to the same origin (page, script, style, calculation bundle, and the text bundle of each locale). `curl -I` on a deep link returned the CSP (`'self'` only, `frame-ancestors 'none'`), `X-Content-Type-Options`, `Referrer-Policy`, and `Permissions-Policy`.
+- *Measured* timing (open question 17; same machine and browser; the tab in front; medians):
+  - Engine modules imported in the page (`npm run dev`, 15 runs after warm-up): full recommendation (`evaluatePool` and `selectCandidates`) cut 6.6 ms, bulk 6.3 ms, tofu required 6.1 ms, bulk at ≤ 15 minutes 3.5 ms; the first call 25.9 ms; `recommendationDataFromBundle` 0.1 ms; re-suggestion 0.015 ms; one recalculation of `chicken_mapo_tofu` 0.017 ms; all 20 recipes 0.23 ms.
+  - In the production UI (click to committed and laid-out DOM, without paint, 9 runs): search 27 ms, of which `search()` 25 ms (measured with temporary marks that are not committed); "show a different type" 2.2 ms; one amount change in the detail view 3.1 ms. The engine takes longer inside the UI than when called alone (about 25 ms against 7 ms); the cause was not investigated.
+  - A background tab gave 55–127 ms for the same search, so measurements from a hidden or background tab are not used.
+  - Not measured: a phone or a phone-class CPU profile; the built-in browser offers no CPU throttling. With a 4–6× slower phone CPU the search would take roughly 100–160 ms (estimate), above the 50 ms of ADR-030 D10.
+- ADR-030 D10 outcome: the recommendation stays on the main thread for now; desktop timings are below 50 ms. Whether a worker is needed is decided with a phone-class measurement (open question 17).
+
+### Phase 4 acceptance (2026-10-20)
+- The full flow (targets → conditions → candidates → comparison → detail → adjustment → re-suggestion) works on mobile and desktop widths in `ja`, `en`, and `es`, including every exceptional state of `docs/SPEC.md` §12 (Stage 4.4, 4.7 logs; jsdom tests and the browser).
+- Every engine code and UI string exists in the three locales (type check, `src/i18n/engineCodes.test.ts`, `src/i18n/messages.test.ts`); the forbidden-expression and glossary checks cover the UI catalogs (`src/i18n/policy.test.ts`).
+- Displayed values come from the engines and are formatted per locale; switching the locale changes no underlying value (`test/ui/candidates.test.tsx`, `test/ui/detail.test.tsx`).
+- Accessibility checks pass in the three locales; keyboard operation and visible focus are verified (Stage 4.7 log).
+- Browser timing is measured and recorded on a desktop; a phone-class measurement is still open (open question 17). The storage decision is recorded (ADR-030 D9).
+- `npm run check` (lint, type-check, 590 tests, content validation, build) passes.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in
@@ -610,7 +628,7 @@ Findings:
 14. ~~Whether every food must have at least one search alias per locale~~: aliases stay optional (ADR-030 D6).
 15. ~~Phase 2 must distinguish raw values from related cooked values for the error bands~~: separate reasons `raw_value_for_cooking` and `related_cooked_value` (ADR-028).
 16. Re-check the `i18next`/`react-i18next` pins after 2026-10-21 17:24 UTC (ADR-016, "Stage 4.3 start").
-17. Recalculation time in browsers, especially on phones; Phase 2 measured Node.js only (Stage 2.5). Measured in Stage 4.7 with the plan of ADR-030 D10.
+17. Recommendation and recalculation time on phones: desktop browser timings are recorded (Stage 4.7); a phone or a phone-class CPU profile (for example Playwright with CPU throttling in Phase 5) decides whether the recommendation moves to a worker (ADR-030 D10).
 18. ~~Fried dishes with wide ranges become "near"~~: intended (ADR-029 D10). The fried and slow-frying bands remain assumptions (open question 3).
 19. ~~Provisional input limits and contradiction thresholds~~: unchanged (ADR-030 D4).
 20. ~~Combined equipment relaxation~~: no engine change; equipment modes and a link to the equipment field instead (ADR-030 D7).

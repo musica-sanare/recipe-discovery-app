@@ -24,6 +24,8 @@ npm ci
 | `npm run report:composition` | Per recipe and ingredient, from the nutrition engine: exact, approximation (with the ADR-028 reasons), hard to estimate, not counted, fried; fails when a cooked state has no weight change rate |
 | `npm run validate:content` | Content validation only (`tools/content/validate.ts`); prints one line per problem with file, recipe or food, field, and rule |
 | `npm run preview` | Serve `dist/` with the production security headers (http://localhost:4173) |
+
+Browser previews: `.claude/launch.json` has `preview` (the production build with headers, port 4173) and `dev` (the Vite dev server, port 5173; engine modules can be imported in the page for measurements). Timing numbers from a hidden or background tab are not reliable.
 | `npm run lint` | ESLint with type-aware rules and module boundaries |
 | `npm run typecheck` | TypeScript project build without emit |
 | `npm test` | Vitest (Node by default; UI tests use jsdom per file; `test/ui/` runs the app on the repository content) |

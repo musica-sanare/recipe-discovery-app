@@ -90,11 +90,12 @@ Details are finalized in Phase 1 and documented in `docs/NUTRITION_CALCULATION.m
 
 ## 6. Recommendation flow (browser)
 
-1. Load the calculation bundle and the text bundle of the active locale (static, content-hashed), validate them with `zod/mini` and against each other, and show the error state with a retry action when a bundle is unreachable or invalid (`src/content/`). Switching the locale loads only its text bundle.
-2. Validate user inputs; detect contradictory targets.
-3. Hard filters → fit evaluation (default amounts, then bounded adjustment) → fit tiers → diversification → stable ordering.
-4. Render candidates and deterministic reason texts from message templates.
-5. Recalculate on every adjustment; the engine is pure and fast enough to run on each change (about 0.02 ms per recipe in Node; `docs/DECISIONS.md` "Stage 2.5").
+1. Load the calculation bundle and the text bundle of the active locale (static, content-hashed), validate them with `zod/mini` and against each other, and show the error state with a retry action when a bundle is unreachable or invalid (`src/content/`). Switching the locale loads only its text bundle, before the language changes, so the views stay mounted.
+2. Validate user inputs; detect contradictory targets (`src/views/TargetsView.tsx` with `domain/recommendation`).
+3. Hard filters → fit evaluation (default amounts, then bounded adjustment) → fit tiers → diversification → stable ordering, on the main thread (ADR-030 D10).
+4. Render candidates and deterministic reason texts from the typed catalogs (`src/views/candidates/`).
+5. Recalculate on every adjustment in the detail view (`src/views/DetailView.tsx`). Measured in the browser (Stage 4.7): a full recommendation about 25 ms inside the UI on a desktop, a re-suggestion about 2 ms and a recalculation about 3 ms from click to layout; phones are not measured yet (open question 17).
+6. State stays in memory (`src/state/`, ADR-015, ADR-030 D9); only the recipe detail has its own URL (`src/navigation/`, ADR-030 D2).
 
 ## 7. Platform independence
 
@@ -116,7 +117,7 @@ Details are finalized in Phase 1 and documented in `docs/NUTRITION_CALCULATION.m
 - **Locale invariance test**: every recipe calculated under each locale context yields identical internal values.
 - Content validation and policy lint run in CI and in the build.
 - Nutrition snapshot tests.
-- UI tests with jsdom; accessibility checks (axe) in `ja`, `en`, and `es`.
+- UI tests with jsdom (`src/**/*.test.tsx` with fixtures; `test/ui/` with the repository content); accessibility checks (axe-core, without the contrast rule) in `ja`, `en`, and `es` for every view and exceptional state, and a contrast test over the color tokens (`test/node/styles.test.ts`).
 - E2E tests on desktop and mobile viewports, including long Spanish strings and locale switching.
 
 ## 10. Not in the MVP

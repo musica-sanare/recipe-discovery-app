@@ -37,7 +37,9 @@ Browser previews: `.claude/launch.json` has `preview` (the production build with
 | `npm run eval:coverage` | How many validation recipes meet representative targets with default and adjusted amounts, computed by the recommendation engine (`docs/DECISIONS.md` "Stage 0.6", "Stage 3.7") |
 | `npm run data:verify-cooking` | macOS only: check `data/composition/cooking.json` against the MEXT explanation PDF text (`docs/DATA_SOURCES.md` "Cooking tables") |
 
-There is intentionally no deploy script.
+There is intentionally no deploy script; deployment follows `docs/DEPLOYMENT.md` after the owner's approval.
+
+CI (`.github/workflows/ci.yml`, GitHub Actions on `ubuntu-24.04`) runs `npm ci` and `npm run check` in one job and `npm run test:e2e` with `npx playwright install --with-deps --only-shell chromium webkit` in another, on pushes to `dev` and `main` and on pull requests. It has read-only permissions, no secrets, and no deployment; the Playwright report is uploaded only when E2E fails (kept 7 days). Actions are pinned to commit SHAs.
 
 ## Layout (current)
 

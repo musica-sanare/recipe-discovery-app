@@ -29,20 +29,72 @@ function renderApp(locale: Locale = "ja") {
   );
 }
 
-describe("App shell", () => {
-  it("names the document in the same commit that shows the view heading", async () => {
-    // A passive effect could leave the loading title in place after the heading appears;
-    // CI caught that gap (docs/DECISIONS.md "CI first run").
-    const titles: string[] = [];
-    const observer = new MutationObserver(() => {
-      if (document.querySelector("h1") !== null) titles.push(document.title);
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
+/**
+ * Reads document state at the first DOM mutation where `ready` holds. Effects with visible
+ * results must already have run then; passive effects can run later, which CI exposed
+ * (docs/DECISIONS.md "CI first run").
+ */
+function readWhen<T>(ready: () => boolean, read: () => T): { readonly values: T[]; stop: () => void } {
+  const values: T[] = [];
+  const observer = new MutationObserver(() => {
+    if (ready()) values.push(read());
+  });
+  observer.observe(document.body, { childList: true, subtree: true, characterData: true });
+  return {
+    values,
+    stop: () => {
+      observer.disconnect();
+    },
+  };
+}
+
+const heading = () => document.querySelector("h1");
+
+describe("effects visible in the same commit as the view", () => {
+  it("names the document when the heading appears", async () => {
+    const titles = readWhen(() => heading() !== null, () => document.title);
     renderApp();
     await screen.findByRole("heading", { level: 1, name: "目標と条件" });
-    observer.disconnect();
-    expect(titles[0]).toBe("目標と条件 — Recipe Discovery");
+    titles.stop();
+    expect(titles.values[0]).toBe("目標と条件 — Recipe Discovery");
   });
+
+  it("replaces the history entry when the reload notice appears", async () => {
+    window.history.replaceState({ view: "candidates" }, "", "/");
+    const states = readWhen(() => document.body.textContent.includes("ページを再読み込みすると"), () => window.history.state as unknown);
+    renderApp();
+    await screen.findByText(/ページを再読み込みすると/);
+    states.stop();
+    expect(states.values[0]).toEqual({ view: "targets" });
+  });
+
+  it("updates <html lang> and focuses the new heading when they appear", async () => {
+    renderApp();
+    await screen.findByRole("heading", { level: 1, name: "目標と条件" });
+    const langs = readWhen(() => heading()?.textContent === "Targets and conditions", () => document.documentElement.lang);
+    fireEvent.change(screen.getByLabelText("言語"), { target: { value: "en" } });
+    await screen.findByRole("heading", { level: 1, name: "Targets and conditions" });
+    langs.stop();
+    expect(langs.values[0]).toBe("en");
+
+    const focus = readWhen(() => heading()?.textContent === "About this app", () => document.activeElement === heading());
+    fireEvent.click(screen.getByRole("link", { name: "About this app" }));
+    await screen.findByRole("heading", { level: 1, name: "About this app" });
+    focus.stop();
+    expect(focus.values[0]).toBe(true);
+
+    // The back button is not a React event, so its effects are not flushed with the commit.
+    const back = readWhen(() => heading()?.textContent === "Targets and conditions", () => document.activeElement === heading());
+    act(() => {
+      window.history.back();
+    });
+    await screen.findByRole("heading", { level: 1, name: "Targets and conditions" });
+    back.stop();
+    expect(back.values[0]).toBe(true);
+  });
+});
+
+describe("App shell", () => {
 
   it("renders Japanese by default and sets document metadata", async () => {
     renderApp();

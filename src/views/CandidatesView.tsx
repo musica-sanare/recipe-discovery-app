@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { Recommended } from "../../domain/recommendation/recommend";
 import { MIN_CANDIDATES } from "../../domain/recommendation/recommend";
@@ -39,7 +39,7 @@ export function CandidatesView({ search: current }: { readonly search: SearchSta
   });
   const name = (recipe: string) => text.recipes[recipe]?.name ?? recipe;
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (focusTarget.current === undefined) return;
     document.getElementById(focusTarget.current)?.focus();
     focusTarget.current = undefined;

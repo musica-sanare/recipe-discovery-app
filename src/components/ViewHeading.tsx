@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, type ReactNode } from "react";
+import { useLayoutEffect, useRef, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 
 /**
@@ -10,13 +10,13 @@ export function ViewHeading({ title, focusOnMount, children }: { readonly title:
   const heading = useRef<HTMLHeadingElement>(null);
   const documentTitle = t("meta.viewTitle", { view: title });
 
-  // A layout effect names the document in the same commit as the heading, so the title never
-  // lags behind the view (a passive effect left the loading title in place on slow machines).
+  // Layout effects name the document and move focus in the same commit as the heading, so
+  // neither lags behind the view (passive effects did on slow machines).
   useLayoutEffect(() => {
     document.title = documentTitle;
   }, [documentTitle]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (focusOnMount) heading.current?.focus();
   }, [focusOnMount]);
 

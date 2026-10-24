@@ -489,6 +489,10 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 
 ### Release blocker decisions (2026-10-24)
 - Open question 13: the owner decided that the English and Spanish texts stay as they are for this release, without a further review of the validation recipes, the Phase 0 foods, and the UI catalogs. A review can follow in a later content version; open question 9 (no native Spanish reviewer) remains a documented limitation.
+- CI: both jobs passed on `d131546` (owner's report).
+- Open question 16: the owner decided that the ADR-016 re-check is not a release condition; the pins stay for the release and the re-check follows as maintenance, with an update as its own commit and redeployment.
+- Secret scan repeated on `d131546` (2026-10-24 08:08 UTC): gitleaks 8.30.1 over 63 commits (1.94 MB), the tracked files (1.59 MB), and `dist/`: no leaks.
+- Deployment facts re-checked for the proposal (`docs/RELEASE_READINESS.md` §5): Wrangler 4.152.0 (released 2026-10-22; `esbuild` 0.28.2 and `workerd` 1.20261019.1 have `postinstall` scripts; about 180 MB to install) and the Cloudflare static-asset billing and limits pages.
 
 ---
 
@@ -750,7 +754,7 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 13. ~~Owner review of the English and Spanish texts added or rewritten in Phase 1~~: the owner accepted the remaining texts (validation recipes, Phase 0 foods, UI catalogs outside `about.*`) as they are for this release (2026-10-24, "Release blocker decisions"); batches 1–3 and the about page were reviewed with their commits.
 14. ~~Whether every food must have at least one search alias per locale~~: aliases stay optional (ADR-030 D6).
 15. ~~Phase 2 must distinguish raw values from related cooked values for the error bands~~: separate reasons `raw_value_for_cooking` and `related_cooked_value` (ADR-028).
-16. Re-check the `i18next`/`react-i18next` pins after 2026-10-25 18:00 UTC (ADR-016, "ADR-016 re-check before Phase 5").
+16. Re-check the `i18next`/`react-i18next` pins after 2026-10-25 18:00 UTC (ADR-016, "ADR-016 re-check before Phase 5"); deferred by the owner to maintenance after the release ("Release blocker decisions").
 17. ~~Recommendation and recalculation time on phones~~: measured with CPU throttling in Stage 5.4 (about 80 ms at 4×); the recommendation stays on the main thread with a 100 ms threshold (ADR-030 D10, revised). A real-device check remains a manual item.
 18. ~~Fried dishes with wide ranges become "near"~~: intended (ADR-029 D10). The fried and slow-frying bands remain assumptions (open question 3).
 19. ~~Provisional input limits and contradiction thresholds~~: unchanged (ADR-030 D4).

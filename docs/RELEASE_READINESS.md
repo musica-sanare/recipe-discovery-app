@@ -1,6 +1,6 @@
 # Release Readiness — Recipe Discovery MVP
 
-Status: **Not ready to deploy (2026-10-24)**. Every acceptance criterion of `docs/SPEC.md` §15 is met on commit `9bf2356`, but release blockers remain (§2). Nothing is deployed. Update this document for every release candidate; decisions behind it are in `docs/DECISIONS.md` ("Stage 5.1 release plan" to "Stage 5.7").
+Status: **Ready for the owner's deployment approval (2026-10-24)**. Every acceptance criterion of `docs/SPEC.md` §15 is met, CI passes, and the release blockers are resolved or deferred by the owner (§2). Nothing is deployed. Update this document for every release candidate; decisions behind it are in `docs/DECISIONS.md` ("Stage 5.1 release plan" to "Release blocker decisions").
 
 ## 1. Acceptance criteria (`docs/SPEC.md` §15)
 
@@ -27,9 +27,9 @@ These must be resolved before a deployment proposal can be approved (owner decis
 |---|---|---|
 | Allergen item lists (open question 11) | **Closed** | *Verified* on 2026-10-24 against the Consumer Affairs Agency page (https://www.caa.go.jp/policies/policy/food_labeling/food_sanitation/allergy/) and its PDFs "アレルギー表示とは" (令和8年4月時点) and the notice of 2026-04-01: 9 mandatory items (えび, カシューナッツ, かに, くるみ, 小麦, そば, 卵, 乳, 落花生; cashew with a two-year transition) and 20 recommended items (アーモンド, あわび, いか, いくら, オレンジ, キウイフルーツ, 牛肉, ごま, さけ, さば, 大豆, 鶏肉, バナナ, ピスタチオ, 豚肉, マカダミアナッツ, もも, やまいも, りんご, ゼラチン) match `shared/content.ts` exactly |
 | English and Spanish review (open question 13) | **Closed** (owner decision) | The owner accepted the remaining texts as they are for this release (2026-10-24; `docs/DECISIONS.md` "Release blocker decisions"). Not separately reviewed: the 20 validation recipes (194 localized texts), the 50 Phase 0 foods, and the UI catalogs outside `about.*` (406 keys); batches 1–3 and the about page were reviewed with their commits |
-| `i18next` / `react-i18next` pins (open question 16) | Waiting | Re-check after 2026-10-25 18:00 UTC; move both packages together as their own commit if no further release followed (ADR-016) |
-| First CI run | Failed twice, fixed | The first two runs failed on effect-timing races (document title, then the reload redirect; `docs/DECISIONS.md` "CI first run"); the fixes are committed locally. `.github/workflows/ci.yml` must pass on GitHub for the release commit |
-| Secret scan of the release history | At release | Repeat `gitleaks git --log-opts=--all --redact` and `gitleaks dir` on the release commit (`docs/DEPLOYMENT.md` §2) |
+| `i18next` / `react-i18next` pins (open question 16) | **Deferred** (owner decision) | Not a release condition: the pins follow the release-burst exception of ADR-016, and the suite and `npm audit` pass with them. Re-check after 2026-10-25 18:00 UTC as maintenance; an update is its own commit and redeployment |
+| First CI run | **Passed** | The first two runs failed on effect-timing races (`docs/DECISIONS.md` "CI first run"); both jobs (`check`, `e2e`) passed on `d131546` (owner's report, 2026-10-24) |
+| Secret scan of the release history | **Passed** on `d131546` | gitleaks 8.30.1: `gitleaks git --log-opts=--all --redact` (63 commits, 1.94 MB), `gitleaks dir` on the tracked files (1.59 MB) and on `dist/`: no leaks (2026-10-24 08:08 UTC). Repeat on the release commit if commits other than documentation follow |
 
 ## 3. Known limitations (released as documented)
 
@@ -60,13 +60,13 @@ Before or right after the first deployment (results recorded here):
 
 | Item | Proposal |
 |---|---|
-| What | The release commit after §2 is resolved (`dev` at that time, including any ADR-016 update), built with `npm ci && npm run build`; content version as recorded in `content/version.ts` |
+| What | The release commit: `dev` with this report (documentation only after `d131546`), built with `npm ci && npm run build`; content version `2026-10-24.3` |
 | Where | Cloudflare Workers static assets on the owner's account, project `recipe-discovery`, served first at the free `*.workers.dev` subdomain (owner decision R3); a custom domain can be added later |
-| How | `docs/DEPLOYMENT.md` §3: owner logs in; set `compatibility_date`; dry run with an exact Wrangler version checked under ADR-016 and ADR-018; deploy; post-deployment checks |
+| How | `docs/DEPLOYMENT.md` §3: the owner logs in with Wrangler in a browser (no token in the repository); set `compatibility_date`; dry run, then deploy, with an exact Wrangler version; post-deployment checks. Wrangler: latest 4.152.0 (released 2026-10-22 14:43 UTC after 4.151.2 and 4.151.3 on 10-19 and 10-20; Node `>=22`). It is installed only for the deployment, in a scratch directory outside the repository (about 180 MB, mostly `@cloudflare/workerd-darwin-arm64`). Its dependencies `esbuild` and `workerd` have `postinstall` scripts (`node install.js`), which are reviewed before they are allowed (ADR-018); the version choice under ADR-016 is confirmed on the day |
 | Rollback | Redeploy the previous release commit with the same steps; Cloudflare's own version rollback is checked at deployment time (`docs/DEPLOYMENT.md` §3) |
-| Cost | Requests to static assets are free and unlimited (*Verified* 2026-10-18; re-check on the day of deployment). No paid plan, database, or Worker script |
+| Cost | *Verified* on 2026-10-24: "Requests to static assets are free and unlimited" and no cost for storing assets (https://developers.cloudflare.com/workers/static-assets/billing-and-limitations/, updated 2026-04-23); Free plan limits of 20,000 files per version and 25 MiB per file (https://developers.cloudflare.com/workers/platform/limits/, updated 2026-10-12) are far above `dist/` (9 files, 864 KB). No Worker script, no paid plan |
 | Data and privacy | No user data leaves the browser; no analytics; only the locale preference is stored (ADR-015, ADR-030 D9) |
-| Owner actions | Push and confirm CI; review the remaining texts (§2); log in to Cloudflare; approve the exact deployment (commit, project name, URL) |
+| Owner actions | Approve this proposal (commit, project name, `*.workers.dev` URL, Wrangler version and its install scripts); log in to Cloudflare when Wrangler asks; confirm the deployed URL |
 | Claude actions after approval | Run the dry run and the deployment commands only as approved, then the post-deployment checks, and record the results here |
 
 ## 6. Sign-off
@@ -74,6 +74,6 @@ Before or right after the first deployment (results recorded here):
 | Step | Date | By |
 |---|---|---|
 | Acceptance criteria checked | 2026-10-24 | Claude (commands above) |
-| Release blockers resolved | — | — |
+| Release blockers resolved | 2026-10-24 | Owner (open questions 13 and 16 by decision; CI passed) and Claude (open question 11, secret scan) |
 | Deployment approved | — | Owner |
 | Deployed and checked | — | — |

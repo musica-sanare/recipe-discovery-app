@@ -385,11 +385,13 @@ function DetailBody({ recipe, recipeState, nutrition, fit, previous, onChange, o
       </Section>
 
       <Section id="ingredients-heading" title={t("detail.ingredientsHeading", { servings: servingsText })}>
+        {/* The visible caption stays outside the scrolling region so that it does not scroll with the table. */}
+        <p id="ingredients-caption" className="m-0 text-sm text-muted">
+          {t("detail.ingredientsCaption", { servings: servingsText })}
+        </p>
         <div role="region" aria-labelledby="ingredients-caption" tabIndex={0} className="overflow-x-auto rounded border border-border">
           <table className="w-full min-w-[40rem] border-collapse text-sm">
-            <caption id="ingredients-caption" className="px-2 py-2 text-left text-muted">
-              {t("detail.ingredientsCaption", { servings: servingsText })}
-            </caption>
+            <caption className="sr-only">{t("detail.ingredientsCaption", { servings: servingsText })}</caption>
             <thead>
               <tr className="bg-surface-muted text-left">
                 <th scope="col" className="px-2 py-2">

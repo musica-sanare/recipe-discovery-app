@@ -64,6 +64,11 @@ describe("recipe detail without a search", () => {
     await openDetail("chicken_lemon_herb_grill");
     const recipe = recipeOf("chicken_lemon_herb_grill");
     const expected = nutritionOf(recipe.id, defaultState(recipe));
+    // The visible caption of the ingredient table sits outside its scrolling region (Stage 5.4).
+    const caption = document.getElementById("ingredients-caption");
+    const region = document.querySelector('[role="region"][aria-labelledby="ingredients-caption"]');
+    expect(region?.querySelector("table")).not.toBeNull();
+    expect(region?.contains(caption)).toBe(false);
     expect(shownValues()).toEqual({
       エネルギー: `${formatNutrient("ja", "ENERC_KCAL", expected.perServing.ENERC_KCAL) ?? ""} kcal`,
       たんぱく質: `${formatNutrient("ja", "PROT-", expected.perServing["PROT-"]) ?? ""} g`,

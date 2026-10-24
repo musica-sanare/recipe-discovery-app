@@ -1,9 +1,13 @@
 import type { Recipe } from "../../shared/content.ts";
 import { recipe as atsuageGingerSaute } from "./atsuage_ginger_saute.ts";
+import { recipe as beefBroccoliMicrowave } from "./beef_broccoli_microwave.ts";
+import { recipe as beefKomatsunaUdon } from "./beef_komatsuna_udon.ts";
 import { recipe as beefLemonSauteSalad } from "./beef_lemon_saute_salad.ts";
 import { recipe as beefMeatballsTomato } from "./beef_meatballs_tomato.ts";
 import { recipe as beefMinceBibimbap } from "./beef_mince_bibimbap.ts";
 import { recipe as beefPepperStirFry } from "./beef_pepper_stir_fry.ts";
+import { recipe as beefPotatoTomatoStew } from "./beef_potato_tomato_stew.ts";
+import { recipe as beefShabuLemonSoy } from "./beef_shabu_lemon_soy.ts";
 import { recipe as beefShimejiBowl } from "./beef_shimeji_bowl.ts";
 import { recipe as beefSteakPotatoes } from "./beef_steak_potatoes.ts";
 import { recipe as boiledChickenNegiSalt } from "./boiled_chicken_negi_salt.ts";
@@ -19,16 +23,25 @@ import { recipe as eggTomatoStirFry } from "./egg_tomato_stir_fry.ts";
 import { recipe as eggsTomatoPepperBake } from "./eggs_tomato_pepper_bake.ts";
 import { recipe as nattoTofuRiceBowl } from "./natto_tofu_rice_bowl.ts";
 import { recipe as poachedEggSpinachToast } from "./poached_egg_spinach_toast.ts";
+import { recipe as porkFilletCurryRice } from "./pork_fillet_curry_rice.ts";
 import { recipe as porkFilletMustardSaute } from "./pork_fillet_mustard_saute.ts";
+import { recipe as porkFilletTomatoZucchini } from "./pork_fillet_tomato_zucchini.ts";
 import { recipe as porkFilletTonkatsu } from "./pork_fillet_tonkatsu.ts";
+import { recipe as porkLegSproutGarlic } from "./pork_leg_sprout_garlic.ts";
+import { recipe as porkLegVegetablesMicrowave } from "./pork_leg_vegetables_microwave.ts";
 import { recipe as porkLoinGinger } from "./pork_loin_ginger.ts";
 import { recipe as porkShabuSalad } from "./pork_shabu_salad.ts";
 import { recipe as salmonCabbageMicrowave } from "./salmon_cabbage_microwave.ts";
 import { recipe as salmonTempura } from "./salmon_tempura.ts";
 import { recipe as salmonTomatoPasta } from "./salmon_tomato_pasta.ts";
+import { recipe as shrimpGarlicBroccoli } from "./shrimp_garlic_broccoli.ts";
 import { recipe as softEggOatmealBowl } from "./soft_egg_oatmeal_bowl.ts";
 import { recipe as soyMilkUdonTofu } from "./soy_milk_udon_tofu.ts";
+import { recipe as squidRedPepperStirFry } from "./squid_red_pepper_stir_fry.ts";
+import { recipe as swordfishLemonHerb } from "./swordfish_lemon_herb.ts";
+import { recipe as tofuEdamameDryCurry } from "./tofu_edamame_dry_curry.ts";
 import { recipe as tofuEggChampuru } from "./tofu_egg_champuru.ts";
+import { recipe as tofuKomatsunaAnkakeBowl } from "./tofu_komatsuna_ankake_bowl.ts";
 import { recipe as tofuSteakMushroomSauce } from "./tofu_steak_mushroom_sauce.ts";
 import { recipe as tortillaEspanola } from "./tortilla_espanola.ts";
 import { recipe as tunaTofuBowl } from "./tuna_tofu_bowl.ts";
@@ -73,4 +86,17 @@ export const recipes: readonly Recipe[] = [
   beefPepperStirFry,
   beefMeatballsTomato,
   beefLemonSauteSalad,
+  beefShabuLemonSoy,
+  beefBroccoliMicrowave,
+  beefPotatoTomatoStew,
+  beefKomatsunaUdon,
+  porkLegSproutGarlic,
+  porkFilletTomatoZucchini,
+  porkLegVegetablesMicrowave,
+  porkFilletCurryRice,
+  swordfishLemonHerb,
+  shrimpGarlicBroccoli,
+  squidRedPepperStirFry,
+  tofuKomatsunaAnkakeBowl,
+  tofuEdamameDryCurry,
 ];

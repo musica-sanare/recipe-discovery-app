@@ -23,6 +23,46 @@ exports[`engine snapshot > records point values, ranges, classes, reasons, and i
       "atsuage": "raw_value_for_cooking",
     },
   },
+  "beef_broccoli_microwave": {
+    "class": "approximation",
+    "incomplete": {},
+    "perServing": {
+      "CHOCDF-": 79.22,
+      "ENERC_KCAL": 588.71,
+      "FAT-": 13.37,
+      "NACL_EQ": 2.11,
+      "PROT-": 41.72,
+    },
+    "ranges": {
+      "CHOCDF-": "79.13–79.25",
+      "ENERC_KCAL": "558.79–598.69 shown",
+      "FAT-": "11.86–13.87 shown",
+      "NACL_EQ": "2.09–2.12",
+      "PROT-": "37.22–43.22 shown",
+    },
+    "reasons": {
+      "beef": "raw_value_for_cooking",
+    },
+  },
+  "beef_komatsuna_udon": {
+    "class": "exact",
+    "incomplete": {},
+    "perServing": {
+      "CHOCDF-": 90.11,
+      "ENERC_KCAL": 651.12,
+      "FAT-": 14.26,
+      "NACL_EQ": 4.53,
+      "PROT-": 47.35,
+    },
+    "ranges": {
+      "CHOCDF-": "90.11–90.11",
+      "ENERC_KCAL": "651.12–651.12",
+      "FAT-": "14.26–14.26",
+      "NACL_EQ": "4.53–4.53",
+      "PROT-": "47.35–47.35",
+    },
+    "reasons": {},
+  },
   "beef_lemon_saute_salad": {
     "class": "approximation",
     "incomplete": {},
@@ -109,6 +149,47 @@ exports[`engine snapshot > records point values, ranges, classes, reasons, and i
     "reasons": {
       "beef": "raw_value_for_cooking",
     },
+  },
+  "beef_potato_tomato_stew": {
+    "class": "approximation",
+    "incomplete": {},
+    "perServing": {
+      "CHOCDF-": 86.89,
+      "ENERC_KCAL": 734.53,
+      "FAT-": 22.99,
+      "NACL_EQ": 2.43,
+      "PROT-": 56.48,
+    },
+    "ranges": {
+      "CHOCDF-": "85.75–87.27",
+      "ENERC_KCAL": "686.68–750.48 shown",
+      "FAT-": "20.77–23.73 shown",
+      "NACL_EQ": "2.4–2.44",
+      "PROT-": "49.76–58.72 shown",
+    },
+    "reasons": {
+      "beef": "raw_value_for_cooking",
+      "onion": "raw_value_for_cooking",
+    },
+  },
+  "beef_shabu_lemon_soy": {
+    "class": "exact",
+    "incomplete": {},
+    "perServing": {
+      "CHOCDF-": 60.61,
+      "ENERC_KCAL": 448.6,
+      "FAT-": 10.78,
+      "NACL_EQ": 1.74,
+      "PROT-": 34.06,
+    },
+    "ranges": {
+      "CHOCDF-": "60.61–60.61",
+      "ENERC_KCAL": "448.6–448.6",
+      "FAT-": "10.78–10.78",
+      "NACL_EQ": "1.74–1.74",
+      "PROT-": "34.06–34.06",
+    },
+    "reasons": {},
   },
   "beef_shimeji_bowl": {
     "class": "approximation",
@@ -420,6 +501,27 @@ exports[`engine snapshot > records point values, ranges, classes, reasons, and i
     },
     "reasons": {},
   },
+  "pork_fillet_curry_rice": {
+    "class": "approximation",
+    "incomplete": {},
+    "perServing": {
+      "CHOCDF-": 126.22,
+      "ENERC_KCAL": 878.38,
+      "FAT-": 19.31,
+      "NACL_EQ": 1.88,
+      "PROT-": 58.84,
+    },
+    "ranges": {
+      "CHOCDF-": "126.12–126.25",
+      "ENERC_KCAL": "839.44–891.36 shown",
+      "FAT-": "18.09–19.72",
+      "NACL_EQ": "1.85–1.89",
+      "PROT-": "51.51–61.28 shown",
+    },
+    "reasons": {
+      "pork": "raw_value_for_cooking",
+    },
+  },
   "pork_fillet_mustard_saute": {
     "class": "approximation",
     "incomplete": {},
@@ -441,6 +543,28 @@ exports[`engine snapshot > records point values, ranges, classes, reasons, and i
       "pork": "related_cooked_value",
     },
   },
+  "pork_fillet_tomato_zucchini": {
+    "class": "approximation",
+    "incomplete": {},
+    "perServing": {
+      "CHOCDF-": 39.17,
+      "ENERC_KCAL": 459.06,
+      "FAT-": 14.08,
+      "NACL_EQ": 1.92,
+      "PROT-": 49.36,
+    },
+    "ranges": {
+      "CHOCDF-": "38.72–39.33",
+      "ENERC_KCAL": "446.12–470.41 shown",
+      "FAT-": "13.75–14.39",
+      "NACL_EQ": "1.91–1.93",
+      "PROT-": "47.11–51.48 shown",
+    },
+    "reasons": {
+      "pork": "related_cooked_value",
+      "zucchini": "raw_value_for_cooking",
+    },
+  },
   "pork_fillet_tonkatsu": {
     "class": "approximation",
     "incomplete": {},
@@ -460,6 +584,50 @@ exports[`engine snapshot > records point values, ranges, classes, reasons, and i
     },
     "reasons": {
       "pork": "fried",
+    },
+  },
+  "pork_leg_sprout_garlic": {
+    "class": "approximation",
+    "incomplete": {},
+    "perServing": {
+      "CHOCDF-": 76.6,
+      "ENERC_KCAL": 596.91,
+      "FAT-": 16,
+      "NACL_EQ": 1.9,
+      "PROT-": 43.25,
+    },
+    "ranges": {
+      "CHOCDF-": "76.55–76.61",
+      "ENERC_KCAL": "563.79–607.95 shown",
+      "FAT-": "14.56–16.48",
+      "NACL_EQ": "1.88–1.91",
+      "PROT-": "38.09–44.97 shown",
+    },
+    "reasons": {
+      "pork": "raw_value_for_cooking",
+    },
+  },
+  "pork_leg_vegetables_microwave": {
+    "class": "approximation",
+    "incomplete": {},
+    "perServing": {
+      "CHOCDF-": 80.93,
+      "ENERC_KCAL": 573.62,
+      "FAT-": 10.39,
+      "NACL_EQ": 2.27,
+      "PROT-": 41.97,
+    },
+    "ranges": {
+      "CHOCDF-": "79.19–81.51 shown",
+      "ENERC_KCAL": "533.4–587.02 shown",
+      "FAT-": "8.92–10.88",
+      "NACL_EQ": "2.24–2.28",
+      "PROT-": "36.5–43.8 shown",
+    },
+    "reasons": {
+      "cabbage": "raw_value_for_cooking",
+      "carrot": "raw_value_for_cooking",
+      "pork": "raw_value_for_cooking",
     },
   },
   "pork_loin_ginger": {
@@ -564,6 +732,27 @@ exports[`engine snapshot > records point values, ranges, classes, reasons, and i
     },
     "reasons": {},
   },
+  "shrimp_garlic_broccoli": {
+    "class": "approximation",
+    "incomplete": {},
+    "perServing": {
+      "CHOCDF-": 37.57,
+      "ENERC_KCAL": 445.15,
+      "FAT-": 13.39,
+      "NACL_EQ": 2.25,
+      "PROT-": 47.63,
+    },
+    "ranges": {
+      "CHOCDF-": "37.38–37.63",
+      "ENERC_KCAL": "423.01–452.53 shown",
+      "FAT-": "13.23–13.44",
+      "NACL_EQ": "2.17–2.28",
+      "PROT-": "42.34–49.4 shown",
+    },
+    "reasons": {
+      "shrimp": "raw_value_for_cooking",
+    },
+  },
   "soft_egg_oatmeal_bowl": {
     "class": "approximation",
     "incomplete": {},
@@ -607,6 +796,71 @@ exports[`engine snapshot > records point values, ranges, classes, reasons, and i
       "tofu": "raw_value_for_cooking",
     },
   },
+  "squid_red_pepper_stir_fry": {
+    "class": "approximation",
+    "incomplete": {},
+    "perServing": {
+      "CHOCDF-": 92.07,
+      "ENERC_KCAL": 635.46,
+      "FAT-": 13.12,
+      "NACL_EQ": 2.87,
+      "PROT-": 43.17,
+    },
+    "ranges": {
+      "CHOCDF-": "92.04–92.08",
+      "ENERC_KCAL": "612.66–643.06 shown",
+      "FAT-": "12.88–13.2",
+      "NACL_EQ": "2.72–2.92",
+      "PROT-": "37.8–44.96 shown",
+    },
+    "reasons": {
+      "squid": "raw_value_for_cooking",
+    },
+  },
+  "swordfish_lemon_herb": {
+    "class": "approximation",
+    "incomplete": {},
+    "perServing": {
+      "CHOCDF-": 46.78,
+      "ENERC_KCAL": 433.03,
+      "FAT-": 14.6,
+      "NACL_EQ": 1.33,
+      "PROT-": 35.31,
+    },
+    "ranges": {
+      "CHOCDF-": "44.57–48.99 shown",
+      "ENERC_KCAL": "412.81–453.26 shown",
+      "FAT-": "13.97–15.22",
+      "NACL_EQ": "1.31–1.34",
+      "PROT-": "33.57–37.05 shown",
+    },
+    "reasons": {
+      "fish": "related_cooked_value",
+      "potato": "post_cooking_refuse",
+    },
+  },
+  "tofu_edamame_dry_curry": {
+    "class": "approximation",
+    "incomplete": {},
+    "perServing": {
+      "CHOCDF-": 126.69,
+      "ENERC_KCAL": 876.93,
+      "FAT-": 28.3,
+      "NACL_EQ": 1.7,
+      "PROT-": 44.53,
+    },
+    "ranges": {
+      "CHOCDF-": "125.49–127.1",
+      "ENERC_KCAL": "842.16–888.52 shown",
+      "FAT-": "26.09–29.04 shown",
+      "NACL_EQ": "1.7–1.71",
+      "PROT-": "41.34–45.6 shown",
+    },
+    "reasons": {
+      "carrot": "raw_value_for_cooking",
+      "tofu": "raw_value_for_cooking",
+    },
+  },
   "tofu_egg_champuru": {
     "class": "approximation",
     "incomplete": {},
@@ -623,6 +877,27 @@ exports[`engine snapshot > records point values, ranges, classes, reasons, and i
       "FAT-": "34.49–36.45",
       "NACL_EQ": "2.49–2.49",
       "PROT-": "30.45–33.25 shown",
+    },
+    "reasons": {
+      "tofu": "raw_value_for_cooking",
+    },
+  },
+  "tofu_komatsuna_ankake_bowl": {
+    "class": "approximation",
+    "incomplete": {},
+    "perServing": {
+      "CHOCDF-": 93.45,
+      "ENERC_KCAL": 639.54,
+      "FAT-": 17.86,
+      "NACL_EQ": 1.74,
+      "PROT-": 31.92,
+    },
+    "ranges": {
+      "CHOCDF-": "92.66–93.71",
+      "ENERC_KCAL": "601.21–652.31 shown",
+      "FAT-": "15.29–18.72 shown",
+      "NACL_EQ": "1.74–1.74",
+      "PROT-": "28.24–33.14 shown",
     },
     "reasons": {
       "tofu": "raw_value_for_cooking",

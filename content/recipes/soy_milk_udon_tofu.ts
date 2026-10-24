@@ -61,7 +61,7 @@ export const recipe: Recipe = {
       text: {
         ja: "ほうれん草をゆでて水にとり、水気を絞って4cm長さに切ります。木綿豆腐は2cm角に切ります。",
         en: "Boil the spinach, cool it in water, squeeze it dry, and cut it into 4 cm lengths. Cut the firm tofu into 2 cm cubes.",
-        es: "Hierve las espinacas, enfríalas en agua, escúrrelas bien y córtalas en trozos de 4 cm. Corta el tofu firme en dados de 2 cm.",
+        es: "Hierve las espinacas, enfríalas en agua, exprímelas bien y córtalas en trozos de 4 cm. Corta el tofu firme en dados de 2 cm.",
       },
     },
     {

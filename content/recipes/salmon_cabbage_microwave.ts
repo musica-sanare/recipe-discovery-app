@@ -7,7 +7,7 @@ export const recipe: Recipe = {
     summary: {
       ja: "サーモン、キャベツ、しめじを耐熱容器に入れて電子レンジで蒸すだけ。洗い物も少なく済みます。",
       en: "Salmon, cabbage, and shimeji steamed together in the microwave in one dish, with little cleanup.",
-      es: "Salmón, repollo y shimeji cocinados al vapor en el microondas en un solo recipiente, con poco que fregar.",
+      es: "Salmón, repollo y shimeji cocinados al vapor en el microondas en un solo recipiente, con pocos utensilios que lavar.",
     },
   },
   cuisine: "japanese",

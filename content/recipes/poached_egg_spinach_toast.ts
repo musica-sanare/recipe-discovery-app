@@ -3,11 +3,11 @@ import type { Recipe } from "../../shared/content.ts";
 export const recipe: Recipe = {
   id: "poached_egg_spinach_toast",
   texts: {
-    name: { ja: "ポーチドエッグとほうれん草のオープンサンド", en: "Open sandwich with poached eggs and spinach", es: "Tosta de huevos escalfados y espinacas" },
+    name: { ja: "ポーチドエッグとほうれん草のオープンサンド", en: "Open sandwich with poached eggs and spinach", es: "Pan tostado con huevos escalfados y espinacas" },
     summary: {
       ja: "トーストにソテーしたほうれん草、チーズ、ポーチドエッグをのせた朝食向けの一皿です。",
       en: "Toast topped with sautéed spinach, cheese, and poached eggs: a quick breakfast.",
-      es: "Tostada con espinacas salteadas, queso y huevos escalfados: un desayuno rápido.",
+      es: "Pan tostado con espinacas salteadas, queso y huevos escalfados: un desayuno rápido.",
     },
   },
   cuisine: "western",

@@ -3,11 +3,11 @@ import type { Recipe } from "../../shared/content.ts";
 export const recipe: Recipe = {
   id: "salmon_tomato_pasta",
   texts: {
-    name: { ja: "サーモンのソテーとトマトパスタ", en: "Sautéed salmon with tomato spaghetti", es: "Salmón salteado con espaguetis al tomate" },
+    name: { ja: "サーモンのソテーとトマトパスタ", en: "Sautéed salmon with tomato spaghetti", es: "Salmón a la sartén con espaguetis al tomate" },
     summary: {
       ja: "サーモンをソテーし、にんにくとバジルのトマトソースのスパゲッティと合わせます。",
       en: "Sautéed salmon with spaghetti in a garlic and basil tomato sauce.",
-      es: "Salmón salteado con espaguetis en salsa de tomate con ajo y albahaca.",
+      es: "Salmón a la sartén con espaguetis en salsa de tomate con ajo y albahaca.",
     },
   },
   cuisine: "western",
@@ -44,7 +44,7 @@ export const recipe: Recipe = {
       text: {
         ja: "別のフライパンにソース用のオリーブ油とつぶしたにんにくを入れて弱火にかけ、香りが出たらトマト缶をつぶしながら加えて8分煮詰め、塩で味を調えます。",
         en: "Warm the sauce oil with crushed garlic over low heat. When fragrant, add the canned tomatoes, crushing them, simmer for 8 minutes, and season with salt.",
-        es: "Calienta a fuego bajo el aceite de la salsa con el ajo machacado. Cuando huela, añade el tomate aplastándolo, cuece 8 minutos y sala.",
+        es: "Calienta a fuego bajo el aceite de la salsa con el ajo machacado. Cuando suelte su aroma, añade el tomate en lata aplastándolo, cuece 8 minutos y sala.",
       },
     },
     {
@@ -52,7 +52,7 @@ export const recipe: Recipe = {
       text: {
         ja: "サーモン用のオリーブ油でサーモンを片面3分ずつ焼きます。",
         en: "Sauté the salmon in its olive oil for 3 minutes on each side.",
-        es: "Saltea el salmón en su aceite de oliva 3 minutos por cada lado.",
+        es: "Cocina el salmón a la sartén en su aceite de oliva 3 minutos por cada lado.",
       },
     },
     {

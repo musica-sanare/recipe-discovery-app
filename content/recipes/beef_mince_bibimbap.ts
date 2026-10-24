@@ -38,7 +38,7 @@ export const recipe: Recipe = {
       text: {
         ja: "鍋に湯を沸かし、細切りのにんじんを2分、もやしを1分、ほうれん草を1分ゆでます。ほうれん草は水にとって絞り、4cm長さに切ります。水気を切った野菜をごま油と塩で和えます。",
         en: "Bring a pot of water to a boil and cook the carrot strips for 2 minutes, the bean sprouts for 1 minute, and the spinach for 1 minute. Cool the spinach in water, squeeze it dry, and cut it into 4 cm lengths. Toss the drained vegetables with the sesame oil and salt.",
-        es: "Lleva a ebullición una olla con agua y cuece la zanahoria en tiras 2 minutos, los brotes de soja 1 minuto y las espinacas 1 minuto. Enfría las espinacas en agua, escúrrelas bien y córtalas en trozos de 4 cm. Mezcla las verduras escurridas con el aceite de sésamo y la sal.",
+        es: "Lleva a ebullición una olla con agua y cuece la zanahoria en tiras 2 minutos, los brotes de soja 1 minuto y las espinacas 1 minuto. Enfría las espinacas en agua, exprímelas bien y córtalas en trozos de 4 cm. Mezcla las verduras escurridas con el aceite de sésamo y la sal.",
       },
     },
     {

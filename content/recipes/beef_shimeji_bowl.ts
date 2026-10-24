@@ -3,11 +3,11 @@ import type { Recipe } from "../../shared/content.ts";
 export const recipe: Recipe = {
   id: "beef_shimeji_bowl",
   texts: {
-    name: { ja: "牛もも肉としめじの甘辛炒め丼", en: "Sweet and savory beef and shimeji rice bowl", es: "Bol de arroz con ternera y setas shimeji agridulces" },
+    name: { ja: "牛もも肉としめじの甘辛炒め丼", en: "Sweet and savory beef and shimeji rice bowl", es: "Bol de arroz con ternera y setas shimeji en salsa dulce y salada" },
     summary: {
       ja: "赤身の牛もも肉としめじ、玉ねぎを、にんにくの効いた甘辛だれで炒めてご飯にのせます。",
-      en: "Lean beef, shimeji mushrooms, and onion stir-fried in a garlicky sweet soy sauce and served over rice.",
-      es: "Ternera magra, setas shimeji y cebolla salteadas en una salsa dulce de soja con ajo, servidas sobre arroz.",
+      en: "Lean beef, shimeji mushrooms, and onion stir-fried in a garlicky sweet and savory soy sauce and served over rice.",
+      es: "Ternera magra, setas shimeji y cebolla salteadas en una salsa de soja dulce y salada con ajo, servidas sobre arroz.",
     },
   },
   cuisine: "korean",

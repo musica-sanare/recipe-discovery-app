@@ -569,6 +569,15 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - Noted for R4: the Spanish texts use Spain's words (for example "zumo" 16 times, "frigorífico" 5 times) in all batches; a library-wide choice is discussed with the food names.
 - Checks: `npm run check` (628 tests; nutrition snapshots unchanged) and `npm run test:e2e` (98 passed, 1 skipped). Browser check (`npm run preview`, 375 px, `es`): the candidate cards of a default search, including the renamed squid recipe, and the detail pages of `squid_red_pepper_stir_fry`, `beef_mince_bibimbap`, and `chicken_thigh_teriyaki` show the new texts with no element wider than the viewport; no console messages.
 
+### Stage 6.3 R3: validation recipes, beef, fish, soy, and egg (2026-10-24)
+- R3 covered the eleven other validation recipes (86 items); with R1 and R2, all 194 texts of the 20 validation recipes are reviewed. The owner approved fixes H1–H9 (content version `2026-10-24.6`):
+  - H1: `beef_shimeji_bowl` translates 甘辛 as "dulce y salada" (name, the last "agridulce") and "sweet and savory" / "dulce y salada" (summary, which had "sweet" only).
+  - H2: `beef_steak_potatoes` says "ternera magra" in the Spanish summary like its name, instead of the Spanish butcher's term "babilla"; the English side name says "Fluffy" like the dish name.
+  - H3: Spanish "exprímelas" for squeezed spinach (as G3) in `salmon_tempura` and, with the owner's approval outside R3, in the reviewed batch texts of `soy_milk_udon_tofu` and `beef_mince_bibimbap`.
+  - H4, H5: "Cuando suelte su aroma" instead of "Cuando huela" (`salmon_tomato_pasta`, `chicken_mapo_tofu`); the pan-cooked salmon fillet is "a la sartén" instead of "salteado", and the canned tomatoes are named.
+  - H6–H9 (Spanish): clearer mapo tofu summary; "con pocos utensilios que lavar" instead of the colloquial "con poco que fregar"; tofu torn by hand ("trocéalo") instead of crumbled; "Pan tostado" instead of Spain's "Tosta" and the Mexican sense of "tostada".
+- Checks: `npm run check` (628 tests; nutrition snapshots unchanged) and `npm run test:e2e` (98 passed, 1 skipped). Browser check (`npm run preview`, 375 px, `es`): the detail pages of `beef_shimeji_bowl`, `salmon_tomato_pasta`, and `poached_egg_spinach_toast` show the new names and texts with no element wider than the viewport; no console messages.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in

@@ -66,7 +66,7 @@ export const recipe: Recipe = {
       text: {
         ja: "ほうれん草をゆでて水気を絞り、しょうゆをかけておひたしにします。",
         en: "Boil the spinach, squeeze out the water, and dress it with soy sauce.",
-        es: "Hierve las espinacas, escúrrelas bien y alíñalas con salsa de soja.",
+        es: "Hierve las espinacas, exprímelas bien y alíñalas con salsa de soja.",
       },
     },
     {

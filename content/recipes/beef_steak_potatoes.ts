@@ -7,7 +7,7 @@ export const recipe: Recipe = {
     summary: {
       ja: "赤身の牛もも肉を焼き、粉ふきいも、ゆでブロッコリー、ご飯を添えます。",
       en: "Lean beef round steak served with fluffy boiled potatoes, boiled broccoli, and rice.",
-      es: "Filete de babilla magra con patatas cocidas, brócoli hervido y arroz.",
+      es: "Filete de ternera magra con patatas cocidas, brócoli hervido y arroz.",
     },
   },
   cuisine: "western",
@@ -30,7 +30,7 @@ export const recipe: Recipe = {
     { key: "rice", food: "rice_cooked", grams: 150, state: "as_is", role: "main_carb", adjust: { kind: "grams", min: 100, max: 250, step: 10 } },
   ],
   sides: [
-    { key: "potatoes", label: { ja: "粉ふきいも", en: "Floury boiled potatoes", es: "Patatas cocidas" }, ingredients: ["potato"], solverMayRemove: true },
+    { key: "potatoes", label: { ja: "粉ふきいも", en: "Fluffy boiled potatoes", es: "Patatas cocidas" }, ingredients: ["potato"], solverMayRemove: true },
     { key: "rice", label: { ja: "ご飯", en: "Rice", es: "Arroz" }, ingredients: ["rice"], solverMayRemove: true },
     { key: "broccoli", label: { ja: "ゆでブロッコリー", en: "Boiled broccoli", es: "Brócoli hervido" }, ingredients: ["broccoli"], solverMayRemove: false },
   ],

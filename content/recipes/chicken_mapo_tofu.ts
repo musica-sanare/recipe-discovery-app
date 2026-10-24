@@ -7,7 +7,7 @@ export const recipe: Recipe = {
     summary: {
       ja: "豚ひき肉の代わりに鶏ひき肉を使い、豆板醤の辛さを効かせた麻婆豆腐です。",
       en: "Mapo tofu made with ground chicken instead of pork, spiced with doubanjiang.",
-      es: "Mapo tofu hecho con pollo picado en lugar de cerdo y picante con doubanjiang.",
+      es: "Mapo tofu hecho con pollo picado en lugar de cerdo, con el picante del doubanjiang.",
     },
   },
   cuisine: "chinese",
@@ -72,7 +72,7 @@ export const recipe: Recipe = {
       text: {
         ja: "フライパンに油を中火で熱し、にんにく、しょうが、豆板醤を炒め、香りが出たら鶏ひき肉を加えて色が変わるまで炒めます。",
         en: "Heat the oil over medium heat and stir-fry the garlic, ginger, and doubanjiang. When fragrant, add the ground chicken and cook until no longer pink.",
-        es: "Calienta el aceite a fuego medio y sofríe el ajo, el jengibre y el doubanjiang. Cuando huela, añade el pollo picado y cocínalo hasta que no quede rosado.",
+        es: "Calienta el aceite a fuego medio y sofríe el ajo, el jengibre y el doubanjiang. Cuando suelte su aroma, añade el pollo picado y cocínalo hasta que no quede rosado.",
       },
     },
     {

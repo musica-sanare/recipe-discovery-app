@@ -53,7 +53,7 @@ export const recipe: Recipe = {
       text: {
         ja: "木綿豆腐をキッチンペーパーで包んで10分置き、水気を切ってから手で大きくちぎります。",
         en: "Wrap the firm tofu in paper towels for 10 minutes to drain, then tear it into large pieces.",
-        es: "Envuelve el tofu firme en papel de cocina 10 minutos para escurrirlo y luego desmenúzalo en trozos grandes.",
+        es: "Envuelve el tofu firme en papel de cocina 10 minutos para escurrirlo y luego trocéalo con las manos en trozos grandes.",
       },
     },
     {

@@ -40,7 +40,7 @@ describe("composition coverage report", () => {
     // Reviewed totals of Stage 1.3 refer to the validation recipes.
     const validation = repositoryEngine(validationBundleInput());
     expect(formatCompositionReport(validation.calc.recipes.map((entry) => compositionCoverage(entry, validation.data)))).toContain(
-      "Total (20 recipes): exact 141, approximation 16, hard to estimate 2, not counted 17, fried 5",
+      "Total (20 recipes): exact 142, approximation 18, hard to estimate 2, not counted 15, fried 5",
     );
   });
 });

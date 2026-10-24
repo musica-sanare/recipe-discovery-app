@@ -150,6 +150,14 @@ export const foods: readonly Food[] = [
     proteinGroup: "egg",
   },
   {
+    id: "egg_white",
+    names: { ja: "卵白", en: "Egg white", es: "Clara de huevo" },
+    aliases: { ja: ["白身", "らんぱく", "たまごのしろみ"], en: ["egg whites", "liquid egg white"], es: ["claras", "clara de huevo líquida"] },
+    composition: { raw: "12014" },
+    allergens: [{ allergen: "egg", confidence: "contains" }],
+    proteinGroup: "egg",
+  },
+  {
     id: "tofu_firm",
     names: { ja: "木綿豆腐", en: "Firm tofu", es: "Tofu firme" },
     aliases: { ja: ["豆腐", "もめん豆腐", "とうふ", "もめんどうふ"], en: ["tofu"], es: ["tofu"] },

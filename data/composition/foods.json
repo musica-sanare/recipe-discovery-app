@@ -5482,6 +5482,52 @@
       }
     },
     {
+      "code": "12014",
+      "nameJa": "鶏卵 卵白 生",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 44,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 10.1,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 9.5,
+          "notation": "measured"
+        },
+        "FAT-": {
+          "value": 0,
+          "notation": "trace"
+        },
+        "FATNLEA": {
+          "value": 0,
+          "notation": "zero"
+        },
+        "CHOAVLDF-": {
+          "value": 1.6,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 0.5,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 0,
+          "notation": "zero"
+        },
+        "NACL_EQ": {
+          "value": 0.5,
+          "notation": "measured"
+        }
+      }
+    },
+    {
       "code": "12021",
       "nameJa": "鶏卵 全卵 目玉焼き",
       "refuse": {

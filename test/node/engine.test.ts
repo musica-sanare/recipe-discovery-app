@@ -84,7 +84,7 @@ describe("engine on the repository content", () => {
         for (const reason of ingredient.reasons) counts[reason] = (counts[reason] ?? 0) + 1;
       }
     }
-    expect(counts).toEqual({ raw_value_for_cooking: 9, related_cooked_value: 3, post_cooking_refuse: 1, slow_frying: 2, fried: 3 });
+    expect(counts).toEqual({ raw_value_for_cooking: 11, related_cooked_value: 3, post_cooking_refuse: 1, slow_frying: 2, fried: 3 });
   });
 
   it("has no unknown displayed nutrient in any recipe", () => {
@@ -104,7 +104,7 @@ describe("engine on the repository content", () => {
         for (const assumption of ingredient.assumptions) counts[assumption.code] = (counts[assumption.code] ?? 0) + 1;
       }
     }
-    expect(counts).toEqual({ oil_counted_in_full: 17, included_in_cooked_value: 17, parts_removed_after_cooking: 1, energy_from_fat: 5, pinch_as_stated_grams: 9 });
+    expect(counts).toEqual({ oil_counted_in_full: 18, included_in_cooked_value: 15, parts_removed_after_cooking: 1, energy_from_fat: 5, pinch_as_stated_grams: 9 });
   });
 });
 

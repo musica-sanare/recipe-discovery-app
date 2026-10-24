@@ -5,21 +5,21 @@ export const recipe: Recipe = {
   texts: {
     name: { ja: "ポーチドエッグとほうれん草のオープンサンド", en: "Open sandwich with poached eggs and spinach", es: "Pan tostado con huevos escalfados y espinacas" },
     summary: {
-      ja: "トーストにソテーしたほうれん草、チーズ、ポーチドエッグをのせた朝食向けの一皿です。",
-      en: "Toast topped with sautéed spinach, cheese, and poached eggs: a quick breakfast.",
-      es: "Pan tostado con espinacas salteadas, queso y huevos escalfados: un desayuno rápido.",
+      ja: "トーストにゆでたほうれん草、チーズ、炒めた卵白、ポーチドエッグをのせた朝食向けの一皿です。",
+      en: "Toast topped with blanched spinach, cheese, scrambled egg whites, and poached eggs: a quick breakfast.",
+      es: "Pan tostado con espinacas escaldadas, queso, claras revueltas y huevos escalfados: un desayuno rápido.",
     },
   },
   cuisine: "western",
   goals: ["maintain"],
   mainProteinGroup: "egg",
   tags: ["breakfast"],
-  minutes: 10,
+  minutes: 15,
   effort: 2,
   equipment: ["stove", "frying_pan", "pot", "oven_toaster"],
   servings: 1,
   ingredients: [
-    { key: "bread", food: "bread", grams: 60, state: "as_is", measure: { unit: "slice", quantity: 1 }, role: "main_carb", adjust: { kind: "count", unitGrams: 60, min: 1, max: 2 } },
+    { key: "bread", food: "bread", grams: 60, state: "as_is", measure: { unit: "slice", quantity: 1 }, role: "main_carb", adjust: { kind: "count", unitGrams: 60, min: 1, max: 3 } },
     { key: "egg", food: "egg", grams: 100, state: "poach", measure: { unit: "piece", quantity: 2 }, role: "main_protein", adjust: { kind: "count", unitGrams: 50, min: 1, max: 3 } },
     {
       key: "vinegar",
@@ -35,9 +35,24 @@ export const recipe: Recipe = {
         es: "Se añade al agua de escalfar; no se come, así que no se cuenta.",
       },
     },
-    { key: "spinach", food: "spinach", grams: 80, state: "stir_fry", role: "vegetable" },
-    { key: "oil", food: "olive_oil", grams: 4, state: "as_is", measure: { unit: "tsp", quantity: 1 }, role: "fat", includedIn: "spinach" },
-    { key: "cheese", food: "mozzarella", grams: 30, state: "as_is", role: "main_protein" },
+    {
+      key: "egg_white",
+      food: "egg_white",
+      grams: 99,
+      state: "raw",
+      cooking: "scramble",
+      measure: { unit: "piece", quantity: 3 },
+      role: "main_protein",
+      adjust: { kind: "count", unitGrams: 33, min: 2, max: 6 },
+      note: {
+        ja: "成分表に加熱した卵白の値がないため、生の値で計算しています。残った黄身は別の料理に使えます。市販の液卵白でも作れます。",
+        en: "The tables have no value for cooked egg white, so the raw value is used. Use the leftover yolks in another dish, or use liquid egg white from a carton.",
+        es: "Las tablas no tienen un valor para la clara cocinada, así que se usa el valor en crudo. Usa las yemas que sobren en otro plato, o usa clara de huevo líquida envasada.",
+      },
+    },
+    { key: "oil", food: "olive_oil", grams: 2, state: "as_is", measure: { unit: "tsp", quantity: 0.5 }, role: "fat", linkedTo: "egg_white" },
+    { key: "spinach", food: "spinach", grams: 80, state: "boil", role: "vegetable" },
+    { key: "cheese", food: "mozzarella", grams: 15, state: "as_is", role: "main_protein" },
     { key: "salt", food: "salt", grams: 0.5, state: "as_is", measure: { unit: "pinch", quantity: 1 }, role: "seasoning" },
     { key: "pepper", food: "black_pepper", grams: 0.2, state: "as_is", measure: { unit: "pinch", quantity: 1 }, role: "seasoning" },
   ],
@@ -54,9 +69,17 @@ export const recipe: Recipe = {
     {
       key: "spinach",
       text: {
-        ja: "ほうれん草をオリーブ油でしんなりするまで炒め、塩をふります。",
-        en: "Sauté the spinach in olive oil until wilted and season with salt.",
-        es: "Saltea las espinacas en aceite de oliva hasta que se ablanden y sálalas.",
+        ja: "ほうれん草を1分ゆでて水にとり、水気を絞って3cm長さに切り、塩をふります。",
+        en: "Boil the spinach for 1 minute, cool it in water, squeeze it dry, cut it into 3 cm lengths, and season with salt.",
+        es: "Hierve las espinacas 1 minuto, enfríalas en agua, exprímelas bien, córtalas en trozos de 3 cm y sálalas.",
+      },
+    },
+    {
+      key: "egg_white",
+      text: {
+        ja: "フライパンにオリーブ油を中火で熱し、溶いた卵白を流し入れて、白く固まるまで炒めます。",
+        en: "Heat the olive oil in a frying pan over medium heat, pour in the beaten egg whites, and stir until they are white and set.",
+        es: "Calienta el aceite de oliva en una sartén a fuego medio, vierte las claras batidas y remueve hasta que estén blancas y cuajadas.",
       },
     },
     {
@@ -70,9 +93,9 @@ export const recipe: Recipe = {
     {
       key: "assemble",
       text: {
-        ja: "ほうれん草とポーチドエッグをのせ、こしょうをふります。",
-        en: "Add the spinach and poached eggs and finish with pepper.",
-        es: "Añade las espinacas y los huevos escalfados y termina con pimienta.",
+        ja: "ほうれん草、炒めた卵白、ポーチドエッグをのせ、こしょうをふります。",
+        en: "Add the spinach, scrambled egg whites, and poached eggs and finish with pepper.",
+        es: "Añade las espinacas, las claras revueltas y los huevos escalfados y termina con pimienta.",
       },
     },
   ],

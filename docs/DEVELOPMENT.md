@@ -29,7 +29,8 @@ Browser previews: `.claude/launch.json` has `preview` (the production build with
 | `npm run lint` | ESLint with type-aware rules and module boundaries |
 | `npm run typecheck` | TypeScript project build without emit |
 | `npm test` | Vitest (Node by default; UI tests use jsdom per file; `test/ui/` runs the app on the repository content) |
-| `npm run check` | Lint, type-check, tests, and build in sequence |
+| `npm run check` | Lint, type-check, license check, tests, and build in sequence |
+| `npm run check:licenses` | Licenses of every package in `package-lock.json` against `tools/licenses.ts` (production: MIT, ISC, Apache-2.0, BSD, 0BSD; development also MPL-2.0, BlueOak-1.0.0, MIT-0, CC0-1.0, CC-BY-4.0) |
 | `npm run test:e2e` | Playwright on the production build with headers (`npm run build && npm run preview` on port 4174): projects `desktop-chromium`, `mobile-chromium`, `mobile-webkit`; every spec in `ja`, `en`, and `es` (`e2e/`). Browsers: `npx playwright install --only-shell chromium webkit` (user cache, outside the repository) |
 | `npm run test:e2e:timing` | Phone-class timing with CPU throttling (project `timing`, Chromium); writes `test-results/timing.json` |
 | `npm run data:extract` | Regenerate `data/composition/foods.json` from the MEXT workbook in `data/raw/` (`docs/DATA_SOURCES.md` "Extraction") |

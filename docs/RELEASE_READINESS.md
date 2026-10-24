@@ -1,6 +1,6 @@
 # Release Readiness — Recipe Discovery MVP
 
-Status: **Deployed (2026-10-24)** at https://recipe-discovery.musica-sanare.workers.dev from commit `66473f7` (Cloudflare Workers static assets, version `0f4696e0-d896-4626-b486-03c53d2cac1b`). The post-deployment checks passed (§6); the manual checks of §4 items 1–3 remain. Update this document for every release; decisions behind it are in `docs/DECISIONS.md` ("Stage 5.1 release plan" to "Production deployment").
+Status: **Deployed (2026-10-24)** at https://recipe-discovery.musica-sanare.workers.dev from commit `66473f7` (Cloudflare Workers static assets, version `0f4696e0-d896-4626-b486-03c53d2cac1b`). The post-deployment checks passed (§6); the manual checks of §4 were done on 2026-10-24 as far as the owner's devices allowed, and the rest is accepted as a known limitation (§3). Update this document for every release; decisions behind it are in `docs/DECISIONS.md` ("Stage 5.1 release plan" to "Production deployment").
 
 ## 1. Acceptance criteria (`docs/SPEC.md` §15)
 
@@ -44,17 +44,18 @@ These must be resolved before a deployment proposal can be approved (owner decis
 | Egg- and soy-based recipes rarely meet the preset fat limits | `docs/DECISIONS.md` "Stage 5.2 batch 1" | Goal labels follow the best-fitting preset; users can set their own targets |
 | A full recommendation takes about 80 ms at a 4× CPU slowdown and about 120 ms at 6×; no real phone measured | ADR-030 D10 (revised) | Main thread within the 100 ms threshold at 4×; measure again when the library grows |
 | WebKit reports a `style-src-attr` CSP violation for every `<select>` | "Stage 5.4" | Browser behavior on a page without inline styles; the CSP is unchanged |
+| Not checked by hand: Android with Chrome, screen readers (VoiceOver, NVDA, Narrator), and Windows forced colors (§4) | `docs/DECISIONS.md` "Manual checks" | Automated: `mobile-chromium` E2E, axe-core in jsdom and in real browsers in three locales, status markers with distinct shapes and texts (ADR-030 D3); check again when a device is available or after a larger UI change |
 | License of the repository not chosen | README | Repository stays private |
 
 ## 4. Manual checks
 
-Before or right after the first deployment (results recorded here):
+Before or right after the first deployment. Results from the owner on the deployed site, 2026-10-24 (`docs/DECISIONS.md` "Manual checks"):
 
-1. Real devices: iPhone with Safari and an Android phone with Chrome — the full flow, the language switch, keyboard on the targets form, and timing of a search (compare with ADR-030 D10).
-2. Screen readers: VoiceOver (iOS or macOS) on the targets form, error summary, candidates live region, comparison table, and detail view; NVDA or Narrator if a Windows machine is available.
-3. Windows high-contrast (forced colors) mode: status markers and focus rings remain visible.
+1. Real devices: iPhone with Safari and an Android phone with Chrome — the full flow, the language switch, keyboard on the targets form, and timing of a search (compare with ADR-030 D10). **iPhone with Safari: no problem found. Android: not checked.**
+2. Screen readers: VoiceOver (iOS or macOS) on the targets form, error summary, candidates live region, comparison table, and detail view; NVDA or Narrator if a Windows machine is available. **Not checked** (owner decision; known limitation, §3).
+3. Windows high-contrast (forced colors) mode: status markers and focus rings remain visible. **Not checked**: no Windows machine (known limitation, §3).
 4. ~~Post-deployment checks of `docs/DEPLOYMENT.md` §3 step 6~~: passed on 2026-10-24 (`docs/DECISIONS.md` "Production deployment").
-5. A final read of the about page and disclaimers in the three locales on the deployed site.
+5. A final read of the about page and disclaimers in the three locales on the deployed site. **No problem found.**
 
 ## 5. Deployment proposal (for the owner's approval; not deployed)
 
@@ -78,3 +79,4 @@ Before or right after the first deployment (results recorded here):
 | Deployment proposal approved (up to the dry run) | 2026-10-24 | Owner; dry run passed (`docs/DECISIONS.md` "Deployment preparation and dry run") |
 | Production deployment approved | 2026-10-24 | Owner (account [account name] confirmed with `wrangler whoami`) |
 | Deployed and checked | 2026-10-24 | Claude: `66473f7`, version `0f4696e0…`, checks in `docs/DECISIONS.md` "Production deployment" |
+| Manual checks (§4) | 2026-10-24 | Owner: items 1 (iPhone only) and 5 without findings; Android, screen readers, and forced colors accepted as not checked |

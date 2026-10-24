@@ -507,6 +507,10 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - Post-deployment checks (`curl -I` and the built-in browser, 2026-10-24): `/`, `/recipes/beef_potato_tomato_stew`, `/about`, `/recipes/no_such_recipe`, an unknown path, and `/third-party-licenses.txt` return 200 with the CSP (identical to `platform/headers.ts`), `X-Content-Type-Options`, `Referrer-Policy`, and `Permissions-Policy`, so `_headers` also applies to SPA fallback responses (answers the 要確認 of Stage 0.1 and Stage 5.1 P9); hashed files under `/assets/` have `Cache-Control: public, max-age=31536000, immutable`, everything else `public, max-age=0, must-revalidate`; `/_headers` is not served (it falls back to `index.html`). In the browser: search with the default targets, comparison of two, detail, language switch to `ja` with the view kept, back to the comparison, not found, and the about page with eight sections; every request goes to the same origin, the only stored key is the locale preference, no console messages; the detail view at 375 px has no horizontal overflow.
 - Not checked: Cloudflare's own version rollback (the documented rollback is redeploying the previous commit), real devices, screen readers, and forced colors (`docs/RELEASE_READINESS.md` §4).
 
+### Manual checks (2026-10-24, Phase 6 Stage 6.1)
+- The owner checked the deployed site: the full flow, the language switch, the targets form keyboard, and the search timing on an iPhone with Safari (`docs/RELEASE_READINESS.md` §4 item 1), and the about page and disclaimers in `ja`, `en`, and `es` (item 5). No problem was found.
+- Not checked: an Android phone with Chrome (item 1), screen readers (item 2), and Windows forced colors (item 3; no Windows machine). The owner decided not to pursue them for this release; they are a known limitation (`docs/RELEASE_READINESS.md` §3), covered in part by the `mobile-chromium` E2E project and the axe-core checks, and checked again when a device is available or after a larger UI change.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in

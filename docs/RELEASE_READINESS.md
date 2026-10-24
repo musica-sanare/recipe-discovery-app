@@ -75,5 +75,6 @@ Before or right after the first deployment (results recorded here):
 |---|---|---|
 | Acceptance criteria checked | 2026-10-24 | Claude (commands above) |
 | Release blockers resolved | 2026-10-24 | Owner (open questions 13 and 16 by decision; CI passed) and Claude (open question 11, secret scan) |
-| Deployment approved | — | Owner |
+| Deployment proposal approved (up to the dry run) | 2026-10-24 | Owner; dry run passed (`docs/DECISIONS.md` "Deployment preparation and dry run") |
+| Production deployment approved | — | Owner |
 | Deployed and checked | — | — |

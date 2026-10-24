@@ -494,6 +494,13 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - Secret scan repeated on `d131546` (2026-10-24 08:08 UTC): gitleaks 8.30.1 over 63 commits (1.94 MB), the tracked files (1.59 MB), and `dist/`: no leaks.
 - Deployment facts re-checked for the proposal (`docs/RELEASE_READINESS.md` §5): Wrangler 4.152.0 (released 2026-10-22; `esbuild` 0.28.2 and `workerd` 1.20261019.1 have `postinstall` scripts; about 180 MB to install) and the Cloudflare static-asset billing and limits pages.
 
+### Deployment preparation and dry run (2026-10-24)
+- The owner approved the deployment proposal of `docs/RELEASE_READINESS.md` §5 up to the dry run.
+- Wrangler 4.152.0 (still the latest on 2026-10-24 08:25 UTC) installed with `--ignore-scripts` in the session scratch directory (36 packages, 213 MB); nothing in the repository changed. `npm audit` there reported `undici` 7.29.1 (pinned by `miniflare` 5.20261019.2-beta) with three advisories published on 2026-10-23 (GHSA-xjj6-f33q-929c high, GHSA-4qv8-2p9j-2685 and GHSA-f72v-6w45-q472 medium), patched in 7.30.1 (released 2026-10-15); an `overrides` entry in the scratch `package.json` sets `undici` 7.30.1, after which `npm audit` reports 0 vulnerabilities. The tool is not part of the app or its bundle.
+- Install scripts (ADR-018): `esbuild` 0.28.2 and `workerd` 1.20261019.1 run `node install.js`, which checks that the platform binary from the optional package (`@esbuild/darwin-arm64`, `@cloudflare/workerd-darwin-arm64`) runs and otherwise fetches that package from `registry.npmjs.org` and rewrites the launcher. The binaries were already installed, so the scripts were not run. `fsevents` was not run either.
+- Dry run on `e07fc48` (`npm ci && npm run build`, then `wrangler deploy --config platform/cloudflare/wrangler.jsonc --dry-run` with `WRANGLER_SEND_METRICS=false`): Wrangler read `/Users/…/recipe-discovery-app/dist`, so `assets.directory` (`../../dist`) resolves relative to the config file (answers the 要確認 of Stage 5.6); it listed the 9 files plus the `/assets` directory, read `_headers` as configuration ("Ignoring asset: _headers"), found no bindings, and exited without uploading. `wrangler telemetry status` reports telemetry disabled by `WRANGLER_SEND_METRICS`; the Wrangler log confirms that nothing was dispatched.
+- This Mac already has a global Wrangler configuration (`~/Library/Preferences/.wrangler/`, from before this project) that may hold a login; it was not opened. The account is confirmed with `wrangler whoami` before deploying.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in

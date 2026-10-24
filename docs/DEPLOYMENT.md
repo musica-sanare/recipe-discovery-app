@@ -28,10 +28,10 @@ Configuration: `platform/cloudflare/wrangler.jsonc` — `name`, `compatibility_d
 
 Wrangler is not a dependency of the repository. At deployment time, check its current stable version under ADR-016 and ADR-018 and run it with an exact version.
 
-1. Log in to the owner's Cloudflare account (owner only; no token is stored in the repository).
+1. Confirm the account: `wrangler whoami` (read-only). If Wrangler is not logged in, the owner runs `wrangler login` in a browser; no token is stored in the repository.
 2. Set `compatibility_date` in `platform/cloudflare/wrangler.jsonc` to the deployment date.
 3. Build: `npm ci && npm run build`. Check that `dist/_headers` contains the `/*` and `/assets/*` rules.
-4. Dry run: `npx wrangler@<version> deploy --config platform/cloudflare/wrangler.jsonc --dry-run`. Confirm that the uploaded directory is `dist/` (要確認: how `assets.directory` resolves with `--config`; if it resolves from the working directory, change it to `./dist`).
+4. Dry run: `wrangler deploy --config platform/cloudflare/wrangler.jsonc --dry-run` with `WRANGLER_SEND_METRICS=false`. Confirm that it reads `dist/`: `assets.directory` resolves relative to the config file (*Verified* with Wrangler 4.152.0 on 2026-10-24), and `_headers` is read as configuration, not uploaded. Install Wrangler in a scratch directory outside the repository (the repository's `strict-allow-scripts` would block its dependencies), with `--ignore-scripts`: the `postinstall` scripts of `esbuild` and `workerd` only check or re-fetch the platform binaries, which the optional packages already provide. Run `npm audit` there and override vulnerable transitive packages to their patched versions if needed.
 5. Deploy: the same command without `--dry-run`, after the owner's approval.
 6. Verify on the deployed URL:
    - `/`, `/recipes/beef_potato_tomato_stew`, and `/about` return 200 with the security headers (`curl -I`).

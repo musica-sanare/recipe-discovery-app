@@ -102,7 +102,7 @@ Details are finalized in Phase 1 and documented in `docs/NUTRITION_CALCULATION.m
 - The production output is a plain static build (`dist/`). Only `platform/cloudflare/` and the generated header file are Cloudflare-specific.
 - No Cloudflare runtime APIs are used by domain, content, or UI code. Tests run in Node.
 - The MVP does not need a Worker. A future server feature (for example optional AI) must define its HTTP contract in `shared/` and keep the provider-specific implementation in a thin adapter.
-- The deployment runbook will describe how to serve the same `dist/` from another static host.
+- The deployment runbook (`docs/DEPLOYMENT.md`) describes Cloudflare (`platform/cloudflare/wrangler.jsonc`) and how to serve the same `dist/` from other static hosts. Hashed files under `/assets/` get a one-year immutable cache rule in the generated `_headers`.
 
 ## 8. Security and privacy
 

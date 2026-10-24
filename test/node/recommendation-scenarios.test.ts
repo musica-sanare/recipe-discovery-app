@@ -129,7 +129,9 @@ describe("locale invariance", () => {
       return { pool: { request: evaluated.request, contradictions, blocked, entries, exclusions }, first, next: select(evaluated, { ...emptySession, shown: ids, previous: ids }, 1) };
     });
 
-  it("gives identical recommendations with each locale's text bundle and with single-locale content", () => {
+  // Four full runs of every scenario: about 1 s alone, but over the 5 s default under the
+  // parallel suite after Stage 6.4 added solver states (Stage 6.6).
+  it("gives identical recommendations with each locale's text bundle and with single-locale content", { timeout: 20_000 }, () => {
     const reference = run(data);
     for (const locale of SUPPORTED_LOCALES) {
       const text = z.parse(textBundleSchema, buildTextBundle(input, locale));

@@ -1,82 +1,97 @@
-# Release Readiness — Recipe Discovery MVP
+# Release Readiness — Recipe Discovery
 
-Status: **Deployed (2026-10-24)** at https://recipe-discovery.musica-sanare.workers.dev from commit `66473f7` (Cloudflare Workers static assets, version `0f4696e0-d896-4626-b486-03c53d2cac1b`). The post-deployment checks passed (§6); the manual checks of §4 were done on 2026-10-24 as far as the owner's devices allowed, and the rest is accepted as a known limitation (§3). Update this document for every release; decisions behind it are in `docs/DECISIONS.md` ("Stage 5.1 release plan" to "Production deployment").
+Status: **Release 2 prepared (Phase 6), not deployed.** The deployed version is release 1: commit `66473f7` at https://recipe-discovery.musica-sanare.workers.dev (Cloudflare Workers static assets, version `0f4696e0-d896-4626-b486-03c53d2cac1b`, deployed 2026-10-24). Release 2 is the release commit of Stage 6.6 with content version `2026-10-24.8`. Update this document for every release; release 1 is recorded in `docs/DECISIONS.md` ("Stage 5.1 release plan" to "Manual checks"), release 2 in "Stage 6.6".
+
+| Release | Commit | Content version | Status |
+|---|---|---|---|
+| 1 (MVP) | `66473f7` | `2026-10-24.3` | Deployed 2026-10-24 |
+| 2 (Phase 6) | Stage 6.6 release commit | `2026-10-24.8` | Prepared; waits for CI and the owner's approval (§2, §5) |
+
+## 0. What changes in release 2
+
+| Stage | Change | Visible to users |
+|---|---|---|
+| 6.2 | Faster solver with identical results (`docs/DECISIONS.md` "Stage 6.2") | Searches about 20 % faster |
+| 6.3 | English and Spanish review of every text released without review (R1–R6) | Fire risk in two frying notes (also Japanese), allergen names with both regional Spanish names, translation fixes |
+| 6.4 | Egg whites in five egg- and soy-based recipes | Those recipes meet the maintain preset |
+| 6.5 | Error bands of raw and related cooked values per nutrient (ADR-028 revised) | Wider estimate ranges, mostly for fat; some statuses move to "near" |
+
+Unchanged: the security headers (`platform/`), the dependencies and the lockfile, and the structure of the app.
 
 ## 1. Acceptance criteria (`docs/SPEC.md` §15)
 
-Checked on commit `9bf2356` (content version `2026-10-24.3`, 60 recipes, 77 foods) on 2026-10-24: `npm run check` (lint, type-check, license check, 46 test files with 624 tests, content validation, production build), `npm run test:e2e` (98 passed, 1 skipped by design), and `npm audit` (0 vulnerabilities) pass.
+Checked on commit `2b74b07` with the Stage 6.6 changes (content version `2026-10-24.8`, 60 recipes, 78 foods) on 2026-10-24: `npm ci`, `npm run check` (lint, type-check, license check, 47 test files with 633 tests, content validation, production build), `npm run test:e2e` (98 passed, 1 skipped by design), and `npm audit` (0 vulnerabilities, also with `--omit=dev`) pass.
 
 | Criterion | Result | Evidence |
 |---|---|---|
 | The complete flow (targets → conditions → candidates → comparison → detail → adjustment → re-suggestion) works on mobile and desktop without AI | Met | `e2e/flow.spec.ts` on `desktop-chromium`, `mobile-chromium`, and `mobile-webkit` in `ja`, `en`, `es`; no AI code or service exists (ADR-004) |
-| The same input and data always produce the same candidates, order, and nutrition values | Met | `test/node/engine.test.ts` "determinism"; scenario snapshot `test/node/recommendation-scenarios.test.ts`; `domain/recommendation/*.test.ts` |
-| Internal nutrition values are identical in `ja`, `en`, and `es` | Met | `test/node/engine.test.ts` "locale invariance" (no locale in the engine signature, identical bundle for every locale); `test/ui/candidates.test.tsx` and `e2e/flow.spec.ts` "locale switching" (same digits after switching) |
+| The same input and data always produce the same candidates, order, and nutrition values | Met | `test/node/engine.test.ts` "determinism"; scenario snapshot `test/node/recommendation-scenarios.test.ts`; solver results at full precision `test/node/solver-results.test.ts`; `domain/recommendation/*.test.ts` |
+| Internal nutrition values are identical in `ja`, `en`, and `es` | Met | `test/node/engine.test.ts` "locale invariance"; `test/node/recommendation-scenarios.test.ts` "locale invariance"; `test/ui/candidates.test.tsx` and `e2e/flow.spec.ts` "locale switching" |
 | All UI strings and published content exist in the three locales (build time) | Met | Type check of the catalogs, `src/i18n/messages.test.ts`, `src/i18n/engineCodes.test.ts`; content validation (locale completeness) in `npm run build` |
 | Every nutrition value is traceable to food codes, data version, cooking state, and assumptions | Met | Basis in the detail view (`test/ui/detail.test.tsx`), `test/node/engine.test.ts` "states the assumptions of every recipe in the basis"; engine snapshot |
-| Unmeasured values are never zero; approximations and hard-to-estimate items are always shown | Met | `domain/nutrition/engine.test.ts` ("make the nutrient unknown, never zero"), `domain/nutrition/rounding.test.ts`; approximation reasons in the detail view and the composition report |
-| An active allergen filter excludes recipes with matching or unknown ingredients; the disclaimer is always visible | Met | `domain/recommendation/filters.test.ts` "allergens (best effort, never rescued)"; disclaimer on the targets, candidates, comparison, detail, and about views (`disclaimer.allergens`); allergen lists match the CAA lists of April 2026 (§2) |
-| No content contains health or efficacy claims | Met | Content validation (`forbidden-expression`), `src/i18n/policy.test.ts`; Stage 5.5 content policy re-check |
+| Unmeasured values are never zero; approximations and hard-to-estimate items are always shown | Met | `domain/nutrition/engine.test.ts` ("make the nutrient unknown, never zero", the pinned band table); approximation reasons in the detail view and the composition report |
+| An active allergen filter excludes recipes with matching or unknown ingredients; the disclaimer is always visible | Met | `domain/recommendation/filters.test.ts` "allergens (best effort, never rescued)"; disclaimer on the targets, candidates, comparison, detail, and about views; allergen lists match the CAA lists of April 2026 (release 1, open question 11) |
+| No content contains health or efficacy claims | Met | Content validation (`forbidden-expression`), `src/i18n/policy.test.ts`; Stage 6.3 review |
 | Attribution to the source tables is shown | Met | Footer, detail view, and about page (`test/ui/about.test.tsx`, `e2e/flow.spec.ts`) |
-| Lint, type-check, unit tests, content validation, E2E, accessibility in three locales, and the production build pass | Met locally | Commands above; axe-core in jsdom (`test/ui/`) and in real browsers with color contrast in light and dark (`e2e/accessibility.spec.ts`). CI has not run yet (§2) |
+| Lint, type-check, unit tests, content validation, E2E, accessibility in three locales, and the production build pass | Met locally | Commands above; axe-core in jsdom and in real browsers with color contrast in light and dark. CI: §2 |
 
 ## 2. Release blockers
 
-These must be resolved before a deployment proposal can be approved (owner decision R2, 2026-10-24).
-
 | Item | Status | What is needed |
 |---|---|---|
-| Allergen item lists (open question 11) | **Closed** | *Verified* on 2026-10-24 against the Consumer Affairs Agency page (https://www.caa.go.jp/policies/policy/food_labeling/food_sanitation/allergy/) and its PDFs "アレルギー表示とは" (令和8年4月時点) and the notice of 2026-04-01: 9 mandatory items (えび, カシューナッツ, かに, くるみ, 小麦, そば, 卵, 乳, 落花生; cashew with a two-year transition) and 20 recommended items (アーモンド, あわび, いか, いくら, オレンジ, キウイフルーツ, 牛肉, ごま, さけ, さば, 大豆, 鶏肉, バナナ, ピスタチオ, 豚肉, マカダミアナッツ, もも, やまいも, りんご, ゼラチン) match `shared/content.ts` exactly |
-| English and Spanish review (open question 13) | **Closed** (owner decision; reviewed in Phase 6) | The owner accepted the remaining texts as they were for the first release (2026-10-24; `docs/DECISIONS.md` "Release blocker decisions"). Phase 6 Stage 6.3 reviewed them all (the 20 validation recipes, the 50 Phase 0 foods, and the 406 UI catalog keys outside `about.*`) in rounds R1–R6; the fixes are in content version `2026-10-24.7` and are not deployed yet (`docs/DECISIONS.md` "Stage 6.3 summary") |
-| `i18next` / `react-i18next` pins (open question 16) | **Deferred** (owner decision) | Not a release condition: the pins follow the release-burst exception of ADR-016, and the suite and `npm audit` pass with them. Re-check after 2026-10-25 18:00 UTC as maintenance; an update is its own commit and redeployment |
-| First CI run | **Passed** | The first two runs failed on effect-timing races (`docs/DECISIONS.md` "CI first run"); both jobs (`check`, `e2e`) passed on `d131546` (owner's report, 2026-10-24) |
-| Secret scan of the release history | **Passed** on `d131546` | gitleaks 8.30.1: `gitleaks git --log-opts=--all --redact` (63 commits, 1.94 MB), `gitleaks dir` on the tracked files (1.59 MB) and on `dist/`: no leaks (2026-10-24 08:08 UTC). Repeat on the release commit if commits other than documentation follow |
+| CI on the release commit | **Open** | The owner pushes `dev` and reports both jobs (`check`, `e2e`) |
+| Secret scan of the release history | **Passed** on `2b74b07` | gitleaks 8.30.1 (archive SHA-256 `b40ab0ae…`, matching the release checksum file and Stage 5.5): `gitleaks git --log-opts=--all --redact` (79 commits, 2.20 MB), `gitleaks dir` on the tracked files (1.77 MB), on `dist/` (0.87 MB), and on the uncommitted Stage 6.6 changes: no leaks (2026-10-24 12:38 UTC). No commit touches `data/raw`, `*.xlsx`, `*.pdf`, or `.env*`. Repeat if commits other than documentation follow |
+| `i18next` / `react-i18next` pins (open question 16) | **Deferred** (owner decision, again for release 2) | Not a release condition (ADR-016 release-burst exception). Re-check not before 2026-10-26 05:53 UTC; an update is its own commit and redeployment |
+| Unit test timeout under load | **Fixed** | The locale invariance test of `test/node/recommendation-scenarios.test.ts` (four full runs of every scenario, about 1 s alone) exceeded the 5 s default once in three full runs after `npm ci`; it now has a 20 s timeout. Three further full runs passed |
 
 ## 3. Known limitations (released as documented)
 
 | Item | Reference | Mitigation in the app |
 |---|---|---|
-| Error bands for fried, slow-frying, and parts removed after cooking are assumptions; the bands of raw and related cooked values were set per nutrient from the evidence in Stage 6.5 (not deployed yet) | Open question 3, `docs/NUTRITION_CALCULATION.md` §7, ADR-028 (revised) | Values are labelled estimates; ranges and reasons are shown |
+| Error bands for fried, slow-frying, and parts removed after cooking are assumptions; the bands of raw and related cooked values are set per nutrient from the evidence (Stage 6.5) | Open question 3, `docs/NUTRITION_CALCULATION.md` §7, ADR-028 (revised) | Values are labelled estimates; ranges and reasons are shown |
 | Cooking tables were transcribed by hand from the PDF; group-level rates are not used | Open question 2, `docs/DATA_SOURCES.md` | Automated cross-checks (`npm run data:verify-cooking`, `test/node/cooking-data.test.ts`) |
 | English food names have no official reference (2015 English edition not checked) | Open question 6 | Names are the app's own translations |
 | Applicability of the Health Promotion Act, the Pharmaceutical and Medical Device Act, and allergen labelling rules; copyright of recipes | Open questions 7, 8 | The stricter policy is applied (`docs/CONTENT_POLICY.md`); recipes are original |
 | No native Spanish reviewer | Open question 9 | The owner reviews with Claude's findings and back-translations (all texts reviewed in Stage 6.3); peninsular food vocabulary with Latin American aliases, words with a different Latin American meaning avoided, allergen names with both regional names (`docs/CONTENT_POLICY.md` §6) |
 | Allergens of processed seasonings (cooking sake, wholegrain mustard, stock granules, karaage mix, curry powder, miso) follow typical ingredients, not product labels | Open question 12 | Unknown or varying items are treated as "may contain"; the disclaimer asks users to check labels |
-| `tortilla_espanola` meets no preset (slow-fried in olive oil); five other egg- and soy-based recipes were reworked with egg whites in Stage 6.4 and meet the maintain preset (not deployed yet) | `docs/DECISIONS.md` "Stage 5.2 batch 1", "Stage 6.4" | Goal labels follow the best-fitting preset; users can set their own targets |
-| A full recommendation takes about 66 ms at a 4× CPU slowdown and about 100 ms at 6× (Stage 6.2; the deployed version `66473f7` takes about 80 and 120 ms); no real phone measured | ADR-030 D10 (revised) | Main thread within the 100 ms threshold at 4×; about 92–110 ms estimated for 100 recipes; measure again when the library grows |
+| `tortilla_espanola` meets no preset (slow-fried in olive oil); cooked egg white has no table value, so five recipes use its raw value as an approximation | `docs/DECISIONS.md` "Stage 6.4" | Goal labels follow the best-fitting preset; the approximation and its band are shown |
+| A full recommendation takes about 73 ms at a 4× CPU slowdown and about 112–123 ms at 6× (release 2; release 1: about 80 and 120 ms); no real phone measured | ADR-030 D10 (revised), §1 | Main thread within the 100 ms threshold at 4×; measure again when the library grows |
 | WebKit reports a `style-src-attr` CSP violation for every `<select>` | "Stage 5.4" | Browser behavior on a page without inline styles; the CSP is unchanged |
-| Not checked by hand: Android with Chrome, screen readers (VoiceOver, NVDA, Narrator), and Windows forced colors (§4) | `docs/DECISIONS.md` "Manual checks" | Automated: `mobile-chromium` E2E, axe-core in jsdom and in real browsers in three locales, status markers with distinct shapes and texts (ADR-030 D3); check again when a device is available or after a larger UI change |
+| Not checked by hand: Android with Chrome, screen readers (VoiceOver, NVDA, Narrator), and Windows forced colors (§4) | `docs/DECISIONS.md` "Manual checks" | Automated: `mobile-chromium` E2E, axe-core in jsdom and in real browsers in three locales, status markers with distinct shapes and texts (ADR-030 D3) |
 | License of the repository not chosen | README | Repository stays private |
+
+Phone-class timing of release 2 (`npm run test:e2e:timing`, Chrome Headless Shell 156.0.8078.4, 2026-10-24 12:37 UTC; median / p90, ms): search cut 19.2 / 20.6 (1×), 72.8 / 85.0 (4×), 123.3 / 147.6 (6×); search bulk 18.0 / 22.6, 73.6 / 80.3, 112.5 / 122.8; maintain with tofu required 9.1 / 10.6, 38.0 / 44.2, 55.4 / 60.0; bulk at ≤ 15 min 10.5 / 11.3, 45.0 / 50.0, 67.0 / 77.6; re-suggestion 5.1 / 6.1, 20.3 / 23.2, 37.9 / 45.9; recalculation 3.0 / 3.2, 11.9 / 15.4, 24.1 / 29.1. Searches are slower than right after Stage 6.2 (66 ms at 4×) because Stage 6.4 added solver states (19,338 → 20,921).
 
 ## 4. Manual checks
 
-Before or right after the first deployment. Results from the owner on the deployed site, 2026-10-24 (`docs/DECISIONS.md` "Manual checks"):
+Release 1 (owner, 2026-10-24, `docs/DECISIONS.md` "Manual checks"): iPhone with Safari and the about page and disclaimers in three languages without findings; Android, screen readers, and forced colors not checked (§3).
 
-1. Real devices: iPhone with Safari and an Android phone with Chrome — the full flow, the language switch, keyboard on the targets form, and timing of a search (compare with ADR-030 D10). **iPhone with Safari: no problem found. Android: not checked.**
-2. Screen readers: VoiceOver (iOS or macOS) on the targets form, error summary, candidates live region, comparison table, and detail view; NVDA or Narrator if a Windows machine is available. **Not checked** (owner decision; known limitation, §3).
-3. Windows high-contrast (forced colors) mode: status markers and focus rings remain visible. **Not checked**: no Windows machine (known limitation, §3).
-4. ~~Post-deployment checks of `docs/DEPLOYMENT.md` §3 step 6~~: passed on 2026-10-24 (`docs/DECISIONS.md` "Production deployment").
-5. A final read of the about page and disclaimers in the three locales on the deployed site. **No problem found.**
+Release 2 (optional, after deployment): on an iPhone, the reworked egg recipes (for example `egg_tomato_stir_fry`), a detail page with a wider fat range (for example `swordfish_lemon_herb`), and the Spanish allergen names on the targets view.
 
 ## 5. Deployment proposal (for the owner's approval; not deployed)
 
 | Item | Proposal |
 |---|---|
-| What | The release commit: `dev` with this report (documentation only after `d131546`), built with `npm ci && npm run build`; content version `2026-10-24.3` |
-| Where | Cloudflare Workers static assets on the owner's account, project `recipe-discovery`, served first at the free `*.workers.dev` subdomain (owner decision R3); a custom domain can be added later |
-| How | `docs/DEPLOYMENT.md` §3: the owner logs in with Wrangler in a browser (no token in the repository); set `compatibility_date`; dry run, then deploy, with an exact Wrangler version; post-deployment checks. Wrangler: latest 4.152.0 (released 2026-10-22 14:43 UTC after 4.151.2 and 4.151.3 on 10-19 and 10-20; Node `>=22`). It is installed only for the deployment, in a scratch directory outside the repository (about 180 MB, mostly `@cloudflare/workerd-darwin-arm64`). Its dependencies `esbuild` and `workerd` have `postinstall` scripts (`node install.js`), which are reviewed before they are allowed (ADR-018); the version choice under ADR-016 is confirmed on the day |
-| Rollback | Redeploy the previous release commit with the same steps; Cloudflare's own version rollback is checked at deployment time (`docs/DEPLOYMENT.md` §3) |
-| Cost | *Verified* on 2026-10-24: "Requests to static assets are free and unlimited" and no cost for storing assets (https://developers.cloudflare.com/workers/static-assets/billing-and-limitations/, updated 2026-04-23); Free plan limits of 20,000 files per version and 25 MiB per file (https://developers.cloudflare.com/workers/platform/limits/, updated 2026-10-12) are far above `dist/` (9 files, 864 KB). No Worker script, no paid plan |
-| Data and privacy | No user data leaves the browser; no analytics; only the locale preference is stored (ADR-015, ADR-030 D9) |
-| Owner actions | Approve this proposal (commit, project name, `*.workers.dev` URL, Wrangler version and its install scripts); log in to Cloudflare when Wrangler asks; confirm the deployed URL |
-| Claude actions after approval | Run the dry run and the deployment commands only as approved, then the post-deployment checks, and record the results here |
+| What | The Stage 6.6 release commit (documentation, one test timeout, and a configuration comment after `2b74b07`), built with `npm ci && npm run build`; content version `2026-10-24.8` |
+| Where | The existing Cloudflare Workers project `recipe-discovery` on the owner's account (https://recipe-discovery.musica-sanare.workers.dev); nothing new is created |
+| How | `docs/DEPLOYMENT.md` §3: Wrangler 4.152.0 (still the latest on 2026-10-24 12:20 UTC) installed with `--ignore-scripts` in a scratch directory outside the repository; `npm audit` there with an `undici` override if still needed (release 1); `wrangler whoami` confirmed by the owner; `compatibility_date` set to the deployment date; dry run, then deploy with `WRANGLER_SEND_METRICS=false`; post-deployment checks, including the release 2 changes (§0) |
+| Rollback | Redeploy release 1 (`66473f7`) with the same steps; whether `wrangler rollback` applies to an assets-only Worker is checked in the current documentation on the deployment day (要確認 since release 1) |
+| Cost | Static assets are free and unlimited (*Verified* 2026-10-24 for release 1; re-checked on the deployment day); `dist/` has 9 files and 876 KB |
+| Data and privacy | Unchanged: no user data leaves the browser; no analytics; only the locale preference is stored (ADR-015, ADR-030 D9) |
+| Owner actions | Report CI; approve this proposal and the Wrangler download; confirm the account shown by `wrangler whoami`; approve the deployment |
+| Claude actions after approval | Run the dry run and the deployment only as approved, then the post-deployment checks, and record the results here and in `docs/DECISIONS.md` |
 
 ## 6. Sign-off
 
-| Step | Date | By |
-|---|---|---|
-| Acceptance criteria checked | 2026-10-24 | Claude (commands above) |
-| Release blockers resolved | 2026-10-24 | Owner (open questions 13 and 16 by decision; CI passed) and Claude (open question 11, secret scan) |
-| Deployment proposal approved (up to the dry run) | 2026-10-24 | Owner; dry run passed (`docs/DECISIONS.md` "Deployment preparation and dry run") |
-| Production deployment approved | 2026-10-24 | Owner (account [account name] confirmed with `wrangler whoami`) |
-| Deployed and checked | 2026-10-24 | Claude: `66473f7`, version `0f4696e0…`, checks in `docs/DECISIONS.md` "Production deployment" |
-| Manual checks (§4) | 2026-10-24 | Owner: items 1 (iPhone only) and 5 without findings; Android, screen readers, and forced colors accepted as not checked |
+| Step | Release | Date | By |
+|---|---|---|---|
+| Acceptance criteria checked | 1 | 2026-10-24 | Claude |
+| Release blockers resolved | 1 | 2026-10-24 | Owner (open questions 13 and 16 by decision; CI passed) and Claude (open question 11, secret scan) |
+| Deployment proposal approved (up to the dry run) | 1 | 2026-10-24 | Owner; dry run passed |
+| Production deployment approved | 1 | 2026-10-24 | Owner (account [account name] confirmed with `wrangler whoami`) |
+| Deployed and checked | 1 | 2026-10-24 | Claude: `66473f7`, version `0f4696e0…` (`docs/DECISIONS.md` "Production deployment") |
+| Manual checks (§4) | 1 | 2026-10-24 | Owner: iPhone and the about page without findings; Android, screen readers, and forced colors accepted as not checked |
+| Acceptance criteria checked | 2 | 2026-10-24 | Claude (§1) |
+| Release blockers resolved | 2 | — | CI pending; secret scan passed; open question 16 deferred by the owner |
+| Deployment proposal approved | 2 | — | — |
+| Deployed and checked | 2 | — | — |

@@ -1,8 +1,8 @@
 // Cloudflare Workers static assets, without a Worker script (ADR-001, docs/DEPLOYMENT.md).
-// Not used until the owner approves a deployment. `compatibility_date` is set to the
-// deployment date at that time; the path of `assets.directory` is checked with
-// `wrangler deploy --dry-run` because the documentation does not state how it resolves
-// when this file is passed with `--config` (docs/DECISIONS.md "Stage 5.6").
+// Used only for deployments the owner approves. `compatibility_date` is set to the
+// deployment date; `assets.directory` resolves relative to this file when it is passed
+// with `--config` (verified with `wrangler deploy --dry-run`, docs/DECISIONS.md
+// "Deployment preparation and dry run").
 {
   "name": "recipe-discovery",
   "compatibility_date": "2026-10-24",

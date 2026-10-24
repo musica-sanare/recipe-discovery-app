@@ -67,7 +67,7 @@ function summary(selection: Selection) {
   };
 }
 
-describe("scenarios on the validation recipes", () => {
+describe("scenarios on the repository recipes", () => {
   it("keeps the reviewed first sets and the next set of each scenario", () => {
     const results = Object.fromEntries(
       Object.entries(scenarios).map(([name, request]) => {

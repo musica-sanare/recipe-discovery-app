@@ -9,10 +9,11 @@ import { applyHardFilters } from "../../domain/recommendation/filters.ts";
 import type { Conditions, Preset, Session } from "../../domain/recommendation/types.ts";
 import { presetTargets, validatePoolRequest } from "../../domain/recommendation/validate.ts";
 import { METHOD_FAMILIES, methodFamily } from "../../shared/recipe.ts";
-import { repositoryEngine } from "../../tools/content/repository.ts";
+import { repositoryEngine, validationBundleInput } from "../../tools/content/repository.ts";
 
-// Recommendation input from the in-memory calculation bundle, as in the browser.
-const { calc } = repositoryEngine();
+// Recommendation input from the in-memory calculation bundle, as in the browser, on the
+// 20 validation recipes whose counts and statuses were reviewed in Phases 0 and 3.
+const { calc } = repositoryEngine(validationBundleInput());
 const data = recommendationDataFromBundle(calc);
 const none: Conditions = { excludedFoods: [], excludedAllergens: [], requiredFoods: [], cuisines: [] };
 const filter = (conditions: Partial<Conditions>, excluded: readonly string[] = []) =>

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { compositionCoverage, formatCompositionReport } from "../../tools/content/composition-report.ts";
-import { repositoryEngine } from "../../tools/content/repository.ts";
+import { repositoryEngine, validationBundleInput } from "../../tools/content/repository.ts";
 
 const { calc, data } = repositoryEngine();
 const recipe = (id: string) => {
@@ -37,6 +37,10 @@ describe("composition coverage report", () => {
   it("covers every recipe deterministically", () => {
     const first = formatCompositionReport(calc.recipes.map((entry) => compositionCoverage(entry, data)));
     expect(formatCompositionReport(calc.recipes.map((entry) => compositionCoverage(entry, data)))).toBe(first);
-    expect(first).toContain(`Total (${String(calc.recipes.length)} recipes): exact 141, approximation 16, hard to estimate 2, not counted 17, fried 5`);
+    // Reviewed totals of Stage 1.3 refer to the validation recipes.
+    const validation = repositoryEngine(validationBundleInput());
+    expect(formatCompositionReport(validation.calc.recipes.map((entry) => compositionCoverage(entry, validation.data)))).toContain(
+      "Total (20 recipes): exact 141, approximation 16, hard to estimate 2, not counted 17, fried 5",
+    );
   });
 });

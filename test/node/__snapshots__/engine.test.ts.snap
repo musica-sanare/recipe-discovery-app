@@ -2,6 +2,114 @@
 
 exports[`engine snapshot > records point values, ranges, classes, reasons, and incompleteness of every recipe 1`] = `
 {
+  "atsuage_ginger_saute": {
+    "class": "approximation",
+    "incomplete": {},
+    "perServing": {
+      "CHOCDF-": 83.15,
+      "ENERC_KCAL": 668.54,
+      "FAT-": 25.68,
+      "NACL_EQ": 1.96,
+      "PROT-": 28.11,
+    },
+    "ranges": {
+      "CHOCDF-": "82.88–83.24",
+      "ENERC_KCAL": "625.64–682.84 shown",
+      "FAT-": "22.29–26.81 shown",
+      "NACL_EQ": "1.96–1.96",
+      "PROT-": "24.9–29.18 shown",
+    },
+    "reasons": {
+      "atsuage": "raw_value_for_cooking",
+    },
+  },
+  "beef_lemon_saute_salad": {
+    "class": "approximation",
+    "incomplete": {},
+    "perServing": {
+      "CHOCDF-": 51.52,
+      "ENERC_KCAL": 482.32,
+      "FAT-": 20.42,
+      "NACL_EQ": 1.12,
+      "PROT-": 39.19,
+    },
+    "ranges": {
+      "CHOCDF-": "49.29–53.75 shown",
+      "ENERC_KCAL": "460.9–503.75 shown",
+      "FAT-": "19.56–21.28",
+      "NACL_EQ": "1.11–1.12",
+      "PROT-": "37.28–41.1 shown",
+    },
+    "reasons": {
+      "beef": "related_cooked_value",
+      "potato": "post_cooking_refuse",
+    },
+  },
+  "beef_meatballs_tomato": {
+    "class": "approximation",
+    "incomplete": {},
+    "perServing": {
+      "CHOCDF-": 79.74,
+      "ENERC_KCAL": 693.55,
+      "FAT-": 27.38,
+      "NACL_EQ": 2.73,
+      "PROT-": 42.19,
+    },
+    "ranges": {
+      "CHOCDF-": "78.74–80.08",
+      "ENERC_KCAL": "668.71–709.11 shown",
+      "FAT-": "25.8–28.45 shown",
+      "NACL_EQ": "2.72–2.74",
+      "PROT-": "40.04–43.58 shown",
+    },
+    "reasons": {
+      "beef": "related_cooked_value",
+      "onion": "raw_value_for_cooking",
+      "tofu": "raw_value_for_cooking",
+    },
+  },
+  "beef_mince_bibimbap": {
+    "class": "approximation",
+    "incomplete": {},
+    "perServing": {
+      "CHOCDF-": 117.4,
+      "ENERC_KCAL": 752.9,
+      "FAT-": 21.81,
+      "NACL_EQ": 3.26,
+      "PROT-": 30.92,
+    },
+    "ranges": {
+      "CHOCDF-": "117.39–117.42",
+      "ENERC_KCAL": "741.98–763.82 shown",
+      "FAT-": "20.98–22.64",
+      "NACL_EQ": "3.25–3.27",
+      "PROT-": "29.91–31.93 shown",
+    },
+    "reasons": {
+      "beef": "related_cooked_value",
+    },
+  },
+  "beef_pepper_stir_fry": {
+    "class": "approximation",
+    "incomplete": {},
+    "perServing": {
+      "CHOCDF-": 86.64,
+      "ENERC_KCAL": 625.93,
+      "FAT-": 17.38,
+      "NACL_EQ": 2.11,
+      "PROT-": 36.77,
+    },
+    "ranges": {
+      "CHOCDF-": "86.55–86.67",
+      "ENERC_KCAL": "596–635.9 shown",
+      "FAT-": "15.88–17.89 shown",
+      "NACL_EQ": "2.09–2.12",
+      "PROT-": "32.27–38.27 shown",
+    },
+    "reasons": {
+      "beef": "raw_value_for_cooking",
+    },
+  },
   "beef_shimeji_bowl": {
     "class": "approximation",
     "incomplete": {},
@@ -190,6 +298,109 @@ exports[`engine snapshot > records point values, ranges, classes, reasons, and i
       "potato": "post_cooking_refuse",
     },
   },
+  "edamame_tofu_fried_rice": {
+    "class": "approximation",
+    "incomplete": {},
+    "perServing": {
+      "CHOCDF-": 103.66,
+      "ENERC_KCAL": 746.29,
+      "FAT-": 26.17,
+      "NACL_EQ": 1.85,
+      "PROT-": 34.39,
+    },
+    "ranges": {
+      "CHOCDF-": "103.21–103.81",
+      "ENERC_KCAL": "724.39–753.59 shown",
+      "FAT-": "24.7–26.66",
+      "NACL_EQ": "1.85–1.85",
+      "PROT-": "32.29–35.09 shown",
+    },
+    "reasons": {
+      "tofu": "raw_value_for_cooking",
+    },
+  },
+  "egg_drop_chinese_noodles": {
+    "class": "approximation",
+    "incomplete": {},
+    "perServing": {
+      "CHOCDF-": 74.05,
+      "ENERC_KCAL": 579.73,
+      "FAT-": 19.95,
+      "NACL_EQ": 3.84,
+      "PROT-": 32.75,
+    },
+    "ranges": {
+      "CHOCDF-": "74.01–74.1",
+      "ENERC_KCAL": "559.69–599.77 shown",
+      "FAT-": "18.39–21.5 shown",
+      "NACL_EQ": "3.8–3.89",
+      "PROT-": "30.88–34.62 shown",
+    },
+    "reasons": {
+      "egg": "related_cooked_value, post_cooking_refuse",
+    },
+  },
+  "egg_tomato_stir_fry": {
+    "class": "approximation",
+    "incomplete": {},
+    "perServing": {
+      "CHOCDF-": 84.98,
+      "ENERC_KCAL": 652.51,
+      "FAT-": 27.56,
+      "NACL_EQ": 1.56,
+      "PROT-": 25.1,
+    },
+    "ranges": {
+      "CHOCDF-": "83.92–85.33",
+      "ENERC_KCAL": "648.01–654.01",
+      "FAT-": "27.54–27.57",
+      "NACL_EQ": "1.56–1.56",
+      "PROT-": "24.94–25.15",
+    },
+    "reasons": {
+      "tomato": "raw_value_for_cooking",
+    },
+  },
+  "eggs_tomato_pepper_bake": {
+    "class": "approximation",
+    "incomplete": {},
+    "perServing": {
+      "CHOCDF-": 43.41,
+      "ENERC_KCAL": 459.48,
+      "FAT-": 24.02,
+      "NACL_EQ": 2.14,
+      "PROT-": 25.55,
+    },
+    "ranges": {
+      "CHOCDF-": "43.4–43.42",
+      "ENERC_KCAL": "449.15–469.81 shown",
+      "FAT-": "23.19–24.85",
+      "NACL_EQ": "2.12–2.16",
+      "PROT-": "24.67–26.42",
+    },
+    "reasons": {
+      "egg": "related_cooked_value",
+    },
+  },
+  "natto_tofu_rice_bowl": {
+    "class": "exact",
+    "incomplete": {},
+    "perServing": {
+      "CHOCDF-": 88.62,
+      "ENERC_KCAL": 596.08,
+      "FAT-": 16.98,
+      "NACL_EQ": 1.16,
+      "PROT-": 31.16,
+    },
+    "ranges": {
+      "CHOCDF-": "88.62–88.62",
+      "ENERC_KCAL": "596.08–596.08",
+      "FAT-": "16.98–16.98",
+      "NACL_EQ": "1.16–1.16",
+      "PROT-": "31.16–31.16",
+    },
+    "reasons": {},
+  },
   "poached_egg_spinach_toast": {
     "class": "exact",
     "incomplete": {},
@@ -353,6 +564,49 @@ exports[`engine snapshot > records point values, ranges, classes, reasons, and i
     },
     "reasons": {},
   },
+  "soft_egg_oatmeal_bowl": {
+    "class": "approximation",
+    "incomplete": {},
+    "perServing": {
+      "CHOCDF-": 30.27,
+      "ENERC_KCAL": 361.63,
+      "FAT-": 19.17,
+      "NACL_EQ": 1.3,
+      "PROT-": 24.66,
+    },
+    "ranges": {
+      "CHOCDF-": "30.03–30.37",
+      "ENERC_KCAL": "349.95–372.42 shown",
+      "FAT-": "18.3–20.01",
+      "NACL_EQ": "1.28–1.32",
+      "PROT-": "23.62–25.6",
+    },
+    "reasons": {
+      "egg": "related_cooked_value",
+      "spinach": "raw_value_for_cooking",
+    },
+  },
+  "soy_milk_udon_tofu": {
+    "class": "approximation",
+    "incomplete": {},
+    "perServing": {
+      "CHOCDF-": 71.22,
+      "ENERC_KCAL": 558.98,
+      "FAT-": 19.43,
+      "NACL_EQ": 3.36,
+      "PROT-": 33.9,
+    },
+    "ranges": {
+      "CHOCDF-": "70.77–71.37",
+      "ENERC_KCAL": "537.08–566.28 shown",
+      "FAT-": "17.96–19.92",
+      "NACL_EQ": "3.36–3.36",
+      "PROT-": "31.8–34.6 shown",
+    },
+    "reasons": {
+      "tofu": "raw_value_for_cooking",
+    },
+  },
   "tofu_egg_champuru": {
     "class": "approximation",
     "incomplete": {},
@@ -369,6 +623,27 @@ exports[`engine snapshot > records point values, ranges, classes, reasons, and i
       "FAT-": "34.49–36.45",
       "NACL_EQ": "2.49–2.49",
       "PROT-": "30.45–33.25 shown",
+    },
+    "reasons": {
+      "tofu": "raw_value_for_cooking",
+    },
+  },
+  "tofu_steak_mushroom_sauce": {
+    "class": "approximation",
+    "incomplete": {},
+    "perServing": {
+      "CHOCDF-": 82.38,
+      "ENERC_KCAL": 604.3,
+      "FAT-": 18.81,
+      "NACL_EQ": 1.74,
+      "PROT-": 31.77,
+    },
+    "ranges": {
+      "CHOCDF-": "81.71–82.61",
+      "ENERC_KCAL": "571.45–615.25 shown",
+      "FAT-": "16.6–19.54 shown",
+      "NACL_EQ": "1.74–1.74",
+      "PROT-": "28.62–32.82 shown",
     },
     "reasons": {
       "tofu": "raw_value_for_cooking",

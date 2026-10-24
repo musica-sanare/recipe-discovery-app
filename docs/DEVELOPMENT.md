@@ -60,7 +60,7 @@ docs/, prompts/         Documentation and phase prompts
 
 ## Adding content
 1. Add foods to `content/foods.ts` with codes from `node tools/extract-composition.ts --search <regex>`; add the codes (and cooked/raw pairs with transcribed rates) to `data/composition/` as described in `docs/DATA_SOURCES.md`.
-2. Add a recipe file under `content/recipes/` and register it in `content/recipes/index.ts`. The schema is `shared/content.ts` (ADR-026): give steps and safety notes keys, list what is served with the dish under `sides`, link seasonings to the ingredient they scale with (`linkedTo`), and give every recipe at least one adjustable ingredient or solver-removable side.
+2. Add a recipe file under `content/recipes/` and register it in `recipes` in `content/recipes/index.ts` (not in `validationRecipes`, the fixed set that tests of reviewed counts use). The schema is `shared/content.ts` (ADR-026): give steps and safety notes keys, list what is served with the dish under `sides`, link seasonings to the ingredient they scale with (`linkedTo`), and give every recipe at least one adjustable ingredient or solver-removable side.
 3. Write `ja`, `en`, and `es` texts; follow `content/glossary.ts` and `docs/CONTENT_POLICY.md`. Serving steps do not name sides; the UI lists the sides that are on.
 4. Update `CONTENT_VERSION` in `content/version.ts`.
 5. `npm run validate:content` (also part of `npm run build`) checks schemas, locales, IDs, references, cooking states, adjustment bounds, links, sides, substitutions, allergens, safety notes, protein groups, tags, glossary use, forbidden expressions, and the version. When adding a rule, add a failing fixture to `tools/content/validate.test.ts`.

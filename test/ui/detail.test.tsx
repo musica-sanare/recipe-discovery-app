@@ -9,11 +9,11 @@ import { App } from "../../src/App.tsx";
 import { formatDifference, formatNutrient } from "../../src/format/format.ts";
 import { createI18n } from "../../src/i18n/createI18n.ts";
 import { axeViolations } from "../../src/testing/axe.ts";
-import { repositoryEngine } from "../../tools/content/repository.ts";
+import { repositoryEngine, validationBundleInput } from "../../tools/content/repository.ts";
 import { repositoryFetch, repositoryUrls } from "./repositoryContent.ts";
 
 // Recipe detail and adjustment on the repository recipes (Stage 4.5).
-const { calc, data } = repositoryEngine();
+const { calc, data } = repositoryEngine(validationBundleInput());
 
 beforeEach(() => {
   vi.stubGlobal("fetch", vi.fn(repositoryFetch));

@@ -7,7 +7,7 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import * as z from "zod/mini";
 import { foods } from "../../content/foods.ts";
-import { recipes } from "../../content/recipes/index.ts";
+import { recipes, validationRecipes } from "../../content/recipes/index.ts";
 import { CONTENT_VERSION } from "../../content/version.ts";
 import { engineDataFromBundle, type EngineData } from "../../domain/nutrition/data.ts";
 import { calcBundleSchema, type CalcBundle } from "../../shared/bundle.ts";
@@ -26,6 +26,11 @@ export function repositoryBundleInput(): BundleInput {
     cooking: z.parse(cookingDataSchema, readJson("cooking.json")),
     contentVersion: CONTENT_VERSION,
   };
+}
+
+/** The same input restricted to the 20 validation recipes, for tests of reviewed counts. */
+export function validationBundleInput(): BundleInput {
+  return { ...repositoryBundleInput(), recipes: validationRecipes };
 }
 
 export interface RepositoryEngine {

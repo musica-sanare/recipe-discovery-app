@@ -1,7 +1,7 @@
 import { describe, expect, expectTypeOf, it } from "vitest";
 import * as z from "zod/mini";
 import { foods } from "../../content/foods.ts";
-import { recipes } from "../../content/recipes/index.ts";
+import { recipes, validationRecipes } from "../../content/recipes/index.ts";
 import { defaultState, type AmountRecipe, type RecipeState } from "../../domain/nutrition/amounts.ts";
 import { nutritionBasis } from "../../domain/nutrition/basis.ts";
 import { engineDataFromBundle, type EngineData } from "../../domain/nutrition/data.ts";
@@ -71,10 +71,14 @@ describe("classification and counting", () => {
   });
 });
 
+// Reviewed counts (Stage 1.3, Phase 2) refer to the validation recipes.
+const validationIds = new Set(validationRecipes.map((recipe) => recipe.id));
+
 describe("engine on the repository content", () => {
   it("splits the approximation reasons of Stage 1.3 (ADR-028)", () => {
     const counts: Record<string, number> = {};
-    for (const result of results.values()) {
+    for (const [id, result] of results) {
+      if (!validationIds.has(id)) continue;
       for (const ingredient of result.ingredients) {
         if (!ingredient.counted) continue;
         for (const reason of ingredient.reasons) counts[reason] = (counts[reason] ?? 0) + 1;
@@ -96,6 +100,7 @@ describe("engine on the repository content", () => {
       expect(basis.versions.composition.workbookUpdated).toBe(composition.source.workbookUpdated);
       for (const ingredient of basis.ingredients) {
         expect(ingredient.dataVersion).toBe(composition.source.workbookUpdated);
+        if (!validationIds.has(recipe.id)) continue;
         for (const assumption of ingredient.assumptions) counts[assumption.code] = (counts[assumption.code] ?? 0) + 1;
       }
     }

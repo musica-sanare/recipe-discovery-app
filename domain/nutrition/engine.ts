@@ -42,6 +42,36 @@ export interface Band {
   readonly plus: number;
 }
 
+export type ContributionReason = "raw_value_for_cooking" | "related_cooked_value" | "post_cooking_refuse";
+
+/**
+ * Error bands as fractions of the ingredient's contribution, per reason and nutrient
+ * (ADR-028, revised in Stage 6.5; evidence in docs/DECISIONS.md "Stage 6.5").
+ */
+export const CONTRIBUTION_BANDS: Readonly<Record<ContributionReason, Readonly<Record<Nutrient, Band>>>> = {
+  raw_value_for_cooking: {
+    ENERC_KCAL: { minus: 0.25, plus: 0.05 },
+    "PROT-": { minus: 0.15, plus: 0.05 },
+    "FAT-": { minus: 0.35, plus: 0.05 },
+    "CHOCDF-": { minus: 0.3, plus: 0.1 },
+    NACL_EQ: { minus: 0.15, plus: 0.05 },
+  },
+  related_cooked_value: {
+    ENERC_KCAL: { minus: 0.15, plus: 0.15 },
+    "PROT-": { minus: 0.1, plus: 0.1 },
+    "FAT-": { minus: 0.35, plus: 0.35 },
+    "CHOCDF-": { minus: 0.1, plus: 0.1 },
+    NACL_EQ: { minus: 0.05, plus: 0.05 },
+  },
+  post_cooking_refuse: {
+    ENERC_KCAL: { minus: 0.05, plus: 0.05 },
+    "PROT-": { minus: 0.05, plus: 0.05 },
+    "FAT-": { minus: 0.05, plus: 0.05 },
+    "CHOCDF-": { minus: 0.05, plus: 0.05 },
+    NACL_EQ: { minus: 0.05, plus: 0.05 },
+  },
+};
+
 export type NotCounted = "included_in" | "side_off";
 
 export interface IngredientNutrition extends ResolvedIngredient {
@@ -137,8 +167,9 @@ function bandsFor(reasons: readonly Reason[], amounts: Readonly<Record<Nutrient,
     for (const reason of reasons) {
       if (reason === "raw_value_for_cooking" || reason === "related_cooked_value" || reason === "post_cooking_refuse") {
         if (amount === null) return null;
-        minus += amount * (reason === "raw_value_for_cooking" ? 0.15 : 0.05);
-        plus += amount * 0.05;
+        const band = CONTRIBUTION_BANDS[reason][nutrient];
+        minus += amount * band.minus;
+        plus += amount * band.plus;
       } else if ((reason === "fried" || reason === "slow_frying") && (nutrient === "FAT-" || nutrient === "ENERC_KCAL")) {
         if (fat === null) return null;
         const fatBand = nutrient === "FAT-" ? fat : fat * KCAL_PER_GRAM_FAT;

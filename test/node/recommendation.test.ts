@@ -168,11 +168,11 @@ describe("bounded adjustment on the validation recipes", () => {
 
   // Stage 3.4 log: the coverage evaluation scenarios with ranges evaluated (ADR-029 D1).
   it("gives the reviewed met and near counts per scenario", () => {
-    expect(count(solveAll({}, "cut"))).toEqual({ met: 9, near: 2 });
-    expect(count(solveAll({ maxMinutes: 20 }, "cut"))).toEqual({ met: 8, near: 1 });
-    expect(count(solveAll({}, "maintain"))).toEqual({ met: 13, near: 5 });
+    expect(count(solveAll({}, "cut"))).toEqual({ met: 9, near: 4 });
+    expect(count(solveAll({ maxMinutes: 20 }, "cut"))).toEqual({ met: 8, near: 2 });
+    expect(count(solveAll({}, "maintain"))).toEqual({ met: 12, near: 6 });
     expect(count(solveAll({}, "bulk"))).toEqual({ met: 8, near: 7 });
-    expect(count(solveAll({ excludedAllergens: ["egg"] }, "cut"))).toEqual({ met: 9, near: 1 });
+    expect(count(solveAll({ excludedAllergens: ["egg"] }, "cut"))).toEqual({ met: 9, near: 2 });
     expect(count(solveAll({ requiredFoods: [CHICKEN] }, "maintain"))).toEqual({ met: 5, near: 1 });
     expect(count(solveAll({ requiredFoods: [TOFU] }, "maintain"))).toEqual({ met: 2, near: 1 });
     expect(count(solveAll({ maxMinutes: 25 }, "bulk"))).toEqual({ met: 6, near: 6 });
@@ -222,7 +222,7 @@ describe("candidates and re-suggestion", () => {
 
   it("returns up to five distinct recipes that meet the targets, with varied attributes", () => {
     const selection = select(cut, emptySession, 0);
-    expect(selection.tiers).toEqual({ met: 9, near: 2, not_met: 9 });
+    expect(selection.tiers).toEqual({ met: 9, near: 4, not_met: 7 });
     expect(ids(selection)).toHaveLength(5);
     expect(new Set(ids(selection)).size).toBe(5);
     for (const entry of selection.candidates) expect(entry.solution.fit.tier).toBe("met");
@@ -262,7 +262,7 @@ describe("candidates and re-suggestion", () => {
     expect(ids(next).slice(0, 4)).toEqual(others);
     expect(ids(next)).toHaveLength(5);
     expect(ids(next)).not.toContain(removed);
-    expect(next.tiers).toEqual({ met: 8, near: 2, not_met: 9 });
+    expect(next.tiers).toEqual({ met: 8, near: 4, not_met: 7 });
     expect(next.exclusions).toEqual([{ item: { constraint: "sessionExcluded" }, count: 1, onlyThis: 1 }]);
   });
 
@@ -386,10 +386,10 @@ describe("few or no candidates, relaxation, reasons", () => {
   });
 
   it("reports near and missed targets with gaps for alternatives", () => {
-    const [champuru, mapo] = run("cut", { requiredFoods: [TOFU] }).alternatives;
-    expect(champuru?.reasons).toContainEqual({ code: "range_straddles", target: "protein" });
-    const fat = mapo?.reasons.find((reason) => reason.code === "misses_target" && reason.target === "fat");
+    const [tempura, pasta] = run("maintain", { requiredFoods: [["salmon"]] }).alternatives;
+    expect(tempura?.reasons).toContainEqual({ code: "range_straddles", target: "fat" });
+    const fat = pasta?.reasons.find((reason) => reason.code === "misses_target" && reason.target === "fat");
     expect(fat?.code === "misses_target" && fat.gap).toBeGreaterThan(2);
-    expect(mapo?.reasons.map((reason) => reason.code)).not.toContain("meets_all_targets");
+    expect(pasta?.reasons.map((reason) => reason.code)).not.toContain("meets_all_targets");
   });
 });

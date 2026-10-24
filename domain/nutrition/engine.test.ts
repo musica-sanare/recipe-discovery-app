@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { CompositionValue } from "../../shared/composition.ts";
 import { defaultState, type AmountRecipe, type RecipeState } from "./amounts.ts";
 import type { EngineComposition, EngineData, Nutrient } from "./data.ts";
-import { calculateNutrition, effectiveGrams, purchaseGrams, type RecipeNutrition } from "./engine.ts";
+import { CONTRIBUTION_BANDS, calculateNutrition, effectiveGrams, purchaseGrams, type RecipeNutrition } from "./engine.ts";
 
 // Hand-made composition data (per 100 g) so every expected value below can be
 // recomputed by hand. Codes are fictitious.
@@ -90,26 +90,41 @@ describe("formulas", () => {
 });
 
 describe("reasons, classes, and bands", () => {
-  it("raw value for an untabulated method: −15 % to +5 % of every nutrient", () => {
+  it("keeps the reviewed bands per reason and nutrient (ADR-028, revised in Stage 6.5)", () => {
+    const percent = Object.fromEntries(
+      Object.entries(CONTRIBUTION_BANDS).map(([reason, bands]) => [reason, Object.fromEntries(Object.entries(bands).map(([nutrient, band]) => [nutrient, `-${String(Math.round(band.minus * 100))} +${String(Math.round(band.plus * 100))}`]))]),
+    );
+    expect(percent).toEqual({
+      raw_value_for_cooking: { ENERC_KCAL: "-25 +5", "PROT-": "-15 +5", "FAT-": "-35 +5", "CHOCDF-": "-30 +10", NACL_EQ: "-15 +5" },
+      related_cooked_value: { ENERC_KCAL: "-15 +15", "PROT-": "-10 +10", "FAT-": "-35 +35", "CHOCDF-": "-10 +10", NACL_EQ: "-5 +5" },
+      post_cooking_refuse: { ENERC_KCAL: "-5 +5", "PROT-": "-5 +5", "FAT-": "-5 +5", "CHOCDF-": "-5 +5", NACL_EQ: "-5 +5" },
+    });
+  });
+
+  it("raw value for an untabulated method: nutrient bands of ADR-028 (revised)", () => {
     // Raw chicken 200 g: 200 kcal, 40 g protein, 4 g fat, 0.2 g salt.
     const result = calculate([{ key: "chicken", food: "chicken", grams: 200, state: "raw", cooking: "boil" }]);
     const ingredient = only(result);
     expect(ingredient).toMatchObject({ class: "approximation", reasons: ["raw_value_for_cooking"], ratePercent: undefined });
-    expect(ingredient.bands.ENERC_KCAL).toEqual({ minus: 30, plus: 10 });
+    expect(ingredient.bands.ENERC_KCAL).toEqual({ minus: 50, plus: 10 });
     expect(ingredient.bands["PROT-"]?.minus).toBeCloseTo(6, 10);
     expect(ingredient.bands["PROT-"]?.plus).toBeCloseTo(2, 10);
-    expect(result.ranges.ENERC_KCAL).toEqual({ low: 170, high: 210, shown: true });
-    expect(result.ranges["FAT-"]).toMatchObject({ shown: false }); // 3.4–4.2 g
+    expect(ingredient.bands["FAT-"]?.minus).toBeCloseTo(1.4, 10);
+    expect(ingredient.bands["FAT-"]?.plus).toBeCloseTo(0.2, 10);
+    expect(result.ranges.ENERC_KCAL).toEqual({ low: 150, high: 210, shown: true });
+    expect(result.ranges["FAT-"]).toMatchObject({ shown: false }); // 2.6–4.2 g
   });
 
-  it("related cooked value: ±5 %", () => {
-    // Grilled value for sautéed chicken: 180 kcal ± 9, 36 g protein ± 1.8.
+  it("related cooked value: energy ±15 %, protein ±10 %, fat ±35 %", () => {
+    // Grilled value for sautéed chicken: 180 kcal ± 27, 36 g protein ± 3.6, 4.8 g fat ± 1.68.
     const result = calculate([{ key: "chicken", food: "chicken", grams: 200, state: "grill", cooking: "saute" }]);
     expect(only(result)).toMatchObject({ class: "approximation", reasons: ["related_cooked_value"] });
-    expect(result.ranges.ENERC_KCAL?.low).toBeCloseTo(171, 10);
-    expect(result.ranges.ENERC_KCAL?.high).toBeCloseTo(189, 10);
-    expect(result.ranges["PROT-"]?.low).toBeCloseTo(34.2, 10);
-    expect(result.ranges["PROT-"]?.high).toBeCloseTo(37.8, 10);
+    expect(result.ranges.ENERC_KCAL?.low).toBeCloseTo(153, 10);
+    expect(result.ranges.ENERC_KCAL?.high).toBeCloseTo(207, 10);
+    expect(result.ranges["PROT-"]?.low).toBeCloseTo(32.4, 10);
+    expect(result.ranges["PROT-"]?.high).toBeCloseTo(39.6, 10);
+    expect(result.ranges["FAT-"]?.low).toBeCloseTo(3.12, 10);
+    expect(result.ranges["FAT-"]?.high).toBeCloseTo(6.48, 10);
   });
 
   it("parts removed after cooking: ±5 %, and bands of several reasons add up", () => {
@@ -119,8 +134,8 @@ describe("reasons, classes, and bands", () => {
     expect(removal.bands.ENERC_KCAL?.minus).toBeCloseTo(3.6, 10);
     const both = only(calculate([{ key: "potato", food: "potato", grams: 100, state: "microwave", cooking: "steam" }]));
     expect(both.reasons).toEqual(["related_cooked_value", "post_cooking_refuse"]);
-    expect(both.bands.ENERC_KCAL?.minus).toBeCloseTo(7.2, 10);
-    expect(both.bands.ENERC_KCAL?.plus).toBeCloseTo(7.2, 10);
+    expect(both.bands.ENERC_KCAL?.minus).toBeCloseTo(14.4, 10); // 15 % + 5 % of 72 kcal
+    expect(both.bands.ENERC_KCAL?.plus).toBeCloseTo(14.4, 10);
   });
 
   it("fried: ±30 % of fat and of 9 kcal per gram of that fat", () => {
@@ -182,11 +197,11 @@ describe("recipe totals and ranges", () => {
   });
 
   it("adds the bands per nutrient and reports per-serving ranges", () => {
-    // Energy: minus (30 + 38.88) / 2 = 34.44, plus (10 + 38.88) / 2 = 24.44.
-    expect(result.ranges.ENERC_KCAL?.low).toBeCloseTo(185.56, 10);
+    // Energy: minus (50 + 38.88) / 2 = 44.44, plus (10 + 38.88) / 2 = 24.44.
+    expect(result.ranges.ENERC_KCAL?.low).toBeCloseTo(175.56, 10);
     expect(result.ranges.ENERC_KCAL?.high).toBeCloseTo(244.44, 10);
-    // Fat: minus (0.6 + 4.32) / 2 = 2.46, plus (0.2 + 4.32) / 2 = 2.26.
-    expect(result.ranges["FAT-"]?.low).toBeCloseTo(6.74, 10);
+    // Fat: minus (1.4 + 4.32) / 2 = 2.86, plus (0.2 + 4.32) / 2 = 2.26.
+    expect(result.ranges["FAT-"]?.low).toBeCloseTo(6.34, 10);
     expect(result.ranges["FAT-"]?.high).toBeCloseTo(11.46, 10);
     expect(result.ranges["FAT-"]?.shown).toBe(true);
   });
@@ -203,19 +218,20 @@ describe("recipe totals and ranges", () => {
 });
 
 describe("range thresholds (twice the display unit)", () => {
-  // Related cooked value, ±5 %: the width is 10 % of the per-serving value.
+  // Related cooked value: widths are 30 % of energy, 20 % of protein, and 10 % of salt.
   const width = (grams: number) => calculate([{ key: "chicken", food: "chicken", grams, state: "grill", cooking: "saute" }]).ranges;
 
   it("shows energy above 20 kcal and protein above 2 g, not at or below", () => {
-    // 200 g -> 180 kcal (width 18), 36 g protein (width 3.6), 0.24 g salt (width 0.024).
-    expect(width(200).ENERC_KCAL?.shown).toBe(false);
+    // 200 g -> 180 kcal (width 54), 36 g protein (width 7.2), 0.24 g salt (width 0.024).
+    expect(width(200).ENERC_KCAL?.shown).toBe(true);
     expect(width(200)["PROT-"]?.shown).toBe(true);
     expect(width(200).NACL_EQ?.shown).toBe(false);
-    // Exactly 20 kcal wide (200 kcal per serving from 222.2… g raw): not shown.
-    expect(width(2000 / 9).ENERC_KCAL?.shown).toBe(false);
-    expect(width(250).ENERC_KCAL?.shown).toBe(true); // 225 kcal, width 22.5
-    // Protein exactly 2 g wide (20 g per serving): not shown.
-    expect(width(1000 / 9)["PROT-"]?.shown).toBe(false);
+    // Exactly 20 kcal wide (66.7 kcal per serving from 74.07… g raw): not shown.
+    expect(width(2000 / 27).ENERC_KCAL?.shown).toBe(false);
+    expect(width(80).ENERC_KCAL?.shown).toBe(true); // 72 kcal, width 21.6
+    // Protein exactly 2 g wide (10 g per serving from 55.6… g raw): not shown.
+    expect(width(500 / 9)["PROT-"]?.shown).toBe(false);
+    expect(width(60)["PROT-"]?.shown).toBe(true); // 10.8 g, width 2.16
   });
 
   it("shows salt above 0.2 g", () => {

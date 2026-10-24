@@ -84,13 +84,13 @@ Household measures such as "a pinch" do not change the class: recipes state gram
 
 Ranges (ADR-025, accepted 2026-10-18). A share-based threshold does not work: in 15 of 20 validation recipes, approximated or fried ingredients contribute more than 10% of the energy, protein, or fat, mostly because the main protein itself is an approximation (76–89% of the protein in those recipes). Instead, each counted ingredient gets an error band by reason, the bands are added per nutrient, and a range is shown when its width exceeds twice the display unit (20 kcal; 2 g for protein, fat, and carbohydrate).
 
-| Reason (engine identifier) | Class | Error band applied to the ingredient's contribution | Basis |
+| Reason (engine identifier) | Class | Error band applied to the ingredient's contribution (energy / protein / fat / carbohydrate / salt) | Basis |
 |---|---|---|---|
-| Cooking method not in the tables, raw value used (`raw_value_for_cooking`) | Approximation | −15 % to +5 % | *Measured*: cooked-to-raw protein retention 0.87–1.03 for meat and fish (Stage 0.3) |
-| Related cooked value used, for example grilled for sautéed (`related_cooked_value`) | Approximation | ±5 % | *Assumption* |
-| Parts removed after cooking (`post_cooking_refuse`) | Approximation | ±5 % | *Assumption* |
-| Fried state, oil absorption (`fried`) | Approximation | ±30 % of the ingredient's fat and of the energy from that fat | *Assumption* |
-| Slow frying in a large amount of oil, authored as hard to estimate (`slow_frying`) | Hard to estimate | 0 to +50 % of the ingredient's fat and of the energy from that fat | *Assumption* |
+| Cooking method not in the tables, raw value used (`raw_value_for_cooking`) | Approximation | −25 / −15 / −35 / −30 / −15 % to +5 / +5 / +5 / +10 / +5 % | *Measured*: cooked-to-raw retention in the tabulated pairs — protein 0.87–1.03 for meat and fish (Stage 0.3; chapter 3 medians 87–100 %), fat down to 0.66 and energy down to 0.73 for fatty meat and fish (chapter 3 medians down to 74 % and 83 %), protein and carbohydrate of boiled vegetables down to 0.67 and 0.70 (`docs/DECISIONS.md` "Stage 6.5") |
+| Related cooked value used, for example grilled for sautéed (`related_cooked_value`) | Approximation | ±15 / ±10 / ±35 / ±10 / ±5 % | *Measured*: between non-oil methods of the same food, protein differs by up to 8 %, fat by up to 34 %, and energy by up to 14 % ("Stage 6.5") |
+| Parts removed after cooking (`post_cooking_refuse`) | Approximation | ±5 % | *Assumption*; the tables give single analyses without spread ("Stage 6.5") |
+| Fried state, oil absorption (`fried`) | Approximation | ±30 % of the ingredient's fat and of the energy from that fat | *Assumption*; Table 13 gives fat changes of −5.2 to +32.3 g per 100 g raw food by food and coating, as single analyses; applied to total fat, the band overstates foods whose fat is mostly their own ("Stage 6.5") |
+| Slow frying in a large amount of oil, authored as hard to estimate (`slow_frying`) | Hard to estimate | 0 to +50 % of the ingredient's fat and of the energy from that fat | *Assumption*; studies disagree on the direction (about +32 % oil uptake at 120 °C against 180 °C for unblanched potato slices in one study, the opposite in others) ("Stage 6.5") |
 | Estimated `( )` value in a displayed nutrient (`estimated_source_value`) | Approximation | None (flag and reason only) | No evidence for a band yet |
 
 Rules (ADR-028):
@@ -145,5 +145,5 @@ Nutrition and recommendation functions take no locale input. Tests calculate eve
 1. ~~Carbohydrate column~~: `CHOCDF-` (ADR-011). Display names in three locales are set with the UI catalogs.
 2. How to extract Table 12 (weight change rates) and Tables 13–14 reliably from the PDF.
 3. Whether to use the chapter 3 group-level rates of change for missing cooked forms.
-4. ~~Tolerance, rounding, and range threshold values~~: decided in ADR-025. The error bands marked *Assumption* need evidence.
+4. ~~Tolerance, rounding, and range threshold values~~: decided in ADR-025. Evidence for the error bands: Stage 6.5 (ADR-028 revised); `post_cooking_refuse`, `fried`, and `slow_frying` remain assumptions.
 5. Expected accuracy versus real cooking cannot be quantified without measurement; the UI states the limits instead.

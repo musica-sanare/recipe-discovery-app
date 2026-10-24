@@ -35,7 +35,7 @@ These must be resolved before a deployment proposal can be approved (owner decis
 
 | Item | Reference | Mitigation in the app |
 |---|---|---|
-| Error bands for fried, slow-frying, and some approximations are assumptions | Open question 3, `docs/NUTRITION_CALCULATION.md` §7 | Values are labelled estimates; ranges and reasons are shown |
+| Error bands for fried, slow-frying, and parts removed after cooking are assumptions; the bands of raw and related cooked values were set per nutrient from the evidence in Stage 6.5 (not deployed yet) | Open question 3, `docs/NUTRITION_CALCULATION.md` §7, ADR-028 (revised) | Values are labelled estimates; ranges and reasons are shown |
 | Cooking tables were transcribed by hand from the PDF; group-level rates are not used | Open question 2, `docs/DATA_SOURCES.md` | Automated cross-checks (`npm run data:verify-cooking`, `test/node/cooking-data.test.ts`) |
 | English food names have no official reference (2015 English edition not checked) | Open question 6 | Names are the app's own translations |
 | Applicability of the Health Promotion Act, the Pharmaceutical and Medical Device Act, and allergen labelling rules; copyright of recipes | Open questions 7, 8 | The stricter policy is applied (`docs/CONTENT_POLICY.md`); recipes are original |

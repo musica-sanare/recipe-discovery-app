@@ -69,7 +69,7 @@ export const recipe: Recipe = {
       text: {
         ja: "残りの油で豚肉を両面焼き、玉ねぎを戻してたれを加え、煮からめます。",
         en: "Cook the pork on both sides in the remaining oil, return the onion, add the sauce, and coat well.",
-        es: "Cocina el cerdo por ambos lados con el resto del aceite, devuelve la cebolla, añade la salsa y mezcla bien.",
+        es: "Cocina el cerdo por ambos lados con el resto del aceite, devuelve la cebolla, añade la salsa y baña bien el cerdo con ella.",
       },
     },
     {

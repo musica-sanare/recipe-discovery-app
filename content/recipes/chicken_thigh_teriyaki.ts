@@ -7,7 +7,7 @@ export const recipe: Recipe = {
     summary: {
       ja: "皮を除いた鶏もも肉を、しょうゆとみりんの甘辛いたれで照り焼きにします。",
       en: "Skinless chicken thigh glazed with a sweet and savory soy sauce and mirin sauce.",
-      es: "Muslo de pollo sin piel glaseado con una salsa agridulce de soja y mirin.",
+      es: "Muslo de pollo sin piel glaseado con una salsa dulce y salada de soja y mirin.",
     },
   },
   cuisine: "japanese",

@@ -64,7 +64,7 @@ export const recipe: Recipe = {
       text: {
         ja: "切ってパセリを散らします。",
         en: "Slice and sprinkle with parsley.",
-        es: "Córtalo en tiras y espolvorea el perejil.",
+        es: "Córtalo y espolvorea el perejil.",
       },
     },
   ],

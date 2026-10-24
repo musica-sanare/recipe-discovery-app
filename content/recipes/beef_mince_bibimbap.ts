@@ -7,7 +7,7 @@ export const recipe: Recipe = {
     summary: {
       ja: "甘辛く炒めた牛ひき肉と、もやし、にんじん、ほうれん草のナムルをご飯にのせて混ぜて食べます。",
       en: "Sweet and savory ground beef with bean sprout, carrot, and spinach namul over rice, mixed before eating.",
-      es: "Carne picada agridulce con namul de brotes de soja, zanahoria y espinacas sobre arroz, para mezclar antes de comer.",
+      es: "Carne picada salteada en salsa dulce y salada con namul de brotes de soja, zanahoria y espinacas sobre arroz, para mezclar antes de comer.",
     },
   },
   cuisine: "korean",

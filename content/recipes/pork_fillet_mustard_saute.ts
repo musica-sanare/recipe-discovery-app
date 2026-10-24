@@ -48,7 +48,7 @@ export const recipe: Recipe = {
       text: {
         ja: "ほうれん草をゆでて水にとり、水気を絞って食べやすく切ります。",
         en: "Boil the spinach, cool it in water, squeeze out the water, and cut it into short lengths.",
-        es: "Hierve las espinacas, enfríalas en agua, escúrrelas bien y córtalas en trozos.",
+        es: "Hierve las espinacas, enfríalas en agua, exprímelas bien y córtalas en trozos.",
       },
     },
     {

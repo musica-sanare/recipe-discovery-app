@@ -562,6 +562,13 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - Not changed (F12): "Ñame japonés (yamaimo)" keeps its parentheses, so "(puede contener)" follows a parenthesis.
 - Checks: `npm run check` (628 tests; nutrition snapshots unchanged) and `npm run test:e2e` (98 passed, 1 skipped). Browser check (`npm run preview`, built-in browser): at 375 px in `es`, the allergen checkboxes of the targets view, the candidate cards of a default search, and the detail pages of `beef_steak_potatoes`, `salmon_tempura`, and `shrimp_garlic_broccoli` show the new texts with no element wider than the viewport; at desktop width, the `tortilla_espanola` note in `ja` and `en` and the about page in `en`; no console messages. Not checked: dark mode, and the comparison view with the new allergen names.
 
+### Stage 6.3 R2: validation recipes, chicken and pork (2026-10-24)
+- R2 covered the nine chicken and pork validation recipes (82 items) and the pork safety note in the substitution of `chicken_lemon_herb_grill`, which R1 had missed (no finding). The owner approved fixes G1–G5 (content version `2026-10-24.5`):
+  - G1, G2: 甘辛 (sweet and savory) had been translated as Spanish "agridulce", which means sweet and sour. Fixed in `chicken_thigh_teriyaki` (summary, "dulce y salada") and, with the owner's approval outside R2, in the reviewed batch texts of `beef_mince_bibimbap` (summary) and `squid_red_pepper_stir_fry` (name, "dulce y picante", following the English "spicy-sweet"). The last use, the name of `beef_shimeji_bowl`, belongs to R3. No glossary entry: the English varies by dish, and the substring check could not tell "dulce" from "agridulce".
+  - G3–G5 (Spanish): `pork_fillet_mustard_saute` squeezes the spinach ("exprímelas"), `pork_loin_ginger` coats the pork with the sauce ("baña"), and `chicken_lemon_herb_grill` no longer adds "en tiras" to "slice".
+- Noted for R4: the Spanish texts use Spain's words (for example "zumo" 16 times, "frigorífico" 5 times) in all batches; a library-wide choice is discussed with the food names.
+- Checks: `npm run check` (628 tests; nutrition snapshots unchanged) and `npm run test:e2e` (98 passed, 1 skipped). Browser check (`npm run preview`, 375 px, `es`): the candidate cards of a default search, including the renamed squid recipe, and the detail pages of `squid_red_pepper_stir_fry`, `beef_mince_bibimbap`, and `chicken_thigh_teriyaki` show the new texts with no element wider than the viewport; no console messages.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in

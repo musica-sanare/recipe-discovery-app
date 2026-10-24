@@ -3,7 +3,7 @@ import type { Recipe } from "../../shared/content.ts";
 export const recipe: Recipe = {
   id: "squid_red_pepper_stir_fry",
   texts: {
-    name: { ja: "いかとパプリカの甘辛炒め", en: "Spicy-sweet squid and red pepper stir-fry", es: "Salteado agridulce picante de calamar y pimiento rojo" },
+    name: { ja: "いかとパプリカの甘辛炒め", en: "Spicy-sweet squid and red pepper stir-fry", es: "Salteado dulce y picante de calamar y pimiento rojo" },
     summary: {
       ja: "韓国の家庭料理をヒントに、いかとパプリカ、玉ねぎを豆板醤入りの甘辛だれで炒めます。ご飯を添えます。",
       en: "Inspired by Korean home cooking: squid, red pepper, and onion stir-fried in a sweet chili bean sauce, with rice.",

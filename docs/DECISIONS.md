@@ -440,6 +440,23 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - Tests: `src/navigation/views.test.ts` (paths), `test/node/food-search.test.ts` (long-vowel variants and matches), `test/ui/about.test.tsx` (direct path in three locales with every section, the attribution, the license link, and axe; footer link, focus, document title), and the comparison test checks that the caption is outside the region.
 - Browser check (`npm run preview`, built-in browser, 2026-10-24): `/about` opened directly and from the footer link (focus on the `h1`, document title), in `ja`, `en`, and `es` at desktop width (light) and at 375 px (dark), with eight sections and no element wider than the viewport; the first section was renamed "What this app does" after the check showed the same text as the `h1`. `/about` and `/third-party-licenses.txt` are served with the production headers (`text/plain`; the file is ASCII only); the back button returns from the license file to `/about` and then to the targets view. Typing トーフ in the ingredient box lists the soy-food group, firm tofu, and silken tofu. In the comparison view at 375 px, scrolling the table by 171 px leaves the caption in place and the page does not scroll sideways. No console messages. Not checked: `/about` at desktop width in dark mode and at 375 px in light mode.
 
+### Stage 5.4 E2E suite and phone-class timing (2026-10-24)
+- Dependencies (owner approved the downloads): `@playwright/test` 1.64.1 and `@axe-core/playwright` 4.14.0 as development dependencies; latest releases, rechecked on 2026-10-24 04:03 UTC. `npm install` under `strict-allow-scripts` reported no install script; `npm audit`: 0 vulnerabilities. Browsers with `npx playwright install --only-shell chromium webkit` into `~/Library/Caches/ms-playwright`: Chrome Headless Shell 156.0.8078.4 (203 MB unpacked), WebKit 27.2 (299 MB), and FFmpeg (3 MB; installed by default, which answers the 要確認 of Stage 5.1 P4).
+- Suite (`playwright.config.ts`, `e2e/`, `tsconfig.e2e.json`): projects `desktop-chromium` (1280×800), `mobile-chromium` (Pixel 7 at 375×812), `mobile-webkit` (iPhone 13 at 375×812), and `timing` (on demand). The web server is `npm run build && npm run preview` on port 4174. Strings come from the typed catalogs. Every test fails on a request to another origin or a CSP violation. Specs: the full flow (search, "show a different type", exclusion, comparison, detail, servings change, back, reload notice), deep links, not found, the about page, locale switching with unchanged digits, input errors, a blocking contradiction, "all shown" with close alternatives, close alternatives when nothing meets the targets (microwave only, egg and rice left out), no recipe passing the filters (≤ 5 minutes), the content error with retry, axe WCAG 2.2 AA with color contrast on five views in light and dark, keyboard operation with the skip link and a visible focus ring (Chromium; WebKit does not reach links with Tab by default), and the security headers on documents, scripts, styles, content bundles, and the license file. Result: 33 tests per project; `desktop-chromium` 33 passed, `mobile-chromium` 33 passed, `mobile-webkit` 32 passed and 1 skipped.
+- Findings: (1) Safari did not move focus to a field when an error summary link was followed; the link now focuses its field on click (`src/views/TargetsView.tsx`, asserted in `src/views/TargetsView.test.tsx`). (2) WebKit reports a `style-src-attr` violation for every `<select>` under a strict CSP, also on a two-line page without inline styles (Chromium reports nothing); the suite tolerates only that report in WebKit (`e2e/support.ts`). The CSP is unchanged. (3) The "all shown" notice also appears in the visually hidden live region; tests check the status box.
+- Phone-class timing (open question 17; `npm run test:e2e:timing`, Chrome Headless Shell 156 on an Apple M1, CDP CPU throttling, 375×812, `ja`; click to the first DOM commit under `main` plus layout; median / p90 of 15 runs after 2 warm-up runs, ms):
+
+| Scenario | 1× | 4× | 6× |
+|---|---|---|---|
+| Search, cut | 20.1 / 23.5 | 80.8 / 93.6 | 121.1 / 140.0 |
+| Search, bulk | 19.3 / 23.1 | 78.1 / 92.9 | 117.8 / 139.7 |
+| Search, maintain with tofu required | 9.1 / 9.5 | 36.4 / 41.8 | 58.0 / 65.9 |
+| Search, bulk at ≤ 15 min | 11.8 / 13.2 | 48.3 / 52.9 | 78.7 / 90.6 |
+| Re-suggestion | 4.5 / 5.4 | 19.1 / 24.2 | 28.6 / 31.5 |
+| Recalculation (servings step) | 2.7 / 3.0 | 11.3 / 12.1 | 17.0 / 18.4 |
+
+- Investigation required by Stage 5.1 P5 (4× median above 50 ms): the engine alone in Node (`evaluatePool` and `selectCandidates`, warm, median of 15) takes 14.9 ms (cut) and 14.4 ms (bulk) on the 60 recipes against 7.7 and 6.7 ms on the 20 validation recipes; the warm UI search at 1× is about 20 ms, so the UI overhead is now about 5 ms. The Stage 4.7 gap (25 against 7 ms) came mostly from the unwarmed first call. Time grows with the library through the engine. The ADR-030 D10 decision (worker or main thread) waits for the owner.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in
@@ -701,7 +718,7 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 14. ~~Whether every food must have at least one search alias per locale~~: aliases stay optional (ADR-030 D6).
 15. ~~Phase 2 must distinguish raw values from related cooked values for the error bands~~: separate reasons `raw_value_for_cooking` and `related_cooked_value` (ADR-028).
 16. Re-check the `i18next`/`react-i18next` pins after 2026-10-25 18:00 UTC (ADR-016, "ADR-016 re-check before Phase 5").
-17. Recommendation and recalculation time on phones: desktop browser timings are recorded (Stage 4.7); a phone or a phone-class CPU profile (for example Playwright with CPU throttling in Phase 5) decides whether the recommendation moves to a worker (ADR-030 D10). Method and threshold: "Stage 5.1 release plan" P5.
+17. Recommendation and recalculation time on phones: measured with CPU throttling in Stage 5.4 ("Stage 5.4 E2E suite and phone-class timing"); a full recommendation takes about 80 ms at 4×, above the 50 ms of ADR-030 D10. The owner decides between a worker and the main thread.
 18. ~~Fried dishes with wide ranges become "near"~~: intended (ADR-029 D10). The fried and slow-frying bands remain assumptions (open question 3).
 19. ~~Provisional input limits and contradiction thresholds~~: unchanged (ADR-030 D4).
 20. ~~Combined equipment relaxation~~: no engine change; equipment modes and a link to the equipment field instead (ADR-030 D7).

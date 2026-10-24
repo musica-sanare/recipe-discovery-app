@@ -118,7 +118,7 @@ Details are finalized in Phase 1 and documented in `docs/NUTRITION_CALCULATION.m
 - Content validation and policy lint run in CI and in the build.
 - Nutrition snapshot tests.
 - UI tests with jsdom (`src/**/*.test.tsx` with fixtures; `test/ui/` with the repository content); accessibility checks (axe-core, without the contrast rule) in `ja`, `en`, and `es` for every view and exceptional state, and a contrast test over the color tokens (`test/node/styles.test.ts`).
-- E2E tests on desktop and mobile viewports, including long Spanish strings and locale switching.
+- E2E tests (`e2e/`, Playwright) on the production build with its headers: desktop Chromium, and Chromium and WebKit at 375 px, in `ja`, `en`, and `es`: the full flow, exceptional states, locale switching, deep links, the about page, keyboard operation, axe-core with color contrast in light and dark, security headers, no request to another origin, and no CSP violation. Phone-class timing runs on demand (`npm run test:e2e:timing`).
 
 ## 10. Not in the MVP
 

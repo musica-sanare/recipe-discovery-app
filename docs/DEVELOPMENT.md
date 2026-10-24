@@ -30,6 +30,8 @@ Browser previews: `.claude/launch.json` has `preview` (the production build with
 | `npm run typecheck` | TypeScript project build without emit |
 | `npm test` | Vitest (Node by default; UI tests use jsdom per file; `test/ui/` runs the app on the repository content) |
 | `npm run check` | Lint, type-check, tests, and build in sequence |
+| `npm run test:e2e` | Playwright on the production build with headers (`npm run build && npm run preview` on port 4174): projects `desktop-chromium`, `mobile-chromium`, `mobile-webkit`; every spec in `ja`, `en`, and `es` (`e2e/`). Browsers: `npx playwright install --only-shell chromium webkit` (user cache, outside the repository) |
+| `npm run test:e2e:timing` | Phone-class timing with CPU throttling (project `timing`, Chromium); writes `test-results/timing.json` |
 | `npm run data:extract` | Regenerate `data/composition/foods.json` from the MEXT workbook in `data/raw/` (`docs/DATA_SOURCES.md` "Extraction") |
 | `npm run eval:coverage` | How many validation recipes meet representative targets with default and adjusted amounts, computed by the recommendation engine (`docs/DECISIONS.md` "Stage 0.6", "Stage 3.7") |
 | `npm run data:verify-cooking` | macOS only: check `data/composition/cooking.json` against the MEXT explanation PDF text (`docs/DATA_SOURCES.md` "Cooking tables") |

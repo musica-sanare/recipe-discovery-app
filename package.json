@@ -14,6 +14,8 @@
     "typecheck": "tsc -b",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:e2e": "playwright test --project=desktop-chromium --project=mobile-chromium --project=mobile-webkit",
+    "test:e2e:timing": "playwright test --project=timing",
     "check": "npm run lint && npm run typecheck && npm run test && npm run build",
     "validate:content": "node tools/validate-content.ts",
     "content:build": "node tools/build-content.ts",
@@ -30,7 +32,9 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
     "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.64.1",
     "@tailwindcss/vite": "^4.3.3",
     "@testing-library/dom": "^10.4.2",
     "@testing-library/react": "^16.3.3",

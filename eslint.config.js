@@ -60,6 +60,11 @@ export default tseslint.config(
     languageOptions: { globals: globals.node },
   },
   {
+    // E2E: Node test files whose callbacks also run in the browser.
+    files: ["e2e/**/*.ts"],
+    languageOptions: { globals: { ...globals.browser, ...globals.node } },
+  },
+  {
     // UI integration tests: jsdom with the repository content built in Node.
     files: ["test/ui/**/*.{ts,tsx}"],
     languageOptions: { globals: { ...globals.browser, ...globals.node } },

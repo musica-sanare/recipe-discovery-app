@@ -481,6 +481,11 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - Open question 13: the texts still to be reviewed by the owner are listed in `docs/RELEASE_READINESS.md` §2 (20 validation recipes with 194 localized texts, 50 Phase 0 foods, 406 UI catalog keys outside `about.*`).
 - Known limitations, manual checks, and the deployment proposal: `docs/RELEASE_READINESS.md` §3–§5. Nothing was deployed.
 
+### CI first run (2026-10-24)
+- The owner pushed `dev`; in GitHub Actions, the `check` job failed in `src/App.test.tsx` ("renders Japanese by default and sets document metadata"): the document title was still the loading title ("Recipe Discovery — 栄養目標に合うレシピを見つける") when the view heading had appeared. All 624 tests had passed locally.
+- Cause: `ViewHeading` set `document.title` in a passive `useEffect`, which React may run after the heading is in the DOM; on the slower runner the test read the title in that gap. A new test reads the title from a `MutationObserver` at the moment the `h1` is inserted and failed the same way before the fix.
+- Fix: `src/components/ViewHeading.tsx` sets the title in `useLayoutEffect`, so the title changes in the same commit as the heading (also for users). `npm run check` (625 tests), 8 runs of the title tests under CPU load, and `npm run test:e2e` (98 passed, 1 skipped) pass locally. The CI run on the fix commit is still to be confirmed.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in

@@ -30,6 +30,20 @@ function renderApp(locale: Locale = "ja") {
 }
 
 describe("App shell", () => {
+  it("names the document in the same commit that shows the view heading", async () => {
+    // A passive effect could leave the loading title in place after the heading appears;
+    // CI caught that gap (docs/DECISIONS.md "CI first run").
+    const titles: string[] = [];
+    const observer = new MutationObserver(() => {
+      if (document.querySelector("h1") !== null) titles.push(document.title);
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+    renderApp();
+    await screen.findByRole("heading", { level: 1, name: "目標と条件" });
+    observer.disconnect();
+    expect(titles[0]).toBe("目標と条件 — Recipe Discovery");
+  });
+
   it("renders Japanese by default and sets document metadata", async () => {
     renderApp();
 

@@ -22,6 +22,7 @@ Status: **Draft (2026-10-18)**. Applies to all recipes, food dictionary entries,
 ## 3. Food safety
 
 - Meat and poultry are cooked through; recipes state a visible doneness check (for example no pink juices) rather than relying on time alone. No recipes with raw or undercooked poultry or pork.
+- Fish, shellfish, and beef are cooked through as well; regional raw dishes (for example ceviche, or rare beef in pho) are not included. Herbs and vegetables eaten raw are washed (owner, 2026-10-24, Phase 7 Stage 7.1).
 - Eggs: raw-egg dishes are not included in the MVP. Eggs with soft or runny yolks are allowed and always carry the `soft_yolk` safety note (owner, 2026-10-23; `docs/DECISIONS.md` "Stage 5.1 release plan" P3).
 - Frying: notes on oil temperature, fire risk, and never leaving hot oil unattended.
 - Batch cooking: general cooling and refrigeration guidance only; no specific storage durations are promised.
@@ -47,6 +48,7 @@ Status: **Draft (2026-10-18)**. Applies to all recipes, food dictionary entries,
 - Translations are canonical content stored in the repository; nothing is machine-translated at runtime.
 - Workflow: content is authored, Claude drafts `en` and `es` at authoring time, the owner reviews the diff and reports problems, Claude fixes them. The owner's approval of the commit is the review record.
 - Spanish follows peninsular vocabulary for foods (`patata`, `zumo`, `ternera`) with Latin American words as search aliases (for example `patata` / `papa`, `gamba` / `camarón`); words that mean something else in Latin America are avoided (for example "frigorífico", "tostada"); allergen names show both regional names (owner decision V1, 2026-10-24; `docs/DECISIONS.md` "Stage 6.3 R1" and "Stage 6.3 R4").
+- Spanish dish names follow the region the dish comes from (for example "Chili con carne", "Arroz con pollo y frijoles"), while food names keep the rule above (owner, 2026-10-24, `docs/DECISIONS.md` "Stage 7.1 expansion plan").
 - A glossary (`content/glossary.ts`) fixes cooking terms, heat levels, units, allergen names, disclaimer texts, and forbidden expressions in all three locales.
 - Safety-relevant texts (allergen warnings, doneness checks, frying cautions, disclaimers) use short, plain sentences and are back-translated during review to detect meaning drift.
 - Japanese-specific ingredients that may be hard to find abroad get a note; regional availability is otherwise out of scope.

@@ -112,7 +112,11 @@ describe("input errors", () => {
       expect(document.activeElement).toBe(summary);
     });
     expect(within(summary).getByText("入力内容を確認してください（2件）")).toBeDefined();
-    expect(within(summary).getByRole("link", { name: "たんぱく質の下限は0〜200の範囲で入力してください。" }).getAttribute("href")).toBe("#targets-proteinMin");
+    const link = within(summary).getByRole("link", { name: "たんぱく質の下限は0〜200の範囲で入力してください。" });
+    expect(link.getAttribute("href")).toBe("#targets-proteinMin");
+    // The link focuses its field itself, because Safari does not on fragment navigation.
+    fireEvent.click(link);
+    expect(document.activeElement).toBe(input("たんぱく質の下限（g）"));
     expect(input("たんぱく質の下限（g）").getAttribute("aria-invalid")).toBe("true");
     expect(input("調理時間の上限（分）").getAttribute("aria-describedby")).toContain("error");
     expect(advanced()?.open).toBe(true);

@@ -158,7 +158,17 @@ export function TargetsView({ reloaded }: { readonly reloaded: boolean }) {
           <ul className="m-0 list-disc pl-6">
             {errors.map((error) => (
               <li key={`${error.code}-${JSON.stringify(error)}`}>
-                <a href={`#${fieldId(errorTarget(error))}`} className="text-accent underline">
+                <a
+                  href={`#${fieldId(errorTarget(error))}`}
+                  onClick={(event) => {
+                    // Safari does not move focus to a form field when following a fragment link.
+                    const field = document.getElementById(fieldId(errorTarget(error)));
+                    if (field === null) return;
+                    event.preventDefault();
+                    field.focus();
+                  }}
+                  className="text-accent underline"
+                >
                   {errorText(error)}
                 </a>
               </li>

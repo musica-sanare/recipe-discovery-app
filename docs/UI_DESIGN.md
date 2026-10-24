@@ -214,7 +214,7 @@ States:
 - Application state lives in one `useReducer` behind a context (`src/state/`): the request, the evaluated pool, the session, the seed, the displayed set, the comparison selection, and per-recipe adjustment states. No store library.
 - The pool is recomputed only when the request changes; "show a different type", "exclude this one", and comparison use `selectCandidates` on the same pool.
 - The seed starts at 0 for every new search and increases by 1 for each "show a different type" (ADR-029 D6).
-- The recommendation runs on the main thread; timing is measured in Stage 4.7 (ADR-030 D10).
+- The recommendation runs on the main thread; phone-class timing is measured in Stage 5.4 (about 80 ms at a 4× CPU slowdown) against a threshold of about 100 ms (ADR-030 D10, revised).
 
 ## 5. Styling
 

@@ -597,6 +597,24 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
   - J6: the unused key `home.status` (an early placeholder, "Coming soon") is removed from the three catalogs; nothing in `src`, `test`, or `e2e` used it.
 - Checks: `npm run check` (632 tests) and `npm run test:e2e` (98 passed, 1 skipped). Browser check (`npm run preview`, 375 px, `es`): the conditions section with "Tipo de cocina (preferencia)", "Fogón o estufa", and "Olla honda para freír", and the servings error for 0 in the field and the error summary, with no element wider than the viewport; no console messages.
 
+### Stage 6.3 R6: candidates, comparison, and detail UI (2026-10-24)
+- R6 covered 186 keys of the UI catalogs (`candidates`, `card`, `comparison`, `detail`, `adjust`, `nutrient`, `target`, `status`, `tier`, `reason`, `exclusion`, `relaxation`, `methodFamily`). The estimate and allergen wording matches the texts reviewed in R1.
+- The owner approved fixes K1–K6 (UI catalogs only; the content version is unchanged):
+  - K1: `methodFamily.grill` is "Asado" in Spanish, like `foodState.grill` (I4).
+  - K2: `detail.changes` and `detail.noChange` say "Change from before" / "No change from before." ("Cambio respecto a antes" / "Sin cambios respecto a antes."), instead of repeating "change".
+  - K3: the comparison column and the two cuisine reasons say "Tipo de cocina" / "Un tipo de cocina" in Spanish, like J1.
+  - K4: `exclusion.sessionExcluded_one` is singular ("Recipe you removed…", "Receta que quitaste…").
+  - K5: `nutrient.NACL_EQ` is "Equivalente en sal", the usual Spanish label wording.
+  - K6: Spanish "porque se quitó el acompañamiento" in `detail.notCounted.side_off` and `detail.sideStepHidden_*`.
+- Checks: `npm run check` (632 tests) and `npm run test:e2e` (98 passed, 1 skipped). Browser check (`npm run preview`, 375 px, `es`): the comparison of two candidates shows the "Tipo de cocina" row; in the detail view, a servings step shows "Sin cambios respecto a antes.", an ingredient step shows "Cambio respecto a antes: …, Equivalente en sal +1,0 g", and switching off the potatoes of `beef_steak_potatoes` shows "Se omite 1 paso porque se quitó el acompañamiento."; no element wider than the viewport; no console messages. Not seen in the browser: `detail.notCounted.side_off` (not shown in the checked views).
+
+### Stage 6.3 summary (2026-10-24)
+- Every text released without an owner review is now reviewed (open questions 9 and 13): R1 safety and trust (88 items), R2 and R3 the 20 validation recipes (168 items plus one substitution safety note), R4 the 50 Phase 0 foods with food states and units, R5 and R6 the 406 UI catalog keys outside `about.*`. Commits: R1 `f70d2df`, R2 `af04a17`, R3 `692e1cf`, R4 `516038c`, R5 `078901a`, R6 with this summary.
+- Fixes: 11 in R1, 5 in R2, 9 in R3, 6 in R4, 6 in R5, 6 in R6. Japanese changed only where a safety rule was not met (fire risk in two `hot_oil` notes, F1 and F2) and for the removal of the unused `home.status`. Reviewed batch texts were changed with the owner's explicit approval where they had the same error (G2, H3).
+- Main findings: two fried recipes without the fire risk of `docs/CONTENT_POLICY.md` §3; 甘辛 translated as "agridulce" (sweet and sour) in four recipes; Spanish words that are Spain-only or mean something else in Latin America ("frigorífico", "tostada", "fogón", "babilla", "fregar"); allergen names that need both regional names; one search alias that led to a different food ("champiñones").
+- Decisions: regional Spanish rule V1 (`docs/CONTENT_POLICY.md` §6); UI glossary 栄養成分表示 → "etiquetado nutricional"; no glossary entry for 甘辛.
+- Not deployed: the fixes reach users with the next release (Stage 6.6). Content version `2026-10-24.7`.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in
@@ -850,11 +868,11 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 6. Whether the 2015 English edition's names and food codes can serve as a reference for English names.
 7. Applicability of the Health Promotion Act and the Pharmaceutical and Medical Device Act to this app; applicability of allergen labelling rules (policy already applies the stricter interpretation).
 8. Copyright status of recipes under Japanese law (primary sources not checked).
-9. Spanish review capacity (ADR-007).
+9. Spanish review capacity (ADR-007). No native Spanish reviewer is available; the owner reviews with Claude's findings and back-translations, and the regional vocabulary rule of `docs/CONTENT_POLICY.md` §6 applies ("Stage 6.3 summary"). Remains a known limitation.
 10. Raw-egg dishes and other regionally sensitive food safety rules across the three locales. Eggs: decided (owner, 2026-10-23, Stage 5.1 P3) — soft or runny yolks are allowed with the `soft_yolk` note; raw-egg dishes stay excluded. Other regional rules are reviewed per batch in Stage 5.2.
 11. ~~Allergen item lists in `shared/content.ts`~~: match the CAA lists of April 2026 ("Stage 5.7 release readiness").
 12. Best-effort allergen lists for cooking sake, wholegrain mustard, Chinese-style stock granules, and karaage coating mix are based on typical ingredients, not product labels (Stage 0.6 log).
-13. ~~Owner review of the English and Spanish texts added or rewritten in Phase 1~~: the owner accepted the remaining texts (validation recipes, Phase 0 foods, UI catalogs outside `about.*`) as they are for this release (2026-10-24, "Release blocker decisions"); batches 1–3 and the about page were reviewed with their commits.
+13. ~~Owner review of the English and Spanish texts added or rewritten in Phase 1~~: the owner accepted the remaining texts (validation recipes, Phase 0 foods, UI catalogs outside `about.*`) as they are for this release (2026-10-24, "Release blocker decisions"); batches 1–3 and the about page were reviewed with their commits. Reviewed in Phase 6 Stage 6.3 (rounds R1–R6, 2026-10-24, "Stage 6.3 summary"): every text that had not been reviewed is now reviewed.
 14. ~~Whether every food must have at least one search alias per locale~~: aliases stay optional (ADR-030 D6).
 15. ~~Phase 2 must distinguish raw values from related cooked values for the error bands~~: separate reasons `raw_value_for_cooking` and `related_cooked_value` (ADR-028).
 16. Re-check the `i18next`/`react-i18next` pins after 2026-10-25 18:00 UTC (ADR-016, "ADR-016 re-check before Phase 5"); deferred by the owner to maintenance after the release ("Release blocker decisions").

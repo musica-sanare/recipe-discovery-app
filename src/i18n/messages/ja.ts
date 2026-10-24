@@ -469,6 +469,9 @@ export const ja = {
     western: "洋食",
     spanish: "スペイン料理",
     okinawan: "沖縄料理",
+    latin_american: "中南米料理",
+    mediterranean: "地中海料理",
+    southeast_asian: "東南アジア料理",
   },
   equipment: {
     stove: "コンロ",

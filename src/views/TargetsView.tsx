@@ -48,7 +48,7 @@ function Fieldset({ legend, hint, children }: { readonly legend: string; readonl
 function Choice({ type, name, checked, onChange, children }: { readonly type: "radio" | "checkbox"; readonly name: string; readonly checked: boolean; readonly onChange: () => void; readonly children: ReactNode }) {
   return (
     <label className="flex min-h-10 items-center gap-2">
-      <input type={type} name={name} checked={checked} onChange={onChange} className="size-5 accent-accent" />
+      <input type={type} name={name} checked={checked} onChange={onChange} className="size-5 shrink-0 accent-accent" />
       <span>{children}</span>
     </label>
   );

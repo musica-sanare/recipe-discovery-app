@@ -190,7 +190,7 @@ export const substitutionSchema = z.object({
 });
 export type Substitution = z.infer<typeof substitutionSchema>;
 
-export const CUISINES = ["japanese", "chinese", "korean", "western", "spanish", "okinawan"] as const;
+export const CUISINES = ["japanese", "chinese", "korean", "western", "spanish", "okinawan", "latin_american", "mediterranean", "southeast_asian"] as const;
 export const GOALS = ["cut", "maintain", "bulk"] as const;
 export const EQUIPMENT = ["stove", "microwave", "oven_toaster", "pot", "frying_pan", "deep_pan"] as const;
 export type Cuisine = (typeof CUISINES)[number];

@@ -467,6 +467,9 @@ export const es: Messages = {
     western: "Occidental",
     spanish: "Española",
     okinawan: "De Okinawa",
+    latin_american: "Latinoamericana",
+    mediterranean: "Mediterránea",
+    southeast_asian: "Del sudeste asiático",
   },
   equipment: {
     stove: "Fogón o estufa",

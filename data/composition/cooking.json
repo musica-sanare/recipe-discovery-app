@@ -19,6 +19,9 @@
     { "code": "06087", "rawCode": "06086", "method": "boil", "ratePercent": 88, "page": 45 },
     { "code": "06155", "rawCode": "06153", "method": "boil", "ratePercent": 89, "page": 46 },
     { "code": "06336", "rawCode": "06153", "method": "stir_fry", "ratePercent": 70, "page": 46 },
+    { "code": "06378", "rawCode": "06178", "method": "boil", "ratePercent": 97, "page": 47 },
+    { "code": "06379", "rawCode": "06178", "method": "stir_fry", "ratePercent": 98, "page": 47 },
+    { "code": "06344", "rawCode": "06207", "method": "stir_fry", "ratePercent": 83, "page": 47 },
     { "code": "06215", "rawCode": "06214", "method": "boil", "ratePercent": 87, "page": 47 },
     { "code": "06246", "rawCode": "06245", "method": "stir_fry", "ratePercent": 96, "page": 48 },
     { "code": "06248", "rawCode": "06247", "method": "stir_fry", "ratePercent": 96, "page": 48 },
@@ -80,6 +83,8 @@
   "stirFryFat": [
     { "code": "06333", "cookedMass": 80, "mainMass": 100, "oilUsed": 5.0, "fatChangeFromMain": 4.6, "fatChangeFromMainAndOil": -0.4, "fatChangePer100gCooked": 5.8, "page": 66 },
     { "code": "06336", "cookedMass": 70, "mainMass": 100, "oilUsed": 5.0, "fatChangeFromMain": 4.0, "fatChangeFromMainAndOil": -1.0, "fatChangePer100gCooked": 5.8, "page": 66 },
+    { "code": "06379", "cookedMass": 98, "mainMass": 100, "oilUsed": 5.0, "fatChangeFromMain": 4.3, "fatChangeFromMainAndOil": -0.7, "fatChangePer100gCooked": 4.5, "page": 66 },
+    { "code": "06344", "cookedMass": 83, "mainMass": 100, "oilUsed": 5.0, "fatChangeFromMain": 4.5, "fatChangeFromMainAndOil": -0.5, "fatChangePer100gCooked": 5.4, "page": 66 },
     { "code": "06246", "cookedMass": 96, "mainMass": 100, "oilUsed": 5.0, "fatChangeFromMain": 3.9, "fatChangeFromMainAndOil": -1.1, "fatChangePer100gCooked": 4.1, "page": 67 },
     { "code": "06248", "cookedMass": 96, "mainMass": 100, "oilUsed": 5.0, "fatChangeFromMain": 3.9, "fatChangeFromMainAndOil": -1.1, "fatChangePer100gCooked": 4.1, "page": 67 },
     { "code": "06397", "cookedMass": 76, "mainMass": 100, "oilUsed": 5.0, "fatChangeFromMain": 4.2, "fatChangeFromMainAndOil": -0.8, "fatChangePer100gCooked": 5.5, "page": 67 },

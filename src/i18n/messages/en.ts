@@ -467,6 +467,9 @@ export const en: Messages = {
     western: "Western",
     spanish: "Spanish",
     okinawan: "Okinawan",
+    latin_american: "Latin American",
+    mediterranean: "Mediterranean",
+    southeast_asian: "Southeast Asian",
   },
   equipment: {
     stove: "Stove",

@@ -511,6 +511,25 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - The owner checked the deployed site: the full flow, the language switch, the targets form keyboard, and the search timing on an iPhone with Safari (`docs/RELEASE_READINESS.md` §4 item 1), and the about page and disclaimers in `ja`, `en`, and `es` (item 5). No problem was found.
 - Not checked: an Android phone with Chrome (item 1), screen readers (item 2), and Windows forced colors (item 3; no Windows machine). The owner decided not to pursue them for this release; they are a known limitation (`docs/RELEASE_READINESS.md` §3), covered in part by the `mobile-chromium` E2E project and the axe-core checks, and checked again when a device is available or after a larger UI change.
 
+### Stage 6.2 recommendation speed: plan and baseline (2026-10-24)
+- The owner approved the plan as recommended: optimize the solver's grid loop (O1) and the nutrition engine's per-call allocations (O2) without changing any result; estimate the 100-recipe browser timing from the Node ratio; commit a solver results snapshot before optimizing. Not pursued: reusing engine probes across searches (O3; only later searches gain, and the engine would keep state between searches), pruning the grid (O4; equivalence is hard to prove), and a worker (decided in "Stage 5.4").
+- Profile (Node 24.19.0, Apple M1, `--cpu-prof` over 300 searches): about 40 % of the time is the solver's grid loop (`visit`, `fromVector`, `evaluateFit`, with garbage collection of the objects created per grid state) and about 30 % is the nutrition engine (`record` with `Object.fromEntries` alone 11 %). The 60 recipes have 19,338 grid states and need about 450 engine calls per search (about 14 µs each); `beef_steak_potatoes` alone has 5,376 states. Every solution uses the linear method; none falls back to the exhaustive search.
+- Tools: `tools/benchmark-recommendation.ts` (`npm run bench:recommendation`) times a full search (`evaluatePool` and `selectCandidates`) in the four scenarios of `e2e/timing.spec.ts` on the repository recipes and on a synthetic library of 100 recipes (the first 40 recipes again under new IDs, in memory only). `test/node/solver-results.test.ts` keeps every pool entry's solver result (method, tier, forced and solver sides, amounts, relative change, per-serving values at full precision) for eight requests, including forced sides, forced substitutions, and required foods. A scratch comparison outside the repository hashes complete pool and selection results for 1,500 requests (five condition sets, 250 target combinations, servings 1 and 2); it is repeatable and is compared before and after each optimization.
+- Baseline, Node (median / p90 of 15 runs, ms): repository (60 recipes, 19,338 grid states) cut 16.0 / 18.2, bulk 15.2 / 15.6, maintain with tofu required 2.8 / 3.5, bulk at ≤ 15 min 5.8 / 7.2; synthetic (100 recipes, 35,322 grid states) 24.9 / 33.7, 26.0 / 30.1, 5.2 / 5.7, 9.9 / 10.2.
+- Baseline, browser (`npm run test:e2e:timing`, same profile as "Stage 5.4"; median / p90, ms):
+
+| Scenario | 1× | 4× | 6× |
+|---|---|---|---|
+| Search, cut | 20.1 / 23.8 | 85.8 / 96.8 | 130.5 / 144.8 |
+| Search, bulk | 19.8 / 22.7 | 81.2 / 97.5 | 119.3 / 148.5 |
+| Search, maintain with tofu required | 9.3 / 11.7 | 38.3 / 42.8 | 58.2 / 66.9 |
+| Search, bulk at ≤ 15 min | 11.9 / 13.6 | 48.6 / 51.4 | 73.6 / 82.8 |
+| Re-suggestion | 4.7 / 5.4 | 19.4 / 21.9 | 31.2 / 41.1 |
+| Recalculation (servings step) | 2.5 / 2.9 | 11.7 / 14.4 | 18.3 / 19.8 |
+
+- Estimate for 100 recipes at 4× (browser median × Node ratio of 100 to 60 recipes): cut 85.8 × 1.56 ≈ 134 ms, bulk 81.2 × 1.71 ≈ 139 ms, above the 100 ms threshold of ADR-030 D10. The optimization needs to save about 30 %.
+- A first browser run overlapped with the scratch comparison and read about 10 % slower at 6×; it was discarded and the timing repeated alone.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in

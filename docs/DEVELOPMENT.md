@@ -35,6 +35,7 @@ Browser previews: `.claude/launch.json` has `preview` (the production build with
 | `npm run test:e2e:timing` | Phone-class timing with CPU throttling (project `timing`, Chromium); writes `test-results/timing.json` |
 | `npm run data:extract` | Regenerate `data/composition/foods.json` from the MEXT workbook in `data/raw/` (`docs/DATA_SOURCES.md` "Extraction") |
 | `npm run eval:coverage` | How many validation recipes meet representative targets with default and adjusted amounts, computed by the recommendation engine (`docs/DECISIONS.md` "Stage 0.6", "Stage 3.7") |
+| `npm run bench:recommendation` | Node timing of a full search on the repository recipes and on an in-memory synthetic library of 100 recipes (`docs/DECISIONS.md` "Stage 6.2") |
 | `npm run data:verify-cooking` | macOS only: check `data/composition/cooking.json` against the MEXT explanation PDF text (`docs/DATA_SOURCES.md` "Cooking tables") |
 
 There is intentionally no deploy script; deployment follows `docs/DEPLOYMENT.md` after the owner's approval.

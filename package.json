@@ -23,7 +23,8 @@
     "report:composition": "node tools/report-composition.ts",
     "data:extract": "node tools/extract-composition.ts",
     "data:verify-cooking": "node tools/verify-cooking-transcription.ts",
-    "eval:coverage": "node tools/evaluate-coverage.ts"
+    "eval:coverage": "node tools/evaluate-coverage.ts",
+    "bench:recommendation": "node tools/benchmark-recommendation.ts"
   },
   "dependencies": {
     "i18next": "26.4.7",

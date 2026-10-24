@@ -23,8 +23,15 @@ export const SECURITY_HEADERS: Readonly<Record<string, string>> = {
   "Permissions-Policy": "camera=(), microphone=(), geolocation=(), payment=()",
 };
 
+/**
+ * Vite puts content-hashed files under /assets/, so a changed file always has a new URL and
+ * browsers may keep these for a year. HTML and other files keep the host's default
+ * revalidation (docs/DEPLOYMENT.md).
+ */
+export const ASSET_CACHE_CONTROL = "public, max-age=31536000, immutable";
+
 /** Cloudflare static assets `_headers` format: a URL pattern followed by indented `Name: Value` lines. */
 export function renderCloudflareHeaders(headers: Readonly<Record<string, string>> = SECURITY_HEADERS): string {
   const lines = Object.entries(headers).map(([name, value]) => `  ${name}: ${value}`);
-  return ["# Generated from platform/headers.ts. Do not edit.", "/*", ...lines, ""].join("\n");
+  return ["# Generated from platform/headers.ts. Do not edit.", "/*", ...lines, "/assets/*", `  Cache-Control: ${ASSET_CACHE_CONTROL}`, ""].join("\n");
 }

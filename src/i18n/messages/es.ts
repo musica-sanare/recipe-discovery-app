@@ -28,9 +28,6 @@ export const es: Messages = {
     retry: "Reintentar",
     versions: "Versión del contenido {{content}} · Datos de composición actualizados el {{composition}}",
   },
-  home: {
-    status: "Próximamente.",
-  },
   nav: {
     views: {
       targets: "Objetivos y condiciones",
@@ -73,7 +70,7 @@ export const es: Messages = {
   conditions: {
     effortLegend: "Esfuerzo (preferencia)",
     effortAny: "Cualquiera",
-    cuisineLegend: "Cocina (preferencia)",
+    cuisineLegend: "Tipo de cocina (preferencia)",
     preferenceHint: "Las preferencias cambian el orden; también pueden aparecer recetas que no coincidan.",
     equipmentLegend: "Utensilios que tienes",
     equipmentMode: {
@@ -93,8 +90,8 @@ export const es: Messages = {
     foodGroup: "{{group}} (cualquier pieza o tipo)",
     foodSearch: {
       noMatch: "Ningún ingrediente coincide con «{{query}}». Este ingrediente no está disponible.",
-      results_one: "{{count}} sugerencia. Usa las flechas arriba y abajo para elegir y Intro para añadir.",
-      results_other: "{{count}} sugerencias. Usa las flechas arriba y abajo para elegir y Intro para añadir.",
+      results_one: "{{count}} sugerencia. Usa las flechas arriba y abajo para elegir y Intro (Enter) para añadir.",
+      results_other: "{{count}} sugerencias. Usa las flechas arriba y abajo para elegir y Intro (Enter) para añadir.",
       remove: "Quitar {{food}}",
       added: "Se añadió {{food}}.",
       removed: "Se quitó {{food}}.",
@@ -325,7 +322,7 @@ export const es: Messages = {
     empty_required_item: "Un ingrediente que quieres usar está vacío. Elige un ingrediente o elimina el elemento.",
     required_and_excluded: "Un ingrediente que quieres usar también está entre los que quieres evitar. Quítalo de una de las dos listas.",
     unknown_recipe: "Las recetas en pantalla están desactualizadas. Vuelve a buscar.",
-    invalid_servings: "Introduce un número entero entre {{min}} y {{max}} en raciones.",
+    invalid_servings: "Introduce un número entero entre {{min}} y {{max}} en el número de raciones.",
     invalid_seed: "No se pudieron elegir nuevas candidatas. Vuelve a buscar.",
   },
   inputField: {
@@ -472,12 +469,12 @@ export const es: Messages = {
     okinawan: "De Okinawa",
   },
   equipment: {
-    stove: "Fogón",
+    stove: "Fogón o estufa",
     microwave: "Microondas",
     oven_toaster: "Horno tostador",
     pot: "Olla",
     frying_pan: "Sartén",
-    deep_pan: "Cazo hondo para freír",
+    deep_pan: "Olla honda para freír",
   },
   proteinGroup: {
     chicken: "Pollo",

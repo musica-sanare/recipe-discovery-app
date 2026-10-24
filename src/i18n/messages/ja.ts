@@ -29,9 +29,6 @@ export const ja = {
     retry: "再読み込み",
     versions: "コンテンツ版 {{content}}・成分表データ {{composition}} 更新",
   },
-  home: {
-    status: "現在準備中です。",
-  },
   nav: {
     views: {
       targets: "目標と条件",

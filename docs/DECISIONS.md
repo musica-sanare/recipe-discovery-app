@@ -590,6 +590,13 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - Tests: `test/node/food-search.test.ts` finds `beef_round` by "babilla" and `bread` by "pan de caja" and "pan lactal", and does not offer `shimeji` for "champiñones". On the previous dictionary the last three fail ("babilla" passed through the old name).
 - Checks: `npm run check` (632 tests; nutrition snapshots unchanged) and `npm run test:e2e` (98 passed, 1 skipped). Browser check (`npm run preview`, 375 px, `es`): the ingredient box offers "Pan de molde" for "pan de caja", the beef group and "Ternera magra (de pierna)" for "babilla", and "not available" for "champiñones"; the detail pages show "Frito (sin rebozar)" (`tortilla_espanola`), "Asado" (`chicken_lemon_herb_grill`), and "refrigerador" (`boiled_chicken_negi_salt`) with no element wider than the viewport; no console messages.
 
+### Stage 6.3 R5: targets and conditions UI (2026-10-24)
+- R5 covered 115 keys of the UI catalogs (`meta`, `app`, `language`, `common`, `content`, `home`, `nav`, `targets`, `conditions`, `inputError`, `inputField`, `contradiction`, `cuisine`, `equipment`, `proteinGroup`, `effort`). The English texts have no finding; the `inputField` phrases were checked inside the error messages that use them.
+- The owner approved fixes J1–J6 (UI catalogs only; the content version is unchanged):
+  - J1–J5 (Spanish): `conditions.cuisineLegend` is "Tipo de cocina (preferencia)" ("Cocina" also reads as "kitchen"); `equipment.stove` is "Fogón o estufa" ("fogón" is a campfire or grill fire in Chile and Argentina, "estufa" a heater in Spain; V1 rule); `equipment.deep_pan` is "Olla honda para freír" ("cazo" names different utensils by region); `inputError.invalid_servings` says "en el número de raciones"; the food search results name the key "Intro (Enter)".
+  - J6: the unused key `home.status` (an early placeholder, "Coming soon") is removed from the three catalogs; nothing in `src`, `test`, or `e2e` used it.
+- Checks: `npm run check` (632 tests) and `npm run test:e2e` (98 passed, 1 skipped). Browser check (`npm run preview`, 375 px, `es`): the conditions section with "Tipo de cocina (preferencia)", "Fogón o estufa", and "Olla honda para freír", and the servings error for 0 in the field and the error summary, with no element wider than the viewport; no console messages.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in

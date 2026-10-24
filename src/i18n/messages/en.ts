@@ -28,9 +28,6 @@ export const en: Messages = {
     retry: "Try again",
     versions: "Content version {{content}} · Composition data updated {{composition}}",
   },
-  home: {
-    status: "Coming soon.",
-  },
   nav: {
     views: {
       targets: "Targets and conditions",

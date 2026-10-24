@@ -81,7 +81,7 @@ Acceptance: the full flow works on mobile and desktop in three locales; accessib
 
 ## Phase 5 — Quality and release preparation
 
-Status: **Stages 5.1–5.7 done (2026-10-24); release blocked** by the items in `docs/RELEASE_READINESS.md` §2. The `docs/SPEC.md` §15 criteria are met locally; deployment waits for those items and the owner's approval. Logs: `docs/DECISIONS.md` "Phase 5 start" to "Stage 5.7".
+Status: **Complete (2026-10-24)**: deployed at https://recipe-discovery.musica-sanare.workers.dev after the owner's approval. Manual checks on real devices, screen readers, and forced colors remain (`docs/RELEASE_READINESS.md` §4). Logs: `docs/DECISIONS.md` "Phase 5 start" to "Production deployment".
 
 - E2E tests (desktop and mobile, three locales, long strings, locale switching, exceptional states).
 - Security headers and CSP verification; dependency and secret scans.

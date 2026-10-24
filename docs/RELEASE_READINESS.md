@@ -1,6 +1,6 @@
 # Release Readiness — Recipe Discovery MVP
 
-Status: **Ready for the owner's deployment approval (2026-10-24)**. Every acceptance criterion of `docs/SPEC.md` §15 is met, CI passes, and the release blockers are resolved or deferred by the owner (§2). Nothing is deployed. Update this document for every release candidate; decisions behind it are in `docs/DECISIONS.md` ("Stage 5.1 release plan" to "Release blocker decisions").
+Status: **Deployed (2026-10-24)** at https://recipe-discovery.musica-sanare.workers.dev from commit `66473f7` (Cloudflare Workers static assets, version `0f4696e0-d896-4626-b486-03c53d2cac1b`). The post-deployment checks passed (§6); the manual checks of §4 items 1–3 remain. Update this document for every release; decisions behind it are in `docs/DECISIONS.md` ("Stage 5.1 release plan" to "Production deployment").
 
 ## 1. Acceptance criteria (`docs/SPEC.md` §15)
 
@@ -53,7 +53,7 @@ Before or right after the first deployment (results recorded here):
 1. Real devices: iPhone with Safari and an Android phone with Chrome — the full flow, the language switch, keyboard on the targets form, and timing of a search (compare with ADR-030 D10).
 2. Screen readers: VoiceOver (iOS or macOS) on the targets form, error summary, candidates live region, comparison table, and detail view; NVDA or Narrator if a Windows machine is available.
 3. Windows high-contrast (forced colors) mode: status markers and focus rings remain visible.
-4. Post-deployment checks of `docs/DEPLOYMENT.md` §3 step 6 (headers, deep links, `/about`, asset caching, `_headers` on SPA fallback responses, no external requests).
+4. ~~Post-deployment checks of `docs/DEPLOYMENT.md` §3 step 6~~: passed on 2026-10-24 (`docs/DECISIONS.md` "Production deployment").
 5. A final read of the about page and disclaimers in the three locales on the deployed site.
 
 ## 5. Deployment proposal (for the owner's approval; not deployed)
@@ -76,5 +76,5 @@ Before or right after the first deployment (results recorded here):
 | Acceptance criteria checked | 2026-10-24 | Claude (commands above) |
 | Release blockers resolved | 2026-10-24 | Owner (open questions 13 and 16 by decision; CI passed) and Claude (open question 11, secret scan) |
 | Deployment proposal approved (up to the dry run) | 2026-10-24 | Owner; dry run passed (`docs/DECISIONS.md` "Deployment preparation and dry run") |
-| Production deployment approved | — | Owner |
-| Deployed and checked | — | — |
+| Production deployment approved | 2026-10-24 | Owner (account [account name] confirmed with `wrangler whoami`) |
+| Deployed and checked | 2026-10-24 | Claude: `66473f7`, version `0f4696e0…`, checks in `docs/DECISIONS.md` "Production deployment" |

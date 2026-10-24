@@ -14,7 +14,7 @@ The app supports Japanese, English, and Spanish (`ja`, `en`, `es`).
 
 ## Status
 
-Phase 5 (quality and release preparation, `docs/IMPLEMENTATION_PLAN.md`). The MVP flow, the content library, E2E tests, security checks, CI, and the deployment runbook are in place, and the acceptance criteria are met locally. Nothing is deployed: the remaining release blockers and the deployment proposal are in [`docs/RELEASE_READINESS.md`](docs/RELEASE_READINESS.md).
+Phase 5 (quality and release preparation, `docs/IMPLEMENTATION_PLAN.md`). The MVP flow, the content library, E2E tests, security checks, CI, and the deployment runbook are in place, and the acceptance criteria are met. Deployed on 2026-10-24 at https://recipe-discovery.musica-sanare.workers.dev; the release record, limitations, and remaining manual checks are in [`docs/RELEASE_READINESS.md`](docs/RELEASE_READINESS.md).
 
 ## Local setup
 

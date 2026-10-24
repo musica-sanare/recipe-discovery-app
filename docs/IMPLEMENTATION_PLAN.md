@@ -10,6 +10,7 @@ Status: **Draft (2026-10-18)**. Each phase ends with checks, a summary to the ow
 | 3 — Recommendation engine | `prompts/03-recommendation-engine.md` |
 | 4 — UI and localization | `prompts/04-ui-and-localization.md` |
 | 5 — Quality and release preparation | `prompts/05-quality-and-release.md` |
+| 6 — Post-release maintenance | `prompts/06-post-release-maintenance.md` |
 
 `prompts/FIRST_MESSAGE.md` is the kickoff message for a new Claude Code session.
 
@@ -90,6 +91,19 @@ Status: **Complete (2026-10-24)**: deployed at https://recipe-discovery.musica-s
 - Deploy only after the owner's explicit approval.
 
 Acceptance: SPEC §15 acceptance criteria pass; known risks and manual checks are listed.
+
+## Phase 6 — Post-release maintenance
+
+Status: **Planned (2026-10-24)**. The owner chose post-release maintenance (option A) over more content, features outside the MVP, and AI; more content is a Phase 7 candidate once the recommendation is faster and the remaining texts are reviewed.
+
+- Manual checks of `docs/RELEASE_READINESS.md` §4 recorded and their findings handled; ADR-016 re-check of `i18next` and `react-i18next` (not before 2026-10-26 05:53 UTC).
+- Recommendation speed: profiling and optimizations that leave every engine output identical, with a library of about 100 recipes as the target (ADR-030 D10).
+- Review of the English and Spanish texts accepted without review for the release (open questions 9 and 13).
+- Egg- and soy-based recipes that fit the presets better (`docs/DECISIONS.md` "Stage 5.2 batch 1").
+- Evidence for the assumed error bands (open question 3); any band change needs an ADR and the owner's approval.
+- Release readiness and a redeployment after the owner's approval.
+
+Acceptance: manual check results recorded; dependency pins updated or re-scheduled; a full recommendation of about 100 recipes within about 100 ms at 4× with unchanged snapshots; the remaining texts reviewed or listed with the owner's decision; changed recipes validated with approved snapshot diffs and ADR-023 still met; error band evidence recorded; checks and CI pass.
 
 ## Later (not MVP)
 

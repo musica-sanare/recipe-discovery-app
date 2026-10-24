@@ -486,6 +486,9 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - Cause: `ViewHeading` set `document.title` in a passive `useEffect`, which React may run after the heading is in the DOM; on the slower runner the test read the title in that gap. A new test reads the title from a `MutationObserver` at the moment the `h1` is inserted and failed the same way before the fix.
 - Fix: `src/components/ViewHeading.tsx` sets the title in `useLayoutEffect`, so the title changes in the same commit as the heading (also for users). `npm run check` (625 tests), 8 runs of the title tests under CPU load, and `npm run test:e2e` (98 passed, 1 skipped) pass locally. The CI run on the fix commit is still to be confirmed.
 
+### Release blocker decisions (2026-10-24)
+- Open question 13: the owner decided that the English and Spanish texts stay as they are for this release, without a further review of the validation recipes, the Phase 0 foods, and the UI catalogs. A review can follow in a later content version; open question 9 (no native Spanish reviewer) remains a documented limitation.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in
@@ -743,7 +746,7 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 10. Raw-egg dishes and other regionally sensitive food safety rules across the three locales. Eggs: decided (owner, 2026-10-23, Stage 5.1 P3) — soft or runny yolks are allowed with the `soft_yolk` note; raw-egg dishes stay excluded. Other regional rules are reviewed per batch in Stage 5.2.
 11. ~~Allergen item lists in `shared/content.ts`~~: match the CAA lists of April 2026 ("Stage 5.7 release readiness").
 12. Best-effort allergen lists for cooking sake, wholegrain mustard, Chinese-style stock granules, and karaage coating mix are based on typical ingredients, not product labels (Stage 0.6 log).
-13. Owner review of the English and Spanish texts added or rewritten in Phase 1: split steps, side labels, and the substitution step texts (Stage 1.1 log, ADR-007). Deferred by the owner to a review together with the UI once the prototype is largely complete ("Phase 4 start").
+13. ~~Owner review of the English and Spanish texts added or rewritten in Phase 1~~: the owner accepted the remaining texts (validation recipes, Phase 0 foods, UI catalogs outside `about.*`) as they are for this release (2026-10-24, "Release blocker decisions"); batches 1–3 and the about page were reviewed with their commits.
 14. ~~Whether every food must have at least one search alias per locale~~: aliases stay optional (ADR-030 D6).
 15. ~~Phase 2 must distinguish raw values from related cooked values for the error bands~~: separate reasons `raw_value_for_cooking` and `related_cooked_value` (ADR-028).
 16. Re-check the `i18next`/`react-i18next` pins after 2026-10-25 18:00 UTC (ADR-016, "ADR-016 re-check before Phase 5").

@@ -30,6 +30,14 @@ export const foods: readonly Food[] = [
     proteinGroup: "chicken",
   },
   {
+    id: "chicken_sasami",
+    names: { ja: "鶏ささみ", en: "Chicken tenderloin", es: "Solomillo de pollo" },
+    aliases: { ja: ["ささみ", "ササミ", "とりささみ"], en: ["chicken tenders", "sasami"], es: ["solomillos de pollo", "sasami"] },
+    composition: { raw: "11227", boil: "11229", grill: "11228" },
+    allergens: [{ allergen: "chicken", confidence: "contains" }],
+    proteinGroup: "chicken",
+  },
+  {
     id: "pork_fillet",
     names: { ja: "豚ヒレ肉", en: "Pork tenderloin", es: "Solomillo de cerdo" },
     aliases: { ja: ["豚ヒレ", "ヒレ肉", "豚フィレ", "ぶたひれ", "ひれにく"], en: ["pork fillet"], es: ["lomo de cerdo", "filete de cerdo"] },
@@ -110,6 +118,22 @@ export const foods: readonly Food[] = [
     proteinGroup: "fish",
   },
   {
+    id: "horse_mackerel",
+    names: { ja: "まあじ", en: "Japanese horse mackerel", es: "Jurel japonés" },
+    aliases: { ja: ["あじ", "アジ", "鯵"], en: ["horse mackerel", "aji"], es: ["jurel", "chicharro"] },
+    composition: { raw: "10003", grill: "10005" },
+    allergens: [],
+    proteinGroup: "fish",
+  },
+  {
+    id: "mackerel_canned",
+    names: { ja: "さば水煮缶", en: "Canned mackerel in water", es: "Caballa en lata al natural" },
+    aliases: { ja: ["さば缶", "サバ缶", "鯖缶", "さばかん"], en: ["mackerel", "canned mackerel"], es: ["caballa", "caballa en lata"] },
+    composition: { as_is: "10164" },
+    allergens: [{ allergen: "mackerel", confidence: "contains" }],
+    proteinGroup: "fish",
+  },
+  {
     id: "tuna_canned",
     names: { ja: "ツナ缶（水煮）", en: "Canned tuna (in water)", es: "Atún en lata (al natural)" },
     aliases: { ja: ["ツナ", "ツナ缶", "シーチキン"], en: ["tuna", "canned tuna"], es: ["atún", "atún al natural"] },
@@ -140,6 +164,19 @@ export const foods: readonly Food[] = [
     composition: { raw: "04033" },
     allergens: [{ allergen: "soybean", confidence: "contains" }],
     proteinGroup: "soy",
+  },
+  {
+    id: "koya_tofu",
+    names: { ja: "高野豆腐（乾）", en: "Freeze-dried tofu (koya-dofu)", es: "Tofu deshidratado (koya-dofu)" },
+    aliases: { ja: ["凍り豆腐", "こうやどうふ", "しみ豆腐"], en: ["koya tofu", "dried tofu"], es: ["koya tofu", "tofu seco"] },
+    composition: { raw: "04042", simmer: "04087" },
+    allergens: [{ allergen: "soybean", confidence: "contains" }],
+    proteinGroup: "soy",
+    note: {
+      ja: "海外では日本食材店で手に入ります。乾物の重さです。",
+      en: "Sold at Japanese grocery stores outside Japan. The weight is the dry weight.",
+      es: "Fuera de Japón se vende en tiendas de alimentación japonesa. El peso es en seco.",
+    },
   },
   {
     id: "atsuage",
@@ -217,6 +254,13 @@ export const foods: readonly Food[] = [
     allergens: [{ allergen: "wheat", confidence: "contains" }],
   },
   {
+    id: "soba_boiled",
+    names: { ja: "ゆでそば", en: "Soba noodles (boiled)", es: "Fideos soba (cocidos)" },
+    aliases: { ja: ["そば", "日本そば", "蕎麦"], en: ["soba", "buckwheat noodles"], es: ["soba", "fideos de alforfón"] },
+    composition: { as_is: "01128" },
+    allergens: [{ allergen: "buckwheat", confidence: "contains" }, { allergen: "wheat", confidence: "may_contain" }],
+  },
+  {
     id: "chinese_noodles",
     names: { ja: "中華めん（生）", en: "Fresh Chinese-style wheat noodles", es: "Fideos chinos frescos de trigo" },
     aliases: { ja: ["中華麺", "ラーメン", "ちゅうかめん"], en: ["ramen noodles", "wheat noodles"], es: ["fideos de ramen", "fideos de trigo"] },
@@ -276,6 +320,13 @@ export const foods: readonly Food[] = [
       en: "May be hard to find outside Japan. Other mushrooms work, but the nutrition values change.",
       es: "Puede ser difícil de encontrar fuera de Japón. Se pueden usar otras setas, pero los valores nutricionales cambian.",
     },
+  },
+  {
+    id: "shiitake",
+    names: { ja: "生しいたけ", en: "Fresh shiitake mushrooms", es: "Setas shiitake frescas" },
+    aliases: { ja: ["しいたけ", "椎茸", "シイタケ"], en: ["shiitake"], es: ["shiitake", "hongos shiitake"] },
+    composition: { raw: "08039", boil: "08040", stir_fry: "08041" },
+    allergens: [],
   },
   {
     id: "tomato",
@@ -465,6 +516,13 @@ export const foods: readonly Food[] = [
     allergens: [],
   },
   {
+    id: "paprika_powder",
+    names: { ja: "パプリカパウダー", en: "Paprika (ground)", es: "Pimentón" },
+    aliases: { ja: ["パプリカ粉", "ぱぷりかぱうだー"], en: ["paprika", "smoked paprika"], es: ["pimentón dulce", "páprika"] },
+    composition: { as_is: "17079" },
+    allergens: [],
+  },
+  {
     id: "grain_mustard",
     names: { ja: "粒マスタード", en: "Wholegrain mustard", es: "Mostaza en grano" },
     aliases: { ja: ["マスタード", "つぶますたーど"], en: ["mustard"], es: ["mostaza antigua", "mostaza"] },
@@ -499,6 +557,13 @@ export const foods: readonly Food[] = [
     aliases: { ja: ["トウバンジャン"], en: ["chili bean paste"], es: ["pasta de chile"] },
     composition: { as_is: "17004" },
     allergens: [{ allergen: "soybean", confidence: "may_contain" }, { allergen: "wheat", confidence: "may_contain" }],
+  },
+  {
+    id: "miso",
+    names: { ja: "米みそ（淡色辛みそ）", en: "Light miso (rice miso)", es: "Miso claro (miso de arroz)" },
+    aliases: { ja: ["みそ", "味噌", "白みそ"], en: ["miso", "miso paste"], es: ["miso", "pasta de miso"] },
+    composition: { as_is: "17045" },
+    allergens: [{ allergen: "soybean", confidence: "contains" }, { allergen: "wheat", confidence: "may_contain" }],
   },
   {
     id: "potato_starch",
@@ -539,6 +604,13 @@ export const foods: readonly Food[] = [
     names: { ja: "モッツァレラチーズ", en: "Mozzarella", es: "Mozzarella" },
     aliases: { ja: ["チーズ", "モッツァレラ"], en: ["cheese"], es: ["queso mozzarella", "queso"] },
     composition: { as_is: "13056" },
+    allergens: [{ allergen: "milk", confidence: "contains" }],
+  },
+  {
+    id: "yogurt_plain",
+    names: { ja: "プレーンヨーグルト（無糖）", en: "Plain yogurt (unsweetened)", es: "Yogur natural (sin azúcar)" },
+    aliases: { ja: ["ヨーグルト", "無糖ヨーグルト", "よーぐると"], en: ["yogurt", "plain yoghurt"], es: ["yogur", "yogur natural"] },
+    composition: { as_is: "13025" },
     allergens: [{ allergen: "milk", confidence: "contains" }],
   },
 ];

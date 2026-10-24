@@ -6,10 +6,11 @@ import type { Conditions, PoolRequest } from "../../domain/recommendation/types.
 import { presetTargets } from "../../domain/recommendation/validate.ts";
 import { appReducer, EMPTY_SESSION, INITIAL_STATE, MAX_COMPARE, type AppState, type SearchState } from "../../src/state/reducer.ts";
 import { differentType, excludeOne, search } from "../../src/state/recommendation.ts";
-import { repositoryEngine } from "../../tools/content/repository.ts";
+import { repositoryEngine, validationBundleInput } from "../../tools/content/repository.ts";
 
-// The UI's session handling on the repository content (ADR-029 D6, ADR-030 D2, D5, D13).
-const { calc } = repositoryEngine();
+// The UI's session handling on the 20 validation recipes, whose reviewed sets include the
+// "all shown" case (ADR-029 D6, ADR-030 D2, D5, D13).
+const { calc } = repositoryEngine(validationBundleInput());
 const data = recommendationDataFromBundle(calc);
 const none: Conditions = { excludedFoods: [], excludedAllergens: [], requiredFoods: [], cuisines: [] };
 const cut: PoolRequest = { targets: presetTargets("cut"), servings: 1, conditions: none };

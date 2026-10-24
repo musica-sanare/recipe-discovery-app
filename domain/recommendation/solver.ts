@@ -12,7 +12,7 @@ import type { Adjust } from "../../shared/content.ts";
 import { substitutedAdjust, type AmountRecipe, type RecipeState } from "../nutrition/amounts.ts";
 import type { EngineData, Nutrient } from "../nutrition/data.ts";
 import { NUTRIENTS, RANGE_EPSILON, RANGE_THRESHOLD, calculateNutrition, type Range, type RecipeNutrition } from "../nutrition/engine.ts";
-import { compareFits, evaluateFit, type Fit } from "./fit.ts";
+import { compareFits, evaluateFit, fitEvaluator, type Fit } from "./fit.ts";
 import type { ForcedState, Targets } from "./types.ts";
 
 export interface SolverRecipe extends AmountRecipe {
@@ -103,15 +103,54 @@ function vector(nutrition: Nutrition): (number | null)[] {
   });
 }
 
-function fromVector(values: readonly (number | null)[]): Nutrition {
+interface MutableRange {
+  low: number;
+  high: number;
+  shown: boolean;
+}
+
+/** Per-serving values and ranges that the linear model overwrites for every grid state. */
+interface Scratch {
+  readonly perServing: Record<Nutrient, number | null>;
+  readonly ranges: Record<Nutrient, Range | null>;
+  readonly rangeObjects: Record<Nutrient, MutableRange>;
+}
+
+function scratch(): Scratch {
   const perServing = {} as Record<Nutrient, number | null>;
   const ranges = {} as Record<Nutrient, Range | null>;
-  NUTRIENTS.forEach((nutrient, index) => {
-    const [point, low, high] = [values[index * 3] ?? null, values[index * 3 + 1] ?? null, values[index * 3 + 2] ?? null];
-    perServing[nutrient] = point;
-    ranges[nutrient] = point === null || low === null || high === null ? null : { low, high, shown: point - low + (high - point) > RANGE_THRESHOLD[nutrient] + RANGE_EPSILON };
-  });
-  return { perServing, ranges };
+  const rangeObjects = {} as Record<Nutrient, MutableRange>;
+  for (const nutrient of NUTRIENTS) {
+    perServing[nutrient] = null;
+    ranges[nutrient] = null;
+    rangeObjects[nutrient] = { low: 0, high: 0, shown: false };
+  }
+  return { perServing, ranges, rangeObjects };
+}
+
+/**
+ * Writes a vector into the scratch object and returns it. The result is only valid
+ * until the next call; the fit evaluation reads it at once and keeps numbers only.
+ */
+function fromVector(values: readonly (number | null)[], into: Scratch): Nutrition {
+  for (let index = 0; index < NUTRIENTS.length; index++) {
+    const nutrient = NUTRIENTS[index];
+    if (nutrient === undefined) continue;
+    const point = values[index * 3] ?? null;
+    const low = values[index * 3 + 1] ?? null;
+    const high = values[index * 3 + 2] ?? null;
+    into.perServing[nutrient] = point;
+    if (point === null || low === null || high === null) {
+      into.ranges[nutrient] = null;
+      continue;
+    }
+    const range = into.rangeObjects[nutrient];
+    range.low = low;
+    range.high = high;
+    range.shown = point - low + (high - point) > RANGE_THRESHOLD[nutrient] + RANGE_EPSILON;
+    into.ranges[nutrient] = range;
+  }
+  return into;
 }
 
 interface Candidate {
@@ -141,6 +180,11 @@ function compareCandidates(a: Candidate, b: Candidate): number {
   if (Math.abs(a.cost - b.cost) > COST_EPSILON) return a.cost - b.cost;
   if (a.sidesOff.length !== b.sidesOff.length) return a.sidesOff.length - b.sidesOff.length;
   return compareStrings(a.sidesOff, b.sidesOff) || compareNumbers(a.values, b.values);
+}
+
+interface CostTerm {
+  readonly index: number;
+  readonly defaultValue: number;
 }
 
 /** Active adjustable ingredients with their index in the full value vector. */
@@ -181,8 +225,9 @@ function search(input: SolveInput, data: EngineData, makeEvaluator: (stateFor: S
   };
 
   // Relative change against the forced default state; ingredients already at 0 g cannot change.
+  const fitOf = fitEvaluator(targets);
   const baseline = calculate(recipe, stateFor([], all.map((adjustable) => adjustable.defaultValue)), data);
-  const defaultFit = evaluateFit(baseline, targets);
+  const defaultFit = fitOf(baseline);
   const baseGrams = new Map(baseline.ingredients.map((ingredient) => [ingredient.key, ingredient.grams]));
   const changeable = [...new Set([...all.map((adjustable) => adjustable.key), ...recipe.sides.filter((side) => removable.includes(side.key)).flatMap((side) => side.ingredients)])].filter(
     (key) => (baseGrams.get(key) ?? 0) > 0,
@@ -202,18 +247,26 @@ function search(input: SolveInput, data: EngineData, makeEvaluator: (stateFor: S
     const active = all.flatMap((adjustable, index): Active[] => (!isOff(adjustable.key) && adjustable.values.length > 1 ? [{ adjustable, index }] : []));
     const evaluate = evaluator(sidesOff, active, defaults);
     const values = [...defaults];
-    const cost = () =>
-      changeable.reduce((sum, key) => {
-        if (isOff(key)) return sum + 1;
-        const index = adjustableIndex.get(key);
-        const adjustable = index === undefined ? undefined : all[index];
-        if (!adjustable || index === undefined) return sum;
-        return sum + Math.abs((values[index] ?? adjustable.defaultValue) - adjustable.defaultValue) / adjustable.defaultValue;
-      }, 0);
+    // The terms of the relative change in `changeable` order, so that the sum is added
+    // in the same order for every state: 1 for a side switched off, or an ingredient.
+    const terms = changeable.flatMap((key): (CostTerm | null)[] => {
+      if (isOff(key)) return [null];
+      const index = adjustableIndex.get(key);
+      const adjustable = index === undefined ? undefined : all[index];
+      return adjustable && index !== undefined ? [{ index, defaultValue: adjustable.defaultValue }] : [];
+    });
+    const cost = () => {
+      let sum = 0;
+      for (const term of terms) {
+        sum = term === null ? sum + 1 : sum + Math.abs((values[term.index] ?? term.defaultValue) - term.defaultValue) / term.defaultValue;
+      }
+      return sum;
+    };
     const visit = (depth: number): void => {
       if (depth === active.length) {
-        const candidate: Candidate = { sidesOff, values: [...values], fit: evaluateFit(evaluate(values), targets), cost: cost() };
-        if (!best || compareCandidates(candidate, best) < 0) best = candidate;
+        // `values` is copied only when the state becomes the best one.
+        const candidate: Candidate = { sidesOff, values, fit: fitOf(evaluate(values)), cost: cost() };
+        if (!best || compareCandidates(candidate, best) < 0) best = { ...candidate, values: [...values] };
         return;
       }
       const entry = active[depth];
@@ -256,19 +309,27 @@ const linearEvaluator =
       });
       return { index, from, slope };
     });
-    return (values) =>
-      fromVector(
-        base.map((value, entry) => {
-          if (value === null) return null;
-          let sum = value;
-          for (const { index, from, slope } of slopes) {
-            const rate = slope[entry];
-            if (rate === null || rate === undefined) return null;
-            sum += rate * ((values[index] ?? from) - from);
+    const predicted: (number | null)[] = base.map(() => null);
+    const into = scratch();
+    return (values) => {
+      for (let entry = 0; entry < base.length; entry++) {
+        const value = base[entry] ?? null;
+        predicted[entry] = null;
+        if (value === null) continue;
+        let sum = value;
+        let known = true;
+        for (const { index, from, slope } of slopes) {
+          const rate = slope[entry];
+          if (rate === null || rate === undefined) {
+            known = false;
+            break;
           }
-          return sum;
-        }),
-      );
+          sum += rate * ((values[index] ?? from) - from);
+        }
+        if (known) predicted[entry] = sum;
+      }
+      return fromVector(predicted, into);
+    };
   };
 
 function sameFit(a: Fit, b: Fit): boolean {

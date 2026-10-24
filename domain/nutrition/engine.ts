@@ -84,8 +84,12 @@ export interface RecipeNutrition {
 /** Margin of the range display threshold against binary noise. */
 export const RANGE_EPSILON = 1e-9;
 
+// A plain loop instead of Object.fromEntries: this runs several times per engine call,
+// hundreds of times per search (Phase 6 Stage 6.2). Key order stays that of NUTRIENTS.
 function record<T>(make: (nutrient: Nutrient) => T): Record<Nutrient, T> {
-  return Object.fromEntries(NUTRIENTS.map((nutrient) => [nutrient, make(nutrient)])) as Record<Nutrient, T>;
+  const result = {} as Record<Nutrient, T>;
+  for (const nutrient of NUTRIENTS) result[nutrient] = make(nutrient);
+  return result;
 }
 
 function mostSevere(classes: readonly UncertaintyClass[]): UncertaintyClass {

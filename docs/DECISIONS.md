@@ -530,6 +530,25 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - Estimate for 100 recipes at 4× (browser median × Node ratio of 100 to 60 recipes): cut 85.8 × 1.56 ≈ 134 ms, bulk 81.2 × 1.71 ≈ 139 ms, above the 100 ms threshold of ADR-030 D10. The optimization needs to save about 30 %.
 - A first browser run overlapped with the scratch comparison and read about 10 % slower at 6×; it was discarded and the timing repeated alone.
 
+### Stage 6.2 recommendation speed: optimization (2026-10-24)
+- O2, nutrition engine (`domain/nutrition/engine.ts`): `record` builds its object in a loop instead of `Object.fromEntries` over an array of pairs; key order is unchanged. About 15 % alone in Node.
+- O1, solver (`domain/recommendation/solver.ts`, `domain/recommendation/fit.ts`): `fitEvaluator(targets)` computes the target windows once per solve (`evaluateFit` calls it, so its behavior is unchanged); the linear model writes into one reused vector and one reused per-serving and range object per side mask, read at once by the fit evaluation, which keeps numbers only; the relative change adds precomputed terms in the same order as before; the value vector is copied only for a new best state. A loop version of the fit counts was tried and dropped (no measurable gain).
+- Equality: `test/node/solver-results.test.ts`, the engine snapshot, the scenario snapshot, and every other test pass without updates; the scratch comparison of 1,500 requests is identical before and after. The comparison was checked by adding 1e-7 to the cost of a switched-off side, which changed the result of 654 of the 1,500 requests; the change was reverted.
+- Node (`npm run bench:recommendation`, median / p90, ms): repository cut 11.3 / 13.5 (−29 %), bulk 10.7 / 11.1 (−30 %), maintain with tofu required 2.0 / 2.5, bulk at ≤ 15 min 4.3 / 4.8; synthetic 100 recipes cut 17.8 / 20.0 (−29 %), bulk 17.9 / 18.3 (−31 %), 3.6 / 4.3, 6.9 / 7.6.
+- Browser (`npm run test:e2e:timing`, run alone; median / p90, ms):
+
+| Scenario | 1× | 4× | 6× |
+|---|---|---|---|
+| Search, cut | 16.3 / 18.3 | 66.0 / 73.7 | 99.7 / 106.5 |
+| Search, bulk | 15.9 / 19.7 | 66.0 / 77.0 | 96.6 / 108.1 |
+| Search, maintain with tofu required | 7.9 / 8.5 | 33.2 / 34.4 | 48.8 / 57.0 |
+| Search, bulk at ≤ 15 min | 10.0 / 11.2 | 40.9 / 47.7 | 61.5 / 69.6 |
+| Re-suggestion | 4.6 / 5.2 | 19.2 / 20.8 | 28.9 / 31.9 |
+| Recalculation (servings step) | 2.6 / 2.8 | 11.0 / 12.5 | 16.4 / 18.1 |
+
+- A full search at 4× fell from 81–86 ms to 66 ms (about −20 %). Estimate for 100 recipes at 4×: 104 ms (cut) and 110 ms (bulk) when the whole browser time is scaled by the Node ratio of 100 to 60 recipes, or 92 ms and 95 ms when only the engine part grows (60-recipe browser time plus 4 × the Node difference). The synthetic library repeats heavier recipes than average (15,984 grid states for 40 copies against 12,892 for an average 40), so both estimates lean high. The real timing is measured when the library grows.
+- Not changed: reusing engine probes across searches (O3) and pruning (O4), as approved in the plan.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in
@@ -764,7 +783,7 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
   - **D7. Relaxation and equipment** (open question 20): no engine change. Relaxation options are listed with their met and near gains and an "apply" action. Equipment is chosen as "no limit" (default), "microwave only", or individual items; when no single relaxation exists, the UI suggests reviewing the equipment and links to that field.
   - **D8. Adjustment**: servings, steppers on the authored grid and whole units, side switches, substitutions from the recipe's list, "fit to my targets" (the pool entry's solver state; only after a search), and reset. Differences from the previous state are the differences of the displayed (rounded) values, so that the shown numbers add up, and status changes are listed.
   - **D9. Browser storage** (open question 5): nothing except the locale preference is stored in the MVP. Opt-in storage of targets or viewed recipes may be proposed later with its own privacy review.
-  - **D10. Where the recommendation runs** (open question 17): the main thread. Stage 4.7 measures a full recommendation, a re-suggestion, and a recalculation in the browser, including a phone-class CPU throttling profile if the browser offers one; a worker is proposed only if a full recommendation exceeds about 50 ms there. Revised (owner, 2026-10-24, Stage 5.4): the recommendation stays on the main thread; the threshold becomes about 100 ms for a full recommendation at a 4× CPU slowdown (a response within 100 ms is perceived as immediate). Measured: median 81 ms, p90 94 ms at 4×; about 120 ms at 6× is a known limitation, and the timing is measured again when the library grows or before real-device checks ("Stage 5.4 E2E suite and phone-class timing").
+  - **D10. Where the recommendation runs** (open question 17): the main thread. Stage 4.7 measures a full recommendation, a re-suggestion, and a recalculation in the browser, including a phone-class CPU throttling profile if the browser offers one; a worker is proposed only if a full recommendation exceeds about 50 ms there. Revised (owner, 2026-10-24, Stage 5.4): the recommendation stays on the main thread; the threshold becomes about 100 ms for a full recommendation at a 4× CPU slowdown (a response within 100 ms is perceived as immediate). Measured: median 81 ms, p90 94 ms at 4×; about 120 ms at 6× is a known limitation, and the timing is measured again when the library grows or before real-device checks ("Stage 5.4 E2E suite and phone-class timing"). Update (Phase 6 Stage 6.2, 2026-10-24): after optimizations that change no result, median 66 ms at 4× and about 100 ms at 6× on the 60 recipes; about 92–110 ms is estimated for 100 recipes at 4× ("Stage 6.2 recommendation speed: optimization").
   - **D11. Accessibility tests**: `axe-core` in Vitest with jsdom for every view and state in `ja`, `en`, and `es`; color contrast is covered by the token test because jsdom cannot compute it. Playwright stays in Phase 5.
   - **D12. Card reason line**: at most two reasons besides the fit status, in this order: `highest_among_candidates` / `lowest_among_candidates`, `uses_required_foods`, `new_attribute`, `matches_cuisine`, `quick`, `within_effort`; when none applies, `meets_all_targets` or `meets_with_adjustment`. Close alternatives show all their gap reasons (`near_target`, `misses_target`, `unknown_value`, `range_straddles`).
   - **D13. Seed**: 0 for every new search, +1 for each "show a different type" (ADR-029 D6).

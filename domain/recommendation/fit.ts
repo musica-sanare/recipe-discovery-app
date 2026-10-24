@@ -95,14 +95,22 @@ function nutrientFit(window: Window, nutrition: Pick<RecipeNutrition, "perServin
   return { target: window.target, status, basis, position: where, value, gap: below + above, gapRatio };
 }
 
+/** `evaluateFit` for fixed targets, with the windows computed once (the solver scores thousands of states). */
+export function fitEvaluator(targets: Targets): (nutrition: Pick<RecipeNutrition, "perServing" | "ranges">) => Fit {
+  const targetWindows = windows(targets);
+  return (nutrition) => {
+    const nutrients = targetWindows.map((window) => nutrientFit(window, nutrition));
+    const nearCount = nutrients.filter((entry) => entry.status === "near").length;
+    const notMetCount = nutrients.filter((entry) => entry.status === "not_met" || entry.status === "unknown").length;
+    const gapScore = nutrients.reduce((sum, entry) => sum + (entry.status === "met" ? 0 : (entry.gapRatio ?? 0)), 0);
+    const tier: Tier = notMetCount > 0 ? "not_met" : nearCount > 0 ? "near" : "met";
+    return { tier, nutrients, nearCount, notMetCount, gapScore };
+  };
+}
+
 /** Per-nutrient statuses for the set targets and the overall tier (the worst; unknown counts as not met). */
 export function evaluateFit(nutrition: Pick<RecipeNutrition, "perServing" | "ranges">, targets: Targets): Fit {
-  const nutrients = windows(targets).map((window) => nutrientFit(window, nutrition));
-  const nearCount = nutrients.filter((entry) => entry.status === "near").length;
-  const notMetCount = nutrients.filter((entry) => entry.status === "not_met" || entry.status === "unknown").length;
-  const gapScore = nutrients.reduce((sum, entry) => sum + (entry.status === "met" ? 0 : (entry.gapRatio ?? 0)), 0);
-  const tier: Tier = notMetCount > 0 ? "not_met" : nearCount > 0 ? "near" : "met";
-  return { tier, nutrients, nearCount, notMetCount, gapScore };
+  return fitEvaluator(targets)(nutrition);
 }
 
 const TIER_RANK: Readonly<Record<Tier, number>> = { met: 0, near: 1, not_met: 2 };

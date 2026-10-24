@@ -94,7 +94,7 @@ Details are finalized in Phase 1 and documented in `docs/NUTRITION_CALCULATION.m
 2. Validate user inputs; detect contradictory targets (`src/views/TargetsView.tsx` with `domain/recommendation`).
 3. Hard filters → fit evaluation (default amounts, then bounded adjustment) → fit tiers → diversification → stable ordering, on the main thread (ADR-030 D10).
 4. Render candidates and deterministic reason texts from the typed catalogs (`src/views/candidates/`).
-5. Recalculate on every adjustment in the detail view (`src/views/DetailView.tsx`). Measured in the browser (Stage 4.7): a full recommendation about 25 ms inside the UI on a desktop, a re-suggestion about 2 ms and a recalculation about 3 ms from click to layout; with a 4× CPU slowdown (Stage 5.4) a full recommendation takes about 80 ms, within the 100 ms threshold of ADR-030 D10 (revised).
+5. Recalculate on every adjustment in the detail view (`src/views/DetailView.tsx`). Measured in the browser (Stage 4.7): a full recommendation about 25 ms inside the UI on a desktop, a re-suggestion about 2 ms and a recalculation about 3 ms from click to layout; with a 4× CPU slowdown a full recommendation takes about 66 ms (Stage 6.2; about 80 ms in Stage 5.4), within the 100 ms threshold of ADR-030 D10 (revised).
 6. State stays in memory (`src/state/`, ADR-015, ADR-030 D9); only the recipe detail and the about page have their own URLs (`src/navigation/`, ADR-030 D2).
 
 ## 7. Platform independence

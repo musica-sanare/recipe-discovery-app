@@ -46,7 +46,7 @@ Status: **Draft (2026-10-18)**. Applies to all recipes, food dictionary entries,
 
 - Translations are canonical content stored in the repository; nothing is machine-translated at runtime.
 - Workflow: content is authored, Claude drafts `en` and `es` at authoring time, the owner reviews the diff and reports problems, Claude fixes them. The owner's approval of the commit is the review record.
-- Spanish uses neutral wording; regional variants are added as search aliases (for example `patata` / `papa`, `gamba` / `camarón`).
+- Spanish follows peninsular vocabulary for foods (`patata`, `zumo`, `ternera`) with Latin American words as search aliases (for example `patata` / `papa`, `gamba` / `camarón`); words that mean something else in Latin America are avoided (for example "frigorífico", "tostada"); allergen names show both regional names (owner decision V1, 2026-10-24; `docs/DECISIONS.md` "Stage 6.3 R1" and "Stage 6.3 R4").
 - A glossary (`content/glossary.ts`) fixes cooking terms, heat levels, units, allergen names, disclaimer texts, and forbidden expressions in all three locales.
 - Safety-relevant texts (allergen warnings, doneness checks, frying cautions, disclaimers) use short, plain sentences and are back-translated during review to detect meaning drift.
 - Japanese-specific ingredients that may be hard to find abroad get a note; regional availability is otherwise out of scope.

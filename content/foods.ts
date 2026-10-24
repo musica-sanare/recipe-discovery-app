@@ -63,8 +63,8 @@ export const foods: readonly Food[] = [
   },
   {
     id: "beef_round",
-    names: { ja: "牛もも肉（脂身なし）", en: "Beef round (lean)", es: "Babilla de ternera (magra)" },
-    aliases: { ja: ["牛もも", "ぎゅうもも", "ぎゅうももにく"], en: ["beef round", "lean beef"], es: ["ternera magra", "carne de res magra", "bola de res"] },
+    names: { ja: "牛もも肉（脂身なし）", en: "Beef round (lean)", es: "Ternera magra (de pierna)" },
+    aliases: { ja: ["牛もも", "ぎゅうもも", "ぎゅうももにく"], en: ["beef round", "lean beef"], es: ["ternera magra", "carne de res magra", "bola de res", "babilla"] },
     composition: { raw: "11076", boil: "11271", grill: "11270" },
     allergens: [{ allergen: "beef", confidence: "contains" }],
     proteinGroup: "beef",
@@ -237,7 +237,7 @@ export const foods: readonly Food[] = [
   {
     id: "bread",
     names: { ja: "食パン", en: "White sandwich bread", es: "Pan de molde" },
-    aliases: { ja: ["パン", "トースト", "しょくぱん"], en: ["bread", "white bread"], es: ["pan", "pan blanco"] },
+    aliases: { ja: ["パン", "トースト", "しょくぱん"], en: ["bread", "white bread"], es: ["pan", "pan blanco", "pan de caja", "pan lactal"] },
     composition: { as_is: "01026" },
     allergens: [
       { allergen: "wheat", confidence: "contains" },
@@ -312,7 +312,7 @@ export const foods: readonly Food[] = [
   {
     id: "shimeji",
     names: { ja: "しめじ（ぶなしめじ）", en: "Shimeji mushrooms", es: "Setas shimeji" },
-    aliases: { ja: ["しめじ", "ぶなしめじ"], en: ["beech mushrooms", "mushrooms"], es: ["shimeji", "hongos shimeji", "champiñones"] },
+    aliases: { ja: ["しめじ", "ぶなしめじ"], en: ["beech mushrooms", "mushrooms"], es: ["shimeji", "hongos shimeji", "setas", "hongos"] },
     composition: { raw: "08016", boil: "08017", stir_fry: "08046", deep_fry: "08055" },
     allergens: [],
     note: {

@@ -578,6 +578,18 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
   - H6–H9 (Spanish): clearer mapo tofu summary; "con pocos utensilios que lavar" instead of the colloquial "con poco que fregar"; tofu torn by hand ("trocéalo") instead of crumbled; "Pan tostado" instead of Spain's "Tosta" and the Mexican sense of "tostada".
 - Checks: `npm run check` (628 tests; nutrition snapshots unchanged) and `npm run test:e2e` (98 passed, 1 skipped). Browser check (`npm run preview`, 375 px, `es`): the detail pages of `beef_shimeji_bowl`, `salmon_tomato_pasta`, and `poached_egg_spinach_toast` show the new names and texts with no element wider than the viewport; no console messages.
 
+### Stage 6.3 R4: Phase 0 foods, food states, units (2026-10-24)
+- R4 covered the names and aliases of the 50 Phase 0 foods (50 names, 55 English and 72 Spanish aliases) and the UI keys `foodState.*` (17) and `unit.*` (26). The English names and aliases and all unit labels have no finding.
+- Regional Spanish (owner decision V1): the Spanish texts keep peninsular vocabulary for foods (about 54 uses of "ternera", 41 of "patata", 17 of "zumo"), as all reviewed batches do, with Latin American words as search aliases; words that mean something else in Latin America are replaced. `docs/CONTENT_POLICY.md` §6 states the rule. Options not chosen: Latin American base words throughout (about 110 changes, and "jugo" means meat juices in Spain), and no change.
+- The owner approved fixes I1–I6 (content version `2026-10-24.7`):
+  - I1: `beef_round` is "Ternera magra (de pierna)" instead of the Spanish butcher's term "Babilla de ternera (magra)"; "babilla" becomes an alias.
+  - I2: the Spanish alias "champiñones" (button mushrooms, a different food) is removed from `shimeji`; "setas" and "hongos" are added.
+  - I3: `bread` gains the aliases "pan de caja" (Mexico) and "pan lactal" (Argentina).
+  - I4, I5: `foodState.grill` is "Asado" instead of "A la parrilla" (barbecue grill); `foodState.deep_fry` is "Deep-fried (no coating)" / "Frito (sin rebozar)", so that 素揚げ is not confused with tempura or karaage. The method family label `methodFamily.grill` ("A la parrilla") belongs to R6.
+  - I6: "frigorífico", a meat-processing plant in the Southern Cone, becomes "refrigerador" in the five storage notes and steps that used it (`boiled_chicken_negi_salt`, `beef_potato_tomato_stew`, `pork_leg_tonjiru_rice`, `koya_tofu_simmer_rice`, `mackerel_can_tomato_salad`).
+- Tests: `test/node/food-search.test.ts` finds `beef_round` by "babilla" and `bread` by "pan de caja" and "pan lactal", and does not offer `shimeji` for "champiñones". On the previous dictionary the last three fail ("babilla" passed through the old name).
+- Checks: `npm run check` (632 tests; nutrition snapshots unchanged) and `npm run test:e2e` (98 passed, 1 skipped). Browser check (`npm run preview`, 375 px, `es`): the ingredient box offers "Pan de molde" for "pan de caja", the beef group and "Ternera magra (de pierna)" for "babilla", and "not available" for "champiñones"; the detail pages show "Frito (sin rebozar)" (`tortilla_espanola`), "Asado" (`chicken_lemon_herb_grill`), and "refrigerador" (`boiled_chicken_negi_salt`) with no element wider than the viewport; no console messages.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in

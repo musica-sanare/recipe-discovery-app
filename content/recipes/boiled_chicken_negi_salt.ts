@@ -74,7 +74,7 @@ export const recipe: Recipe = {
       text: {
         ja: "作り置きする場合は、粗熱を取ってから冷蔵庫で保存します。",
         en: "For batch cooking, let it cool briefly and then refrigerate.",
-        es: "Si lo preparas por adelantado, déjalo templar y guárdalo en el frigorífico.",
+        es: "Si lo preparas por adelantado, déjalo templar y guárdalo en el refrigerador.",
       },
     },
   ],

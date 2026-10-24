@@ -251,7 +251,7 @@ export const en: Messages = {
     grill: "Grilled",
     stir_fry: "Stir-fried",
     saute: "Sautéed",
-    deep_fry: "Deep-fried",
+    deep_fry: "Deep-fried (no coating)",
     tempura: "Tempura",
     tonkatsu: "Breaded and fried (tonkatsu)",
     karaage: "Karaage",

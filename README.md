@@ -9,7 +9,7 @@ The app supports Japanese, English, and Spanish (`ja`, `en`, `es`).
 - Targets per meal (energy range, protein minimum, fat maximum, optional carbohydrate range) with example presets, and conditions: cooking time, effort, equipment, cuisines, ingredients to use or leave out, allergens.
 - Three to five candidates with fit status, reasons, and adjustments; "show a different type", exclusion, close alternatives, and suggestions to relax conditions when nothing fits.
 - Comparison of two or three recipes, and a recipe detail with per-ingredient nutrition, its basis (food codes, data version, cooking state, assumptions), servings, sides, substitutions, and "fit to my targets".
-- 60 original recipes and 77 foods (content version `2026-10-24.6`), validated at build time in three languages.
+- 60 original recipes and 77 foods (content version `2026-10-24.7`), validated at build time in three languages.
 - A static site: no accounts, no server-side storage, no analytics; only the language choice is stored in the browser.
 
 ## Status

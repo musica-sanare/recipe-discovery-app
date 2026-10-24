@@ -40,6 +40,19 @@ describe("ingredient search on the repository dictionary", () => {
     expect(found("en", "tofu")).toEqual(expect.arrayContaining(["tofu_firm", "tofu_silken"]));
   });
 
+  // Stage 6.3 R4: regional aliases, and no alias that names a different food.
+  it.each([
+    ["babilla", "beef_round"],
+    ["pan de caja", "bread"],
+    ["pan lactal", "bread"],
+  ] as const)("finds the Spanish regional term %s", (query, food) => {
+    expect(found("es", query)).toContain(food);
+  });
+
+  it("does not offer shimeji for button mushrooms (champiñones)", () => {
+    expect(found("es", "champiñones")).not.toContain("shimeji");
+  });
+
   it("finds every food by its own name in every locale", () => {
     for (const locale of ["ja", "en", "es"] as const) {
       const text = buildTextBundle(input, locale);

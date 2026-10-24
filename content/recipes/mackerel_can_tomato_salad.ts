@@ -84,7 +84,7 @@ export const recipe: Recipe = {
       text: {
         ja: "開けた缶詰の残りは缶から別の容器に移して冷蔵し、早めに食べてください。",
         en: "Move any leftover canned fish to another container, refrigerate it, and eat it soon.",
-        es: "Pasa el pescado en lata que sobre a otro recipiente, guárdalo en el frigorífico y consúmelo pronto.",
+        es: "Pasa el pescado en lata que sobre a otro recipiente, guárdalo en el refrigerador y consúmelo pronto.",
       },
     },
   ],

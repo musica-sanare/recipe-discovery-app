@@ -81,7 +81,7 @@ Acceptance: the full flow works on mobile and desktop in three locales; accessib
 
 ## Phase 5 — Quality and release preparation
 
-Status: **In progress**. The release plan was approved on 2026-10-23 (`docs/DECISIONS.md` "Phase 5 start" and "Stage 5.1 release plan").
+Status: **Stages 5.1–5.7 done (2026-10-24); release blocked** by the items in `docs/RELEASE_READINESS.md` §2. The `docs/SPEC.md` §15 criteria are met locally; deployment waits for those items and the owner's approval. Logs: `docs/DECISIONS.md` "Phase 5 start" to "Stage 5.7".
 
 - E2E tests (desktop and mobile, three locales, long strings, locale switching, exceptional states).
 - Security headers and CSP verification; dependency and secret scans.

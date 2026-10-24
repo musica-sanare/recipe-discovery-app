@@ -474,6 +474,13 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - README (R1): rewritten for the current state (features, status, setup, commands, data handling, attribution, known limitations, documents); the license stays "not chosen" (要確認, owner decision).
 - Checks: `npm run check` (624 tests) and `npm run test:e2e` (98 passed, 1 skipped) pass; `dist/_headers` contains the `/*` and `/assets/*` rules.
 
+### Stage 5.7 release readiness (2026-10-24)
+- The owner approved the plan with R1–R3 as recommended: the report lives in `docs/RELEASE_READINESS.md`; open questions 11, 13, and 16, the first CI run, and a secret scan of the release history block the release, while open questions 2, 3, 6, 7, 8, 9, and 12 and the real-device timing are released as documented limitations; the first deployment uses the free `*.workers.dev` subdomain.
+- `docs/SPEC.md` §15: all ten criteria are met on commit `9bf2356` (`npm run check` with 624 tests, `npm run test:e2e` with 98 passed and 1 skipped, `npm audit` 0 vulnerabilities), with the evidence per criterion in `docs/RELEASE_READINESS.md` §1; the CI part waits for the first run.
+- Open question 11 closed: *Verified* on 2026-10-24 (Consumer Affairs Agency, https://www.caa.go.jp/policies/policy/food_labeling/food_sanitation/allergy/, PDF "アレルギー表示とは" 令和8年4月時点 and the notice of 2026-04-01): 9 mandatory and 20 recommended items, including cashew (mandatory since 2026-04-01 with a two-year transition) and pistachio (recommended), match `shared/content.ts`. The same PDF notes that a mere "may contain" statement is not allowed on packaged-food labels; the app's "may contain" is its own best-effort classification shown with the disclaimer, not a food label.
+- Open question 13: the texts still to be reviewed by the owner are listed in `docs/RELEASE_READINESS.md` §2 (20 validation recipes with 194 localized texts, 50 Phase 0 foods, 406 UI catalog keys outside `about.*`).
+- Known limitations, manual checks, and the deployment proposal: `docs/RELEASE_READINESS.md` §3–§5. Nothing was deployed.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in
@@ -729,7 +736,7 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 8. Copyright status of recipes under Japanese law (primary sources not checked).
 9. Spanish review capacity (ADR-007).
 10. Raw-egg dishes and other regionally sensitive food safety rules across the three locales. Eggs: decided (owner, 2026-10-23, Stage 5.1 P3) — soft or runny yolks are allowed with the `soft_yolk` note; raw-egg dishes stay excluded. Other regional rules are reviewed per batch in Stage 5.2.
-11. Allergen item lists in `shared/content.ts` derived from CAA change notes and municipal notices; confirm against the CAA figure (Stage 0.4 log).
+11. ~~Allergen item lists in `shared/content.ts`~~: match the CAA lists of April 2026 ("Stage 5.7 release readiness").
 12. Best-effort allergen lists for cooking sake, wholegrain mustard, Chinese-style stock granules, and karaage coating mix are based on typical ingredients, not product labels (Stage 0.6 log).
 13. Owner review of the English and Spanish texts added or rewritten in Phase 1: split steps, side labels, and the substitution step texts (Stage 1.1 log, ADR-007). Deferred by the owner to a review together with the UI once the prototype is largely complete ("Phase 4 start").
 14. ~~Whether every food must have at least one search alias per locale~~: aliases stay optional (ADR-030 D6).

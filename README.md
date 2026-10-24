@@ -14,7 +14,7 @@ The app supports Japanese, English, and Spanish (`ja`, `en`, `es`).
 
 ## Status
 
-Phase 5 (quality and release preparation, `docs/IMPLEMENTATION_PLAN.md`). The MVP flow, the content library, E2E tests, security checks, CI, and the deployment runbook are in place. Nothing is deployed; a deployment needs the owner's approval (`docs/DEPLOYMENT.md`).
+Phase 5 (quality and release preparation, `docs/IMPLEMENTATION_PLAN.md`). The MVP flow, the content library, E2E tests, security checks, CI, and the deployment runbook are in place, and the acceptance criteria are met locally. Nothing is deployed: the remaining release blockers and the deployment proposal are in [`docs/RELEASE_READINESS.md`](docs/RELEASE_READINESS.md).
 
 ## Local setup
 
@@ -66,6 +66,7 @@ Nutrition values are calculated by this app from 日本食品標準成分表（�
 | [`docs/IMPLEMENTATION_PLAN.md`](docs/IMPLEMENTATION_PLAN.md) | Phased plan |
 | [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md) | Local setup and commands |
 | [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) | Deployment runbook (Cloudflare first, other static hosts) |
+| [`docs/RELEASE_READINESS.md`](docs/RELEASE_READINESS.md) | Acceptance criteria with evidence, release blockers, limitations, manual checks, deployment proposal |
 
 Contributor and AI-assistant rules are in [`CLAUDE.md`](CLAUDE.md).
 

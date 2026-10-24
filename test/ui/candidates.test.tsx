@@ -171,6 +171,10 @@ describe("comparison", () => {
 
     const table = await screen.findByRole("table", { name: "選んだレシピの比較（1人分、推定値）" });
     expect(within(table).getAllByRole("columnheader")).toHaveLength(4);
+    // The visible caption sits outside the scrolling region and labels it (Stage 5.3).
+    const region = screen.getByRole("region", { name: "選んだレシピの比較（1人分、推定値）" });
+    expect(region.contains(table)).toBe(true);
+    expect(region.contains(document.getElementById("comparison-caption"))).toBe(false);
     expect(within(table).getAllByRole("rowheader").map((cell) => cell.textContent)).toEqual([
       "調理時間",
       "手間",

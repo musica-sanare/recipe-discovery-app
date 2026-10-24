@@ -37,6 +37,7 @@ export const en: Messages = {
       candidates: "Candidates",
       comparison: "Comparison",
       detail: "Recipe details",
+      about: "About this app",
     },
     mainNavigation: "Main menu",
     toTargets: "Go to targets and conditions",
@@ -504,6 +505,49 @@ export const en: Messages = {
     cut: "Cutting example",
     maintain: "Maintenance example",
     bulk: "Bulking example",
+  },
+  about: {
+    purpose: {
+      title: "What this app does",
+      body: "Recipe Discovery helps you find and compare recipes that fit the nutrition targets you set and your conditions, such as cooking time and the ingredients you want to use. It aims to introduce you to dishes you might not have thought of.",
+      deterministic: "Candidates, nutrition values, and amount adjustments follow fixed rules: the same input always gives the same result. No AI is used.",
+    },
+    calculation: {
+      title: "How nutrition values are calculated",
+      cooking: "Cooked ingredients use the cooked values and weight change rates of the tables. When the tables have no cooked value, a close value is used and this is shown.",
+      approximations: "Ingredients calculated from a close value, and those that are hard to estimate, such as fried foods, are listed with the reason in the recipe details.",
+      ranges: "Values with a wide estimate are shown as a range (for example 500–540 kcal).",
+      unmeasured: "Values not measured in the tables are never treated as zero; they are shown as unknown.",
+    },
+    source: {
+      title: "Source and data versions",
+    },
+    allergens: {
+      title: "Allergens",
+      unknown: "Ingredients without allergen information are treated as \"may contain\".",
+    },
+    health: {
+      title: "About health",
+      notAdvice: "The information in this app is not medical advice. You set your own targets.",
+    },
+    limits: {
+      title: "What this app does not do",
+      medical: "It does not judge or advise on illnesses or health conditions.",
+      allergens: "It does not guarantee that any recipe is safe for people with allergies.",
+      accounts: "It does not create accounts or store your targets and conditions on a server.",
+      ai: "It does not generate text or numbers with AI.",
+    },
+    privacy: {
+      title: "Privacy",
+      noTracking: "No analytics, cookies, or ads are used, and the app makes no requests to external services.",
+      storage: "The only thing saved in your browser is your language choice.",
+      memory: "The targets and conditions you enter stay in your browser's memory while the page is open and are never put in the URL.",
+    },
+    licenses: {
+      title: "Open-source licenses",
+      body: "This app uses open-source software such as React, i18next, and Zod. The full license texts are in the following file.",
+      link: "Third-party licenses (English)",
+    },
   },
   disclaimer: {
     estimates: "All nutrition values are estimates calculated from the food composition tables and the stated amounts. Actual values vary with ingredients and cooking.",

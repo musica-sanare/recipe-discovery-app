@@ -37,6 +37,7 @@ export const es: Messages = {
       candidates: "Candidatas",
       comparison: "Comparación",
       detail: "Detalles de la receta",
+      about: "Acerca de esta app",
     },
     mainNavigation: "Menú principal",
     toTargets: "Ir a objetivos y condiciones",
@@ -504,6 +505,49 @@ export const es: Messages = {
     cut: "Ejemplo de definición",
     maintain: "Ejemplo de mantenimiento",
     bulk: "Ejemplo de volumen",
+  },
+  about: {
+    purpose: {
+      title: "Qué hace esta app",
+      body: "Recipe Discovery te ayuda a encontrar y comparar recetas que se ajustan a los objetivos nutricionales que tú defines y a tus condiciones, como el tiempo de cocina o los ingredientes que quieres usar. Busca que descubras platos en los que quizá no habías pensado.",
+      deterministic: "Los candidatos, los valores nutricionales y el ajuste de cantidades siguen reglas fijas: la misma entrada siempre da el mismo resultado. No se usa IA.",
+    },
+    calculation: {
+      title: "Cómo se calculan los valores nutricionales",
+      cooking: "Los ingredientes cocinados usan los valores cocinados y los porcentajes de cambio de peso de las tablas. Cuando las tablas no tienen un valor cocinado, se usa un valor cercano y se indica.",
+      approximations: "Los ingredientes calculados con un valor cercano y los difíciles de estimar, como los fritos, aparecen con el motivo en los detalles de la receta.",
+      ranges: "Los valores con una estimación amplia se muestran como un rango (por ejemplo, 500-540 kcal).",
+      unmeasured: "Los valores no medidos en las tablas nunca se tratan como cero; se muestran como desconocidos.",
+    },
+    source: {
+      title: "Fuente y versiones de los datos",
+    },
+    allergens: {
+      title: "Alérgenos",
+      unknown: "Los ingredientes sin información sobre alérgenos se tratan como «puede contener».",
+    },
+    health: {
+      title: "Sobre la salud",
+      notAdvice: "La información de esta app no es consejo médico. Tú defines tus propios objetivos.",
+    },
+    limits: {
+      title: "Lo que esta app no hace",
+      medical: "No evalúa ni aconseja sobre enfermedades ni estados de salud.",
+      allergens: "No garantiza que ninguna receta sea segura para personas con alergias.",
+      accounts: "No crea cuentas ni guarda tus objetivos y condiciones en un servidor.",
+      ai: "No genera textos ni números con IA.",
+    },
+    privacy: {
+      title: "Privacidad",
+      noTracking: "No se usan herramientas de análisis, cookies ni anuncios, y la app no hace solicitudes a servicios externos.",
+      storage: "Lo único que se guarda en tu navegador es el idioma elegido.",
+      memory: "Los objetivos y las condiciones que introduces se quedan en la memoria del navegador mientras la página está abierta y nunca se ponen en la URL.",
+    },
+    licenses: {
+      title: "Licencias de código abierto",
+      body: "Esta app usa software de código abierto como React, i18next y Zod. Los textos completos de las licencias están en el siguiente archivo.",
+      link: "Licencias de terceros (en inglés)",
+    },
   },
   disclaimer: {
     estimates: "Todos los valores nutricionales son estimaciones calculadas a partir de las tablas de composición y las cantidades indicadas. Los valores reales varían según los ingredientes y la cocción.",

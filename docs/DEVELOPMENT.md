@@ -20,7 +20,7 @@ npm ci
 |---|---|
 | `npm run dev` | Generate the content bundles, then start the Vite dev server on http://localhost:5173 (no CSP; see ADR-018). Rerun `npm run content:build` after changing content |
 | `npm run content:build` | Write the content bundles to `generated/content/` and print their sizes (ADR-027) |
-| `npm run build` | Validate content, generate the content bundles, type-check, then build to `dist/` including the generated `_headers` |
+| `npm run build` | Validate content, generate the content bundles, type-check, then build to `dist/` including the generated `_headers` and `third-party-licenses.txt` (Vite `build.license`, linked from the about page) |
 | `npm run report:composition` | Per recipe and ingredient, from the nutrition engine: exact, approximation (with the ADR-028 reasons), hard to estimate, not counted, fried; fails when a cooked state has no weight change rate |
 | `npm run validate:content` | Content validation only (`tools/content/validate.ts`); prints one line per problem with file, recipe or food, field, and rule |
 | `npm run preview` | Serve `dist/` with the production security headers (http://localhost:4173) |

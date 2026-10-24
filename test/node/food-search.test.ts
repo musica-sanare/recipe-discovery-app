@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { buildTextBundle } from "../../tools/content/bundle.ts";
 import { repositoryBundleInput, repositoryEngine } from "../../tools/content/repository.ts";
-import { foodOptions, searchFoods } from "../../src/views/targets/foodSearch.ts";
+import { foodOptions, queryVariants, searchFoods } from "../../src/views/targets/foodSearch.ts";
 
 // Ingredient search on the repository dictionary (ADR-030 D6, open question 21).
 const input = repositoryBundleInput();
@@ -17,6 +17,22 @@ describe("ingredient search on the repository dictionary", () => {
     ["さとう", ["sugar"]],
   ] as const)("finds foods by their Japanese reading: %s", (query, expected) => {
     expect(found("ja", query)).toEqual(expect.arrayContaining([...expected]));
+  });
+
+  it.each([
+    ["トーフ", ["tofu_firm", "tofu_silken"]],
+    ["ナットー", ["natto"]],
+    ["ブロッコリー", ["broccoli"]],
+  ] as const)("matches a katakana long-vowel mark against readings: %s", (query, expected) => {
+    expect(found("ja", query)).toEqual(expect.arrayContaining([...expected]));
+  });
+
+  it("expands a long-vowel mark only in Japanese", () => {
+    expect(queryVariants("ja", "トーフ")).toEqual(["とーふ", "とおふ", "とうふ"]);
+    expect(queryVariants("ja", "ケーキ")).toEqual(["けーき", "けえき", "けいき"]);
+    expect(queryVariants("ja", "ルー")).toEqual(["るー", "るう"]);
+    expect(queryVariants("ja", "ー")).toEqual(["ー"]);
+    expect(queryVariants("en", "tofu")).toEqual(["tofu"]);
   });
 
   it("finds regional Spanish terms and English names", () => {

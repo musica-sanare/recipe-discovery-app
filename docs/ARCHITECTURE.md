@@ -74,7 +74,7 @@ Details are finalized in Phase 1 and documented in `docs/NUTRITION_CALCULATION.m
 - UI catalogs: `ja` defines the message type; `en` and `es` must match it at compile time.
 - Content: every recipe and food carries `ja`, `en`, and `es` texts; the build fails on missing or blank entries.
 - **Food identity is separate from translation** (ADR-006). Ingredients reference locale-neutral food IDs; names and aliases are display and search data only. Nutrition functions do not accept a locale parameter, enforced by their types.
-- Search normalization per locale: Unicode NFKC and hiragana/katakana folding for `ja`; case folding for `en`; case and accent folding for `es`. Aliases cover regional terms (for example `patata` / `papa`).
+- Search normalization per locale: Unicode NFKC and hiragana/katakana folding for `ja` (a long-vowel mark in the query also matches the vowel it lengthens and, after o- and e-row kana, う or い); case folding for `en`; case and accent folding for `es`. Aliases cover regional terms (for example `patata` / `papa`).
 - Household units are display labels per locale (大さじ / tbsp / cucharada). Amounts are stored in grams; a tablespoon is defined as 15 mL.
 - Formatting uses `Intl` APIs. Values are formatted only at the presentation layer.
 - Locale detection and persistence (*Proposed*, same pattern as the owner's other apps): stored locale preference if valid, otherwise the first supported language in `navigator.languages`, otherwise `ja`. Only the locale preference is stored.
@@ -95,7 +95,7 @@ Details are finalized in Phase 1 and documented in `docs/NUTRITION_CALCULATION.m
 3. Hard filters → fit evaluation (default amounts, then bounded adjustment) → fit tiers → diversification → stable ordering, on the main thread (ADR-030 D10).
 4. Render candidates and deterministic reason texts from the typed catalogs (`src/views/candidates/`).
 5. Recalculate on every adjustment in the detail view (`src/views/DetailView.tsx`). Measured in the browser (Stage 4.7): a full recommendation about 25 ms inside the UI on a desktop, a re-suggestion about 2 ms and a recalculation about 3 ms from click to layout; phones are not measured yet (open question 17).
-6. State stays in memory (`src/state/`, ADR-015, ADR-030 D9); only the recipe detail has its own URL (`src/navigation/`, ADR-030 D2).
+6. State stays in memory (`src/state/`, ADR-015, ADR-030 D9); only the recipe detail and the about page have their own URLs (`src/navigation/`, ADR-030 D2).
 
 ## 7. Platform independence
 

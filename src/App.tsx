@@ -10,6 +10,7 @@ import { useNavigation } from "./navigation/context";
 import { NavigationProvider } from "./navigation/Navigation";
 import { ViewLink } from "./navigation/ViewLink";
 import { useAppState } from "./state/context";
+import { AboutView } from "./views/AboutView";
 import { AppStateProvider, ContentProvider } from "./state/providers";
 import { CandidatesView } from "./views/CandidatesView";
 import { ComparisonView } from "./views/ComparisonView";
@@ -73,6 +74,11 @@ function Shell({ contentUrls }: { readonly contentUrls: ContentUrls }) {
           <div className="mx-auto flex max-w-5xl flex-col gap-2 px-4 py-4 text-sm text-muted">
             <Attribution />
             <ContentVersions versions={state.calc} />
+            <p className="m-0">
+              <ViewLink to={{ name: "about" }} className="text-accent underline">
+                {t("nav.views.about")}
+              </ViewLink>
+            </p>
           </div>
         </footer>
       )}
@@ -107,5 +113,7 @@ function CurrentView() {
       return state.search ? <ComparisonView search={state.search} /> : null;
     case "detail":
       return <DetailView key={view.recipe} recipe={view.recipe} />;
+    case "about":
+      return <AboutView />;
   }
 }

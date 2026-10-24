@@ -87,12 +87,14 @@ export function ComparisonView({ search }: { readonly search: SearchState }) {
         <ViewHeading title={t("nav.views.comparison")} focusOnMount={navigated} />
         {back}
       </div>
-      {/* The table scrolls inside its own region on narrow screens; the page never scrolls sideways. */}
+      {/* The table scrolls inside its own region on narrow screens; the page never scrolls sideways.
+          The visible caption stays outside the region so that it does not scroll with the table. */}
+      <p id="comparison-caption" className="-mb-2 text-sm text-muted">
+        {t("comparison.caption")}
+      </p>
       <div role="region" aria-labelledby="comparison-caption" tabIndex={0} className="overflow-x-auto rounded border border-border">
         <table className="w-full min-w-[32rem] border-collapse">
-          <caption id="comparison-caption" className="px-3 py-2 text-left text-sm text-muted">
-            {t("comparison.caption")}
-          </caption>
+          <caption className="sr-only">{t("comparison.caption")}</caption>
           <thead>
             <tr>
               <th scope="col" className={`${header} sticky left-0`}>

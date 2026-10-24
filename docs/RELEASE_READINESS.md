@@ -1,11 +1,11 @@
 # Release Readiness — Recipe Discovery
 
-Status: **Release 2 prepared (Phase 6), not deployed.** The deployed version is release 1: commit `66473f7` at https://recipe-discovery.musica-sanare.workers.dev (Cloudflare Workers static assets, version `0f4696e0-d896-4626-b486-03c53d2cac1b`, deployed 2026-10-24). Release 2 is the release commit of Stage 6.6 with content version `2026-10-24.8`. Update this document for every release; release 1 is recorded in `docs/DECISIONS.md` ("Stage 5.1 release plan" to "Manual checks"), release 2 in "Stage 6.6".
+Status: **Release 2 deployed (2026-10-24)** at https://recipe-discovery.musica-sanare.workers.dev from commit `edd7afe` (Cloudflare Workers static assets, version `81bc7642-f8fb-4290-a1ed-5f096a363074`), content version `2026-10-24.8`. The post-deployment checks passed (`docs/DECISIONS.md` "Second production deployment"). Release 1 (`66473f7`, version `0f4696e0-d896-4626-b486-03c53d2cac1b`) is the rollback target. Update this document for every release; release 1 is recorded in `docs/DECISIONS.md` ("Stage 5.1 release plan" to "Manual checks"), release 2 in "Stage 6.6".
 
 | Release | Commit | Content version | Status |
 |---|---|---|---|
-| 1 (MVP) | `66473f7` | `2026-10-24.3` | Deployed 2026-10-24 |
-| 2 (Phase 6) | Stage 6.6 release commit | `2026-10-24.8` | Prepared; waits for CI and the owner's approval (§2, §5) |
+| 1 (MVP) | `66473f7` | `2026-10-24.3` | Deployed 2026-10-24 (version `0f4696e0…`); replaced by release 2 |
+| 2 (Phase 6) | `edd7afe` | `2026-10-24.8` | Deployed 2026-10-24 13:18 UTC (version `81bc7642…`) |
 
 ## 0. What changes in release 2
 
@@ -39,7 +39,7 @@ Checked on commit `2b74b07` with the Stage 6.6 changes (content version `2026-10
 
 | Item | Status | What is needed |
 |---|---|---|
-| CI on the release commit | **Open** | The owner pushes `dev` and reports both jobs (`check`, `e2e`) |
+| CI on the release commit | **Passed** | Both jobs (`check`, `e2e`) passed on `edd7afe` (owner's report, 2026-10-24) |
 | Secret scan of the release history | **Passed** on `2b74b07` | gitleaks 8.30.1 (archive SHA-256 `b40ab0ae…`, matching the release checksum file and Stage 5.5): `gitleaks git --log-opts=--all --redact` (79 commits, 2.20 MB), `gitleaks dir` on the tracked files (1.77 MB), on `dist/` (0.87 MB), and on the uncommitted Stage 6.6 changes: no leaks (2026-10-24 12:38 UTC). No commit touches `data/raw`, `*.xlsx`, `*.pdf`, or `.env*`. Repeat if commits other than documentation follow |
 | `i18next` / `react-i18next` pins (open question 16) | **Deferred** (owner decision, again for release 2) | Not a release condition (ADR-016 release-burst exception). Re-check not before 2026-10-26 05:53 UTC; an update is its own commit and redeployment |
 | Unit test timeout under load | **Fixed** | The locale invariance test of `test/node/recommendation-scenarios.test.ts` (four full runs of every scenario, about 1 s alone) exceeded the 5 s default once in three full runs after `npm ci`; it now has a 20 s timeout. Three further full runs passed |
@@ -68,7 +68,7 @@ Release 1 (owner, 2026-10-24, `docs/DECISIONS.md` "Manual checks"): iPhone with 
 
 Release 2 (optional, after deployment): on an iPhone, the reworked egg recipes (for example `egg_tomato_stir_fry`), a detail page with a wider fat range (for example `swordfish_lemon_herb`), and the Spanish allergen names on the targets view.
 
-## 5. Deployment proposal (for the owner's approval; not deployed)
+## 5. Deployment proposal (approved and deployed on 2026-10-24)
 
 | Item | Proposal |
 |---|---|
@@ -92,6 +92,7 @@ Release 2 (optional, after deployment): on an iPhone, the reworked egg recipes (
 | Deployed and checked | 1 | 2026-10-24 | Claude: `66473f7`, version `0f4696e0…` (`docs/DECISIONS.md` "Production deployment") |
 | Manual checks (§4) | 1 | 2026-10-24 | Owner: iPhone and the about page without findings; Android, screen readers, and forced colors accepted as not checked |
 | Acceptance criteria checked | 2 | 2026-10-24 | Claude (§1) |
-| Release blockers resolved | 2 | — | CI pending; secret scan passed; open question 16 deferred by the owner |
-| Deployment proposal approved | 2 | — | — |
-| Deployed and checked | 2 | — | — |
+| Release blockers resolved | 2 | 2026-10-24 | Owner (CI passed; open question 16 deferred) and Claude (secret scan) |
+| Deployment proposal approved (up to the dry run) | 2 | 2026-10-24 | Owner; dry run passed |
+| Production deployment approved | 2 | 2026-10-24 | Owner (account [account name] confirmed with `wrangler whoami`) |
+| Deployed and checked | 2 | 2026-10-24 | Claude: `edd7afe`, version `81bc7642…` (`docs/DECISIONS.md` "Second production deployment") |

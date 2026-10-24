@@ -654,6 +654,24 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - `docs/RELEASE_READINESS.md` now covers both releases (status, changes, acceptance, blockers, limitations, timing, proposal, sign-off). `platform/cloudflare/wrangler.jsonc`: the comment states what release 1 verified; the configuration is unchanged.
 - Open: CI on the release commit (the owner reports it), then the deployment proposal of `docs/RELEASE_READINESS.md` §5.
 
+### Second production deployment (2026-10-24)
+- CI passed on `edd7afe` (owner's report). The owner approved the deployment proposal up to the dry run, then the production deployment after confirming the account.
+- Cloudflare documentation re-checked on 2026-10-24: static asset requests are free and unlimited and storage has no cost (https://developers.cloudflare.com/workers/static-assets/billing-and-limitations/, updated 2026-04-23); `wrangler rollback` and the dashboard can roll back to one of the 100 most recent versions by creating a new deployment (https://developers.cloudflare.com/workers/configuration/versions-and-deployments/rollbacks/, updated 2026-07-15). Whether this applies to an assets-only Worker is not stated (要確認 remains); the documented rollback stays redeploying the previous release commit.
+- Wrangler 4.152.0 installed with `--ignore-scripts` in the session scratch directory (198 MB); `npm audit` there reported `undici` 7.29.1 (pinned by `miniflare` 5.20261019.2-beta, advisories GHSA-xjj6-f33q-929c and two moderate ones, as in release 1); an `overrides` entry set `undici` 7.30.1 (released 2026-10-15, the latest 7.x), after which `npm audit` reported 0 vulnerabilities. Nothing in the repository changed.
+- `wrangler whoami`: account [account name] (`[account ID]`), the OAuth login of release 1; confirmed by the owner. `wrangler deployments list` showed release 1 (`0f4696e0…`) at 100 %. Telemetry disabled by `WRANGLER_SEND_METRICS=false` (`wrangler telemetry status`).
+- Build: `npm ci && npm run build` on `edd7afe` (content version `2026-10-24.8`, 9 files, 876 KB). Dry run: Wrangler read `dist/`, 0.44 KiB of Worker upload, no bindings, nothing uploaded. Deployment (2026-10-24 13:18 UTC): 6 new or changed assets uploaded (`index.html`, the JavaScript bundle, the calculation bundle, and the three text bundles), 2 already present; version `81bc7642-f8fb-4290-a1ed-5f096a363074` at 100 %, same URL.
+- Post-deployment checks (`curl -I` and the built-in browser): `/`, `/recipes/egg_tomato_stir_fry`, `/about`, `/recipes/no_such_recipe`, an unknown path, and `/third-party-licenses.txt` return 200 with the CSP, `X-Content-Type-Options`, `Referrer-Policy`, and `Permissions-Policy`; `/assets/*` has `Cache-Control: public, max-age=31536000, immutable`, the rest `public, max-age=0, must-revalidate`; `/_headers` is not served; `index.html` references the new bundle and the calculation bundle reports content version `2026-10-24.8`. In the browser: `egg_tomato_stir_fry` shows the egg white rows and the new summary (`ja`); `swordfish_lemon_herb` shows the fat range 10–19 g (`ja`); the targets view shows "Gamba o camarón", "Ternera o res", "Soja o soya", "Cacahuete o maní", and "Tipo de cocina (preferencia)" (`es`); a default search lists five candidates; the about page has eight sections and content version `2026-10-24.8`; every request goes to the same origin; the only stored key is the locale preference; no console messages.
+- Not checked: Cloudflare's own rollback on an assets-only Worker, real devices (the optional release 2 check of `docs/RELEASE_READINESS.md` §4), and dark mode on the deployed site.
+
+### Phase 6 acceptance (2026-10-24)
+- Manual check results recorded; Android, screen readers, and forced colors accepted as not checked ("Manual checks").
+- Dependency pins: the ADR-016 re-check of `i18next` and `react-i18next` is not due before 2026-10-26 05:53 UTC; the owner chose not to await it for release 2. It remains open as maintenance (open question 16).
+- Speed: a full recommendation takes about 73 ms at 4× on the 60 recipes of release 2, with every snapshot unchanged by the Stage 6.2 optimization; about 92–110 ms was estimated for 100 recipes after Stage 6.2 ("Stage 6.2 recommendation speed: optimization").
+- English and Spanish: every text released without review was reviewed ("Stage 6.3 summary").
+- Egg- and soy-based recipes: five reworked and meeting the maintain preset; `tortilla_espanola` unchanged by decision ("Stage 6.4").
+- Error bands: evidence recorded and the bands of raw and related cooked values set per nutrient with ADR-028 revised ("Stage 6.5").
+- `npm run check`, `npm run test:e2e`, and CI pass; release 2 deployed after the owner's approval.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in
@@ -915,7 +933,7 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 13. ~~Owner review of the English and Spanish texts added or rewritten in Phase 1~~: the owner accepted the remaining texts (validation recipes, Phase 0 foods, UI catalogs outside `about.*`) as they are for this release (2026-10-24, "Release blocker decisions"); batches 1–3 and the about page were reviewed with their commits. Reviewed in Phase 6 Stage 6.3 (rounds R1–R6, 2026-10-24, "Stage 6.3 summary"): every text that had not been reviewed is now reviewed.
 14. ~~Whether every food must have at least one search alias per locale~~: aliases stay optional (ADR-030 D6).
 15. ~~Phase 2 must distinguish raw values from related cooked values for the error bands~~: separate reasons `raw_value_for_cooking` and `related_cooked_value` (ADR-028).
-16. Re-check the `i18next`/`react-i18next` pins after 2026-10-25 18:00 UTC (ADR-016, "ADR-016 re-check before Phase 5"); deferred by the owner to maintenance after the release ("Release blocker decisions").
+16. Re-check the `i18next`/`react-i18next` pins (ADR-016, "ADR-016 re-check before Phase 5"); deferred by the owner to maintenance after the release ("Release blocker decisions") and again for release 2 ("Stage 6.6"). Further releases on 2026-10-24 (`i18next` 26.5.8, `react-i18next` 17.1.6 at 05:5x UTC) move the earliest re-check to 2026-10-26 05:53 UTC.
 17. ~~Recommendation and recalculation time on phones~~: measured with CPU throttling in Stage 5.4 (about 80 ms at 4×); the recommendation stays on the main thread with a 100 ms threshold (ADR-030 D10, revised). A real-device check remains a manual item.
 18. ~~Fried dishes with wide ranges become "near"~~: intended (ADR-029 D10). The fried and slow-frying bands remain assumptions (open question 3).
 19. ~~Provisional input limits and contradiction thresholds~~: unchanged (ADR-030 D4).

@@ -94,7 +94,7 @@ Acceptance: SPEC §15 acceptance criteria pass; known risks and manual checks ar
 
 ## Phase 6 — Post-release maintenance
 
-Status: **Planned (2026-10-24)**. The owner chose post-release maintenance (option A) over more content, features outside the MVP, and AI; more content is a Phase 7 candidate once the recommendation is faster and the remaining texts are reviewed.
+Status: **Complete (2026-10-24)**: release 2 deployed after the owner's approval. The ADR-016 re-check of `i18next` and `react-i18next` remains as maintenance (not before 2026-10-26 05:53 UTC). Logs: `docs/DECISIONS.md` "Manual checks" to "Phase 6 acceptance". The owner chose post-release maintenance (option A) over more content, features outside the MVP, and AI; more content is a Phase 7 candidate.
 
 - Manual checks of `docs/RELEASE_READINESS.md` §4 recorded and their findings handled; ADR-016 re-check of `i18next` and `react-i18next` (not before 2026-10-26 05:53 UTC).
 - Recommendation speed: profiling and optimizations that leave every engine output identical, with a library of about 100 recipes as the target (ADR-030 D10).

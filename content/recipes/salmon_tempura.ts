@@ -82,9 +82,9 @@ export const recipe: Recipe = {
     {
       key: "hot_oil",
       text: {
-        ja: "揚げ油から目を離さないでください。水気が残っていると油がはねます。",
-        en: "Never leave hot oil unattended. Moisture on the food makes the oil spatter.",
-        es: "No dejes nunca el aceite caliente sin vigilancia. La humedad en los alimentos hace que el aceite salpique.",
+        ja: "揚げ油から目を離さないでください。高温の油は発火やけがの原因になります。水気が残っていると油がはねます。",
+        en: "Never leave hot oil unattended; it can catch fire or cause burns. Moisture on the food makes the oil spatter.",
+        es: "No dejes nunca el aceite caliente sin vigilancia: puede incendiarse o causar quemaduras. La humedad en los alimentos hace que el aceite salpique.",
       },
     },
   ],

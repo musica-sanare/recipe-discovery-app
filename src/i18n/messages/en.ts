@@ -406,7 +406,7 @@ export const en: Messages = {
     reason: {
       raw_value_for_cooking: "The tables have no value for this cooking method, so the raw value is used.",
       related_cooked_value: "The tables have no value for this cooking method, so the value of a similar method is used.",
-      post_cooking_refuse: "The tables remove some parts after cooking, so this is an approximation.",
+      post_cooking_refuse: "The table value is for the food with some parts removed after cooking, so this is an approximation.",
       fried: "Fat and energy of fried food vary with how much oil is absorbed.",
       slow_frying: "Slow frying in plenty of oil makes oil absorption hard to estimate, so fat and energy are given as a range.",
       estimated_source_value: "Includes values that the tables mark as estimated.",
@@ -554,7 +554,7 @@ export const en: Messages = {
     allergens:
       "Allergen information is for reference only and may be incomplete. Actual products may differ, so always check the product labels. This app does not guarantee that any recipe is safe for people with allergies.",
     strictControl: "If you need strict control, weigh your ingredients and check the nutrition labels of the products.",
-    medicalGuidance: "If you follow guidance from a doctor or registered dietitian, follow that guidance.",
+    medicalGuidance: "If you are under the guidance of a doctor or registered dietitian, follow their advice.",
     presetsAreExamples: "The example targets are reference values, not recommendations.",
   },
   attribution: {

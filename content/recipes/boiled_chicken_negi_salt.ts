@@ -84,7 +84,7 @@ export const recipe: Recipe = {
       text: {
         ja: "余熱調理では、肉の厚みや量によって火の通りが変わります。中心に赤みが残っていたら、再び加熱してください。",
         en: "When cooking with residual heat, doneness depends on the thickness and amount of meat. If the center is still pink, heat it again.",
-        es: "Al cocinar con calor residual, el punto depende del grosor y la cantidad de carne. Si el centro sigue rosado, vuelve a calentarlo.",
+        es: "Al cocinar con calor residual, el punto de cocción depende del grosor y la cantidad de carne. Si el centro sigue rosado, vuelve a calentar la carne.",
       },
     },
     {

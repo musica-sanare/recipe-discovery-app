@@ -90,9 +90,9 @@ export const recipe: Recipe = {
     {
       key: "hot_oil",
       text: {
-        ja: "大量の油を使うので、火から離れないでください。裏返すときは熱い油や卵液がこぼれないよう注意します。",
-        en: "This uses a lot of oil; stay at the stove. Take care not to spill hot oil or egg when flipping.",
-        es: "Se usa mucho aceite: no te alejes del fuego. Ten cuidado de no derramar aceite caliente ni huevo al darle la vuelta.",
+        ja: "大量の油を使うので、火から離れないでください。高温の油は発火やけがの原因になります。裏返すときは熱い油や卵液がこぼれないよう注意します。",
+        en: "This uses a lot of oil; stay at the stove. Hot oil can catch fire or cause burns. Take care not to spill hot oil or egg when flipping.",
+        es: "Se usa mucho aceite: no te alejes del fuego. El aceite caliente puede incendiarse o causar quemaduras. Ten cuidado de no derramar aceite caliente ni huevo al darle la vuelta.",
       },
     },
     {

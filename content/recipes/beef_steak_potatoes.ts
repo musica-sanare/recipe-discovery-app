@@ -75,8 +75,8 @@ export const recipe: Recipe = {
       key: "beef_doneness",
       text: {
         ja: "牛肉のかたまりは表面をしっかり焼いてください。ひき肉や、筋を切る処理・味付け液の注入をした肉は、中心まで火を通します。",
-        en: "Sear whole cuts of beef well on the outside. Minced, tenderized, or injected beef must be cooked through.",
-        es: "Dora bien la superficie de las piezas enteras de ternera. La carne picada, ablandada o inyectada debe cocinarse por completo.",
+        en: "Sear whole cuts of beef well on the outside. Minced beef, and beef that has been mechanically tenderized or injected with seasoning, must be cooked through.",
+        es: "Dora bien la superficie de las piezas enteras de ternera. La carne picada y la carne ablandada mecánicamente o inyectada con adobo deben cocinarse por completo.",
       },
     },
   ],

@@ -100,7 +100,7 @@ export const recipe: Recipe = {
       text: {
         ja: "揚げ油から目を離さないでください。高温の油は発火やけがの原因になります。水気をよく拭いてから入れます。",
         en: "Never leave hot oil unattended; it can catch fire or cause burns. Pat ingredients dry before adding them.",
-        es: "No dejes nunca el aceite caliente sin vigilancia: puede prenderse o causar quemaduras. Seca bien los ingredientes antes de echarlos.",
+        es: "No dejes nunca el aceite caliente sin vigilancia: puede incendiarse o causar quemaduras. Seca bien los ingredientes antes de echarlos.",
       },
     },
     {
@@ -108,7 +108,7 @@ export const recipe: Recipe = {
       text: {
         ja: "鶏肉は中心まで火を通してください。大きめの1個を切って、赤みがないことを確認します。",
         en: "Cook chicken all the way through. Cut open the largest piece to check that it is no longer pink.",
-        es: "Cocina el pollo completamente. Abre el trozo más grande para comprobar que ya no esté rosado.",
+        es: "Cocina el pollo completamente. Corta el trozo más grande para comprobar que ya no esté rosado por dentro.",
       },
     },
   ],

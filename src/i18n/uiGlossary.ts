@@ -22,7 +22,7 @@ export const uiGlossary: readonly UiTerm[] = [
   { ja: "人数", en: "serving", es: "raci" },
   { ja: "手間", en: "effort", es: "esfuerzo" },
   { ja: "設備", en: "equipment", es: "utensilio" },
-  { ja: "栄養成分表示", en: "nutrition label", es: "información nutricional" },
+  { ja: "栄養成分表示", en: "nutrition label", es: "etiquetado nutricional" },
   { ja: "成分表データ", en: "composition data", es: "datos de composición" },
   { ja: "成分表", en: "table", es: "tabla" },
 ];

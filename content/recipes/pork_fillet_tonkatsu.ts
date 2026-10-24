@@ -107,7 +107,7 @@ export const recipe: Recipe = {
       text: {
         ja: "揚げ油から目を離さないでください。高温の油は発火やけがの原因になります。",
         en: "Never leave hot oil unattended; it can catch fire or cause burns.",
-        es: "No dejes nunca el aceite caliente sin vigilancia: puede prenderse o causar quemaduras.",
+        es: "No dejes nunca el aceite caliente sin vigilancia: puede incendiarse o causar quemaduras.",
       },
     },
     {

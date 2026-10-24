@@ -104,6 +104,14 @@ export const recipe: Recipe = {
   ],
   safetyNotes: [
     {
+      key: "beef_doneness",
+      text: {
+        ja: "牛肉は赤い部分がなくなるまで煮てください。",
+        en: "Simmer the beef until no red remains.",
+        es: "Cuece la ternera hasta que no quede nada rojo.",
+      },
+    },
+    {
       key: "cooling",
       text: {
         ja: "作り置きする場合は、浅い容器に移して早めに冷まし、冷蔵庫で保存してください。食べるときは中心まで十分に温め直します。",

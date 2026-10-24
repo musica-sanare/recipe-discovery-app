@@ -100,6 +100,14 @@ export const recipe: Recipe = {
         es: "Cocina el bacalao por completo: está hecho cuando es blanco, opaco y se desmenuza con facilidad.",
       },
     },
+    {
+      key: "steam",
+      text: {
+        ja: "加熱直後は蒸気でやけどしやすいので、ラップは奥から手前に向かって外してください。",
+        en: "Steam can burn right after heating; peel the wrap away from you.",
+        es: "El vapor puede quemar justo después de calentar; retira el film en dirección contraria a ti.",
+      },
+    },
   ],
   substitutions: [],
 };

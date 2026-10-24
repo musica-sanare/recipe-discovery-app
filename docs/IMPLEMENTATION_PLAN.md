@@ -11,6 +11,7 @@ Status: **Draft (2026-10-18)**. Each phase ends with checks, a summary to the ow
 | 4 — UI and localization | `prompts/04-ui-and-localization.md` |
 | 5 — Quality and release preparation | `prompts/05-quality-and-release.md` |
 | 6 — Post-release maintenance | `prompts/06-post-release-maintenance.md` |
+| 7 — Content expansion | `prompts/07-content-expansion.md` |
 
 `prompts/FIRST_MESSAGE.md` is the kickoff message for a new Claude Code session.
 
@@ -104,6 +105,17 @@ Status: **Complete (2026-10-24)**: release 2 deployed after the owner's approval
 - Release readiness and a redeployment after the owner's approval.
 
 Acceptance: manual check results recorded; dependency pins updated or re-scheduled; a full recommendation of about 100 recipes within about 100 ms at 4× with unchanged snapshots; the remaining texts reviewed or listed with the owner's decision; changed recipes validated with approved snapshot diffs and ADR-023 still met; error band evidence recorded; checks and CI pass.
+
+## Phase 7 — Content expansion
+
+Status: **Planned (2026-10-24)**. The owner chose more content (option B) over shopping lists, opt-in storage, meal planning, and AI; shopping lists are a Phase 8 candidate.
+
+- Expansion plan: cuisine values for dishes missing today (for example Latin American, Mediterranean, Southeast Asian; ADR-026 and ADR-029), the recipe list for two batches, new foods and their composition codes, the revised ADR-023 library size, and food safety decisions.
+- Batch 1 and batch 2 of about 13 original recipes each, aimed at the gaps of release 2: cuisines (29 of 60 recipes are Japanese), dishes of ≤ 10 minutes (5), batch cooking (4), breakfast (5), grilling (4), and steaming (5).
+- Per batch: foods and cooking rates with checks, texts in three locales with the owner's review, content validation, approved snapshot diffs, coverage, and the speed measurement against the 100 ms threshold of ADR-030 D10.
+- Release 3 after the owner's approval.
+
+Acceptance: about 26 new recipes validated and reviewed in three locales with approved snapshot diffs; ADR-023 met as revised; the planned gaps narrowed; a full recommendation within about 100 ms at 4× or the owner's decision on how to proceed; checks and CI pass.
 
 ## Later (not MVP)
 

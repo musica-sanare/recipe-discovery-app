@@ -175,7 +175,13 @@ Mobile:
 │ Side: rice [on/off]             │
 │ Substitute: ( )none ( )thigh    │
 │ [Fit to my targets] [Reset]     │
+├─────────────────────────────────┤
+│ Shopping list                   │
 │ [Add to shopping list]          │
+│ (after adding: In the list      │
+│  (2 servings) · View the list;  │
+│  [Update the list] [Remove] when│
+│  the amounts differ)            │
 ├─────────────────────────────────┤
 │ Ingredients (2 servings)        │
 │ Chicken breast 320 g (2)        │
@@ -203,7 +209,7 @@ States:
 - An invalid adjustment state cannot be reached through the controls (steppers follow the authored grid and bounds); engine errors are still mapped to messages.
 - Unknown values show "unknown" with the ingredients that lack data, never zero.
 - When a rounded value looks like it meets a bound that the full value misses, the value is shown to one decimal with "just below the target" (or "just above").
-- Shopping list (ADR-032): "Add to shopping list" copies the current state (servings, amounts, sides, substitutions) into the list. Afterwards the block shows "In the shopping list (2 servings)" with a link to the list; when the current state differs from the list entry, it offers "Update the list" and "Remove from the list". With 10 recipes in the list, the add button is disabled and the reason is shown. Adding, updating, and removing are announced in the live region; focus stays on the block. Available with and without a search.
+- Shopping list (ADR-032), a section of its own after the adjustment section: "Add to shopping list" copies the current state (servings, amounts, sides, substitutions) into the list. Afterwards the block shows "In the shopping list (2 servings)" with a link to the list; when the current state differs from the list entry, it offers "Update the list" and "Remove from the list". With 10 recipes in the list, the add button is disabled and the reason is shown. Adding, updating, and removing are announced in the live region; focus stays on the block. Available with and without a search.
 
 ### 3.5 Shared elements
 

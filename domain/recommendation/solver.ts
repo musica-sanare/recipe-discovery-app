@@ -66,6 +66,11 @@ interface Adjustable {
 }
 
 const COST_EPSILON = 1e-9;
+/**
+ * Pruning (Phase 9 Stage 9.3, O4) compares a lower bound of the relative change, summed in
+ * another order than `cost`; the margin covers that rounding (about 1e-14 for these sums).
+ */
+const PRUNE_MARGIN = 1e-12;
 
 function gridValues(adjust: Adjust): number[] {
   if (adjust.kind === "count") return Array.from({ length: adjust.max - adjust.min + 1 }, (_, index) => adjust.min + index);
@@ -276,12 +281,16 @@ function search(input: SolveInput, data: EngineData, makeEvaluator: (stateFor: S
 
   const evaluator = makeEvaluator(stateFor, baseline);
   let best: Candidate | undefined;
+  /**
+   * Whether every state whose relative change is at least `bound` loses to the best state so
+   * far: once that state meets every target, no state has a better fit (met states compare
+   * equal), so a cost above its cost plus the tie margin loses (`compareCandidates`). Such
+   * states would never replace the best one, so skipping them leaves every result unchanged.
+   */
+  const beaten = (bound: number) => best !== undefined && best.fit.tier === "met" && bound > best.cost + COST_EPSILON + PRUNE_MARGIN;
   for (let mask = 0; mask < 2 ** removable.length; mask++) {
     const sidesOff = removable.filter((_, bit) => (mask >> bit) & 1);
     const isOff = isOffWith(sidesOff);
-    const active = activeWith(sidesOff);
-    const scorer = evaluator(sidesOff, active, defaults);
-    const values = [...defaults];
     // The terms of the relative change in `changeable` order, so that the sum is added
     // in the same order for every state: 1 for a side switched off, or an ingredient.
     const terms = changeable.flatMap((key): (CostTerm | null)[] => {
@@ -290,6 +299,15 @@ function search(input: SolveInput, data: EngineData, makeEvaluator: (stateFor: S
       const adjustable = index === undefined ? undefined : all[index];
       return adjustable && index !== undefined ? [{ index, defaultValue: adjustable.defaultValue }] : [];
     });
+    // Every term is at least 0, so the switched-off terms bound the cost of every state of
+    // this combination from below; a combination that cannot beat a best state is skipped.
+    const offTerms = terms.filter((term) => term === null).length;
+    if (beaten(offTerms)) continue;
+    const active = activeWith(sidesOff);
+    const scorer = evaluator(sidesOff, active, defaults);
+    const values = [...defaults];
+    // Per depth, the default of the active ingredient when it has a term of the relative change.
+    const termDefaults = active.map(({ index }) => terms.find((term) => term !== null && term.index === index)?.defaultValue ?? null);
     const cost = () => {
       let sum = 0;
       for (const term of terms) {
@@ -297,7 +315,8 @@ function search(input: SolveInput, data: EngineData, makeEvaluator: (stateFor: S
       }
       return sum;
     };
-    const visit = (depth: number): void => {
+    // `lower`: the switched-off terms plus the terms of the values set above `depth`.
+    const visit = (depth: number, lower: number): void => {
       if (depth === active.length) {
         // `values` is copied only when the state becomes the best one.
         const candidate: Candidate = { sidesOff, values, fit: fitOf(scorer.evaluate(values)), cost: cost() };
@@ -307,14 +326,17 @@ function search(input: SolveInput, data: EngineData, makeEvaluator: (stateFor: S
       const entry = active[depth];
       if (!entry) return;
       const { adjustable, index } = entry;
+      const termDefault = termDefaults[depth] ?? null;
       for (const value of adjustable.values) {
+        const bound = termDefault === null ? lower : lower + Math.abs(value - termDefault) / termDefault;
+        if (beaten(bound)) continue;
         values[index] = value;
         scorer.set(depth, value);
-        visit(depth + 1);
+        visit(depth + 1, bound);
       }
       values[index] = adjustable.defaultValue;
     };
-    visit(0);
+    visit(0, offTerms);
   }
   if (!best) throw new Error(`No state for ${JSON.stringify(input.forced)}`);
   return { best, adjustables: all, stateFor, defaultFit };

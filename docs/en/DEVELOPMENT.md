@@ -26,8 +26,6 @@ npm ci
 | `npm run report:composition` | Per recipe and ingredient, from the nutrition engine: exact, approximation (with the ADR-028 reasons), hard to estimate, not counted, fried; fails when a cooked state has no weight change rate |
 | `npm run validate:content` | Content validation only (`tools/content/validate.ts`); prints one line per problem with file, recipe or food, field, and rule |
 | `npm run preview` | Serve `dist/` with the production security headers (http://localhost:4173) |
-
-Browser previews: `.claude/launch.json` has `preview` (the production build with headers, port 4173) and `dev` (the Vite dev server, port 5173; engine modules can be imported in the page for measurements). Timing numbers from a hidden or background tab are not reliable.
 | `npm run lint` | ESLint with type-aware rules and module boundaries |
 | `npm run typecheck` | TypeScript project build without emit |
 | `npm test` | Vitest (Node by default; UI tests use jsdom per file; `test/ui/` runs the app on the repository content) |
@@ -39,6 +37,8 @@ Browser previews: `.claude/launch.json` has `preview` (the production build with
 | `npm run eval:coverage` | How many validation recipes meet representative targets with default and adjusted amounts, computed by the recommendation engine ([DECISIONS.md](../working/DECISIONS.md) "Stage 0.6", "Stage 3.7") |
 | `npm run bench:recommendation` | Node timing of a full search on the repository recipes and on an in-memory synthetic library of 100 recipes ([DECISIONS.md](../working/DECISIONS.md) "Stage 6.2") |
 | `npm run data:verify-cooking` | macOS only: check `data/composition/cooking.json` against the MEXT explanation PDF text ([DATA_SOURCES.md](DATA_SOURCES.md) "Cooking tables") |
+
+Browser previews: `.claude/launch.json` has `preview` (the production build with headers, port 4173) and `dev` (the Vite dev server, port 5173; engine modules can be imported in the page for measurements). Timing numbers from a hidden or background tab are not reliable.
 
 There is intentionally no deploy script; deployment follows [DEPLOYMENT.md](DEPLOYMENT.md) after the owner's approval.
 

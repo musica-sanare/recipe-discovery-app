@@ -2,7 +2,7 @@ English | [日本語](../ja/UI_DESIGN.md) · [Docs index](README.md)
 
 # UI Design — Recipe Discovery
 
-Status: **Accepted (owner, 2026-10-19, Stage 4.1)**. Decisions and their alternatives: [DECISIONS.md](../working/DECISIONS.md) ADR-030. This document describes the screens, navigation, state, styling, and catalog structure of the MVP user interface (Phase 4). It does not change any engine behavior; every value and status shown comes from `domain/nutrition` (ADR-028) and `domain/recommendation` (ADR-029).
+Status: **Accepted (owner, 2026-10-19, Stage 4.1)**. Decisions and their alternatives: [DECISIONS.md](../working/DECISIONS.md) ADR-030. This document describes the screens, navigation, state, styling, and catalog structure of the MVP user interface (Phase 4). It does not change any engine behavior; every value and status shown comes from `domain/nutrition` (ADR-028) and `domain/recommendation` (ADR-029). The shopping list (Phase 8, ADR-032, accepted 2026-10-25) adds §3.7; its items come from `domain/shopping`.
 
 ## 1. Principles
 
@@ -20,6 +20,10 @@ Targets and conditions ──search──► Candidates ──select 2–3──
          │ edit conditions            │   └──────── back ──────────┘
          └────────────────────────────┤
                                       └──open──► Recipe detail (adjustment)
+                                                     │  ▲
+                                          add/update │  │ recipe link
+                                                     ▼  │
+                         header link (list not empty) ──► Shopping list
 ```
 
 | View | URL | Content after reload |
@@ -29,6 +33,7 @@ Targets and conditions ──search──► Candidates ──select 2–3──
 | Comparison | `/` (history entry with the view name only) | Same as candidates |
 | Recipe detail | `/recipes/<id>` | The recipe at its default amounts with no fit status; a link to the targets view |
 | About | `/about` | The same page (it needs no search); reached from the footer |
+| Shopping list | `/` (history entry with the view name only) | Targets view with the reload notice, which also says that the shopping list is not kept |
 
 - The browser back button moves between views through history entries that carry only the view name and, for the detail view, the recipe ID.
 - An unknown recipe ID shows a "recipe not found" state with a link to the targets view.
@@ -170,6 +175,7 @@ Mobile:
 │ Side: rice [on/off]             │
 │ Substitute: ( )none ( )thigh    │
 │ [Fit to my targets] [Reset]     │
+│ [Add to shopping list]          │
 ├─────────────────────────────────┤
 │ Ingredients (2 servings)        │
 │ Chicken breast 320 g (2)        │
@@ -197,10 +203,11 @@ States:
 - An invalid adjustment state cannot be reached through the controls (steppers follow the authored grid and bounds); engine errors are still mapped to messages.
 - Unknown values show "unknown" with the ingredients that lack data, never zero.
 - When a rounded value looks like it meets a bound that the full value misses, the value is shown to one decimal with "just below the target" (or "just above").
+- Shopping list (ADR-032): "Add to shopping list" copies the current state (servings, amounts, sides, substitutions) into the list. Afterwards the block shows "In the shopping list (2 servings)" with a link to the list; when the current state differs from the list entry, it offers "Update the list" and "Remove from the list". With 10 recipes in the list, the add button is disabled and the reason is shown. Adding, updating, and removing are announced in the live region; focus stays on the block. Available with and without a search.
 
 ### 3.5 Shared elements
 
-- Header: app name, language switcher. Footer: attribution, content and composition versions, and a link to the about page.
+- Header: app name, a link to the shopping list with its recipe count (only while the list has a recipe; a shorter label at narrow widths if needed), language switcher. Footer: attribution, content and composition versions, and a link to the about page.
 
 ### 3.6 About
 
@@ -210,10 +217,71 @@ States:
 - The estimates disclaimer appears on candidates, comparison, and detail views; the allergen disclaimer appears wherever allergen features appear.
 - A live region announces search results, replacements, and recalculations.
 
+### 3.7 Shopping list
+
+Rules for items, amounts, combination, sections, and order: [SPEC.md](SPEC.md) §18 and ADR-032. The view only renders what `domain/shopping` returns, with names from the active text bundle and numbers from `src/format/`.
+
+Mobile:
+```
+┌─────────────────────────────────┐
+│ h1 Shopping list      [Back]    │
+│ From 2 recipes                  │
+│ ┌ Lemon-herb chicken breast ──┐ │
+│ │ 2 servings · amounts adjusted│ │
+│ │                    [Remove] │ │
+│ └─────────────────────────────┘ │
+│ ┌ Tofu champuru ──────────────┐ │
+│ │ 1 serving · 1 side off      │ │
+│ │                    [Remove] │ │
+│ └─────────────────────────────┘ │
+│ [Copy as text] [Print] [Clear all]│
+│ (i) Amounts are the edible      │
+│ portion or the weight as sold.  │
+├─────────────────────────────────┤
+│ h2 Ingredients                  │
+│ ☐ Chicken breast, skinless 300 g│
+│   > Per recipe                  │
+│ ☐ Egg 100 g (2)                 │
+│ ☐ Cooked white rice 360 g       │
+│ h2 Check whether you have       │
+│ ☐ Soy sauce 18 g (1 tbsp)       │
+│ ☐ Frying oil: vegetable oil 500 g│
+│   The amount depends on the pan.│
+└─────────────────────────────────┘
+```
+Desktop (≥ 1024 px): the recipes, actions, and note in a left column, the two sections on the right; the reading order stays the same.
+
+- Recipes: the name links to its detail, which opens in the state of the list entry; the summary names the servings and the changes (amounts adjusted, sides switched off, substitutions). "Remove" takes the recipe out of the list.
+- Items: a native checkbox whose label is the food name and amount; a checked item is struck through and keeps its place. An item from two or more recipes has a "Per recipe" disclosure (`details`) with each recipe's amount. Frying oil carries its note.
+- Copy as text: the Clipboard API with the text below; the result is announced in the live region. If the API is missing or fails, a read-only text area with the whole text appears, selected, with an instruction to copy it by hand. When every item is checked, the button is disabled and the reason is shown.
+- Print: `window.print()`; the print styles hide the header, the buttons, and the disclosures and print the title, the recipes with servings, the note, and every item with an empty box, whatever its check.
+- Clear all: a second, inline confirmation ("Clear the list?" with "Clear" and "Cancel"); focus moves to the confirmation, then to the `h1`.
+- Focus: after "Remove", focus moves to the next recipe's "Remove", else the previous one, else the `h1`. The live region announces removals and clearing.
+- Empty: "No recipes yet. You can add them from a recipe's detail." with a link to the targets view.
+- The view shows no nutrition values, allergen notices, or disclaimers of its own; the footer is unchanged.
+
+Copied text (plain text, `\n` line breaks, `- ` bullets in every locale; numbers formatted with `Intl`; a section without unchecked items is left out; final wording in the Stage 8.3 review):
+```
+Shopping list (2 recipes)
+- Lemon-herb grilled chicken breast (2 servings)
+- Tofu champuru (1 serving)
+
+[Ingredients]
+- Chicken breast, skinless 300 g
+- Egg 100 g (2)
+
+[Check whether you have]
+- Soy sauce 18 g (1 tbsp)
+- Frying oil: vegetable oil 500 g
+
+Amounts are the edible portion (without skin, bones, or shells) or the weight as sold.
+```
+Japanese and Spanish use the same structure, for example `買い物リスト（2品）`, `[手元にあるか確認するもの]`, `- 卵 100 g（2個）`, `- しょうゆ（濃口） 18 g（大さじ1）`; `Lista de la compra (2 recetas)`, `[Comprueba si ya lo tienes]`, `- Huevo 100 g (2)`, `- Salsa de soja 18 g (1 cucharada)`.
+
 ## 4. Navigation and state
 
-- No router library (ADR-030 D2). `src/navigation/` wraps the History API: views `targets`, `candidates`, `comparison`, `detail` (with a recipe ID), and `about`. Only the detail view (`/recipes/<id>`) and the about page (`/about`) have their own paths; the others use `/` with the view name in `history.state`. `popstate` restores the view; if the view needs a search that is no longer in memory, the targets view is shown with the notice.
-- Application state lives in one `useReducer` behind a context (`src/state/`): the request, the evaluated pool, the session, the seed, the displayed set, the comparison selection, and per-recipe adjustment states. No store library.
+- No router library (ADR-030 D2). `src/navigation/` wraps the History API: views `targets`, `candidates`, `comparison`, `detail` (with a recipe ID), `about`, and `shoppingList`. Only the detail view (`/recipes/<id>`) and the about page (`/about`) have their own paths; the others use `/` with the view name in `history.state`. `popstate` restores the view; if the view needs a search that is no longer in memory, the targets view is shown with the notice.
+- Application state lives in one `useReducer` behind a context (`src/state/`): the request, the evaluated pool, the session, the seed, the displayed set, the comparison selection, per-recipe adjustment states, and the shopping list (recipe IDs with their copied states in the order added, and the checked items). A new search resets everything except the targets draft and the shopping list. No store library.
 - The pool is recomputed only when the request changes; "show a different type", "exclude this one", and comparison use `selectCandidates` on the same pool.
 - The seed starts at 0 for every new search and increases by 1 for each "show a different type" (ADR-029 D6).
 - The recommendation runs on the main thread; phone-class timing is measured in Stage 5.4 (about 80 ms at a 4× CPU slowdown) against a threshold of about 100 ms (ADR-030 D10, revised).
@@ -242,6 +310,7 @@ States:
 | `exclusion` | One key per `ConstraintItem`, with plural counts |
 | `relaxation` | One key per `Relaxation` constraint, with gains as plural counts |
 | `candidates`, `comparison`, `detail`, `adjust` | View texts, adjustment summary, differences, status changes |
+| `shopping` | Header link, detail block, view texts, recipe summaries, section names, frying oil label and note, edible portion note, copy, print, and clear texts, announcements, the copied text's title and section labels, empty state |
 | `nutrient` | Display names of the five nutrients and their units |
 | `uncertainty` | Classes and reasons (`raw_value_for_cooking`, `related_cooked_value`, `post_cooking_refuse`, `fried`, `slow_frying`, `estimated_source_value`), notations (trace, estimated) |
 | `assumption` | `oil_counted_in_full`, `included_in_cooked_value`, `parts_removed_after_cooking`, `energy_from_fat`, `pinch_as_stated_grams`, energy versus 4P + 9F + 4C |

@@ -32,6 +32,7 @@ Repository content (recipes, food dictionary, translations)
 |---|---|---|
 | `domain/nutrition` | Amount resolution for a recipe state (servings, sides, linked ingredients, chosen substitutions), per-ingredient and per-recipe nutrition, cooking-state handling, uncertainty classification, ranges, rounding for display values (ADR-028) | UI, i18n, locale, platform, network |
 | `domain/recommendation` | Hard filters, fit evaluation, fit tiers, diversification, seeded re-suggestion, bounded adjustment solver, substitution suggestions, relaxation suggestions, contradiction checks | UI, i18n, locale, platform, network |
+| `domain/shopping` | Shopping list aggregation (ADR-032): items from recipe states with `resolveAmounts` of `domain/nutrition`, combination by food ID, sections, order, frying oil, household measure totals; no nutrition values | UI, i18n, locale, platform, network |
 | `shared` | Content schemas and types, IDs, units, constants used by build tools, domain, and UI | UI, platform |
 | `content/` (data) | Recipes, food dictionary, allergen links, substitutions, localized texts, glossary | — |
 | `tools/` (build time) | Composition extraction, content validation, policy lint, nutrition snapshots, header generation | UI |
@@ -46,6 +47,7 @@ Boundaries are enforced with lint import restrictions and a boundary test, as in
 src/                    UI (React)
 domain/nutrition/       Pure nutrition engine
 domain/recommendation/  Pure ranking, diversity, adjustment
+domain/shopping/        Pure shopping list aggregation
 shared/                 Schemas (Zod), types, units, constants
 content/recipes/        One file per recipe (structured, localized texts)
 content/foods.ts        Food dictionary (locale-neutral IDs, mappings, names, aliases, allergens)
@@ -98,6 +100,7 @@ Details are finalized in Phase 1 and documented in [NUTRITION_CALCULATION.md](NU
 4. Render candidates and deterministic reason texts from the typed catalogs (`src/views/candidates/`).
 5. Recalculate on every adjustment in the detail view (`src/views/DetailView.tsx`). Measured in the browser (Stage 4.7): a full recommendation about 25 ms inside the UI on a desktop, a re-suggestion about 2 ms and a recalculation about 3 ms from click to layout; with a 4× CPU slowdown a full recommendation takes about 66 ms (Stage 6.2; about 80 ms in Stage 5.4), within the 100 ms threshold of ADR-030 D10 (revised).
 6. State stays in memory (`src/state/`, ADR-015, ADR-030 D9); only the recipe detail and the about page have their own URLs (`src/navigation/`, ADR-030 D2).
+7. The shopping list (ADR-032) keeps the recipe states the user added in memory; `domain/shopping` aggregates them only when the list changes or is shown, never during a recommendation.
 
 ## 7. Platform independence
 
@@ -115,7 +118,7 @@ Details are finalized in Phase 1 and documented in [NUTRITION_CALCULATION.md](NU
 
 ## 9. Testing strategy
 
-- Unit tests for the nutrition and recommendation engines (determinism, rounding, uncertainty, adjustment bounds, diversity, relaxation suggestions, contradictions).
+- Unit tests for the nutrition and recommendation engines (determinism, rounding, uncertainty, adjustment bounds, diversity, relaxation suggestions, contradictions) and for the shopping list aggregation (combination, scaling, sides, substitutions, order, determinism, locale independence).
 - **Locale invariance test**: every recipe calculated under each locale context yields identical internal values.
 - Content validation and policy lint run in CI and in the build.
 - Nutrition snapshot tests.

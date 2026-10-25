@@ -1,4 +1,4 @@
-<!-- source: docs/en/ARCHITECTURE.md blob 39bea456e01aacf18615915a752d61ed0760f26d -->
+<!-- source: docs/en/ARCHITECTURE.md blob ea4371c0bcadc29f7c65946edb7fe6f989095971 -->
 [English](../en/ARCHITECTURE.md) | 日本語 · [目次に戻る](README.md)
 
 > この文書は[英語版](../en/ARCHITECTURE.md)の翻訳です。内容が異なる場合は英語版が優先されます。
@@ -37,6 +37,7 @@ Repository content (recipes, food dictionary, translations)
 |---|---|---|
 | `domain/nutrition` | レシピの状態（人数、副菜、連動する材料、選んだ置き換え）に対する分量の決定、材料ごと・レシピごとの栄養、調理の状態の扱い、不確かさの区分、範囲、表示する値の丸め（ADR-028） | UI、i18n、ロケール、プラットフォーム、ネットワーク |
 | `domain/recommendation` | ハードな絞り込み、適合の評価、適合の段階、多様化、シードつきの再提案、範囲内での調整ソルバー、置き換えの提案、緩和の提案、矛盾の確認 | UI、i18n、ロケール、プラットフォーム、ネットワーク |
+| `domain/shopping` | 買い物リストの集計（ADR-032）：`domain/nutrition` の `resolveAmounts` によるレシピの状態からの品目、食品 ID でのまとめ、欄、並び順、揚げ油、家庭での計量の合計。栄養値は扱わない | UI、i18n、ロケール、プラットフォーム、ネットワーク |
 | `shared` | ビルドツール、ドメイン、UI が使うコンテンツのスキーマと型、ID、単位、定数 | UI、プラットフォーム |
 | `content/`（データ） | レシピ、食品辞書、アレルゲンの結び付け、置き換え、多言語のテキスト、用語集 | — |
 | `tools/`（ビルド時） | 成分の抽出、コンテンツ検証、ポリシーの lint、栄養のスナップショット、ヘッダーの生成 | UI |
@@ -51,6 +52,7 @@ Repository content (recipes, food dictionary, translations)
 src/                    UI (React)
 domain/nutrition/       Pure nutrition engine
 domain/recommendation/  Pure ranking, diversity, adjustment
+domain/shopping/        Pure shopping list aggregation
 shared/                 Schemas (Zod), types, units, constants
 content/recipes/        One file per recipe (structured, localized texts)
 content/foods.ts        Food dictionary (locale-neutral IDs, mappings, names, aliases, allergens)
@@ -103,6 +105,7 @@ docs/                   Documentation
 4. 型付きのカタログから、候補と決定論的な理由のテキストを描画します（`src/views/candidates/`）。
 5. 詳細画面では、調整のたびに再計算します（`src/views/DetailView.tsx`）。ブラウザでの測定（Stage 4.7）：デスクトップで、UI の中での推薦全体が約 25 ms、クリックからレイアウトまでで再提案が約 2 ms、再計算が約 3 ms。CPU を 4 倍遅くすると推薦全体は約 66 ms（Stage 6.2。Stage 5.4 では約 80 ms）で、ADR-030 D10（改訂）の 100 ms のしきい値に収まります。
 6. 状態はメモリに保ちます（`src/state/`、ADR-015、ADR-030 D9）。独自の URL を持つのは、レシピの詳細と「このアプリについて」のページだけです（`src/navigation/`、ADR-030 D2）。
+7. 買い物リスト（ADR-032）は、利用者が入れたレシピの状態をメモリに保ちます。`domain/shopping` がそれを集計するのは、リストが変わったときと表示するときだけで、推薦の処理の中では決して行いません。
 
 ## 7. プラットフォームからの独立
 
@@ -120,7 +123,7 @@ docs/                   Documentation
 
 ## 9. テストの方針
 
-- 栄養エンジンと推薦エンジンの単体テスト（決定論性、丸め、不確かさ、調整の範囲、多様性、緩和の提案、矛盾）。
+- 栄養エンジンと推薦エンジンの単体テスト（決定論性、丸め、不確かさ、調整の範囲、多様性、緩和の提案、矛盾）と、買い物リストの集計の単体テスト（まとめ方、人数による増減、副菜、置き換え、並び順、決定論性、ロケールに依存しないこと）。
 - **ロケールに依存しないことのテスト**：各ロケールの文脈で計算したすべてのレシピが、同じ内部の値になること。
 - コンテンツ検証とポリシーの lint は、CI とビルドで実行します。
 - 栄養のスナップショットテスト。

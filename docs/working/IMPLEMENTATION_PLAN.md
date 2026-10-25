@@ -122,7 +122,7 @@ Acceptance: about 26 new recipes validated and reviewed in three locales with ap
 
 ## Phase 8 — Shopping list
 
-Status: **Planned (2026-10-25)**, to start in a new Claude Code session. Shopping lists were the Phase 8 candidate named when the owner chose Phase 7; they are outside the MVP in [SPEC.md](../en/SPEC.md) §3, so the phase starts with a scope change and an ADR.
+Status: **In progress (2026-10-25)**: Stage 8.1 design accepted (ADR-032, [SPEC.md](../en/SPEC.md) §18, [DECISIONS.md](DECISIONS.md) "Stage 8.1 shopping list design"). Shopping lists were the Phase 8 candidate named when the owner chose Phase 7; they were outside the MVP in [SPEC.md](../en/SPEC.md) §3, so the phase started with a scope change and an ADR.
 
 - Design: entry points, amounts and combination rules, pantry items, persistence and privacy (ADR-015, ADR-030 D9), output (checklist, copy, print), and UI, approved before implementation.
 - A pure, deterministic, locale-free aggregation module with tests; UI and localization in three locales with the owner's review; accessibility and E2E checks.

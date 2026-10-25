@@ -1,11 +1,11 @@
-<!-- source: docs/en/UI_DESIGN.md blob 91a26d0187bade5c8a98683e5da0ffa89c1e6c9f -->
+<!-- source: docs/en/UI_DESIGN.md blob 7a68ce5964c15163e4b8046f44b957483cfac26c -->
 [English](../en/UI_DESIGN.md) | 日本語 · [目次に戻る](README.md)
 
 > この文書は[英語版](../en/UI_DESIGN.md)の翻訳です。内容が異なる場合は英語版が優先されます。
 
 # UI 設計 — Recipe Discovery
 
-状態：**採用（オーナー、2026-10-19、Stage 4.1）**。決定とその代替案：[DECISIONS.md](../working/DECISIONS.md)（英語のみ）ADR-030。この文書は、MVP のユーザーインターフェース（フェーズ 4）の画面、ナビゲーション、状態、スタイル、カタログの構成を説明します。エンジンの動作は何も変えません。表示する値と判定は、すべて `domain/nutrition`（ADR-028）と `domain/recommendation`（ADR-029）から来ます。
+状態：**採用（オーナー、2026-10-19、Stage 4.1）**。決定とその代替案：[DECISIONS.md](../working/DECISIONS.md)（英語のみ）ADR-030。この文書は、MVP のユーザーインターフェース（フェーズ 4）の画面、ナビゲーション、状態、スタイル、カタログの構成を説明します。エンジンの動作は何も変えません。表示する値と判定は、すべて `domain/nutrition`（ADR-028）と `domain/recommendation`（ADR-029）から来ます。買い物リスト（フェーズ 8、ADR-032、2026-10-25 採用）で §3.7 を加えました。その品目は `domain/shopping` から来ます。
 
 この翻訳では、画面の図（テキストのワイヤーフレーム）を英語のまま残しています。罫線の桁をそろえるためです。図や本文の中の UI の文言は英語の UI を示したもので、日本語の UI の実際の文言は `src/i18n/messages/` のカタログにあります。
 
@@ -25,6 +25,10 @@ Targets and conditions ──search──► Candidates ──select 2–3──
          │ edit conditions            │   └──────── back ──────────┘
          └────────────────────────────┤
                                       └──open──► Recipe detail (adjustment)
+                                                     │  ▲
+                                          add/update │  │ recipe link
+                                                     ▼  │
+                         header link (list not empty) ──► Shopping list
 ```
 
 （図の訳）目標と条件 → 検索 → 候補 → 2〜3 件を選ぶ → 比較。比較から候補へ戻れ、候補から条件の編集で目標と条件へ戻れます。候補を開くとレシピの詳細（調整）になります。
@@ -36,6 +40,7 @@ Targets and conditions ──search──► Candidates ──select 2–3──
 | 比較 | `/`（画面名だけを持つ履歴の項目） | 候補と同じ |
 | レシピの詳細 | `/recipes/<id>` | 既定の分量で、適合の判定なしのレシピ。目標の画面へのリンク |
 | このアプリについて | `/about` | 同じページ（検索を必要としない）。フッターから開く |
+| 買い物リスト | `/`（画面名だけを持つ履歴の項目） | 再読み込みの案内つきの目標の画面。案内では、買い物リストも残らないことを伝える |
 
 - ブラウザの戻るボタンでは、画面名と、詳細画面ではレシピ ID だけを持つ履歴の項目をたどって画面を移ります。
 - 存在しないレシピ ID では「レシピが見つかりません」の状態を、目標の画面へのリンクとともに示します。
@@ -177,6 +182,7 @@ Targets and conditions ──search──► Candidates ──select 2–3──
 │ Side: rice [on/off]             │
 │ Substitute: ( )none ( )thigh    │
 │ [Fit to my targets] [Reset]     │
+│ [Add to shopping list]          │
 ├─────────────────────────────────┤
 │ Ingredients (2 servings)        │
 │ Chicken breast 320 g (2)        │
@@ -204,10 +210,11 @@ Targets and conditions ──search──► Candidates ──select 2–3──
 - 正しくない調整の状態には、操作部品からはたどり着けません（ステッパーは作成した格子と範囲に従う）。それでも、エンジンのエラーはメッセージに対応付けます。
 - 不明な値は、データのない材料とともに「不明」と示し、決して 0 にはしません。
 - 丸めた値では上下限を満たすように見えるのに完全な値では満たさないとき、値を小数第 1 位まで示し、「目標をわずかに下回る」（または「目標をわずかに上回る」）と添えます。
+- 買い物リスト（ADR-032）：「買い物リストに追加」は、今の状態（人数、分量、副菜、置き換え）をリストに写します。そのあとは「買い物リストに入っています（2人分）」とリストへのリンクを示し、今の状態がリストの内容と違うときは「リストを更新」と「リストから外す」を出します。リストに 10 レシピあるときは、追加のボタンを使えなくし、その理由を示します。追加、更新、削除はライブリージョンで読み上げ、フォーカスはその場に残します。検索の有無にかかわらず使えます。
 
 ### 3.5 共通の要素
 
-- ヘッダー：アプリ名、言語の切り替え。フッター：出典表示、コンテンツと成分データの版、「このアプリについて」へのリンク。
+- ヘッダー：アプリ名、レシピの件数つきの買い物リストへのリンク（リストにレシピがあるときだけ。狭い幅では必要に応じて短い表記）、言語の切り替え。フッター：出典表示、コンテンツと成分データの版、「このアプリについて」へのリンク。
 
 ### 3.6 このアプリについて
 
@@ -217,10 +224,71 @@ Targets and conditions ──search──► Candidates ──select 2–3──
 - 推定値の注意書きは候補、比較、詳細の画面に表示し、アレルゲンの注意書きはアレルゲンの機能があるところすべてに表示します。
 - ライブリージョンで、検索結果、入れ替え、再計算を読み上げます。
 
+### 3.7 買い物リスト
+
+品目、分量、まとめ方、欄、並び順のルール：[SPEC.md](SPEC.md) §18 と ADR-032。この画面は `domain/shopping` が返すものを描画するだけで、名前は有効なテキスト用のバンドルから、数値は `src/format/` から得ます。
+
+モバイル：
+```
+┌─────────────────────────────────┐
+│ h1 Shopping list      [Back]    │
+│ From 2 recipes                  │
+│ ┌ Lemon-herb chicken breast ──┐ │
+│ │ 2 servings · amounts adjusted│ │
+│ │                    [Remove] │ │
+│ └─────────────────────────────┘ │
+│ ┌ Tofu champuru ──────────────┐ │
+│ │ 1 serving · 1 side off      │ │
+│ │                    [Remove] │ │
+│ └─────────────────────────────┘ │
+│ [Copy as text] [Print] [Clear all]│
+│ (i) Amounts are the edible      │
+│ portion or the weight as sold.  │
+├─────────────────────────────────┤
+│ h2 Ingredients                  │
+│ ☐ Chicken breast, skinless 300 g│
+│   > Per recipe                  │
+│ ☐ Egg 100 g (2)                 │
+│ ☐ Cooked white rice 360 g       │
+│ h2 Check whether you have       │
+│ ☐ Soy sauce 18 g (1 tbsp)       │
+│ ☐ Frying oil: vegetable oil 500 g│
+│   The amount depends on the pan.│
+└─────────────────────────────────┘
+```
+デスクトップ（≥ 1024 px）：レシピ、操作、注記を左の列に、2 つの欄を右に置きます。読み上げの順序は変わりません。
+
+- レシピ：名前はその詳細へのリンクで、詳細はリストの内容の状態で開きます。要約には人数と変更（分量の調整、オフにした副菜、置き換え）を示します。「外す」でそのレシピをリストから外します。
+- 品目：ネイティブのチェックボックスで、ラベルは食品名と分量です。チェックした品目には取り消し線を引き、位置は変えません。2 つ以上のレシピから来た品目には、レシピごとの分量を示す「レシピごと」の開閉（`details`）を付けます。揚げ油には注記を付けます。
+- テキストでコピー：下のテキストを Clipboard API で渡し、結果をライブリージョンで読み上げます。API がないか失敗したときは、全文を選択した状態の読み取り専用のテキスト欄を出し、手でコピーするよう案内します。すべての品目にチェックがあるときは、ボタンを使えなくし、その理由を示します。
+- 印刷：`window.print()`。印刷用のスタイルでヘッダー、ボタン、開閉を隠し、タイトル、人数つきのレシピ、注記、すべての品目を、チェックの有無にかかわらず空の四角つきで印刷します。
+- すべて消す：その場でもう一度確認します（「リストを消しますか」と「消す」「キャンセル」）。フォーカスは確認へ、そのあと `h1` へ移します。
+- フォーカス：「外す」のあと、次のレシピの「外す」へ、なければ前のレシピの「外す」へ、それもなければ `h1` へ移します。削除とすべて消したことはライブリージョンで読み上げます。
+- 空のとき：「まだレシピがありません。レシピの詳細から追加できます。」と、目標の画面へのリンク。
+- この画面は、栄養値、アレルゲンの案内、独自の注意書きを示しません。フッターは変わりません。
+
+コピーするテキスト（プレーンテキスト、改行は `\n`、行頭はどのロケールでも `- `。数値は `Intl` で書式化。チェックしていない品目のない欄は省く。最終的な文言は Stage 8.3 の確認で決める）：
+```
+Shopping list (2 recipes)
+- Lemon-herb grilled chicken breast (2 servings)
+- Tofu champuru (1 serving)
+
+[Ingredients]
+- Chicken breast, skinless 300 g
+- Egg 100 g (2)
+
+[Check whether you have]
+- Soy sauce 18 g (1 tbsp)
+- Frying oil: vegetable oil 500 g
+
+Amounts are the edible portion (without skin, bones, or shells) or the weight as sold.
+```
+日本語とスペイン語も同じ構成です。たとえば `買い物リスト（2品）`、`[手元にあるか確認するもの]`、`- 卵 100 g（2個）`、`- しょうゆ（濃口） 18 g（大さじ1）`、`Lista de la compra (2 recetas)`、`[Comprueba si ya lo tienes]`、`- Huevo 100 g (2)`、`- Salsa de soja 18 g (1 cucharada)`。
+
 ## 4. ナビゲーションと状態
 
-- ルーターのライブラリは使いません（ADR-030 D2）。`src/navigation/` が History API を包みます：画面は `targets`、`candidates`、`comparison`、`detail`（レシピ ID つき）、`about`。独自のパスを持つのは詳細画面（`/recipes/<id>`）と「このアプリについて」のページ（`/about`）だけで、ほかは `/` を使い、`history.state` に画面名を入れます。`popstate` で画面を復元します。その画面がもうメモリにない検索を必要とするときは、目標の画面を案内つきで示します。
-- アプリの状態は、コンテキストの裏にある 1 つの `useReducer` にまとめます（`src/state/`）：リクエスト、評価済みの候補の集まり、セッション、シード、表示中の組、比較の選択、レシピごとの調整の状態。ストアのライブラリは使いません。
+- ルーターのライブラリは使いません（ADR-030 D2）。`src/navigation/` が History API を包みます：画面は `targets`、`candidates`、`comparison`、`detail`（レシピ ID つき）、`about`、`shoppingList`。独自のパスを持つのは詳細画面（`/recipes/<id>`）と「このアプリについて」のページ（`/about`）だけで、ほかは `/` を使い、`history.state` に画面名を入れます。`popstate` で画面を復元します。その画面がもうメモリにない検索を必要とするときは、目標の画面を案内つきで示します。
+- アプリの状態は、コンテキストの裏にある 1 つの `useReducer` にまとめます（`src/state/`）：リクエスト、評価済みの候補の集まり、セッション、シード、表示中の組、比較の選択、レシピごとの調整の状態、買い物リスト（入れた順のレシピ ID と写した状態、チェックした品目）。新しい検索では、目標の入力中の内容と買い物リスト以外をすべて初期化します。ストアのライブラリは使いません。
 - 候補の集まりは、リクエストが変わったときだけ計算し直します。「違うタイプを見る」「これを除外」、比較では、同じ集まりに対して `selectCandidates` を使います。
 - シードは新しい検索ごとに 0 から始まり、「違うタイプを見る」のたびに 1 ずつ増えます（ADR-029 D6）。
 - 推薦はメインスレッドで実行します。スマートフォン相当の速度は Stage 5.4 で測定し（CPU を 4 倍遅くして約 80 ms）、約 100 ms のしきい値と比べています（ADR-030 D10、改訂）。
@@ -249,6 +317,7 @@ Targets and conditions ──search──► Candidates ──select 2–3──
 | `exclusion` | `ConstraintItem` ごとに 1 つのキー。複数形の件数つき |
 | `relaxation` | `Relaxation` の制約ごとに 1 つのキー。得られる件数を複数形で持つ |
 | `candidates`、`comparison`、`detail`、`adjust` | 画面のテキスト、調整の要約、差分、判定の変化 |
+| `shopping` | ヘッダーのリンク、詳細画面の欄、画面のテキスト、レシピの要約、欄の名前、揚げ油のラベルと注記、可食部の注記、コピー・印刷・すべて消すのテキスト、読み上げ、コピーするテキストのタイトルと欄のラベル、空の状態 |
 | `nutrient` | 5 つの栄養素の表示名と単位 |
 | `uncertainty` | 区分と理由（`raw_value_for_cooking`、`related_cooked_value`、`post_cooking_refuse`、`fried`、`slow_frying`、`estimated_source_value`）、記号（微量、推定値） |
 | `assumption` | `oil_counted_in_full`、`included_in_cooked_value`、`parts_removed_after_cooking`、`energy_from_fat`、`pinch_as_stated_grams`、エネルギーと 4P + 9F + 4C の違い |

@@ -41,8 +41,11 @@ Out of target: people following medically prescribed diets (for example protein 
 - Japanese, English, and Spanish for UI and all content, with a visible language switcher.
 - Exceptional-state UX (section 12).
 
+### Added after the MVP
+- Shopping list (Phase 8, ADR-032): section 18.
+
 ### Out of scope for MVP
-- User accounts, server-side storage, daily or weekly meal planning, shopping lists.
+- User accounts, server-side storage, daily or weekly meal planning.
 - AI at runtime (recipe generation, free-text parsing, AI explanations, AI substitution suggestions).
 - Packaged-product nutrition (barcodes, Open Food Facts), prices, external service integrations, analytics.
 - Photos other than original photos owned by the project (none planned for the MVP).
@@ -60,11 +63,12 @@ Home
      ├→ Comparison view (2–3 candidates side by side)
      └→ Recipe detail
            → Adjust (servings, bounded amounts, substitutions → instant recalculation with differences)
+           → Add to the shopping list → Shopping list (check off, copy, print; section 18)
  → Re-suggest (different type / exclude this one / relax a condition)
 ```
 
 - The flow state stays in memory. Targets and conditions are never put in the URL, so body-related targets do not end up in history or referrers.
-- Nothing except the locale preference is stored in the browser in the MVP (section 16, ADR-030 D9).
+- Nothing except the locale preference is stored in the browser in the MVP (section 16, ADR-030 D9). The shopping list also stays in memory (section 18).
 
 ## 5. Inputs
 
@@ -165,6 +169,7 @@ Defined in [CONTENT_POLICY.md](CONTENT_POLICY.md). Summary:
 
 - No accounts and no server-side storage in the MVP; the MVP has no application server.
 - Targets and conditions stay in the browser and are not put in URLs.
+- The shopping list stays in memory; copying and printing it are browser features started by the user and send nothing (section 18).
 - No analytics or trackers by default.
 - Strict security headers (Content-Security-Policy and related headers) on all responses.
 - Any future server endpoint must validate inputs and outputs at runtime and must not log user targets or conditions.
@@ -205,3 +210,25 @@ Defined in [CONTENT_POLICY.md](CONTENT_POLICY.md). Summary:
 ## 17. Open questions (要確認)
 
 Tracked in [DECISIONS.md](../working/DECISIONS.md) "Open questions".
+
+## 18. Shopping list (Phase 8)
+
+Decisions and alternatives: ADR-032 in [DECISIONS.md](../working/DECISIONS.md). Screens and text format: [UI_DESIGN.md](UI_DESIGN.md) §3.7.
+
+- Purpose: turn one or more recipes, in the state the user chose, into one list of what to buy. No prices, stores, package sizes, stock tracking, or meal planning.
+- Adding: from the recipe detail only. "Add to the shopping list" copies the recipe's current state (servings, adjusted amounts, sides on or off, substitutions) into the list. One entry per recipe, at most 10 recipes; to cook a recipe twice, the user raises its servings. When the detail state later differs from the list entry, the detail view offers "update the list" and "remove from the list"; the list never changes by itself.
+- Provenance: the list shows each recipe with its name (a link to its detail), its servings, and a summary of its changes (amounts adjusted, sides switched off, substitutions). Each item can show its amount per recipe.
+- Amounts: the grams that `domain/nutrition` resolves for the recipe state (`resolveAmounts`), the same amounts as the detail view. A side switched off contributes nothing; a substitution lists the substitute food. Ingredients counted as included in another ingredient's cooked value (cooking oil, coatings) are listed, because they are needed for cooking. The list neither shows nor computes nutrition values.
+- Basis: grams are the raw edible portion (without skin, bones, or shells) or the weight as sold (`as_is` foods), and the list says so. Purchase amounts from refuse rates are not shown.
+- Combination: items are combined by food ID. Every food is used on a single basis (always as sold or always raw edible grams), and forms that are bought differently are different foods (cooked rice and dry pasta, tomatoes and canned tomatoes), so the cooking state never splits an item. Frying oil (an oil ingredient included in a fried or slow-fried ingredient) is a separate item, not added to the same oil used otherwise, with a note that the amount depends on the pan.
+- Display: totals are computed at full precision and rounded only for display, like the ingredient grams of the detail view (up to one decimal). A total household measure is shown only when every contribution has a household measure of the same unit and the sum is a multiple of 1/12; units are not converted.
+- Sections and order: "ingredients" and "check whether you have" (ingredient role `seasoning` or `fat`; a food that has any other role in the list goes to "ingredients"). Within a section, items follow a fixed role order (main protein, main carbohydrate, vegetable, other and coating; seasoning, fat, frying oil), then the order of first appearance (recipes in the order added, ingredients in authored order). The order does not depend on the locale.
+- Checking off: every item has a checkbox. When an item's total changes, its check is cleared.
+- Output: copy as text (the items not checked off) and print (all items with empty boxes). No sharing service.
+- Persistence: in memory for the session; kept across view changes, new searches, and language changes (names and units are shown in the new language; amounts do not change); lost on reload. Nothing is stored in the browser (section 13, ADR-015, ADR-030 D9).
+- Safety: the list shows no nutrition values and makes no allergen, food safety, or health statement of its own.
+
+Acceptance (Phase 8):
+- The aggregation is a pure, deterministic, locale-free module covered by unit tests and a snapshot over representative selections of the repository recipes.
+- A user can add recipes from the detail view, check items off, copy the list, and print it in `ja`, `en`, and `es` on desktop and mobile; the new strings are reviewed in three locales; accessibility checks pass in three locales.
+- The nutrition snapshots and the recommendation scenario snapshot are unchanged; a full recommendation stays within about 100 ms at a 4× CPU slowdown (ADR-030 D10).

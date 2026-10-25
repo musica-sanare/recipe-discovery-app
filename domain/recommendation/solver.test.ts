@@ -19,6 +19,7 @@ const data: EngineData = {
     ["oil", { as_is: "90004" }],
     ["tofu", { raw: "90005" }],
     ["thigh", { raw: "90006" }],
+    ["sauce", { as_is: "90007" }],
   ]),
   composition: new Map([
     ["90001", food(100, 20, 2, 0)],
@@ -27,6 +28,8 @@ const data: EngineData = {
     ["90004", food(900, 0, 100, 0)],
     ["90005", food(70, 7, 4, 2)],
     ["90006", food(200, 17, 14, 0)],
+    // Carbohydrate unmeasured ("-"): the recipe's carbohydrate is unknown.
+    ["90007", { refuse: zero, nutrients: { ENERC_KCAL: v(80), "PROT-": v(2), "FAT-": v(1), "CHOCDF-": { value: null, notation: "unmeasured" }, NACL_EQ: zero } }],
   ]),
   rates: new Map(),
   versions: { contentVersion: "2026-10-19.1", composition: { workbookUpdated: "2026-03-27", workbookSha256: "0".repeat(64), cookingSha256: "1".repeat(64) } },
@@ -72,6 +75,19 @@ const karaage: SolverRecipe = {
   servings: 1,
   ingredients: [{ key: "thigh", food: "thigh", grams: 150, state: "raw", cooking: "karaage", adjust: { kind: "grams", min: 100, max: 200, step: 10 } }],
   sides: [],
+  substitutions: [],
+};
+
+// Three adjustable ingredients, one with an unmeasured carbohydrate, and a removable side.
+const stew: SolverRecipe = {
+  servings: 1,
+  ingredients: [
+    { key: "chicken", food: "chicken", grams: 120, state: "raw", adjust: { kind: "grams", min: 80, max: 200, step: 20 } },
+    { key: "egg", food: "egg", grams: 50, state: "raw", adjust: { kind: "count", unitGrams: 50, min: 0, max: 3 } },
+    { key: "sauce", food: "sauce", grams: 30, state: "as_is", adjust: { kind: "grams", min: 10, max: 50, step: 10 } },
+    { key: "rice", food: "rice", grams: 150, state: "as_is", adjust: { kind: "grams", min: 100, max: 250, step: 50 } },
+  ],
+  sides: [{ key: "rice", ingredients: ["rice"], solverMayRemove: true }],
   substitutions: [],
 };
 
@@ -191,6 +207,8 @@ describe("solve", () => {
       input(twins, { kcal: { min: 210, max: 215 } }),
       input(karaage, { kcal: { min: 100, max: 500 }, fatMax: 25 }),
       input(karaage, { kcal: { min: 700, max: 900 }, proteinMin: 50 }),
+      input(stew, { kcal: { min: 400, max: 550 }, proteinMin: 35, fatMax: 15 }),
+      input(stew, { kcal: { min: 300, max: 450 }, proteinMin: 30, carbohydrate: { min: 20, max: 60 } }),
     ];
     for (const entry of cases) {
       const linear = solve(entry, data);

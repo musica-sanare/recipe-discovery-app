@@ -197,7 +197,17 @@ interface Active {
 
 type StateFor = (sidesOff: readonly string[], values: readonly number[]) => RecipeState;
 
-type Evaluator = (sidesOff: readonly string[], active: readonly Active[], defaults: readonly number[]) => (values: readonly number[]) => Nutrition;
+/**
+ * Scores the states of one side combination. The search reports each value it sets at a
+ * depth (in `active` order) with `set` before it goes deeper, and asks for the values of a
+ * complete state with `evaluate`.
+ */
+interface Scorer {
+  readonly set: (depth: number, value: number) => void;
+  readonly evaluate: (values: readonly number[]) => Nutrition;
+}
+
+type Evaluator = (sidesOff: readonly string[], active: readonly Active[], defaults: readonly number[]) => Scorer;
 
 interface Search {
   readonly best: Candidate;
@@ -270,7 +280,7 @@ function search(input: SolveInput, data: EngineData, makeEvaluator: (stateFor: S
     const sidesOff = removable.filter((_, bit) => (mask >> bit) & 1);
     const isOff = isOffWith(sidesOff);
     const active = activeWith(sidesOff);
-    const evaluate = evaluator(sidesOff, active, defaults);
+    const scorer = evaluator(sidesOff, active, defaults);
     const values = [...defaults];
     // The terms of the relative change in `changeable` order, so that the sum is added
     // in the same order for every state: 1 for a side switched off, or an ingredient.
@@ -290,7 +300,7 @@ function search(input: SolveInput, data: EngineData, makeEvaluator: (stateFor: S
     const visit = (depth: number): void => {
       if (depth === active.length) {
         // `values` is copied only when the state becomes the best one.
-        const candidate: Candidate = { sidesOff, values, fit: fitOf(evaluate(values)), cost: cost() };
+        const candidate: Candidate = { sidesOff, values, fit: fitOf(scorer.evaluate(values)), cost: cost() };
         if (!best || compareCandidates(candidate, best) < 0) best = { ...candidate, values: [...values] };
         return;
       }
@@ -299,6 +309,7 @@ function search(input: SolveInput, data: EngineData, makeEvaluator: (stateFor: S
       const { adjustable, index } = entry;
       for (const value of adjustable.values) {
         values[index] = value;
+        scorer.set(depth, value);
         visit(depth + 1);
       }
       values[index] = adjustable.defaultValue;
@@ -312,9 +323,10 @@ function search(input: SolveInput, data: EngineData, makeEvaluator: (stateFor: S
 const exhaustiveEvaluator =
   (recipe: SolverRecipe, data: EngineData) =>
   (stateFor: StateFor): Evaluator =>
-  (sidesOff) =>
-  (values) =>
-    calculate(recipe, stateFor(sidesOff, values), data);
+  (sidesOff) => ({
+    set: () => undefined,
+    evaluate: (values) => calculate(recipe, stateFor(sidesOff, values), data),
+  });
 
 interface Slope {
   readonly index: number;
@@ -391,26 +403,26 @@ const linearEvaluator =
   (stateFor: StateFor, baseline: RecipeNutrition): Evaluator =>
   (sidesOff, active, defaults) => {
     const { base, slopes } = precomputed?.models.get(sidesKey(sidesOff)) ?? linearModel(recipe, data, stateFor, sidesOff, active, defaults, baseline);
-    const predicted: (number | null)[] = base.map(() => null);
+    if (slopes.length !== active.length || slopes.some((slope, depth) => slope.index !== active[depth]?.index)) throw new Error("Linear model does not match the active ingredients");
+    // `sums[depth]` holds base + Σ rate × (value − default) over the slopes before `depth`,
+    // added in slope order as one sum per state would add them, so every prediction is the
+    // same number; `null` once a value or a rate is unknown. `sums[slopes.length]` is the state's prediction.
+    const sums: (number | null)[][] = [base.map((value) => value ?? null), ...slopes.map(() => base.map((): number | null => null))];
     const into = scratch();
-    return (values) => {
-      for (let entry = 0; entry < base.length; entry++) {
-        const value = base[entry] ?? null;
-        predicted[entry] = null;
-        if (value === null) continue;
-        let sum = value;
-        let known = true;
-        for (const { index, from, slope } of slopes) {
-          const rate = slope[entry];
-          if (rate === null || rate === undefined) {
-            known = false;
-            break;
-          }
-          sum += rate * ((values[index] ?? from) - from);
+    return {
+      set: (depth, value) => {
+        const slope = slopes[depth];
+        const previous = sums[depth];
+        const next = sums[depth + 1];
+        if (!slope || !previous || !next) return;
+        const delta = value - slope.from;
+        for (let entry = 0; entry < base.length; entry++) {
+          const sum = previous[entry] ?? null;
+          const rate = slope.slope[entry];
+          next[entry] = sum === null || rate === null || rate === undefined ? null : sum + rate * delta;
         }
-        if (known) predicted[entry] = sum;
-      }
-      return fromVector(predicted, into);
+      },
+      evaluate: () => fromVector(sums[slopes.length] ?? [], into),
     };
   };
 

@@ -15,6 +15,7 @@ Status: **Draft (2026-10-18)**. Each phase ends with checks, a summary to the ow
 | 6 — Post-release maintenance | `prompts/06-post-release-maintenance.md` |
 | 7 — Content expansion | `prompts/07-content-expansion.md` |
 | 8 — Shopping list | `prompts/08-shopping-list.md` |
+| 9 — Recommendation speed and maintenance | `prompts/09-speed-and-maintenance.md` |
 
 `prompts/FIRST_MESSAGE.md` is the kickoff message for a new Claude Code session.
 
@@ -130,6 +131,16 @@ Status: **Complete (2026-10-25)**: release 4 deployed after the owner's approval
 - Release 4 after the owner's approval.
 
 Acceptance: approved ADR and SPEC change; the module covered by tests and a snapshot; lists built, checked off, copied, and printed in three locales on desktop and mobile; nutrition and scenario snapshots unchanged; checks and CI pass.
+
+## Phase 9 — Recommendation speed and maintenance
+
+Status: **Planned (2026-10-25)**, to start in a new Claude Code session. The owner chose recommendation speed and maintenance (option A) over more recipes, opt-in storage, and meal planning or AI: a full recommendation is near the ADR-030 D10 threshold (p90 about 99–100 ms at 4×, [RELEASE_READINESS.md](RELEASE_READINESS.md) §3), which blocks a larger library, and the ADR-016 re-check is due after 2026-10-26 12:40 UTC.
+
+- Dependency maintenance: the ADR-016 re-check of `i18next` and `react-i18next`, the other dependencies under ADR-016, and the ADR-017 state.
+- Recommendation speed: profiling on the current library and a synthetic larger one, options with their equality proof and a target approved by the owner, then the implementation with every engine output unchanged, measured against a same-session baseline.
+- Release 5 only if users receive a change, after the owner's approval.
+
+Acceptance: ADR-016 re-checked and dependencies current or excepted; the approved speed target met with every snapshot and equality test unchanged; timing documents updated as approved; checks and CI pass.
 
 ## Later (not MVP)
 

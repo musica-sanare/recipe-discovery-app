@@ -14,7 +14,7 @@ The app supports Japanese, English, and Spanish (`ja`, `en`, `es`).
 
 ## Status
 
-Phase 6 (post-release maintenance, `docs/IMPLEMENTATION_PLAN.md`) is complete. Release 2 is deployed at https://recipe-discovery.musica-sanare.workers.dev (2026-10-24, content version `2026-10-24.8`); the release record, limitations, and manual checks are in [`docs/RELEASE_READINESS.md`](docs/RELEASE_READINESS.md).
+Phase 7 (content expansion, `docs/IMPLEMENTATION_PLAN.md`) has added 26 recipes; release 3 is prepared. Release 2 is deployed at https://recipe-discovery.musica-sanare.workers.dev (2026-10-24, content version `2026-10-24.8`); the release record, limitations, and manual checks are in [`docs/RELEASE_READINESS.md`](docs/RELEASE_READINESS.md).
 
 ## Local setup
 

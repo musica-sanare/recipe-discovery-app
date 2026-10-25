@@ -723,6 +723,15 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - Browser check (built preview): the 13 detail pages at 1280 px and 375 px in three locales (78 views) without page overflow or missing keys. Not checked: candidate cards of the new recipes, real devices.
 - Checks: `npm run validate:content` (94 foods, 86 recipes), `npm run check` (643 tests), `npm run test:e2e` (98 passed, 1 skipped), `npm run report:composition` (86 recipes: exact 600, approximation 116, hard to estimate 2, not counted 31, fried 5), `npm run eval:coverage`.
 
+### Stage 7.4 release 3 preparation (2026-10-25)
+- Release 3 contains the Phase 7 changes after release 2 (`edd7afe`): Stages 7.1 to 7.3, content version `2026-10-25.2` (86 recipes, 94 foods). The engines, headers, and dependencies are unchanged.
+- Checks on `09449fd` with the Stage 7.4 changes: `npm ci`, `npm run check` (643 tests; the unit tests ran three times without a timeout), `npm run test:e2e` (98 passed, 1 skipped), `npm audit` (0, also with `--omit=dev`). `dist/`: 9 files, about 1.03 MB (release 2: 876 KB).
+- Phone-class timing (`npm run test:e2e:timing`): a full search takes 82.2 ms (cut) and 78.5 ms (bulk) median at 4× (p90 92.8 and 92.0 ms) and 123.4 and 117.0 ms at 6×, within the 100 ms threshold of ADR-030 D10 with little margin. Numbers in `docs/RELEASE_READINESS.md` §3.
+- Secret scan without a new download: the gitleaks 8.30.1 binary of Stage 6.6 is byte-identical to the binary in the archive whose SHA-256 is `b40ab0ae…` (checked by extracting it again). `gitleaks git --log-opts=--all --redact`: 87 commits, 2.49 MB, no leaks; `gitleaks dir` on the tracked files of `09449fd` (2.04 MB) and on `dist/` (1.03 MB): no leaks.
+- Versions, checked 2026-10-25 02:19 UTC: Wrangler 4.152.0 and gitleaks 8.30.1 are still the latest; the Stage 6.6 Wrangler installation reports `npm audit` 0 with the `undici` 7.30.1 override. `i18next` and `react-i18next` kept releasing (26.5.10 at 2026-10-24 10:15 UTC, 17.1.8 at 12:39 UTC), so the ADR-016 re-check moves to 2026-10-26 12:40 UTC (open question 16).
+- `docs/RELEASE_READINESS.md` now prepares release 3 (status, changes, acceptance, blockers, limitations, timing, manual checks, proposal, sign-off).
+- Open: CI on the release commit (the owner reports it), then the deployment proposal of `docs/RELEASE_READINESS.md` §5.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in
@@ -986,7 +995,7 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 13. ~~Owner review of the English and Spanish texts added or rewritten in Phase 1~~: the owner accepted the remaining texts (validation recipes, Phase 0 foods, UI catalogs outside `about.*`) as they are for this release (2026-10-24, "Release blocker decisions"); batches 1–3 and the about page were reviewed with their commits. Reviewed in Phase 6 Stage 6.3 (rounds R1–R6, 2026-10-24, "Stage 6.3 summary"): every text that had not been reviewed is now reviewed.
 14. ~~Whether every food must have at least one search alias per locale~~: aliases stay optional (ADR-030 D6).
 15. ~~Phase 2 must distinguish raw values from related cooked values for the error bands~~: separate reasons `raw_value_for_cooking` and `related_cooked_value` (ADR-028).
-16. Re-check the `i18next`/`react-i18next` pins (ADR-016, "ADR-016 re-check before Phase 5"); deferred by the owner to maintenance after the release ("Release blocker decisions") and again for release 2 ("Stage 6.6"). Further releases on 2026-10-24 (`i18next` 26.5.8, `react-i18next` 17.1.6 at 05:5x UTC) move the earliest re-check to 2026-10-26 05:53 UTC.
+16. Re-check the `i18next`/`react-i18next` pins (ADR-016, "ADR-016 re-check before Phase 5"); deferred by the owner to maintenance after the release ("Release blocker decisions") and again for release 2 ("Stage 6.6"). Further releases on 2026-10-24 (`i18next` 26.5.10 at 10:15 UTC, `react-i18next` 17.1.8 at 12:39 UTC) move the earliest re-check to 2026-10-26 12:40 UTC ("Stage 7.4").
 17. ~~Recommendation and recalculation time on phones~~: measured with CPU throttling in Stage 5.4 (about 80 ms at 4×); the recommendation stays on the main thread with a 100 ms threshold (ADR-030 D10, revised). A real-device check remains a manual item.
 18. ~~Fried dishes with wide ranges become "near"~~: intended (ADR-029 D10). The fried and slow-frying bands remain assumptions (open question 3).
 19. ~~Provisional input limits and contradiction thresholds~~: unchanged (ADR-030 D4).

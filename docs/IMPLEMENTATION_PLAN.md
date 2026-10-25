@@ -12,6 +12,7 @@ Status: **Draft (2026-10-18)**. Each phase ends with checks, a summary to the ow
 | 5 — Quality and release preparation | `prompts/05-quality-and-release.md` |
 | 6 — Post-release maintenance | `prompts/06-post-release-maintenance.md` |
 | 7 — Content expansion | `prompts/07-content-expansion.md` |
+| 8 — Shopping list | `prompts/08-shopping-list.md` |
 
 `prompts/FIRST_MESSAGE.md` is the kickoff message for a new Claude Code session.
 
@@ -116,6 +117,17 @@ Status: **Complete (2026-10-25)**: both batches added (86 recipes) and release 3
 - Release 3 after the owner's approval.
 
 Acceptance: about 26 new recipes validated and reviewed in three locales with approved snapshot diffs; ADR-023 met as revised; the planned gaps narrowed; a full recommendation within about 100 ms at 4× or the owner's decision on how to proceed; checks and CI pass.
+
+## Phase 8 — Shopping list
+
+Status: **Planned (2026-10-25)**, to start in a new Claude Code session. Shopping lists were the Phase 8 candidate named when the owner chose Phase 7; they are outside the MVP in `docs/SPEC.md` §3, so the phase starts with a scope change and an ADR.
+
+- Design: entry points, amounts and combination rules, pantry items, persistence and privacy (ADR-015, ADR-030 D9), output (checklist, copy, print), and UI, approved before implementation.
+- A pure, deterministic, locale-free aggregation module with tests; UI and localization in three locales with the owner's review; accessibility and E2E checks.
+- No change to nutrition values, the recommendation engine, or the recipe content; the recommendation stays within the ADR-030 D10 threshold.
+- Release 4 after the owner's approval.
+
+Acceptance: approved ADR and SPEC change; the module covered by tests and a snapshot; lists built, checked off, copied, and printed in three locales on desktop and mobile; nutrition and scenario snapshots unchanged; checks and CI pass.
 
 ## Later (not MVP)
 

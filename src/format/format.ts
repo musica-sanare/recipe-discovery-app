@@ -9,8 +9,23 @@ import type { Locale } from "../../shared/locales";
 
 const DISPLAY_DECIMALS: Readonly<Record<Nutrient, number>> = { ENERC_KCAL: 0, "PROT-": 0, "FAT-": 0, "CHOCDF-": 0, NACL_EQ: 1 };
 
+// Formatters are reused (Phase 9 Stage 9.3, U1): creating one per call took about 2 ms of a
+// search at a 4× CPU slowdown. A formatter's output depends only on its locale and options,
+// and the keys are few (three locales, a handful of option sets).
+const formatters = new Map<string, Intl.NumberFormat>();
+
+function cachedFormat(locale: Locale, options: Intl.NumberFormatOptions): Intl.NumberFormat {
+  const key = `${locale} ${JSON.stringify(options)}`;
+  let format = formatters.get(key);
+  if (format === undefined) {
+    format = new Intl.NumberFormat(locale, options);
+    formatters.set(key, format);
+  }
+  return format;
+}
+
 function numberFormat(locale: Locale, decimals: number, options: Intl.NumberFormatOptions = {}): Intl.NumberFormat {
-  return new Intl.NumberFormat(locale, { minimumFractionDigits: decimals, maximumFractionDigits: decimals, ...options });
+  return cachedFormat(locale, { minimumFractionDigits: decimals, maximumFractionDigits: decimals, ...options });
 }
 
 /** A plain number with a fixed number of decimals. */
@@ -38,7 +53,7 @@ export function formatNutrientRange(locale: Locale, nutrient: Nutrient, low: num
 export function formatGap(locale: Locale, nutrient: Nutrient, gap: number): string {
   const rounded = roundForDisplay(nutrient, Math.abs(gap));
   if (rounded === 0 && gap !== 0) {
-    return new Intl.NumberFormat(locale, { maximumFractionDigits: DISPLAY_DECIMALS[nutrient] + 1 }).format(Math.abs(gap));
+    return cachedFormat(locale, { maximumFractionDigits: DISPLAY_DECIMALS[nutrient] + 1 }).format(Math.abs(gap));
   }
   return formatNumber(locale, rounded, DISPLAY_DECIMALS[nutrient]);
 }
@@ -61,11 +76,11 @@ export function displayedDifference(nutrient: Nutrient, previous: number | null,
 
 /** An ingredient amount in grams (not a nutrient value): up to one decimal. */
 export function formatGrams(locale: Locale, grams: number): string {
-  return new Intl.NumberFormat(locale, { maximumFractionDigits: 1 }).format(grams);
+  return cachedFormat(locale, { maximumFractionDigits: 1 }).format(grams);
 }
 
 export function formatPercent(locale: Locale, ratio: number): string {
-  return new Intl.NumberFormat(locale, { style: "percent", maximumFractionDigits: 0 }).format(ratio);
+  return cachedFormat(locale, { style: "percent", maximumFractionDigits: 0 }).format(ratio);
 }
 
 export type BoundaryNote = "justBelow" | "justAbove";

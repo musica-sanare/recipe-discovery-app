@@ -140,3 +140,17 @@ describe("other numbers", () => {
     expect(formatNumber("es", 1.5, 1)).toBe("1,5");
   });
 });
+
+describe("reused formatters", () => {
+  it("keep each locale's and option set's output when calls alternate", () => {
+    for (let round = 0; round < 2; round++) {
+      expect(formatNutrient("es", "NACL_EQ", 1.15)).toBe("1,2");
+      expect(formatNutrient("en", "NACL_EQ", 1.15)).toBe("1.2");
+      expect(formatNumber("es", 1234.5, 1)).toBe("1234,5");
+      expect(formatNumber("es", 1234.5, 0)).toBe("1235");
+      expect(formatDifference("en", "PROT-", 30, 38)).toBe("+8");
+      expect(formatNumber("en", 8)).toBe("8");
+      expect(formatPercent("ja", 0.25)).toBe("25%");
+    }
+  });
+});

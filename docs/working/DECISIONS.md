@@ -874,6 +874,10 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - Equality: every test passes without updates; the scratch comparison of 5,760 requests is identical to the baseline.
 - Node (scratch script, `41697e8` against this change in one process, alternating, 41 runs after 5 warm-up runs, two rounds; median, ms): 86 recipes cut 9.3–9.5 → 8.1–8.5 (−11 to −14 %), bulk 9.0–9.2 → 7.9 (−13 to −14 %); 130 recipes cut 13.9–16.3 → 11.9–13.4 (−15 to −18 %), bulk 14.0–16.0 → 12.0–14.1 (−12 to −15 %).
 
+### Stage 9.3 U1: reused number formatters (2026-10-25)
+- `src/format/format.ts`: every `Intl.NumberFormat` comes from a small map keyed by the locale and the options, instead of a new formatter per call (Stage 9.2 measured about 2 ms per search at 4× for creating them). A formatter's output depends only on its locale and options; the keys are three locales times a handful of option sets. UI only; no engine or value changes. `src/format/format.test.ts` adds a check that alternating locales and option sets keep each one's output.
+- Checks: `npm run check` (687 tests) and `npm run test:e2e` (107 passed, 1 skipped) pass. Built preview (`npm run preview`, 2026-10-25): a default search in `en`, then `es` and `ja`, at desktop width and at 375 px; the detail view of `beef_potato_tomato_stew` in `es` at 375 px shows salt as "2,4 g"; no page overflow; no console messages. Its timing is part of the browser comparison that follows.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in

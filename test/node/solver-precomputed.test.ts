@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { recommendationDataFromBundle } from "../../domain/recommendation/data.ts";
+import { recommendationDataFromBundle, withPrecomputed } from "../../domain/recommendation/data.ts";
+import { evaluatePool } from "../../domain/recommendation/recommend.ts";
 import { precompute, solve, type SolveInput } from "../../domain/recommendation/solver.ts";
 import { presetTargets } from "../../domain/recommendation/validate.ts";
 import type { Targets } from "../../domain/recommendation/types.ts";
@@ -41,6 +42,23 @@ describe("precomputed solver results on the repository recipes", () => {
           expect(solve({ ...input, ...(precomputed ? { precomputed } : {}) }, data.engine), `${recipe.id} ${JSON.stringify(variant)}`).toStrictEqual(solve(input, data.engine));
         }
       }
+    }
+  });
+});
+
+describe("recommendation data without precomputed results", () => {
+  it("adds the same results later and gives the same recommendations", () => {
+    const calc = repositoryEngine().calc;
+    const base = recommendationDataFromBundle(calc, { precompute: false });
+    expect(base.precomputed.size).toBe(0);
+    const later = withPrecomputed(base);
+    expect(later.precomputed).toStrictEqual(data.precomputed);
+    for (const preset of ["cut", "maintain", "bulk"] as const) {
+      const request = { targets: presetTargets(preset), servings: 1, conditions: { excludedFoods: [], excludedAllergens: [], requiredFoods: [], cuisines: [] } };
+      const without = evaluatePool(request, base);
+      const withResults = evaluatePool(request, later);
+      if (!without.ok || !withResults.ok) throw new Error("invalid request");
+      expect(withResults.value.entries).toStrictEqual(without.value.entries);
     }
   });
 });

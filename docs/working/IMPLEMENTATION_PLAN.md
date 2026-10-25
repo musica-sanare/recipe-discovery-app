@@ -134,7 +134,7 @@ Acceptance: approved ADR and SPEC change; the module covered by tests and a snap
 
 ## Phase 9 — Recommendation speed and maintenance
 
-Status: **Planned (2026-10-25)**, to start in a new Claude Code session. The owner chose recommendation speed and maintenance (option A) over more recipes, opt-in storage, and meal planning or AI: a full recommendation is near the ADR-030 D10 threshold (p90 about 99–100 ms at 4×, [RELEASE_READINESS.md](RELEASE_READINESS.md) §3), which blocks a larger library, and the ADR-016 re-check is due after 2026-10-26 12:40 UTC.
+Status: **In progress (2026-10-25)**: Stages 9.2 and 9.3 done and release 5 deployed after the owner's approval ([DECISIONS.md](DECISIONS.md) "Stage 9.2" to "Fifth production deployment"); the ADR-016 re-check (Stage 9.1, not before 2026-10-26 12:40 UTC) remains. The owner chose recommendation speed and maintenance (option A) over more recipes, opt-in storage, and meal planning or AI: a full recommendation is near the ADR-030 D10 threshold (p90 about 99–100 ms at 4×, [RELEASE_READINESS.md](RELEASE_READINESS.md) §3), which blocks a larger library, and the ADR-016 re-check is due after 2026-10-26 12:40 UTC.
 
 - Dependency maintenance: the ADR-016 re-check of `i18next` and `react-i18next`, the other dependencies under ADR-016, and the ADR-017 state.
 - Recommendation speed: profiling on the current library and a synthetic larger one, options with their equality proof and a target approved by the owner, then the implementation with every engine output unchanged, measured against a same-session baseline.

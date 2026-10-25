@@ -2,7 +2,7 @@
 
 # Release Readiness — Recipe Discovery
 
-Status: **Release 5 in preparation (2026-10-25)**: the Phase 9 recommendation speed-up on top of release 4, content version `2026-10-25.2` (unchanged). Release 4 is deployed at https://recipe-discovery.musica-sanare.workers.dev from commit `2bcbb9b` (Cloudflare Workers static assets, version `5a4ae857-f25e-4bdc-8db1-2246c280aeef`) and is the rollback target. Update this document for every release; release 1 is recorded in [DECISIONS.md](DECISIONS.md) ("Stage 5.1 release plan" to "Manual checks"), release 2 in "Stage 6.6" and "Second production deployment", release 3 in "Stage 7.4" and "Third production deployment", release 4 in "Stage 8.4" and "Fourth production deployment", release 5 in "Stage 9.4".
+Status: **Release 5 deployed (2026-10-25)** at https://recipe-discovery.musica-sanare.workers.dev from commit `5709506` (Cloudflare Workers static assets, version `3f566ec5-7948-488c-b7ac-cace55a24d34`): the Phase 9 recommendation speed-up on top of release 4, content version `2026-10-25.2` (unchanged). The post-deployment checks passed ([DECISIONS.md](DECISIONS.md) "Fifth production deployment"). Release 4 (`2bcbb9b`, version `5a4ae857-f25e-4bdc-8db1-2246c280aeef`) is the rollback target. Update this document for every release; release 1 is recorded in [DECISIONS.md](DECISIONS.md) ("Stage 5.1 release plan" to "Manual checks"), release 2 in "Stage 6.6" and "Second production deployment", release 3 in "Stage 7.4" and "Third production deployment", release 4 in "Stage 8.4" and "Fourth production deployment", release 5 in "Stage 9.4".
 
 Commit hashes in this document are those after the history rewrite of 2026-10-25; older records in [DECISIONS.md](DECISIONS.md) use the earlier hashes ("History rewrite (2026-10-25)").
 
@@ -11,8 +11,8 @@ Commit hashes in this document are those after the history rewrite of 2026-10-25
 | 1 (MVP) | `ed511a0` | `2026-10-24.3` | Deployed 2026-10-24 (version `0f4696e0…`); replaced by release 2 |
 | 2 (Phase 6) | `7144d06` | `2026-10-24.8` | Deployed 2026-10-24 13:18 UTC (version `81bc7642…`); replaced by release 3 |
 | 3 (Phase 7) | `7b66ca3` | `2026-10-25.2` | Deployed 2026-10-25 02:44 UTC (version `992ce5ff…`); replaced by release 4 |
-| 4 (Phase 8) | `2bcbb9b` | `2026-10-25.2` | Deployed 2026-10-25 09:02 UTC (version `5a4ae857…`) |
-| 5 (Phase 9) | Stage 9.4 release commit (after `73c3f18`) | `2026-10-25.2` | In preparation |
+| 4 (Phase 8) | `2bcbb9b` | `2026-10-25.2` | Deployed 2026-10-25 09:02 UTC (version `5a4ae857…`); replaced by release 5 |
+| 5 (Phase 9) | `5709506` | `2026-10-25.2` | Deployed 2026-10-25 12:26 UTC (version `3f566ec5…`) |
 
 ## 0. What changes in release 5
 
@@ -45,7 +45,7 @@ Checked on `73c3f18` (the Stage 9.4 changes are documentation only) on 2026-10-2
 
 | Item | Status | What is needed |
 |---|---|---|
-| CI on the release commit | **Open** | The owner pushes `dev` and reports both jobs (`check`, `e2e`); the Stage 9.2–9.4 commits have not run in CI yet |
+| CI on the release commit | **Passed** | Both jobs (`check`, `e2e`) passed on `5709506` after Claude pushed `dev` at the owner's request (owner's report, 2026-10-25) |
 | Secret scan of the release history | **Passed** on `73c3f18` | gitleaks 8.30.1 (Homebrew, still the latest): `gitleaks git --log-opts=--all --redact` (118 commits, 2.99 MB), `gitleaks dir` on the tracked files (`git archive HEAD`, 3.1 MB) and on `dist/` (1.0 MB): no leaks (2026-10-25 11:53 UTC). No commit touches `data/raw`, `*.xlsx`, `*.pdf`, or `.env*`. Repeat if commits other than documentation follow |
 | `i18next` / `react-i18next` pins (open question 16) | **Deferred** (owner decision for releases 1 to 5) | Not a release condition (ADR-016 release-burst exception). The earliest re-check is 2026-10-26 12:40 UTC; the owner chose to prepare release 5 without waiting for it (2026-10-25). An update is its own commit and redeployment |
 
@@ -77,11 +77,11 @@ Release 1 (owner, 2026-10-24, [DECISIONS.md](DECISIONS.md) "Manual checks"): iPh
 
 Releases 2 to 5 (optional, after deployment): on an iPhone, the cuisine choices on the targets view in Spanish (nine values), a search with the Southeast Asian cuisine preferred, the detail pages of a new recipe in each language (for example `beef_pho_rice_noodles`, `tofu_sasami_steamed`), for release 4 adding two recipes to the shopping list, checking items off, "Copy as text" (pasting into a notes app), and the print preview, and for release 5 the time from tapping "Find recipes" to the candidates with the default targets.
 
-## 5. Deployment proposal (release 5, awaiting the owner's approval)
+## 5. Deployment proposal (approved and deployed on 2026-10-25)
 
 | Item | Proposal |
 |---|---|
-| What | The Stage 9.4 release commit (documentation after `73c3f18`) plus a commit that sets `compatibility_date` to the deployment date, built with `npm ci && npm run build`; content version `2026-10-25.2`; `dist/` has 9 files and about 1.0 MB |
+| What | The Stage 9.4 release commit `5709506` (documentation after `73c3f18`), built with `npm ci && npm run build`; `compatibility_date` was already the deployment date (2026-10-25), so no further commit was needed; content version `2026-10-25.2`; `dist/` has 9 files and about 1.0 MB |
 | Where | The existing Cloudflare Workers project `recipe-discovery` on the owner's account (https://recipe-discovery.musica-sanare.workers.dev); nothing new is created |
 | How | [DEPLOYMENT.md](../en/DEPLOYMENT.md) §3: Wrangler 4.152.0 (still the latest on 2026-10-25 11:54 UTC; dependencies `esbuild` 0.28.2, `workerd` 1.20261019.1, `miniflare` 5.20261019.2-beta, unchanged since release 4) installed after the owner approves the download into a new folder of the session scratch directory with `npm install --ignore-scripts --save-exact`, its integrity checked against the registry; `npm audit` there, with the `undici` override if still needed (release 4: 7.30.1); global npm state compared before and after; `wrangler whoami` confirmed by the owner; dry run, then deploy with `WRANGLER_SEND_METRICS=false`; post-deployment checks of [DEPLOYMENT.md](../en/DEPLOYMENT.md) §3 plus a default search at 375 px in three locales |
 | Rollback | Redeploy release 4 (`2bcbb9b`) with the same steps; whether `wrangler rollback` applies to an assets-only Worker remains 要確認 |
@@ -116,3 +116,7 @@ Releases 2 to 5 (optional, after deployment): on an iPhone, the cuisine choices 
 | Production deployment approved | 4 | 2026-10-25 | Owner (account [account name] confirmed with `wrangler whoami`) |
 | Deployed and checked | 4 | 2026-10-25 | Claude: `2bcbb9b`, version `5a4ae857…` ([DECISIONS.md](DECISIONS.md) "Fourth production deployment") |
 | Acceptance criteria checked | 5 | 2026-10-25 | Claude (§1) |
+| Release blockers resolved | 5 | 2026-10-25 | Owner (CI passed; open question 16 deferred) and Claude (secret scan) |
+| Deployment proposal approved | 5 | 2026-10-25 | Owner (Wrangler download approved; dry run passed) |
+| Production deployment approved | 5 | 2026-10-25 | Owner (account [account name] confirmed with `wrangler whoami`) |
+| Deployed and checked | 5 | 2026-10-25 | Claude: `5709506`, version `3f566ec5…` ([DECISIONS.md](DECISIONS.md) "Fifth production deployment") |

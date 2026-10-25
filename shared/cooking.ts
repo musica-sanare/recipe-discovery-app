@@ -1,6 +1,6 @@
 /**
  * Cooking data transcribed from the MEXT explanation PDF, tables 12-14
- * (docs/DATA_SOURCES.md "Cooking tables", docs/NUTRITION_CALCULATION.md §5-6).
+ * (docs/en/DATA_SOURCES.md "Cooking tables", docs/en/NUTRITION_CALCULATION.md §5-6).
  * `rawCode` pairs each cooked food with its raw counterpart; the pairing is this
  * project's, the numbers are MEXT's.
  */

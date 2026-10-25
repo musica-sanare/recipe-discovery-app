@@ -1,5 +1,5 @@
 /**
- * Translation glossary (docs/CONTENT_POLICY.md §6). When a Japanese text uses a
+ * Translation glossary (docs/en/CONTENT_POLICY.md §6). When a Japanese text uses a
  * term, the English and Spanish texts of the same item must use the listed
  * equivalents; a test enforces this. Longer terms are matched first.
  */
@@ -17,7 +17,7 @@ export const glossary: readonly LocalizedText[] = [
 
 /**
  * Health, efficacy, and allergen-safety expressions that must not appear in any
- * content (docs/CONTENT_POLICY.md §2 and §4). English and Spanish patterns are
+ * content (docs/en/CONTENT_POLICY.md §2 and §4). English and Spanish patterns are
  * matched case-insensitively at word starts.
  */
 export const forbiddenExpressions: { readonly ja: readonly string[]; readonly en: readonly string[]; readonly es: readonly string[] } = {

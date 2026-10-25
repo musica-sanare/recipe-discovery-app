@@ -40,7 +40,7 @@ describe("recommendation data", () => {
 });
 
 describe("hard filters on the validation recipes", () => {
-  // Eligible counts of the Stage 0.6 scenarios (docs/DECISIONS.md, with the Stage 0.6 allergen follow-up).
+  // Eligible counts of the Stage 0.6 scenarios (docs/working/DECISIONS.md, with the Stage 0.6 allergen follow-up).
   it("reproduces the eligible counts of the coverage evaluation", () => {
     expect(ids({})).toHaveLength(20);
     expect(ids({ maxMinutes: 20 })).toHaveLength(13);

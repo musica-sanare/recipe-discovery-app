@@ -1,5 +1,5 @@
 /**
- * Extracts the composition subset used by the app (docs/DATA_SOURCES.md "Handling rules").
+ * Extracts the composition subset used by the app (docs/en/DATA_SOURCES.md "Handling rules").
  *
  *   node tools/extract-composition.ts              write data/composition/foods.json
  *   node tools/extract-composition.ts --search 鶏卵  list matching food codes and names
@@ -31,7 +31,7 @@ let workbook: Buffer;
 try {
   workbook = readFileSync(rawPath);
 } catch {
-  console.error(`Workbook not found: ${manifest.rawFile}\nDownload it from ${manifest.source.url} (see docs/DATA_SOURCES.md).`);
+  console.error(`Workbook not found: ${manifest.rawFile}\nDownload it from ${manifest.source.url} (see docs/en/DATA_SOURCES.md).`);
   process.exit(1);
 }
 const sha256 = createHash("sha256").update(workbook).digest("hex");

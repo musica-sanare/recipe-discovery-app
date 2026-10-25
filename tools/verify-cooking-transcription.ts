@@ -1,6 +1,6 @@
 /**
  * Verifies data/composition/cooking.json against the text layer of the MEXT
- * explanation PDF (docs/DATA_SOURCES.md "Cooking tables"). macOS only: the PDF
+ * explanation PDF (docs/en/DATA_SOURCES.md "Cooking tables"). macOS only: the PDF
  * text is read with PDFKit through tools/macos/pdf-page-text.swift.
  *
  *   node tools/verify-cooking-transcription.ts

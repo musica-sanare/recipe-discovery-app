@@ -16,7 +16,7 @@ import { defaultDraft, draftToRequest, relaxedDraft } from "./targets/draft";
 import { contradictionMessage } from "./targets/errors";
 import { useTextContext } from "./useTextContext";
 
-/** Candidates, close alternatives, re-suggestion, and the exceptional states (docs/UI_DESIGN.md §3.2, ADR-030 D5, D7). */
+/** Candidates, close alternatives, re-suggestion, and the exceptional states (docs/en/UI_DESIGN.md §3.2, ADR-030 D5, D7). */
 export function CandidatesView({ search: current }: { readonly search: SearchState }) {
   const { t } = useTranslation();
   const { navigated, navigate } = useNavigation();

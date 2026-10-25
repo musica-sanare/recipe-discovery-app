@@ -1,5 +1,5 @@
 /**
- * Relaxation options (ADR-029 D8, docs/SPEC.md §12): one hard constraint at a time,
+ * Relaxation options (ADR-029 D8, docs/en/SPEC.md §12): one hard constraint at a time,
  * with the resulting gain in recipes that meet (and nearly meet) the targets,
  * recomputed exactly with the same filters and solver. Allergens and recipes the user
  * excluded are never relaxed.

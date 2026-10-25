@@ -1,6 +1,6 @@
 /**
  * Ingredient search over the food dictionary of the active text bundle (ADR-030 D6,
- * docs/ARCHITECTURE.md §4). Names and aliases are search data only; a choice always
+ * docs/en/ARCHITECTURE.md §4). Names and aliases are search data only; a choice always
  * resolves to locale-neutral food IDs.
  */
 import type { CalcBundle, TextBundle } from "../../../shared/bundle";

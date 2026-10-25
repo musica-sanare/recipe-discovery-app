@@ -1,5 +1,5 @@
 /**
- * Bounded adjustment solver (docs/NUTRITION_CALCULATION.md §10, ADR-024, ADR-026,
+ * Bounded adjustment solver (docs/en/NUTRITION_CALCULATION.md §10, ADR-024, ADR-026,
  * ADR-029 D4). The search space is every grid combination of the adjustable
  * ingredients times every subset of the sides the solver may switch off. For fixed
  * sides, per-serving values and range bounds are linear in each amount, so a linear

@@ -1,5 +1,5 @@
 /**
- * The targets and conditions form (docs/UI_DESIGN.md §3.1, §7). Fields hold the text the
+ * The targets and conditions form (docs/en/UI_DESIGN.md §3.1, §7). Fields hold the text the
  * user typed; `draftToRequest` turns them into the engine request without changing any
  * value. Invalid numbers become NaN so that the engine reports `invalid_number`.
  */
@@ -60,7 +60,7 @@ export function defaultDraft(preset: Preset = DEFAULT_PRESET): TargetsDraft {
   };
 }
 
-/** Choosing a preset overwrites the four target fields (docs/UI_DESIGN.md §3.1). */
+/** Choosing a preset overwrites the four target fields (docs/en/UI_DESIGN.md §3.1). */
 export function withPreset(draft: TargetsDraft, preset: Preset): TargetsDraft {
   return { ...draft, preset, edited: false, numbers: { ...draft.numbers, ...presetNumbers(preset) } };
 }

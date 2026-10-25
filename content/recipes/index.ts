@@ -84,7 +84,7 @@ import { recipe as tofuSteakMushroomSauce } from "./tofu_steak_mushroom_sauce.ts
 import { recipe as tortillaEspanola } from "./tortilla_espanola.ts";
 import { recipe as tunaChickpeaSalad } from "./tuna_chickpea_salad.ts";
 import { recipe as tunaTofuBowl } from "./tuna_tofu_bowl.ts";
-import { recipe as vegetableOmeletteBread } from "./vegetable_omelette_bread.ts";/** The 20 Phase 0 validation recipes (docs/IMPLEMENTATION_PLAN.md "Phase 0", item 4). */
+import { recipe as vegetableOmeletteBread } from "./vegetable_omelette_bread.ts";/** The 20 Phase 0 validation recipes (docs/working/IMPLEMENTATION_PLAN.md "Phase 0", item 4). */
 export const validationRecipes: readonly Recipe[] = [
   chickenLemonHerbGrill,
   boiledChickenNegiSalt,
@@ -108,7 +108,7 @@ export const validationRecipes: readonly Recipe[] = [
   poachedEggSpinachToast,
 ];
 
-/** The library: the validation recipes, then the Phase 5 batches (docs/DECISIONS.md "Stage 5.1 release plan" P2). */
+/** The library: the validation recipes, then the Phase 5 batches (docs/working/DECISIONS.md "Stage 5.1 release plan" P2). */
 export const recipes: readonly Recipe[] = [
   ...validationRecipes,
   nattoTofuRiceBowl,

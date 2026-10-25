@@ -1,5 +1,5 @@
 /**
- * Extracted food composition data (docs/DATA_SOURCES.md, docs/NUTRITION_CALCULATION.md §3).
+ * Extracted food composition data (docs/en/DATA_SOURCES.md, docs/en/NUTRITION_CALCULATION.md §3).
  * Component identifiers are kept as published by MEXT so every value stays traceable.
  */
 import * as z from "zod/mini";

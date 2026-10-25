@@ -11,7 +11,7 @@ import { adjustmentItems, allergenNotices, targetLines } from "./candidates/disp
 import { listText, minutesText, nutrientText, rangeText } from "./candidates/texts";
 import { useTextContext } from "./useTextContext";
 
-/** Two or three candidates side by side (docs/UI_DESIGN.md §3.3). */
+/** Two or three candidates side by side (docs/en/UI_DESIGN.md §3.3). */
 export function ComparisonView({ search }: { readonly search: SearchState }) {
   const { t } = useTranslation();
   const { navigated } = useNavigation();

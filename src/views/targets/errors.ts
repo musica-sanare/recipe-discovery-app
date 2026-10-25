@@ -1,5 +1,5 @@
 /**
- * Where each engine input error belongs on the targets form (docs/UI_DESIGN.md §3.1).
+ * Where each engine input error belongs on the targets form (docs/en/UI_DESIGN.md §3.1).
  * The engine validates; the UI only places and words its errors.
  */
 import type { TFunction } from "i18next";

@@ -7,7 +7,7 @@ import { compositionSubsetSchema } from "../../shared/composition.ts";
 const dataDir = path.join(import.meta.dirname, "..", "..", "data", "composition");
 const readJson = (name: string): unknown => JSON.parse(readFileSync(path.join(dataDir, name), "utf8"));
 
-// Checks the tracked subset without the original workbook (docs/DATA_SOURCES.md).
+// Checks the tracked subset without the original workbook (docs/en/DATA_SOURCES.md).
 describe("tracked composition subset", () => {
   const subset = z.parse(compositionSubsetSchema, readJson("foods.json"));
   const manifest = readJson("manifest.json") as { source: unknown; requestedCodes: string[] };

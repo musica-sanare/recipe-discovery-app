@@ -1,5 +1,5 @@
 /**
- * Traceable basis of every calculated value (docs/NUTRITION_CALCULATION.md §5–§7,
+ * Traceable basis of every calculated value (docs/en/NUTRITION_CALCULATION.md §5–§7,
  * SPEC §15): food codes, data versions, cooking states, reasons, and the assumptions
  * behind each counted ingredient. Texts come from the UI catalogs; only codes are here.
  */

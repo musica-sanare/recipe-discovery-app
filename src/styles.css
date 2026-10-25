@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /*
- * Design tokens (docs/UI_DESIGN.md §5). Only these colors exist; the default palette is
+ * Design tokens (docs/en/UI_DESIGN.md §5). Only these colors exist; the default palette is
  * removed so that every color passes the contrast test in src/styles.test.ts.
  */
 @theme {

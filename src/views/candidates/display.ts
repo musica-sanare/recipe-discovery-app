@@ -1,5 +1,5 @@
 /**
- * What a candidate card shows, derived from engine output only (docs/UI_DESIGN.md §3.2,
+ * What a candidate card shows, derived from engine output only (docs/en/UI_DESIGN.md §3.2,
  * ADR-030 D12). No value or status is computed here; this module selects and orders
  * what the engines returned.
  */

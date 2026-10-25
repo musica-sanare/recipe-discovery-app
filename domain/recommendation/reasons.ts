@@ -1,7 +1,7 @@
 /**
  * Reason data for displayed recipes (ADR-029): typed codes and numbers that the UI
  * turns into localized texts in Phase 4. Facts about the calculation and the user's
- * own targets only; no health or efficacy wording exists here (docs/CONTENT_POLICY.md §4).
+ * own targets only; no health or efficacy wording exists here (docs/en/CONTENT_POLICY.md §4).
  */
 import { isQuick } from "../../shared/recipe.ts";
 import type { TargetKey } from "./fit.ts";

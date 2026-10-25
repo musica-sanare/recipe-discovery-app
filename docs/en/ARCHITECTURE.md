@@ -1,6 +1,6 @@
 # Architecture — Recipe Discovery
 
-Status: **Draft (2026-10-18)**. The structure below is the intended direction (`docs/DECISIONS.md` ADR-001 to ADR-014). Exact package versions, file names, and the data model details are confirmed in Phase 0 and Phase 1; anything not yet verified is marked *Proposed*.
+Status: **Draft (2026-10-18)**. The structure below is the intended direction (`docs/working/DECISIONS.md` ADR-001 to ADR-014). Exact package versions, file names, and the data model details are confirmed in Phase 0 and Phase 1; anything not yet verified is marked *Proposed*.
 
 ## 1. Overview
 
@@ -33,7 +33,7 @@ Repository content (recipes, food dictionary, translations)
 | `shared` | Content schemas and types, IDs, units, constants used by build tools, domain, and UI | UI, platform |
 | `content/` (data) | Recipes, food dictionary, allergen links, substitutions, localized texts, glossary | — |
 | `tools/` (build time) | Composition extraction, content validation, policy lint, nutrition snapshots, header generation | UI |
-| `src/` (UI) | React app, navigation, i18n, formatting, state, accessibility (`docs/UI_DESIGN.md`) | Platform-specific APIs |
+| `src/` (UI) | React app, navigation, i18n, formatting, state, accessibility (`docs/en/UI_DESIGN.md`) | Platform-specific APIs |
 | `platform/` | Hosting configuration (Cloudflare) and generated security headers | Domain logic |
 
 Boundaries are enforced with lint import restrictions and a boundary test, as in the owner's other projects.
@@ -58,7 +58,7 @@ docs/                   Documentation
 
 ## 3. Data model (outline)
 
-Details are finalized in Phase 1 and documented in `docs/NUTRITION_CALCULATION.md` and the content schemas.
+Details are finalized in Phase 1 and documented in `docs/en/NUTRITION_CALCULATION.md` and the content schemas.
 
 - **Food**: locale-neutral `id` (stable slug); `composition` references (food code and data version per cooking state, for example `raw` and `grilled`); weight change rates per cooking method; refuse rate; allergen links with confidence (`contains`, `may_contain`, `unknown`); localized `names` and search `aliases` for `ja`, `en`, `es`.
 - **Recipe**: `id`; time; effort; cuisine; goals; main protein group; tags; equipment; servings; ingredients; sides; keyed steps and food safety notes; substitutions; localized texts. "Quick" and "fried" are derived.
@@ -81,9 +81,9 @@ Details are finalized in Phase 1 and documented in `docs/NUTRITION_CALCULATION.m
 
 ## 5. Build-time pipeline
 
-1. **Extraction**: a script reads the MEXT workbook from `data/raw/` (git-ignored), checks its SHA-256 against the manifest, and writes only the food codes referenced by the food dictionary and only the selected columns, with notation flags. Output and manifest are tracked (`docs/DATA_SOURCES.md`).
+1. **Extraction**: a script reads the MEXT workbook from `data/raw/` (git-ignored), checks its SHA-256 against the manifest, and writes only the food codes referenced by the food dictionary and only the selected columns, with notation flags. Output and manifest are tracked (`docs/en/DATA_SOURCES.md`).
 2. **Content validation**: schemas; unique IDs; every ingredient maps to a food and every food to composition data; locale completeness; adjustment bounds valid; substitutions valid; allergen links present (or explicitly `unknown`).
-3. **Policy lint**: forbidden health or efficacy expressions in all locales (`docs/CONTENT_POLICY.md`).
+3. **Policy lint**: forbidden health or efficacy expressions in all locales (`docs/en/CONTENT_POLICY.md`).
 4. **Nutrition snapshots**: per-recipe calculated values are stored as test snapshots so that data or formula changes produce a reviewable diff.
 5. **Content bundles** (ADR-027): `tools/build-content.ts` writes a locale-neutral calculation bundle and one text bundle per locale to `generated/content/` (git-ignored); Vite adds a content hash to each file name.
 6. **Header generation**: security headers are defined once and written in the hosting platform's format.
@@ -102,7 +102,7 @@ Details are finalized in Phase 1 and documented in `docs/NUTRITION_CALCULATION.m
 - The production output is a plain static build (`dist/`). Only `platform/cloudflare/` and the generated header file are Cloudflare-specific.
 - No Cloudflare runtime APIs are used by domain, content, or UI code. Tests run in Node.
 - The MVP does not need a Worker. A future server feature (for example optional AI) must define its HTTP contract in `shared/` and keep the provider-specific implementation in a thin adapter.
-- The deployment runbook (`docs/DEPLOYMENT.md`) describes Cloudflare (`platform/cloudflare/wrangler.jsonc`) and how to serve the same `dist/` from other static hosts. Hashed files under `/assets/` get a one-year immutable cache rule in the generated `_headers`.
+- The deployment runbook (`docs/en/DEPLOYMENT.md`) describes Cloudflare (`platform/cloudflare/wrangler.jsonc`) and how to serve the same `dist/` from other static hosts. Hashed files under `/assets/` get a one-year immutable cache rule in the generated `_headers`.
 
 ## 8. Security and privacy
 

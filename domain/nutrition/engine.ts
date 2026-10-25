@@ -1,5 +1,5 @@
 /**
- * Nutrition engine (docs/NUTRITION_CALCULATION.md §3–§8, ADR-028). Pure, deterministic,
+ * Nutrition engine (docs/en/NUTRITION_CALCULATION.md §3–§8, ADR-028). Pure, deterministic,
  * and locale-free: the inputs are a recipe, a recipe state, and the engine data.
  * Values keep full precision; rounding is a display concern.
  */
@@ -46,7 +46,7 @@ export type ContributionReason = "raw_value_for_cooking" | "related_cooked_value
 
 /**
  * Error bands as fractions of the ingredient's contribution, per reason and nutrient
- * (ADR-028, revised in Stage 6.5; evidence in docs/DECISIONS.md "Stage 6.5").
+ * (ADR-028, revised in Stage 6.5; evidence in docs/working/DECISIONS.md "Stage 6.5").
  */
 export const CONTRIBUTION_BANDS: Readonly<Record<ContributionReason, Readonly<Record<Nutrient, Band>>>> = {
   raw_value_for_cooking: {

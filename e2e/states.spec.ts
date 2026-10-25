@@ -14,8 +14,8 @@ import {
   test,
 } from "./support.ts";
 
-// Exceptional states of docs/SPEC.md §12 on the 60-recipe library. The conditions were
-// chosen with the recommendation engine (docs/DECISIONS.md "Stage 5.4").
+// Exceptional states of docs/en/SPEC.md §12 on the 60-recipe library. The conditions were
+// chosen with the recommendation engine (docs/working/DECISIONS.md "Stage 5.4").
 for (const locale of LOCALES) {
   test.describe(`exceptional states in ${locale}`, () => {
     test.use({ locale: BROWSER_LOCALE[locale] });

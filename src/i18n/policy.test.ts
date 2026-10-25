@@ -13,7 +13,7 @@ function texts(tree: Tree, prefix = ""): [string, string][] {
 }
 
 describe("UI catalogs and the content policy", () => {
-  it.each(SUPPORTED_LOCALES)("%s contains no forbidden expressions (docs/CONTENT_POLICY.md §2, §4)", (locale) => {
+  it.each(SUPPORTED_LOCALES)("%s contains no forbidden expressions (docs/en/CONTENT_POLICY.md §2, §4)", (locale) => {
     const found = texts(resources[locale].translation).flatMap(([key, text]) => forbiddenIn(locale, text, forbiddenExpressions[locale]).map((word) => `${key}: ${word}`));
     expect(found).toEqual([]);
   });
@@ -24,7 +24,7 @@ describe("UI catalogs and the content policy", () => {
     expect(forbiddenIn("es", "Receta sin alérgenos", forbiddenExpressions.es)).toContain("sin alérgenos");
   });
 
-  it("translates glossary terms consistently (docs/CONTENT_POLICY.md §6)", () => {
+  it("translates glossary terms consistently (docs/en/CONTENT_POLICY.md §6)", () => {
     const en = new Map(texts(resources.en.translation));
     const es = new Map(texts(resources.es.translation));
     const terms = [...glossary, ...uiGlossary].sort((a, b) => b.ja.length - a.ja.length);

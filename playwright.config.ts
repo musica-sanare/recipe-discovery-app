@@ -1,6 +1,6 @@
 import { defineConfig, devices } from "@playwright/test";
 
-// E2E against the production build served with the production headers (docs/DECISIONS.md
+// E2E against the production build served with the production headers (docs/working/DECISIONS.md
 // "Stage 5.1 release plan" P4). A separate port keeps it apart from the `preview` launch
 // configuration (4173).
 const PORT = 4174;

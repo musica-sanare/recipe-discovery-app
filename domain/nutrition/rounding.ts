@@ -1,5 +1,5 @@
 /**
- * Display rounding (ADR-025, docs/NUTRITION_CALCULATION.md §8). Values stay full
+ * Display rounding (ADR-025, docs/en/NUTRITION_CALCULATION.md §8). Values stay full
  * precision everywhere else; fit is never evaluated on rounded values. Locale
  * formatting is a UI concern.
  */

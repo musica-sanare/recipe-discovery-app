@@ -1,6 +1,6 @@
 # Deployment Runbook — Recipe Discovery
 
-Status: **In use (2026-10-24)**. First deployment: https://recipe-discovery.musica-sanare.workers.dev (`docs/DECISIONS.md` "Production deployment"). Every deployment, account, token, and project needs the owner's explicit approval of that specific action (`CLAUDE.md`).
+Status: **In use (2026-10-24)**. First deployment: https://recipe-discovery.musica-sanare.workers.dev (`docs/working/DECISIONS.md` "Production deployment"). Every deployment, account, token, and project needs the owner's explicit approval of that specific action (`CLAUDE.md`).
 
 The MVP is a static single-page application: `npm run build` writes everything to `dist/`, and no server code runs (ADR-001). Cloudflare is the first host; other static hosts work if they can send response headers and serve `index.html` for unknown paths.
 
@@ -18,13 +18,13 @@ Routes handled by the app: `/`, `/recipes/<id>`, `/about`. Every response needs 
 ## 2. Before a release
 
 1. On the commit to deploy: `npm ci`, `npm run check`, `npm run test:e2e`, and `npm audit` pass.
-2. The secret scan of the whole history is repeated (`docs/DECISIONS.md` "Stage 5.5"): `gitleaks git --log-opts=--all --redact` and `gitleaks dir` on the tracked files report no leaks.
-3. `docs/SPEC.md` §15 is checked (Stage 5.7) and the open questions listed for release are closed or accepted as limitations.
+2. The secret scan of the whole history is repeated (`docs/working/DECISIONS.md` "Stage 5.5"): `gitleaks git --log-opts=--all --redact` and `gitleaks dir` on the tracked files report no leaks.
+3. `docs/en/SPEC.md` §15 is checked (Stage 5.7) and the open questions listed for release are closed or accepted as limitations.
 4. The owner approves the deployment proposal: what is deployed (commit), where (account, project name, domain), and how it is rolled back.
 
 ## 3. Cloudflare (Workers static assets)
 
-Configuration: `platform/cloudflare/wrangler.jsonc` — `name`, `compatibility_date`, and `assets` with `directory` and `not_found_handling: "single-page-application"`, without `main` (*Verified* in the Cloudflare documentation on 2026-10-18 and 2026-10-24; `docs/DECISIONS.md` "Stage 5.1 release plan" P9). Requests to static assets are free and unlimited (*Verified* 2026-10-18; re-check before deploying).
+Configuration: `platform/cloudflare/wrangler.jsonc` — `name`, `compatibility_date`, and `assets` with `directory` and `not_found_handling: "single-page-application"`, without `main` (*Verified* in the Cloudflare documentation on 2026-10-18 and 2026-10-24; `docs/working/DECISIONS.md` "Stage 5.1 release plan" P9). Requests to static assets are free and unlimited (*Verified* 2026-10-18; re-check before deploying).
 
 Wrangler is not a dependency of the repository. At deployment time, check its current stable version under ADR-016 and ADR-018 and run it with an exact version.
 

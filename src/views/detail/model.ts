@@ -1,5 +1,5 @@
 /**
- * The recipe detail's state and what it shows (docs/UI_DESIGN.md §3.4, §8, ADR-030 D8).
+ * The recipe detail's state and what it shows (docs/en/UI_DESIGN.md §3.4, §8, ADR-030 D8).
  * Values come from `calculateNutrition`; this module chooses states, steps, and notes.
  */
 import { substitutedAdjust, type RecipeState } from "../../../domain/nutrition/amounts";

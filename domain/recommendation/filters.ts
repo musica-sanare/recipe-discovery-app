@@ -1,5 +1,5 @@
 /**
- * Hard filters with per-constraint exclusion counts (ADR-029 D7, docs/SPEC.md §5, §12).
+ * Hard filters with per-constraint exclusion counts (ADR-029 D7, docs/en/SPEC.md §5, §12).
  * Allergens are never rescued; an excluded food may be removed by switching off the
  * side that holds it or by a substitution, and the forced state is checked again.
  */

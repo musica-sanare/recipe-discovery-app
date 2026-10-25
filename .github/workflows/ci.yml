@@ -1,4 +1,4 @@
-# Checks for every push to dev and main and every pull request (docs/DECISIONS.md
+# Checks for every push to dev and main and every pull request (docs/working/DECISIONS.md
 # "Stage 5.6"). No secrets and no deployment. Actions are pinned to commit SHAs; the
 # comment gives the release.
 name: CI

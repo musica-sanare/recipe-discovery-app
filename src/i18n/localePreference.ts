@@ -1,5 +1,5 @@
 /**
- * Initial UI locale and its persistence (docs/ARCHITECTURE.md "Localization"):
+ * Initial UI locale and its persistence (docs/en/ARCHITECTURE.md "Localization"):
  * a stored supported choice, else the first supported browser language, else
  * Japanese. Only this preference is stored; storage failures are ignored.
  */

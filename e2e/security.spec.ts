@@ -2,7 +2,7 @@ import { CONTENT_SECURITY_POLICY, SECURITY_HEADERS } from "../platform/headers.t
 import { expect, test } from "./support.ts";
 
 // Production headers on documents and assets served by `npm run preview` (ADR-018,
-// docs/ARCHITECTURE.md §8). Cloudflare serves the same values from `dist/_headers`.
+// docs/en/ARCHITECTURE.md §8). Cloudflare serves the same values from `dist/_headers`.
 test("every response carries the security headers", async ({ page, request }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();

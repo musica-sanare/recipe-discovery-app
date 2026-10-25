@@ -54,7 +54,7 @@ function Choice({ type, name, checked, onChange, children }: { readonly type: "r
   );
 }
 
-/** Targets and conditions (docs/UI_DESIGN.md §3.1, ADR-030 D4, D6, D7). */
+/** Targets and conditions (docs/en/UI_DESIGN.md §3.1, ADR-030 D4, D6, D7). */
 export function TargetsView({ reloaded }: { readonly reloaded: boolean }) {
   const { t, i18n } = useTranslation();
   const locale = isLocale(i18n.resolvedLanguage) ? i18n.resolvedLanguage : DEFAULT_LOCALE;

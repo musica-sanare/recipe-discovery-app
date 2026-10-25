@@ -70,7 +70,7 @@ describe("point values (no range shown)", () => {
   });
 
   it("uses the full-precision value, not the rounded display value", () => {
-    // 34.6 g is displayed as 35 g but misses a 35 g minimum (docs/NUTRITION_CALCULATION.md §8).
+    // 34.6 g is displayed as 35 g but misses a 35 g minimum (docs/en/NUTRITION_CALCULATION.md §8).
     expect(roundForDisplay("PROT-", 34.6)).toBe(35);
     const fit = evaluateFit(nutrition({ ENERC_KCAL: 500, "PROT-": 34.6, "FAT-": 10 }), cut);
     expect(entry(fit, "protein")).toMatchObject({ status: "near", value: 34.6 });

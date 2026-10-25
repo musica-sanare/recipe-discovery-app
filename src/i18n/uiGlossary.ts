@@ -1,5 +1,5 @@
 /**
- * Terms the UI catalogs must translate consistently (docs/CONTENT_POLICY.md §6), in
+ * Terms the UI catalogs must translate consistently (docs/en/CONTENT_POLICY.md §6), in
  * addition to `content/glossary.ts`. When a Japanese message uses a term, the English and
  * Spanish messages of the same key contain the listed stem (case-insensitive);
  * `src/i18n/policy.test.ts` enforces this. Longer terms are matched first.

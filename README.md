@@ -14,7 +14,7 @@ The app supports Japanese, English, and Spanish (`ja`, `en`, `es`).
 
 ## Status
 
-Phase 7 (content expansion, `docs/IMPLEMENTATION_PLAN.md`) is complete. Release 3 is deployed at https://recipe-discovery.musica-sanare.workers.dev (2026-10-25, content version `2026-10-25.2`); the release record, limitations, and manual checks are in [`docs/RELEASE_READINESS.md`](docs/RELEASE_READINESS.md).
+Phase 7 (content expansion, `docs/working/IMPLEMENTATION_PLAN.md`) is complete. Release 3 is deployed at https://recipe-discovery.musica-sanare.workers.dev (2026-10-25, content version `2026-10-25.2`); the release record, limitations, and manual checks are in [`docs/working/RELEASE_READINESS.md`](docs/working/RELEASE_READINESS.md).
 
 ## Local setup
 
@@ -32,11 +32,11 @@ npm run dev
 | `npm run test:e2e` | Playwright on the production build (install browsers once with `npx playwright install --only-shell chromium webkit`) |
 | `npm run preview` | Serve `dist/` with the production security headers on http://localhost:4173 |
 
-All commands, content authoring, and data tools: [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md). CI runs `npm run check` and `npm run test:e2e` on pushes to `dev` and `main` and on pull requests (`.github/workflows/ci.yml`).
+All commands, content authoring, and data tools: [`docs/en/DEVELOPMENT.md`](docs/en/DEVELOPMENT.md). CI runs `npm run check` and `npm run test:e2e` on pushes to `dev` and `main` and on pull requests (`.github/workflows/ci.yml`).
 
 ## Data handling
 
-- The original MEXT workbook and explanation PDF stay outside Git (`data/raw/` is ignored). Only the extracted subset (`data/composition/foods.json`) and the hand-transcribed cooking tables (`data/composition/cooking.json`) are tracked, with the source checksums in their manifests (`docs/DATA_SOURCES.md`).
+- The original MEXT workbook and explanation PDF stay outside Git (`data/raw/` is ignored). Only the extracted subset (`data/composition/foods.json`) and the hand-transcribed cooking tables (`data/composition/cooking.json`) are tracked, with the source checksums in their manifests (`docs/en/DATA_SOURCES.md`).
 - Recipes, food names, and translations are original content in `content/`; nothing is generated or translated at runtime.
 
 ## Data attribution
@@ -45,28 +45,28 @@ Nutrition values are calculated by this app from 日本食品標準成分表（�
 
 ## Known limitations
 
-- Every nutrition value is an estimate; some cooked states use related or raw values and some fried foods are hard to estimate (shown in the app). Some error bands are assumptions (`docs/NUTRITION_CALCULATION.md`).
+- Every nutrition value is an estimate; some cooked states use related or raw values and some fried foods are hard to estimate (shown in the app). Some error bands are assumptions (`docs/en/NUTRITION_CALCULATION.md`).
 - Allergen information is best effort and may be incomplete; the app never guarantees that a recipe is safe for people with allergies.
 - The app gives no medical advice; presets are examples.
-- Egg- and soy-based dishes rarely meet the preset fat limits (`docs/DECISIONS.md` "Stage 5.2 batch 1").
+- Egg- and soy-based dishes rarely meet the preset fat limits (`docs/working/DECISIONS.md` "Stage 5.2 batch 1").
 - A full recommendation takes about 80 ms with a 4× CPU slowdown and about 120 ms at 6×; real phones are not measured yet (ADR-030 D10).
-- Open questions that remain before or after release are listed in `docs/DECISIONS.md` "Open questions".
+- Open questions that remain before or after release are listed in `docs/working/DECISIONS.md` "Open questions".
 
 ## Documentation
 
 | Document | Contents |
 |---|---|
-| [`docs/SPEC.md`](docs/SPEC.md) | Product requirements, MVP scope, acceptance criteria |
-| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Technical structure and responsibilities |
-| [`docs/UI_DESIGN.md`](docs/UI_DESIGN.md) | Screens, navigation, styling, catalogs |
-| [`docs/NUTRITION_CALCULATION.md`](docs/NUTRITION_CALCULATION.md) | Nutrition calculation rules and uncertainty |
-| [`docs/CONTENT_POLICY.md`](docs/CONTENT_POLICY.md) | Recipe authoring, allergens, food safety, health expressions, translations |
-| [`docs/DATA_SOURCES.md`](docs/DATA_SOURCES.md) | Data sources, terms, attribution, handling |
-| [`docs/DECISIONS.md`](docs/DECISIONS.md) | Verification log and architecture decision records |
-| [`docs/IMPLEMENTATION_PLAN.md`](docs/IMPLEMENTATION_PLAN.md) | Phased plan |
-| [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md) | Local setup and commands |
-| [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) | Deployment runbook (Cloudflare first, other static hosts) |
-| [`docs/RELEASE_READINESS.md`](docs/RELEASE_READINESS.md) | Acceptance criteria with evidence, release blockers, limitations, manual checks, deployment proposal |
+| [`docs/en/SPEC.md`](docs/en/SPEC.md) | Product requirements, MVP scope, acceptance criteria |
+| [`docs/en/ARCHITECTURE.md`](docs/en/ARCHITECTURE.md) | Technical structure and responsibilities |
+| [`docs/en/UI_DESIGN.md`](docs/en/UI_DESIGN.md) | Screens, navigation, styling, catalogs |
+| [`docs/en/NUTRITION_CALCULATION.md`](docs/en/NUTRITION_CALCULATION.md) | Nutrition calculation rules and uncertainty |
+| [`docs/en/CONTENT_POLICY.md`](docs/en/CONTENT_POLICY.md) | Recipe authoring, allergens, food safety, health expressions, translations |
+| [`docs/en/DATA_SOURCES.md`](docs/en/DATA_SOURCES.md) | Data sources, terms, attribution, handling |
+| [`docs/working/DECISIONS.md`](docs/working/DECISIONS.md) | Verification log and architecture decision records |
+| [`docs/working/IMPLEMENTATION_PLAN.md`](docs/working/IMPLEMENTATION_PLAN.md) | Phased plan |
+| [`docs/en/DEVELOPMENT.md`](docs/en/DEVELOPMENT.md) | Local setup and commands |
+| [`docs/en/DEPLOYMENT.md`](docs/en/DEPLOYMENT.md) | Deployment runbook (Cloudflare first, other static hosts) |
+| [`docs/working/RELEASE_READINESS.md`](docs/working/RELEASE_READINESS.md) | Acceptance criteria with evidence, release blockers, limitations, manual checks, deployment proposal |
 
 Contributor and AI-assistant rules are in [`CLAUDE.md`](CLAUDE.md).
 

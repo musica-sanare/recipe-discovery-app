@@ -18,7 +18,7 @@ export default defineConfig({
   build: {
     // Content bundles are fetched; a data: URL would be blocked by `connect-src 'self'`.
     assetsInlineLimit: (filePath) => (filePath.endsWith(".json") ? false : undefined),
-    // Licenses of the bundled dependencies, linked from the about page (docs/DECISIONS.md "Stage 5.3").
+    // Licenses of the bundled dependencies, linked from the about page (docs/working/DECISIONS.md "Stage 5.3").
     license: { fileName: "third-party-licenses.txt" },
   },
   // The dev server is left without CSP because React Fast Refresh injects an

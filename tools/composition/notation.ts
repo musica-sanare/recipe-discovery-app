@@ -1,6 +1,6 @@
 /**
  * Parses a cell of the MEXT tables into a value and its notation
- * (docs/NUTRITION_CALCULATION.md §3). Unknown notations fail loudly.
+ * (docs/en/NUTRITION_CALCULATION.md §3). Unknown notations fail loudly.
  */
 import type { CompositionValue } from "../../shared/composition.ts";
 

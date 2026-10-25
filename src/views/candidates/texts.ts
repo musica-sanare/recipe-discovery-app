@@ -34,7 +34,7 @@ export function nutrientText(t: TFunction, locale: Locale, nutrient: Nutrient, v
   return nutrient === "ENERC_KCAL" ? t("unit.kcal", { value: formatted }) : t("unit.gram", { value: formatted });
 }
 
-/** One decimal finer, for values with a boundary note (docs/NUTRITION_CALCULATION.md §8). */
+/** One decimal finer, for values with a boundary note (docs/en/NUTRITION_CALCULATION.md §8). */
 export function preciseNutrientText(t: TFunction, locale: Locale, nutrient: Nutrient, value: number): string {
   return withUnit(t, nutrient, formatPrecise(locale, nutrient, value));
 }

@@ -23,7 +23,7 @@ const rateByCode = new Map(cooking.weightChangeRates.map((rate) => [rate.code, r
 const COATED = new Set(["tempura", "tonkatsu", "karaage"]);
 
 // Plausibility checks that catch transcription errors in the hand-copied tables
-// (docs/DATA_SOURCES.md "Cooking tables"). The PDF text-layer check is separate
+// (docs/en/DATA_SOURCES.md "Cooking tables"). The PDF text-layer check is separate
 // (tools/verify-cooking-transcription.ts, macOS only).
 describe("transcribed cooking tables", () => {
   it("reference foods present in the composition subset", () => {

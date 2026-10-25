@@ -1,5 +1,5 @@
 /**
- * Dependency license policy (docs/DECISIONS.md "Stage 5.1 release plan" P6, "Stage 5.5").
+ * Dependency license policy (docs/working/DECISIONS.md "Stage 5.1 release plan" P6, "Stage 5.5").
  * Production dependencies end up in the browser bundle; development dependencies only
  * run at build and test time and may also use the licenses listed for them.
  */

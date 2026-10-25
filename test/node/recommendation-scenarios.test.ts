@@ -33,7 +33,7 @@ function select(evaluated: EvaluatedPool, session: Session = emptySession, seed 
   return result.value;
 }
 
-// Stage 0.6 scenarios and the personas of docs/SPEC.md §2.
+// Stage 0.6 scenarios and the personas of docs/en/SPEC.md §2.
 const scenarios: Readonly<Record<string, PoolRequest>> = {
   "S1 cut": { targets: presetTargets("cut"), servings: 1, conditions: none },
   "S2 cut, <=20 min": { targets: presetTargets("cut"), servings: 1, conditions: { ...none, maxMinutes: 20 } },

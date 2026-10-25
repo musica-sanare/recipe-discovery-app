@@ -100,7 +100,7 @@ function CurrentView() {
   if (!lost && view.name !== "targets" && reloadNotice) setReloadNotice(false);
 
   // A layout effect replaces the history entry in the same commit that shows the notice; a
-  // passive effect left the old entry in place for a moment (docs/DECISIONS.md "CI first run").
+  // passive effect left the old entry in place for a moment (docs/working/DECISIONS.md "CI first run").
   useLayoutEffect(() => {
     if (lost) navigate({ name: "targets" }, { replace: true });
   }, [lost, navigate]);

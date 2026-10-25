@@ -1,7 +1,7 @@
-// Cloudflare Workers static assets, without a Worker script (ADR-001, docs/DEPLOYMENT.md).
+// Cloudflare Workers static assets, without a Worker script (ADR-001, docs/en/DEPLOYMENT.md).
 // Used only for deployments the owner approves. `compatibility_date` is set to the
 // deployment date; `assets.directory` resolves relative to this file when it is passed
-// with `--config` (verified with `wrangler deploy --dry-run`, docs/DECISIONS.md
+// with `--config` (verified with `wrangler deploy --dry-run`, docs/working/DECISIONS.md
 // "Deployment preparation and dry run").
 {
   "name": "recipe-discovery",

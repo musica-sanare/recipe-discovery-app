@@ -8,7 +8,7 @@ const MARKERS: Readonly<Record<NutrientStatus, { readonly symbol: string; readon
   unknown: { symbol: "?", color: "text-unknown" },
 };
 
-/** A status as a shape and a text, never by color alone (docs/UI_DESIGN.md §5). */
+/** A status as a shape and a text, never by color alone (docs/en/UI_DESIGN.md §5). */
 export function StatusMarker({ status, label }: { readonly status: NutrientStatus; readonly label?: string | undefined }) {
   const { t } = useTranslation();
   const marker = MARKERS[status];

@@ -16,7 +16,7 @@ export type LocalizedText = z.infer<typeof localizedTextSchema>;
 export const localizedListSchema = z.object({ ja: z.array(nonBlank), en: z.array(nonBlank), es: z.array(nonBlank) });
 
 /**
- * Japanese allergen categories (docs/CONTENT_POLICY.md §2): 9 mandatory items
+ * Japanese allergen categories (docs/en/CONTENT_POLICY.md §2): 9 mandatory items
  * and 20 recommended items as of April 2026.
  */
 export const MANDATORY_ALLERGENS = ["shrimp", "crab", "walnut", "wheat", "buckwheat", "egg", "milk", "peanut", "cashew"] as const;
@@ -110,7 +110,7 @@ export type Adjust = z.infer<typeof adjustSchema>;
 
 /**
  * Cooking that no table value represents, so the estimate gets a wider range
- * (docs/NUTRITION_CALCULATION.md §7). `slow_frying`: slow frying in a large amount of oil.
+ * (docs/en/NUTRITION_CALCULATION.md §7). `slow_frying`: slow frying in a large amount of oil.
  */
 export const ESTIMATE_REASONS = ["slow_frying"] as const;
 
@@ -137,7 +137,7 @@ export const recipeIngredientSchema = z.object({
   /**
    * Key of the ingredient whose cooked value already includes this one (frying oil,
    * coating). Such ingredients are listed but not counted again
-   * (docs/NUTRITION_CALCULATION.md §5 rule 3).
+   * (docs/en/NUTRITION_CALCULATION.md §5 rule 3).
    */
   includedIn: z.optional(slug),
   note: z.optional(localizedTextSchema),

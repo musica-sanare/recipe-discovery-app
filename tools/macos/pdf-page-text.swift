@@ -1,6 +1,6 @@
 // Prints the text layer of selected PDF pages (macOS PDFKit), one block per page:
 //   swift tools/macos/pdf-page-text.swift <file.pdf> <page> [<page> ...]
-// Used only to verify manual transcriptions (docs/DATA_SOURCES.md "Cooking tables").
+// Used only to verify manual transcriptions (docs/en/DATA_SOURCES.md "Cooking tables").
 import Foundation
 import PDFKit
 

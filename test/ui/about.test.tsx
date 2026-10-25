@@ -8,7 +8,7 @@ import { createI18n } from "../../src/i18n/createI18n.ts";
 import { axeViolations } from "../../src/testing/axe.ts";
 import { repositoryFetch, repositoryUrls } from "./repositoryContent.ts";
 
-// The about page (Stage 5.3, ADR-030 D2 revised, docs/UI_DESIGN.md §3.6).
+// The about page (Stage 5.3, ADR-030 D2 revised, docs/en/UI_DESIGN.md §3.6).
 
 beforeEach(() => {
   vi.stubGlobal("fetch", vi.fn(repositoryFetch));

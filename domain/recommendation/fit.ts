@@ -1,5 +1,5 @@
 /**
- * Target fit (docs/NUTRITION_CALCULATION.md §9, ADR-025, ADR-029 D1–D3). Statuses use
+ * Target fit (docs/en/NUTRITION_CALCULATION.md §9, ADR-025, ADR-029 D1–D3). Statuses use
  * full-precision values: the point value, or the per-serving range when it is shown.
  * Bounds and tolerance limits are inclusive; no epsilon.
  */

@@ -9,14 +9,14 @@ This file has two parts:
 
 ## Read first
 Before changing code or content, read:
-- `docs/SPEC.md`
-- `docs/ARCHITECTURE.md`
-- `docs/NUTRITION_CALCULATION.md`
-- `docs/CONTENT_POLICY.md`
-- `docs/DATA_SOURCES.md`
-- `docs/IMPLEMENTATION_PLAN.md`
-- `docs/DECISIONS.md`
-- `docs/DEVELOPMENT.md`
+- `docs/en/SPEC.md`
+- `docs/en/ARCHITECTURE.md`
+- `docs/en/NUTRITION_CALCULATION.md`
+- `docs/en/CONTENT_POLICY.md`
+- `docs/en/DATA_SOURCES.md`
+- `docs/working/IMPLEMENTATION_PLAN.md`
+- `docs/working/DECISIONS.md`
+- `docs/en/DEVELOPMENT.md`
 
 If any path does not exist, report it rather than silently inventing its contents.
 
@@ -37,7 +37,7 @@ If any path does not exist, report it rather than silently inventing its content
 - Commits require the owner's explicit approval each time. After the owner approves a specific proposed commit (message and file list), Claude may stage and create exactly that commit. An approval covers only the commit that was reviewed.
 - The owner performs branch creation, remote configuration, and pushes. Never push, create or switch branches, change remotes, rewrite history, or deploy unless the owner explicitly asks for that specific action.
 - Never commit secrets, `.env` files, personal data, real API tokens, or generated credentials. Include `.env.example` with placeholders only when environment variables exist.
-- Never commit original third-party data files (for example the MEXT Excel workbook). Only extracted subsets allowed by `docs/DATA_SOURCES.md` are tracked.
+- Never commit original third-party data files (for example the MEXT Excel workbook). Only extracted subsets allowed by `docs/en/DATA_SOURCES.md` are tracked.
 - Keep commits focused. Do not mix unrelated changes.
 - Before proposing a commit, review the full working-tree diff and the complete list of files to be committed (including new, untracked files), and confirm that no secrets, generated files, raw source data, or unrelated changes are included.
 - Before any public release, inspect the complete repository history and scan for secrets.
@@ -61,7 +61,7 @@ If any path does not exist, report it rather than silently inventing its content
 - Wait for the owner's explicit approval. Then either the owner commits, or Claude creates exactly the approved commit and reports its hash.
 
 ## Engineering rules
-- Use TypeScript strict mode (see `docs/DECISIONS.md` for the exact compiler options once the toolchain is set up).
+- Use TypeScript strict mode (see `docs/working/DECISIONS.md` for the exact compiler options once the toolchain is set up).
 - Use the package manager and lockfile selected during foundation setup; do not switch later without approval.
 - Keep UI, domain logic, content data, build-time tooling, and any platform or AI integration separated.
 - Add or update tests for behavior changes.
@@ -75,13 +75,13 @@ If any path does not exist, report it rather than silently inventing its content
 - Prefer the smallest understandable implementation over unnecessary abstractions.
 
 ## Dependencies and current documentation
-- Before choosing framework or tool versions or platform capabilities, verify current official documentation and compatibility. Prefer stable releases. Record important choices, sources, and the date checked in `docs/DECISIONS.md`.
+- Before choosing framework or tool versions or platform capabilities, verify current official documentation and compatibility. Prefer stable releases. Record important choices, sources, and the date checked in `docs/working/DECISIONS.md`.
 - Do not assume free tiers, limits, prices, or terms from memory. Distinguish verified facts from assumptions and mark unverified items `要確認`.
-- Dependency install scripts must be reviewed explicitly (allowlist policy, recorded in `docs/DECISIONS.md` during Phase 0).
+- Dependency install scripts must be reviewed explicitly (allowlist policy, recorded in `docs/working/DECISIONS.md` during Phase 0).
 - Do not create external accounts, API keys, paid resources, or deployments without explicit approval.
 
 ## Workflow
-- Work one phase at a time as described in `docs/IMPLEMENTATION_PLAN.md`.
+- Work one phase at a time as described in `docs/working/IMPLEMENTATION_PLAN.md`.
 - Start each phase by stating the intended changes and files affected.
 - Inspect existing files before editing.
 - After implementation, run relevant checks and summarize in Japanese:
@@ -103,7 +103,7 @@ If any path does not exist, report it rather than silently inventing its content
 2. Nutrition calculation, target fit evaluation, ranking, diversification, amount adjustment, and substitution are deterministic: the same input and data always produce the same result.
 3. Every displayed nutrition value is an estimate. Label it as such and keep its basis traceable (food code, data version, cooking state, assumptions).
 4. Never present an uncertain value or an approximate food mapping as exact. Unmeasured values (`-` in the source tables) are unknown, never zero.
-5. Follow `docs/NUTRITION_CALCULATION.md`; changing a formula, a source column, or a rounding rule is a decision that needs the owner's approval and an ADR.
+5. Follow `docs/en/NUTRITION_CALCULATION.md`; changing a formula, a source column, or a rounding rule is a decision that needs the owner's approval and an ADR.
 
 ## Localization
 6. The UI and all content support Japanese, English, and Spanish (`ja`, `en`, `es`) from the MVP. This is part of the owner's product identity, not an optional extra.
@@ -114,13 +114,13 @@ If any path does not exist, report it rather than silently inventing its content
 
 ## Content and data
 11. Recipes are original, structured content managed in the repository and validated at build time. Do not copy recipe text or photos from other sources.
-12. Original source data files (for example the MEXT Excel workbook) are kept outside Git. Extracted subsets are generated by a script and tracked with their source version and checksum (`docs/DATA_SOURCES.md`).
+12. Original source data files (for example the MEXT Excel workbook) are kept outside Git. Extracted subsets are generated by a script and tracked with their source version and checksum (`docs/en/DATA_SOURCES.md`).
 13. Always show the data attribution required by the data source, and state that values are this app's own calculations.
 
 ## Safety and health
 14. Allergen filtering is best effort. Never state or imply that a recipe is allergen-free or safe for a person with allergies. Unknown allergen information is treated as "may contain".
 15. Do not make health, medical, or efficacy claims (for example "burns fat" or "good for a condition"). Targets are set by the user; presets are examples, not advice.
-16. Follow the food safety rules in `docs/CONTENT_POLICY.md` for every recipe.
+16. Follow the food safety rules in `docs/en/CONTENT_POLICY.md` for every recipe.
 
 ## AI
 17. The MVP does not use AI at runtime. Every core feature must work without AI.

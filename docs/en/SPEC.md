@@ -1,6 +1,6 @@
 # Product Specification — Recipe Discovery
 
-Status: **Draft baseline (2026-10-18)**. Items marked *Provisional* are placeholders to be validated in Phase 0 (`docs/IMPLEMENTATION_PLAN.md`); they are not final requirements. Decisions and their status are recorded in `docs/DECISIONS.md`.
+Status: **Draft baseline (2026-10-18)**. Items marked *Provisional* are placeholders to be validated in Phase 0 (`docs/working/IMPLEMENTATION_PLAN.md`); they are not final requirements. Decisions and their status are recorded in `docs/working/DECISIONS.md`.
 
 ## 1. Product goal
 
@@ -78,13 +78,13 @@ Home
 | Effort (3 levels) | none | Optional | Soft |
 | Cuisine and style preferences | none | Optional | Soft |
 | Excluded ingredients | none | Optional | **Hard** |
-| Allergen exclusion | none | Optional | **Hard, best effort** (`docs/CONTENT_POLICY.md`) |
+| Allergen exclusion | none | Optional | **Hard, best effort** (`docs/en/CONTENT_POLICY.md`) |
 | Equipment (for example microwave only) | none | Optional | **Hard** |
 | Required ingredients ("ingredients I want to use") | none | Optional | **Hard** (recipes must contain all of them) |
 
 - Nutrition targets are not hard filters: estimation error would make borderline recipes disappear and empty results would become common. Fit tiers are used instead (section 6).
 - Preset values are examples, not advice. The app does not calculate targets from body weight or other personal data.
-- Ingredient inputs (required, excluded) are chosen from the food dictionary with locale-aware autocomplete, so unsupported ingredients cannot be entered. Search uses localized names and aliases (`docs/ARCHITECTURE.md` "Localization").
+- Ingredient inputs (required, excluded) are chosen from the food dictionary with locale-aware autocomplete, so unsupported ingredients cannot be entered. Search uses localized names and aliases (`docs/en/ARCHITECTURE.md` "Localization").
 - Input validation detects contradictory targets before searching (section 12).
 
 ## 6. Ranking, diversity, and re-suggestion
@@ -125,7 +125,7 @@ Recipe detail:
 
 ## 9. Nutrition display and uncertainty
 
-Rules are in `docs/NUTRITION_CALCULATION.md`. User-facing behavior:
+Rules are in `docs/en/NUTRITION_CALCULATION.md`. User-facing behavior:
 - Values are labelled as estimates.
 - Each ingredient's contribution, food code, data version, and cooking state are visible.
 - Uncertainty classes: exact mapping, approximation (similar food, raw or related cooked value used for a cooked ingredient, fried foods with a tabulated fried form), and hard-to-estimate (slow frying in a lot of oil, fried foods without a tabulated form). Household measures such as "a pinch" are display aids; the calculation uses the stated grams. Approximations are explained; large uncertainty is shown as a range.
@@ -134,7 +134,7 @@ Rules are in `docs/NUTRITION_CALCULATION.md`. User-facing behavior:
 
 ## 10. Localization
 
-- Locales: `ja`, `en`, `es`. Default and detection behavior follows `docs/ARCHITECTURE.md` "Localization".
+- Locales: `ja`, `en`, `es`. Default and detection behavior follows `docs/en/ARCHITECTURE.md` "Localization".
 - Localized: UI strings, recipe names, ingredient display names and search aliases, steps, notes, substitutions, validation and error messages, accessibility labels, document language metadata.
 - Every published recipe and food must have complete content in all three locales; the build fails otherwise. Runtime content fallback is therefore not needed for published content.
 - Numbers and units are formatted per locale (for example decimal comma in Spanish). Underlying values never change.
@@ -142,7 +142,7 @@ Rules are in `docs/NUTRITION_CALCULATION.md`. User-facing behavior:
 
 ## 11. Allergens, food safety, and health expressions
 
-Defined in `docs/CONTENT_POLICY.md`. Summary:
+Defined in `docs/en/CONTENT_POLICY.md`. Summary:
 - Allergen exclusion is best effort; ingredients with unknown allergen information are treated as "may contain"; the app never claims a recipe is safe for allergic users.
 - Every recipe includes the relevant food safety notes (for example cooking meat through; handling hot oil).
 - No health, medical, or efficacy claims.
@@ -202,4 +202,4 @@ Defined in `docs/CONTENT_POLICY.md`. Summary:
 
 ## 17. Open questions (要確認)
 
-Tracked in `docs/DECISIONS.md` "Open questions".
+Tracked in `docs/working/DECISIONS.md` "Open questions".

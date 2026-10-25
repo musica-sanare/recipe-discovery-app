@@ -1,5 +1,5 @@
 /**
- * Build-time content validation (docs/IMPLEMENTATION_PLAN.md "Phase 1"). Pure: the
+ * Build-time content validation (docs/working/IMPLEMENTATION_PLAN.md "Phase 1"). Pure: the
  * caller passes the content and the composition codes; every problem is returned
  * with the file, the recipe or food, the field, and the rule it breaks.
  */
@@ -57,7 +57,7 @@ export interface ContentInput {
 export const FOODS_FILE = "content/foods.ts";
 export const VERSION_FILE = "content/version.ts";
 const LOCALES = ["ja", "en", "es"] as const;
-/** Protein groups whose recipes need a doneness or handling note (docs/CONTENT_POLICY.md §3). */
+/** Protein groups whose recipes need a doneness or handling note (docs/en/CONTENT_POLICY.md §3). */
 const SAFETY_GROUPS: ReadonlySet<string> = new Set(["chicken", "pork", "beef", "fish", "egg"]);
 
 export function formatIssue(issue: Issue): string {
@@ -241,7 +241,7 @@ function recipeIssues(recipe: Recipe, file: string, foods: ReadonlyMap<string, F
 
   const handlesRiskyFood = recipe.ingredients.some((ingredient) => SAFETY_GROUPS.has(foods.get(ingredient.food)?.proteinGroup ?? ""));
   if ((handlesRiskyFood || isFried(recipe)) && recipe.safetyNotes.length === 0) {
-    issue("safetyNotes", "safety-note", "meat, fish, eggs, or frying need a food safety note (docs/CONTENT_POLICY.md §3)");
+    issue("safetyNotes", "safety-note", "meat, fish, eggs, or frying need a food safety note (docs/en/CONTENT_POLICY.md §3)");
   }
   if (recipe.tags.includes("no_cook")) {
     for (const ingredient of recipe.ingredients) {
@@ -270,7 +270,7 @@ function languageIssues(value: unknown, file: string, subject: string, input: Co
       ...forbiddenIn("en", en, input.forbiddenExpressions.en).map((word) => ["en", word] as const),
       ...forbiddenIn("es", es, input.forbiddenExpressions.es).map((word) => ["es", word] as const),
     ];
-    for (const [locale, word] of found) issues.push({ file, subject, field: `${path}.${locale}`, rule: "forbidden-expression", message: `contains "${word}" (docs/CONTENT_POLICY.md §2, §4)` });
+    for (const [locale, word] of found) issues.push({ file, subject, field: `${path}.${locale}`, rule: "forbidden-expression", message: `contains "${word}" (docs/en/CONTENT_POLICY.md §2, §4)` });
   }
   return issues;
 }

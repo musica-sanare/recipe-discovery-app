@@ -22,7 +22,7 @@ export interface RecipeCardProps {
   readonly onExclude?: () => void;
 }
 
-/** A candidate card (docs/SPEC.md §7, docs/UI_DESIGN.md §3.2). */
+/** A candidate card (docs/en/SPEC.md §7, docs/en/UI_DESIGN.md §3.2). */
 export function RecipeCard({ entry, recipe, calc, text, targets, context, mode, compare, onExclude }: RecipeCardProps) {
   const { t } = useTranslation();
   const { locale } = context;

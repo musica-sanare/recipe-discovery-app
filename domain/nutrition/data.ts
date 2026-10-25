@@ -16,7 +16,7 @@ export interface EngineComposition {
 
 export interface EngineRate {
   readonly ratePercent: number;
-  /** The tables remove parts after cooking (docs/NUTRITION_CALCULATION.md §5 rule 5). */
+  /** The tables remove parts after cooking (docs/en/NUTRITION_CALCULATION.md §5 rule 5). */
   readonly postCookingRefuse: boolean;
 }
 

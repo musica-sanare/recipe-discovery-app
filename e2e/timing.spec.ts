@@ -4,7 +4,7 @@ import { BROWSER_LOCALE, choosePresetCut, expect, heading1, openAdvanced, openTa
 
 // Phone-class timing (open question 17, ADR-030 D10): click to committed and laid-out DOM,
 // in Chromium with CDP CPU throttling. Run with `npm run test:e2e:timing`; the numbers are
-// written to test-results/timing.json and recorded in docs/DECISIONS.md "Stage 5.4".
+// written to test-results/timing.json and recorded in docs/working/DECISIONS.md "Stage 5.4".
 const RATES = [1, 4, 6] as const;
 const RUNS = 15;
 const WARM_UP = 2;

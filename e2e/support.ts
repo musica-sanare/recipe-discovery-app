@@ -25,13 +25,13 @@ export function t(locale: Locale, key: string, vars: Readonly<Record<string, str
  * WebKit reports `style-src-attr` for every `<select>` under a strict CSP, even on a page
  * without inline styles (its internal shadow DOM; reproduced with a minimal page, Chromium
  * reports nothing). Only that report, with an empty sample, is tolerated in WebKit
- * (docs/DECISIONS.md "Stage 5.4").
+ * (docs/working/DECISIONS.md "Stage 5.4").
  */
 const WEBKIT_SELECT_REPORT = /^style-src-attr inline \S+ $/;
 
 /**
  * Every test fails if the page requests another origin or reports a CSP violation
- * (docs/ARCHITECTURE.md §8).
+ * (docs/en/ARCHITECTURE.md §8).
  */
 export const test = base.extend<{ guard: undefined }>({
   guard: [
@@ -64,7 +64,7 @@ export async function heading1(page: Page, name: string): Promise<void> {
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(name);
 }
 
-/** No element is wider than the viewport outside the scrolling table regions (docs/UI_DESIGN.md §5). */
+/** No element is wider than the viewport outside the scrolling table regions (docs/en/UI_DESIGN.md §5). */
 export async function expectNoHorizontalOverflow(page: Page): Promise<void> {
   const overflow = await page.evaluate(() => {
     const width = document.documentElement.clientWidth;

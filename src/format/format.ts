@@ -1,5 +1,5 @@
 /**
- * Locale formatting of engine values (docs/UI_DESIGN.md §1, docs/NUTRITION_CALCULATION.md §8).
+ * Locale formatting of engine values (docs/en/UI_DESIGN.md §1, docs/en/NUTRITION_CALCULATION.md §8).
  * Nutrient values are always rounded with `roundForDisplay` first; `Intl` only adds the
  * locale's separators. Statuses never come from these functions.
  */

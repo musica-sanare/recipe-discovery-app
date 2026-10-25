@@ -1,5 +1,5 @@
 /**
- * Views and their URLs (ADR-030 D2, docs/UI_DESIGN.md §4). Only the recipe detail and the
+ * Views and their URLs (ADR-030 D2, docs/en/UI_DESIGN.md §4). Only the recipe detail and the
  * about page have their own paths. History entries carry the view name and, for the detail, the recipe ID;
  * targets and conditions never enter the URL or `history.state` (ADR-015).
  */

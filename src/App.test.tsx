@@ -32,7 +32,7 @@ function renderApp(locale: Locale = "ja") {
 /**
  * Reads document state at the first DOM mutation where `ready` holds. Effects with visible
  * results must already have run then; passive effects can run later, which CI exposed
- * (docs/DECISIONS.md "CI first run").
+ * (docs/working/DECISIONS.md "CI first run").
  */
 function readWhen<T>(ready: () => boolean, read: () => T): { readonly values: T[]; stop: () => void } {
   const values: T[] = [];

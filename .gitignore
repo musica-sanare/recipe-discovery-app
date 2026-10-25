@@ -23,7 +23,7 @@ coverage/
 playwright-report/
 test-results/
 
-# Original source data files are never committed (docs/DATA_SOURCES.md).
+# Original source data files are never committed (docs/en/DATA_SOURCES.md).
 # Only the extracted subset generated from them is tracked.
 data/raw/
 *.xlsx

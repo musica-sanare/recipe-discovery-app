@@ -7,7 +7,7 @@ import type { FoodState, ProteinGroup, Recipe, RecipeIngredient } from "./conten
 /** "Quick" recipes take at most this many minutes (ADR-023). */
 export const QUICK_MAX_MINUTES = 20;
 
-/** Fried states: values depend on oil absorption (docs/NUTRITION_CALCULATION.md §6). */
+/** Fried states: values depend on oil absorption (docs/en/NUTRITION_CALCULATION.md §6). */
 export const FRIED_STATES: ReadonlySet<FoodState> = new Set<FoodState>(["deep_fry", "tempura", "tonkatsu", "karaage"]);
 
 export function isQuick(recipe: Pick<Recipe, "minutes">): boolean {

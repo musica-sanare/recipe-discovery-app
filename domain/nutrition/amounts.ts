@@ -1,5 +1,5 @@
 /**
- * Amount resolution for a recipe state (docs/NUTRITION_CALCULATION.md §10, ADR-024,
+ * Amount resolution for a recipe state (docs/en/NUTRITION_CALCULATION.md §10, ADR-024,
  * ADR-026, ADR-028). Pure and locale-free: the same recipe and state always give the
  * same grams per ingredient.
  */

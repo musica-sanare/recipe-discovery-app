@@ -1,5 +1,5 @@
 /**
- * Security headers for every static response (docs/ARCHITECTURE.md "Security
+ * Security headers for every static response (docs/en/ARCHITECTURE.md "Security
  * and privacy"). Defined once here and rendered into the hosting platform's
  * format at build time, so moving to another host only needs a new renderer.
  */
@@ -26,7 +26,7 @@ export const SECURITY_HEADERS: Readonly<Record<string, string>> = {
 /**
  * Vite puts content-hashed files under /assets/, so a changed file always has a new URL and
  * browsers may keep these for a year. HTML and other files keep the host's default
- * revalidation (docs/DEPLOYMENT.md).
+ * revalidation (docs/en/DEPLOYMENT.md).
  */
 export const ASSET_CACHE_CONTROL = "public, max-age=31536000, immutable";
 

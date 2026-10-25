@@ -76,7 +76,7 @@ function Stepper({ label, value, onStep, decrease, increase }: { readonly label:
   );
 }
 
-/** Recipe detail with adjustment and instant recalculation (docs/UI_DESIGN.md §3.4, ADR-030 D8). */
+/** Recipe detail with adjustment and instant recalculation (docs/en/UI_DESIGN.md §3.4, ADR-030 D8). */
 export function DetailView({ recipe: recipeId }: { readonly recipe: string }) {
   const { t } = useTranslation();
   const { navigated } = useNavigation();

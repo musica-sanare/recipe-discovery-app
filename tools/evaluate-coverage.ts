@@ -1,5 +1,5 @@
 /**
- * Coverage evaluation (Phase 0 Stage 0.6, docs/IMPLEMENTATION_PLAN.md "Phase 0", item
+ * Coverage evaluation (Phase 0 Stage 0.6, docs/working/IMPLEMENTATION_PLAN.md "Phase 0", item
  * 6): how many validation recipes meet representative targets with default amounts
  * and with bounded amount adjustment. Since Stage 3.7 it runs the recommendation
  * engine (ADR-029): hard filters, fit with shown ranges, and the solver, on the

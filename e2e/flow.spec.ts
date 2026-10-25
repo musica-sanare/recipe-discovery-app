@@ -12,7 +12,7 @@ import {
   test,
 } from "./support.ts";
 
-// The full flow of docs/SPEC.md §15 on the production build, per locale and project.
+// The full flow of docs/en/SPEC.md §15 on the production build, per locale and project.
 for (const locale of LOCALES) {
   test.describe(`flow in ${locale}`, () => {
     test.use({ locale: BROWSER_LOCALE[locale] });

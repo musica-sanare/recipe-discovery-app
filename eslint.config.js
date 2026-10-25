@@ -4,7 +4,7 @@ import reactRefresh from "eslint-plugin-react-refresh";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
-// Module boundaries (docs/ARCHITECTURE.md "Layers and responsibilities").
+// Module boundaries (docs/en/ARCHITECTURE.md "Layers and responsibilities").
 const BUILD_AND_PLATFORM = ["**/tools/**", "**/platform/**", "**/test/**"];
 const UI_PACKAGES = ["react", "react-*", "react/*", "react-dom/*", "i18next", "i18next/*"];
 

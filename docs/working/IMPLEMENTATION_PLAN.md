@@ -122,7 +122,7 @@ Acceptance: about 26 new recipes validated and reviewed in three locales with ap
 
 ## Phase 8 — Shopping list
 
-Status: **In progress (2026-10-25)**: Stages 8.1 to 8.3 complete (ADR-032, [SPEC.md](../en/SPEC.md) §18, [DECISIONS.md](DECISIONS.md) "Stage 8.1 shopping list design" to "Stage 8.3 shopping list view"); release 4 in preparation ("Stage 8.4", [RELEASE_READINESS.md](RELEASE_READINESS.md)). Shopping lists were the Phase 8 candidate named when the owner chose Phase 7; they were outside the MVP in [SPEC.md](../en/SPEC.md) §3, so the phase started with a scope change and an ADR.
+Status: **Complete (2026-10-25)**: release 4 deployed after the owner's approval. Logs: [DECISIONS.md](DECISIONS.md) "Stage 8.1 shopping list design" to "Phase 8 acceptance" (ADR-032, [SPEC.md](../en/SPEC.md) §18). Shopping lists were the Phase 8 candidate named when the owner chose Phase 7; they were outside the MVP in [SPEC.md](../en/SPEC.md) §3, so the phase started with a scope change and an ADR. The ADR-016 re-check of `i18next` and `react-i18next` remains as maintenance (not before 2026-10-26 12:40 UTC).
 
 - Design: entry points, amounts and combination rules, pantry items, persistence and privacy (ADR-015, ADR-030 D9), output (checklist, copy, print), and UI, approved before implementation.
 - A pure, deterministic, locale-free aggregation module with tests; UI and localization in three locales with the owner's review; accessibility and E2E checks.

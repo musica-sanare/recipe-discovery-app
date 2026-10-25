@@ -2,7 +2,7 @@
 
 # Release Readiness — Recipe Discovery
 
-Status: **Release 4 in preparation (2026-10-25)**: the Phase 8 shopping list on top of release 3, content version `2026-10-25.2` (unchanged). Release 3 (`7b66ca3`, Cloudflare Workers static assets version `992ce5ff-56e4-4cf3-85d8-7b8ff6f37ab5`) is deployed at https://recipe-discovery.musica-sanare.workers.dev and is the rollback target. Update this document for every release; release 1 is recorded in [DECISIONS.md](DECISIONS.md) ("Stage 5.1 release plan" to "Manual checks"), release 2 in "Stage 6.6" and "Second production deployment", release 3 in "Stage 7.4" and "Third production deployment", release 4 in "Stage 8.4".
+Status: **Release 4 deployed (2026-10-25)** at https://recipe-discovery.musica-sanare.workers.dev from commit `2bcbb9b` (Cloudflare Workers static assets, version `5a4ae857-f25e-4bdc-8db1-2246c280aeef`): the Phase 8 shopping list on top of release 3, content version `2026-10-25.2` (unchanged). The post-deployment checks passed ([DECISIONS.md](DECISIONS.md) "Fourth production deployment"). Release 3 (`7b66ca3`, version `992ce5ff-56e4-4cf3-85d8-7b8ff6f37ab5`) is the rollback target. Update this document for every release; release 1 is recorded in [DECISIONS.md](DECISIONS.md) ("Stage 5.1 release plan" to "Manual checks"), release 2 in "Stage 6.6" and "Second production deployment", release 3 in "Stage 7.4" and "Third production deployment", release 4 in "Stage 8.4".
 
 Commit hashes in this document are those after the history rewrite of 2026-10-25; older records in [DECISIONS.md](DECISIONS.md) use the earlier hashes ("History rewrite (2026-10-25)").
 
@@ -10,8 +10,8 @@ Commit hashes in this document are those after the history rewrite of 2026-10-25
 |---|---|---|---|
 | 1 (MVP) | `ed511a0` | `2026-10-24.3` | Deployed 2026-10-24 (version `0f4696e0…`); replaced by release 2 |
 | 2 (Phase 6) | `7144d06` | `2026-10-24.8` | Deployed 2026-10-24 13:18 UTC (version `81bc7642…`); replaced by release 3 |
-| 3 (Phase 7) | `7b66ca3` | `2026-10-25.2` | Deployed 2026-10-25 02:44 UTC (version `992ce5ff…`) |
-| 4 (Phase 8) | the Stage 8.4 commit | `2026-10-25.2` | In preparation |
+| 3 (Phase 7) | `7b66ca3` | `2026-10-25.2` | Deployed 2026-10-25 02:44 UTC (version `992ce5ff…`); replaced by release 4 |
+| 4 (Phase 8) | `2bcbb9b` | `2026-10-25.2` | Deployed 2026-10-25 09:02 UTC (version `5a4ae857…`) |
 
 ## 0. What changes in release 4
 
@@ -46,7 +46,7 @@ Checked on `80304ee` with the Stage 8.4 changes (documentation only) on 2026-10-
 
 | Item | Status | What is needed |
 |---|---|---|
-| CI on the release commit | **Open** | Both jobs (`check`, `e2e`) on the pushed release commit (the owner pushes and reports) |
+| CI on the release commit | **Passed** | Both jobs (`check`, `e2e`) passed on `7aad609` (owner's report, 2026-10-25); `2bcbb9b` only changes `compatibility_date` |
 | Secret scan of the release history | **Passed** on `80304ee` | gitleaks 8.30.1 (Homebrew): `gitleaks git --log-opts=--all --redact` (105 commits, 2.87 MB), `gitleaks dir` on the tracked files (`git archive HEAD`, 2.30 MB) and on `dist/` (1.05 MB): no leaks (2026-10-25 07:47 UTC). No commit touches `data/raw`, `*.xlsx`, `*.pdf`, or `.env*`. Repeat if commits other than documentation follow |
 | `i18next` / `react-i18next` pins (open question 16) | **Deferred** (owner decision for releases 1 to 4) | Not a release condition (ADR-016 release-burst exception). The earliest re-check is 2026-10-26 12:40 UTC; the owner chose to release 4 without it (2026-10-25). An update is its own commit and redeployment |
 
@@ -77,7 +77,7 @@ Release 1 (owner, 2026-10-24, [DECISIONS.md](DECISIONS.md) "Manual checks"): iPh
 
 Releases 2 to 4 (optional, after deployment): on an iPhone, the cuisine choices on the targets view in Spanish (nine values), a search with the Southeast Asian cuisine preferred, the detail pages of a new recipe in each language (for example `beef_pho_rice_noodles`, `tofu_sasami_steamed`), and for release 4 adding two recipes to the shopping list, checking items off, "Copy as text" (pasting into a notes app), and the print preview.
 
-## 5. Deployment proposal (for the owner's approval)
+## 5. Deployment proposal (approved and deployed on 2026-10-25)
 
 | Item | Proposal |
 |---|---|
@@ -111,7 +111,7 @@ Releases 2 to 4 (optional, after deployment): on an iPhone, the cuisine choices 
 | Production deployment approved | 3 | 2026-10-25 | Owner (account [account name] confirmed with `wrangler whoami`) |
 | Deployed and checked | 3 | 2026-10-25 | Claude: `7b66ca3`, version `992ce5ff…` ([DECISIONS.md](DECISIONS.md) "Third production deployment") |
 | Acceptance criteria checked | 4 | 2026-10-25 | Claude (§1) |
-| Release blockers resolved | 4 | — | Open: CI (owner); secret scan passed (Claude); open question 16 deferred (owner, 2026-10-25) |
-| Deployment proposal approved | 4 | — | Open |
-| Production deployment approved | 4 | — | Open |
-| Deployed and checked | 4 | — | Open |
+| Release blockers resolved | 4 | 2026-10-25 | Owner (CI passed; open question 16 deferred) and Claude (secret scan) |
+| Deployment proposal approved | 4 | 2026-10-25 | Owner (Wrangler download approved; dry run passed) |
+| Production deployment approved | 4 | 2026-10-25 | Owner (account [account name] confirmed with `wrangler whoami`) |
+| Deployed and checked | 4 | 2026-10-25 | Claude: `2bcbb9b`, version `5a4ae857…` ([DECISIONS.md](DECISIONS.md) "Fourth production deployment") |

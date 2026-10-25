@@ -778,6 +778,13 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 | `edd7afe` | `7144d06` |
 | `f70d2df` | `1ef5c4e` |
 
+### Pre-publication check (2026-10-25)
+- Done on `86e75e0` before the repository is made public (ADR-031; shared public-repository safety rule). No file was changed by the check.
+- Secret scan without a download: gitleaks 8.30.1 from Homebrew (`homebrew/core`), the latest GitHub release (2026-03-21) as checked on 2026-10-25. No `.gitleaks.toml` or `.gitleaksignore`, so the default rules apply. `gitleaks git --log-opts=--all --redact`: 100 commits on all branches, 2.74 MB, no leaks; `gitleaks dir` on the tracked files (`git archive HEAD`, 2.17 MB) and on `dist/` (1.03 MB): no leaks.
+- Manual review of the full history: every author and committer is `musica-sanare` with the GitHub noreply address; no AI attribution trailers; the only other email address is the public MEXT contact in [DATA_SOURCES.md](../en/DATA_SOURCES.md); the one local path is already elided (`/Users/…/`); the Cloudflare account name and account ID appear only as placeholders ("History rewrite"); no raw source file, `.env` file, key, log, or image was ever committed. `.gitignore` excludes `.env*` and `.claude/settings.local.json`.
+- Kept as they are (owner, 2026-10-25): the Cloudflare Worker version IDs in this log, [RELEASE_READINESS.md](RELEASE_READINESS.md), and `prompts/06`–`08` (not secrets, unusable without account access, and already in the history); the production URL; the Claude-only files (`CLAUDE.md`, `prompts/`, `.claude/launch.json`), which hold instructions and plans, not conversation logs.
+- Open for the owner before publishing: `main` (the GitHub default branch) still holds only the initial commit; align it with `dev` or change the default branch.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in

@@ -19,7 +19,7 @@ for (const locale of LOCALES) {
     test.describe(`axe in ${locale}, ${colorScheme}`, () => {
       test.use({ locale: BROWSER_LOCALE[locale], colorScheme });
 
-      test("targets, candidates, comparison, detail, and about have no violations", async ({ page }) => {
+      test("targets, candidates, comparison, detail, shopping list, and about have no violations", async ({ page }) => {
         await openTargets(page, locale);
         await expectNoAxeViolations(page);
 
@@ -36,6 +36,12 @@ for (const locale of LOCALES) {
 
         await page.getByRole("table").getByRole("link", { name: a ?? "" }).click();
         await heading1(page, a ?? "");
+        await expectNoAxeViolations(page);
+
+        await page.getByRole("button", { name: t(locale, "shopping.add") }).click();
+        await expectNoAxeViolations(page);
+        await page.getByRole("banner").getByRole("link", { name: t(locale, "shopping.headerLink_other", { count: 1 }) }).click();
+        await heading1(page, t(locale, "nav.views.shoppingList"));
         await expectNoAxeViolations(page);
 
         await page.goto("/about");

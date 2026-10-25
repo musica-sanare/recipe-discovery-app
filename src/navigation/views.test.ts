@@ -5,13 +5,14 @@ describe("views and URLs (ADR-030 D2)", () => {
   it("gives only the recipe detail and the about page their own paths", () => {
     expect(pathFor({ name: "detail", recipe: "tuna_tofu_bowl" })).toBe("/recipes/tuna_tofu_bowl");
     expect(pathFor({ name: "about" })).toBe("/about");
-    expect(["targets", "candidates", "comparison"].map((name) => pathFor({ name } as never))).toEqual(["/", "/", "/"]);
+    expect(["targets", "candidates", "comparison", "shoppingList"].map((name) => pathFor({ name } as never))).toEqual(["/", "/", "/", "/"]);
   });
 
   it("reads the view from the path and the history entry", () => {
     expect(viewFromLocation("/recipes/tuna_tofu_bowl", null)).toEqual({ name: "detail", recipe: "tuna_tofu_bowl" });
     expect(viewFromLocation("/recipes/tuna_tofu_bowl/", { view: "candidates" })).toEqual({ name: "detail", recipe: "tuna_tofu_bowl" });
     expect(viewFromLocation("/", { view: "comparison" })).toEqual({ name: "comparison" });
+    expect(viewFromLocation("/", { view: "shoppingList" })).toEqual({ name: "shoppingList" });
     expect(viewFromLocation("/", { view: "detail" })).toEqual({ name: "targets" });
     expect(viewFromLocation("/", "candidates")).toEqual({ name: "targets" });
     expect(viewFromLocation("/recipes/Bad-ID", null)).toEqual({ name: "targets" });

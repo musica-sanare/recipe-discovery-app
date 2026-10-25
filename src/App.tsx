@@ -15,6 +15,7 @@ import { AppStateProvider, ContentProvider } from "./state/providers";
 import { CandidatesView } from "./views/CandidatesView";
 import { ComparisonView } from "./views/ComparisonView";
 import { DetailView } from "./views/DetailView";
+import { ShoppingListView } from "./views/ShoppingListView";
 import { TargetsView } from "./views/TargetsView";
 
 export function App({ contentUrls }: { readonly contentUrls: ContentUrls }) {
@@ -45,12 +46,15 @@ function Shell({ contentUrls }: { readonly contentUrls: ContentUrls }) {
       <a className="absolute -top-12 left-4 z-10 bg-surface px-4 py-2 focus:top-4" href="#main">
         {t("common.skipToContent")}
       </a>
-      <header className="border-b border-border">
+      <header className="border-b border-border print:hidden">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-3">
           <ViewLink to={{ name: "targets" }} className="font-bold text-text no-underline">
             {t("app.name")}
           </ViewLink>
-          <LanguageSwitcher prepare={prepare} />
+          <div className="flex flex-wrap items-center gap-3">
+            <ShoppingListLink />
+            <LanguageSwitcher prepare={prepare} />
+          </div>
         </div>
       </header>
       <main id="main" tabIndex={-1} className="mx-auto w-full max-w-5xl flex-1 px-4 py-6">
@@ -86,14 +90,30 @@ function Shell({ contentUrls }: { readonly contentUrls: ContentUrls }) {
   );
 }
 
+/** The header link to the shopping list, shown while the list has a recipe (ADR-032 D7). */
+function ShoppingListLink() {
+  const { t } = useTranslation();
+  const { state } = useAppState();
+  const count = state.shoppingList.entries.length;
+  if (count === 0) return null;
+  return (
+    <ViewLink to={{ name: "shoppingList" }} className="text-accent underline">
+      {t("shopping.headerLink", { count })}
+    </ViewLink>
+  );
+}
+
 /**
  * The view for the current location. Candidates and comparison need a search in memory;
- * after a reload it is gone, so the targets view opens with a notice (ADR-030 D2).
+ * after a reload it is gone, so the targets view opens with a notice (ADR-030 D2). The
+ * shopping list is empty after a reload too; emptied by the user, it shows its empty state.
  */
 function CurrentView() {
-  const { view, navigate } = useNavigation();
+  const { view, navigate, navigated } = useNavigation();
   const { state } = useAppState();
-  const lost = (view.name === "candidates" || view.name === "comparison") && state.search === undefined;
+  const lost =
+    ((view.name === "candidates" || view.name === "comparison") && state.search === undefined) ||
+    (view.name === "shoppingList" && !navigated && state.shoppingList.entries.length === 0);
   // The notice stays on the targets view after the redirect and goes once the user moves on.
   const [reloadNotice, setReloadNotice] = useState(false);
   if (lost && !reloadNotice) setReloadNotice(true);
@@ -117,5 +137,7 @@ function CurrentView() {
       return <DetailView key={view.recipe} recipe={view.recipe} />;
     case "about":
       return <AboutView />;
+    case "shoppingList":
+      return <ShoppingListView />;
   }
 }

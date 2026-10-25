@@ -12,7 +12,7 @@ import { repositoryFetch, repositoryUrls } from "./repositoryContent.ts";
 // Covered elsewhere: targets view, errors, warning, reload notice, not found, content error
 // (src/App.test.tsx, src/views/TargetsView.test.tsx); candidates with alternatives and
 // relaxations, comparison (test/ui/candidates.test.tsx); detail before and after a change
-// (test/ui/detail.test.tsx).
+// (test/ui/detail.test.tsx); shopping list (test/ui/shopping.test.tsx).
 
 beforeEach(() => {
   vi.stubGlobal("fetch", vi.fn(repositoryFetch));

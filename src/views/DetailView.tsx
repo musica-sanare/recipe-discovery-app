@@ -28,6 +28,7 @@ import {
   withSide,
   withSubstitution,
 } from "./detail/model";
+import { DetailShoppingBlock } from "./shopping/DetailShoppingBlock";
 import { useTextContext } from "./useTextContext";
 
 const SHOWN_NUTRIENTS: readonly Nutrient[] = ["ENERC_KCAL", "PROT-", "FAT-", "CHOCDF-", "NACL_EQ"];
@@ -383,6 +384,8 @@ function DetailBody({ recipe, recipeState, nutrition, fit, previous, onChange, o
         </div>
         {solverState !== undefined && <p className="m-0 text-sm text-muted">{t("adjust.fitHint")}</p>}
       </Section>
+
+      <DetailShoppingBlock recipe={recipe.id} recipeState={recipeState} />
 
       <Section id="ingredients-heading" title={t("detail.ingredientsHeading", { servings: servingsText })}>
         {/* The visible caption stays outside the scrolling region so that it does not scroll with the table. */}

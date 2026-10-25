@@ -8,7 +8,8 @@ export type View =
   | { readonly name: "candidates" }
   | { readonly name: "comparison" }
   | { readonly name: "detail"; readonly recipe: string }
-  | { readonly name: "about" };
+  | { readonly name: "about" }
+  | { readonly name: "shoppingList" };
 
 export type ViewName = View["name"];
 
@@ -27,7 +28,7 @@ export function viewFromLocation(pathname: string, state: unknown): View {
   if (ABOUT_PATH.test(pathname)) return { name: "about" };
   if (typeof state === "object" && state !== null && "view" in state) {
     const name = state.view;
-    if (name === "candidates" || name === "comparison") return { name };
+    if (name === "candidates" || name === "comparison" || name === "shoppingList") return { name };
   }
   return { name: "targets" };
 }

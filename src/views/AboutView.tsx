@@ -64,6 +64,7 @@ export function AboutView() {
           <li>{t("about.privacy.noTracking")}</li>
           <li>{t("about.privacy.storage")}</li>
           <li>{t("about.privacy.memory")}</li>
+          <li>{t("about.privacy.shoppingList")}</li>
         </ul>
       </Section>
       <Section id="about-licenses" title={t("about.licenses.title")}>

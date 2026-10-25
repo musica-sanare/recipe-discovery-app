@@ -126,6 +126,14 @@ export const foods: readonly Food[] = [
     proteinGroup: "fish",
   },
   {
+    id: "mackerel",
+    names: { ja: "さば（まさば、切り身）", en: "Mackerel (chub mackerel, fillet)", es: "Caballa (filete)" },
+    aliases: { ja: ["さば", "サバ", "鯖", "まさば", "さばの切り身"], en: ["mackerel", "chub mackerel", "saba"], es: ["caballa", "macarela", "verdel"] },
+    composition: { raw: "10154", grill: "10156" },
+    allergens: [{ allergen: "mackerel", confidence: "contains" }],
+    proteinGroup: "fish",
+  },
+  {
     id: "mackerel_canned",
     names: { ja: "さば水煮缶", en: "Canned mackerel in water", es: "Caballa en lata al natural" },
     aliases: { ja: ["さば缶", "サバ缶", "鯖缶", "さばかん"], en: ["mackerel", "canned mackerel"], es: ["caballa", "caballa en lata"] },
@@ -326,6 +334,20 @@ export const foods: readonly Food[] = [
     allergens: [],
   },
   {
+    id: "sweet_potato",
+    names: { ja: "さつまいも", en: "Sweet potato", es: "Boniato" },
+    aliases: { ja: ["サツマイモ", "さつま芋", "薩摩芋"], en: ["sweet potatoes"], es: ["batata", "camote", "moniato"] },
+    composition: { raw: "02006", steam: "02007" },
+    allergens: [],
+  },
+  {
+    id: "kabocha",
+    names: { ja: "かぼちゃ（西洋かぼちゃ）", en: "Kabocha squash", es: "Calabaza kabocha" },
+    aliases: { ja: ["かぼちゃ", "カボチャ", "南瓜"], en: ["kabocha", "pumpkin", "squash"], es: ["calabaza", "zapallo", "auyama", "kabocha"] },
+    composition: { raw: "06048", boil: "06049" },
+    allergens: [],
+  },
+  {
     id: "broccoli",
     names: { ja: "ブロッコリー", en: "Broccoli", es: "Brócoli" },
     aliases: { ja: ["ぶろっこりー"], en: [], es: ["brécol"] },
@@ -412,6 +434,13 @@ export const foods: readonly Food[] = [
     names: { ja: "にんじん", en: "Carrot", es: "Zanahoria" },
     aliases: { ja: ["人参", "ニンジン"], en: ["carrots"], es: ["zanahorias"] },
     composition: { raw: "06214", boil: "06215" },
+    allergens: [],
+  },
+  {
+    id: "daikon",
+    names: { ja: "だいこん", en: "Daikon radish", es: "Rábano daikon" },
+    aliases: { ja: ["大根", "ダイコン", "大根おろし"], en: ["daikon", "white radish", "mooli"], es: ["daikon", "nabo japonés", "rábano blanco"] },
+    composition: { raw: "06134" },
     allergens: [],
   },
   {

@@ -704,6 +704,14 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - Browser check (built preview): the 13 detail pages at desktop width and 375 px in three locales (78 views) without page overflow or missing keys; the per-ingredient table scrolls inside its frame as on existing pages. Not checked: candidate cards of the new recipes, real devices.
 - Checks: `npm run validate:content` (90 foods, 73 recipes), `npm run check` (640 tests), `npm run test:e2e` (98 passed, 1 skipped), `npm run report:composition` (73 recipes: exact 515, approximation 96, hard to estimate 2, not counted 29, fried 5), `npm run eval:coverage`.
 
+### Stage 7.3 batch 2: plan and foods (2026-10-25)
+- Engine evaluation of the 13 planned recipes: oily fish has about as much fat as protein (raw chub mackerel 20.6 g protein and 16.8 g fat, yellowtail 21.4 and 17.6 g per 100 g), so salt-grilled mackerel and yellowtail teriyaki stay near for every preset (maintain: protein 28 g; bulk: fat 31 g with protein 45 g).
+- Owner decisions (2026-10-25): E1 keep salt-grilled mackerel with grated daikon, labelled maintain (near), like `tortilla_espanola` a recipe that meets no preset; E2 replace yellowtail teriyaki with swordfish teriyaki, labelled maintain (meets it), and leave yellowtail out of the foods; E3 commit the foods before the recipes. The other 12 planned recipes and their amounts and bounds are approved as evaluated (each meets the preset of its label; about 1,150 grid states in total, at most 140 per recipe).
+- Composition subset: 7 codes added (02006, 02007, 06048, 06049, 06134, 10154, 10156); 162 foods extracted, the existing entries unchanged.
+- Cooking tables: weight change rates 02007 (steamed from 02006, 98 %, post-cooking refuse 表皮、両端, PDF p. 41), 06049 (boiled from 06048, 98 %, p. 44), 10156 (grilled from 10154, 77 %, p. 54). `npm run data:verify-cooking`: 88/88 entries verified.
+- Foods (94 in total): `mackerel` (raw, grilled; mackerel allergen), `daikon` (raw value for grated daikon eaten with its juice), `kabocha` (raw, boiled), `sweet_potato` (raw, steamed; the steamed value is an approximation because the tables peel after cooking). Spanish names follow V1 (`Caballa`, `Rábano daikon`, `Calabaza kabocha`, `Boniato`) with regional aliases (`zapallo`, `auyama`, `batata`, `camote`). No recipe uses them yet, so no snapshot changes.
+- Checks: `npm run validate:content` (94 foods, 73 recipes, `2026-10-25.1`), `npm run check`.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in

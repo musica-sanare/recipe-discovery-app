@@ -237,7 +237,7 @@ export const foods: readonly Food[] = [
     note: {
       ja: "水煮の缶詰やパウチは、汁を切った重さです。成分表の値は塩を加えずにゆでた豆なので、缶詰の塩は含みません。",
       en: "For canned or pouched beans, use the drained weight. The table value is for beans boiled without salt, so salt in canned beans is not counted.",
-      es: "Si se usan de bote o en bolsa, es el peso escurrido. El valor de la tabla es para legumbres cocidas sin sal, así que no cuenta la sal de las conservas.",
+      es: "Si son de conserva, usa el peso escurrido. El valor de la tabla es para legumbres cocidas sin sal, así que no cuenta la sal de las conservas.",
     },
   },
   {
@@ -249,7 +249,7 @@ export const foods: readonly Food[] = [
     note: {
       ja: "水煮の缶詰やパウチは、汁を切った重さです。成分表の値は塩を加えずにゆでた豆なので、缶詰の塩は含みません。",
       en: "For canned or pouched beans, use the drained weight. The table value is for beans boiled without salt, so salt in canned beans is not counted.",
-      es: "Si se usan de bote o en bolsa, es el peso escurrido. El valor de la tabla es para legumbres cocidas sin sal, así que no cuenta la sal de las conservas.",
+      es: "Si son de conserva, usa el peso escurrido. El valor de la tabla es para legumbres cocidas sin sal, así que no cuenta la sal de las conservas.",
     },
   },
   {

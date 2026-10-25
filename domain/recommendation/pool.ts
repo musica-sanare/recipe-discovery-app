@@ -64,7 +64,8 @@ export function poolEntry(pool: Pick<EvaluatedPool, "request" | "data" | "cache"
   // Preferences depend on the soft conditions, which relaxation never changes.
   if (cached) return cached;
   const { request, data } = pool;
-  const solution = solve({ recipe, targets: request.targets, servings: request.servings, forced, lockedSides: locked }, data.engine);
+  const precomputed = data.precomputed.get(recipe.id);
+  const solution = solve({ recipe, targets: request.targets, servings: request.servings, forced, lockedSides: locked, ...(precomputed ? { precomputed } : {}) }, data.engine);
   const entry: PoolEntry = {
     recipe: recipe.id,
     attributes: { proteinGroup: recipe.mainProteinGroup, cuisine: recipe.cuisine, method: methodFamily(recipe, (food) => data.foods.get(food)?.proteinGroup) },

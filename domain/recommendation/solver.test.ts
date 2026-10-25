@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { CompositionValue } from "../../shared/composition.ts";
 import type { EngineComposition, EngineData } from "../nutrition/data.ts";
-import { solve, solveExhaustive, type SolveInput, type SolverRecipe } from "./solver.ts";
+import { precompute, solve, solveExhaustive, type SolveInput, type SolverRecipe } from "./solver.ts";
 import type { Targets } from "./types.ts";
 
 // Hand-made raw and as-sold foods (per 100 g) so that every amount below can be checked by hand.
@@ -198,5 +198,38 @@ describe("solve", () => {
       const exhaustive = solveExhaustive(entry, data);
       expect({ ...linear, method: "exhaustive" }).toEqual(exhaustive);
     }
+  });
+});
+
+describe("precompute", () => {
+  it("gives the same solution as computing everything in the search", () => {
+    const cases: SolveInput[] = [
+      input(bowl, { kcal: { min: 300, max: 450 }, proteinMin: 30 }),
+      input(bowl, { kcal: { min: 150, max: 250 }, proteinMin: 30 }),
+      input(bowl, { kcal: { min: 150, max: 250 }, proteinMin: 30 }, { lockedSides: ["rice"] }),
+      input(eggs, { kcal: { min: 400, max: 500 }, fatMax: 12 }),
+      input(twins, { kcal: { min: 210, max: 215 } }),
+      input(karaage, { kcal: { min: 100, max: 500 }, fatMax: 25 }),
+    ];
+    for (const entry of cases) {
+      expect(solve({ ...entry, precomputed: precompute(entry.recipe, data) }, data)).toStrictEqual(solve(entry, data));
+    }
+  });
+
+  it("holds one model per combination of removable sides", () => {
+    expect([...precompute(bowl, data).models.keys()]).toEqual(["", "rice"]);
+    expect([...precompute(eggs, data).models.keys()]).toEqual([""]);
+  });
+
+  it("is used only for one serving without forced sides or substitutions", () => {
+    // Results of another recipe show whether the search used them.
+    const foreign = { ...precompute(karaage, data), models: new Map() };
+    const targets: Targets = { kcal: { min: 470, max: 650 }, proteinMin: 34 };
+    for (const overrides of [{ servings: 2 }, { forced: { sidesOff: ["rice"], substitutions: [] } }, { forced: { sidesOff: [], substitutions: ["tofu"] } }]) {
+      const entry = input(bowl, targets, overrides);
+      expect(solve({ ...entry, precomputed: foreign }, data)).toStrictEqual(solve(entry, data));
+    }
+    const entry = input(bowl, targets);
+    expect(solve({ ...entry, precomputed: foreign }, data)).not.toStrictEqual(solve(entry, data));
   });
 });

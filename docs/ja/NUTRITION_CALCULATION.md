@@ -63,7 +63,7 @@ MVP では表示しないもの：食物繊維（`FIB-`。検証用レシピ 20 
 5. 重量変化率は生の可食部に対する値です。ただし、成分表が調理後に一部を除いている場合は別です（`data/composition/cooking.json` の `postCookingRefuse`。たとえば ゆで卵の殻、蒸したじゃがいもの皮）。レシピが生の可食部の質量を記載している場合、これらは近似になります。
 6. でんぷん質の主食では、成分表にある状態（ご飯、ゆでた／乾燥のパスタ）の質量をレシピに記載してかまいません。その場合、重量変化率は不要です。
 
-調理データ：重量変化率と表 13〜14 の行は `data/composition/cooking.json` に書き写しています（[DATA_SOURCES.md](DATA_SOURCES.md) "Cooking tables"）。
+調理データ：重量変化率と表 13〜14 の行は `data/composition/cooking.json` に書き写しています（[DATA_SOURCES.md](DATA_SOURCES.md)「調理の表」）。
 
 ## 6. 揚げ物（ADR-010）
 

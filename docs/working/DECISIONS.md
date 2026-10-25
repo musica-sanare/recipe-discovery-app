@@ -1022,6 +1022,14 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - Dependencies (verification log "Stage 4.1 UI design"): `tailwindcss` 4.3.3 and `@tailwindcss/vite` 4.3.3 (dev), `axe-core` 4.14.0 (dev). No new install script; no router.
 - Alternatives: React Router or wouter (more than two views with URLs are not needed, and targets must stay out of URLs); plain CSS (the owner's other apps use Tailwind); opt-in local storage (privacy review not needed for the MVP flow); a worker from the start (Node timings are far below a frame budget); combined equipment relaxation in the engine (needs an ADR-029 change for one rare case); differences of full-precision values (shown numbers would not add up).
 
+## ADR-031: Repository license
+- Status: **Accepted** (owner, 2026-10-25)
+- Decision: the [MIT License](../../LICENSE) for the repository, with the copyright holder `musica-sanare` (the GitHub handle, not a personal name) and the year 2026. It covers the code, configuration, docs, and the original content in `content/` (recipes, food names, translations).
+- Excluded: `data/composition/`, whose values come from the MEXT tables and are used under the MEXT terms with the requested source statement ([DATA_SOURCES.md](../en/DATA_SOURCES.md) "License of the extracted data").
+- `package.json` and the lockfile root declare `"license": "MIT"`; `"private": true` stays so that the package is never published to npm. Production dependency licenses (MIT, ISC, Apache-2.0, BSD, 0BSD; `tools/licenses.ts`) are compatible, and `dist/third-party-licenses.txt` still lists them.
+- Alternatives: CC BY 4.0 for recipe texts (a second license for one repository; rejected for simplicity); no license (the owner plans to make the repository public).
+- Before the repository is made public: scan the full history for secrets and review the docs for data that should not be public (shared public-repository safety rule).
+
 ---
 
 ## Open questions (要確認)

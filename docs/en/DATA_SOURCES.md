@@ -29,6 +29,10 @@ Status: **Draft (2026-10-18)**. Terms and facts below were read from the cited p
 - The extracted subset and a manifest (source URL, workbook update date, SHA-256, extraction script version, extraction date) are tracked in Git so that builds are reproducible without the original file.
 - Updating the source: download the new file, update the manifest, rerun the extraction, review the nutrition snapshot diff, and record the change in [DECISIONS.md](../working/DECISIONS.md).
 
+### License of the extracted data
+- The repository is under the [MIT License](../../LICENSE) (ADR-031), except `data/composition/`. Its values come from the MEXT tables: `foods.json` is extracted from the workbook, `cooking.json` is transcribed from Tables 12–14 of the explanation PDF, and `manifest.json` records the source.
+- This project claims no rights in the MEXT values. The files are used and shared under the MEXT terms above; anyone reusing them follows those terms, including the source statement 「日本食品標準成分表（八訂）増補2023年から引用（又は出典）」.
+
 ### Extraction (implemented in Phase 0 Stage 0.2)
 - Place the workbook at the path given by `rawFile` in `data/composition/manifest.json` (currently `data/raw/mext/20260327-mxt_kagsei-mext-000029402_02.xlsx`, git-ignored).
 - `npm run data:extract` checks the SHA-256 against the manifest, reads the sheet named in the manifest (`表全体`), and writes `data/composition/foods.json` with the codes listed in `requestedCodes`. The output is deterministic (sorted by food code, no timestamps).

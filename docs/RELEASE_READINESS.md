@@ -1,12 +1,12 @@
 # Release Readiness — Recipe Discovery
 
-Status: **Release 3 prepared (Phase 7), not deployed.** The deployed version is release 2: commit `edd7afe` at https://recipe-discovery.musica-sanare.workers.dev (Cloudflare Workers static assets, version `81bc7642-f8fb-4290-a1ed-5f096a363074`), content version `2026-10-24.8`. Release 3 is the release commit of Stage 7.4 with content version `2026-10-25.2`. Update this document for every release; release 1 is recorded in `docs/DECISIONS.md` ("Stage 5.1 release plan" to "Manual checks"), release 2 in "Stage 6.6" and "Second production deployment", release 3 in "Stage 7.4".
+Status: **Release 3 deployed (2026-10-25)** at https://recipe-discovery.musica-sanare.workers.dev from commit `c3b4911` (Cloudflare Workers static assets, version `992ce5ff-56e4-4cf3-85d8-7b8ff6f37ab5`), content version `2026-10-25.2`. The post-deployment checks passed (`docs/DECISIONS.md` "Third production deployment"). Release 2 (`edd7afe`, version `81bc7642-f8fb-4290-a1ed-5f096a363074`) is the rollback target. Update this document for every release; release 1 is recorded in `docs/DECISIONS.md` ("Stage 5.1 release plan" to "Manual checks"), release 2 in "Stage 6.6" and "Second production deployment", release 3 in "Stage 7.4".
 
 | Release | Commit | Content version | Status |
 |---|---|---|---|
 | 1 (MVP) | `66473f7` | `2026-10-24.3` | Deployed 2026-10-24 (version `0f4696e0…`); replaced by release 2 |
-| 2 (Phase 6) | `edd7afe` | `2026-10-24.8` | Deployed 2026-10-24 13:18 UTC (version `81bc7642…`) |
-| 3 (Phase 7) | Stage 7.4 release commit | `2026-10-25.2` | Prepared; waits for CI and the owner's approval (§2, §5) |
+| 2 (Phase 6) | `edd7afe` | `2026-10-24.8` | Deployed 2026-10-24 13:18 UTC (version `81bc7642…`); replaced by release 3 |
+| 3 (Phase 7) | `c3b4911` | `2026-10-25.2` | Deployed 2026-10-25 02:44 UTC (version `992ce5ff…`) |
 
 ## 0. What changes in release 3
 
@@ -39,7 +39,7 @@ Checked on commit `09449fd` with the Stage 7.4 changes (content version `2026-10
 
 | Item | Status | What is needed |
 |---|---|---|
-| CI on the release commit | **Open** | The owner pushes `dev` and reports both jobs (`check`, `e2e`) |
+| CI on the release commit | **Passed** | Both jobs (`check`, `e2e`) passed on `c3b4911` (owner's report, 2026-10-25) |
 | Secret scan of the release history | **Passed** on `09449fd` | gitleaks 8.30.1 (the Stage 6.6 binary, identical to the archive with SHA-256 `b40ab0ae…`; still the latest release on 2026-10-25): `gitleaks git --log-opts=--all --redact` (87 commits, 2.49 MB), `gitleaks dir` on the tracked files (2.04 MB) and on `dist/` (1.03 MB): no leaks (2026-10-25 02:19 UTC). No commit touches `data/raw`, `*.xlsx`, `*.pdf`, or `.env*`. Repeat if commits other than documentation follow |
 | `i18next` / `react-i18next` pins (open question 16) | **Deferred** (owner decision for releases 1 and 2) | Not a release condition (ADR-016 release-burst exception). The burst continued (`i18next` 26.5.10 at 2026-10-24 10:15 UTC, `react-i18next` 17.1.8 at 12:39 UTC), so the re-check is not before 2026-10-26 12:40 UTC; an update is its own commit and redeployment |
 
@@ -67,7 +67,7 @@ Release 1 (owner, 2026-10-24, `docs/DECISIONS.md` "Manual checks"): iPhone with 
 
 Release 2 and release 3 (optional, after deployment): on an iPhone, the cuisine choices on the targets view in Spanish (nine values), a search with the Southeast Asian cuisine preferred, and the detail pages of a new recipe in each language (for example `beef_pho_rice_noodles`, `tofu_sasami_steamed`).
 
-## 5. Deployment proposal (for the owner's approval; not deployed)
+## 5. Deployment proposal (approved and deployed on 2026-10-25)
 
 | Item | Proposal |
 |---|---|
@@ -96,6 +96,7 @@ Release 2 and release 3 (optional, after deployment): on an iPhone, the cuisine 
 | Production deployment approved | 2 | 2026-10-24 | Owner (account [account name] confirmed with `wrangler whoami`) |
 | Deployed and checked | 2 | 2026-10-24 | Claude: `edd7afe`, version `81bc7642…` (`docs/DECISIONS.md` "Second production deployment") |
 | Acceptance criteria checked | 3 | 2026-10-25 | Claude (§1) |
-| Release blockers resolved | 3 | — | CI pending; secret scan passed; open question 16 deferred unless the owner decides otherwise |
-| Deployment proposal approved | 3 | — | — |
-| Deployed and checked | 3 | — | — |
+| Release blockers resolved | 3 | 2026-10-25 | Owner (CI passed; open question 16 deferred) and Claude (secret scan) |
+| Deployment proposal approved | 3 | 2026-10-25 | Owner; dry run passed |
+| Production deployment approved | 3 | 2026-10-25 | Owner (account [account name] confirmed with `wrangler whoami`) |
+| Deployed and checked | 3 | 2026-10-25 | Claude: `c3b4911`, version `992ce5ff…` (`docs/DECISIONS.md` "Third production deployment") |

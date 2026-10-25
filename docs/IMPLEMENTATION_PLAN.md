@@ -108,7 +108,7 @@ Acceptance: manual check results recorded; dependency pins updated or re-schedul
 
 ## Phase 7 — Content expansion
 
-Status: **In progress (2026-10-25)**: both batches added (86 recipes, `docs/DECISIONS.md` "Stage 7.1" to "Stage 7.3"); release 3 prepared ("Stage 7.4"), not deployed. The owner chose more content (option B) over shopping lists, opt-in storage, meal planning, and AI; shopping lists are a Phase 8 candidate.
+Status: **Complete (2026-10-25)**: both batches added (86 recipes) and release 3 deployed after the owner's approval. Logs: `docs/DECISIONS.md` "Stage 7.1 expansion plan" to "Third production deployment". The owner chose more content (option B) over shopping lists, opt-in storage, meal planning, and AI; shopping lists are a Phase 8 candidate.
 
 - Expansion plan: cuisine values for dishes missing today (for example Latin American, Mediterranean, Southeast Asian; ADR-026 and ADR-029), the recipe list for two batches, new foods and their composition codes, the revised ADR-023 library size, and food safety decisions.
 - Batch 1 and batch 2 of about 13 original recipes each, aimed at the gaps of release 2: cuisines (29 of 60 recipes are Japanese), dishes of ≤ 10 minutes (5), batch cooking (4), breakfast (5), grilling (4), and steaming (5).

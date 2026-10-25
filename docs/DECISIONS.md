@@ -732,6 +732,21 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - `docs/RELEASE_READINESS.md` now prepares release 3 (status, changes, acceptance, blockers, limitations, timing, manual checks, proposal, sign-off).
 - Open: CI on the release commit (the owner reports it), then the deployment proposal of `docs/RELEASE_READINESS.md` §5.
 
+### Third production deployment (2026-10-25)
+- CI passed on `c3b4911` (owner's report). The owner approved the deployment proposal, then the production deployment after confirming the account.
+- Cloudflare documentation re-checked on 2026-10-25: static asset requests are free and unlimited and storage has no cost (https://developers.cloudflare.com/workers/static-assets/billing-and-limitations/, updated 2026-04-23).
+- Wrangler 4.152.0 (still the latest) from the Stage 6.6 installation in the session scratch directory; `npm audit` there: 0 vulnerabilities with the `undici` 7.30.1 override. `wrangler whoami`: account [account name] (`[account ID]`), confirmed by the owner; `wrangler deployments list` showed release 2 (`81bc7642…`) at 100 %. Telemetry disabled by `WRANGLER_SEND_METRICS=false`.
+- Build: `npm ci && npm run build` on `c3b4911` (content version `2026-10-25.2`, 9 files, 1.03 MB). Dry run: Wrangler read `dist/` (9 files plus the `assets` directory, as for release 1), 0.44 KiB of Worker upload, no bindings, nothing uploaded. Deployment (2026-10-25 02:44 UTC): 7 new or changed assets uploaded (`index.html`, the JavaScript and CSS bundles, the calculation bundle, and the three text bundles), 1 already present; version `992ce5ff-56e4-4cf3-85d8-7b8ff6f37ab5` at 100 %, same URL.
+- Post-deployment checks (`curl -I` and the built-in browser): `/`, `/recipes/beef_pho_rice_noodles`, `/recipes/tofu_sasami_steamed`, `/about`, `/recipes/no_such_recipe`, an unknown path, and `/third-party-licenses.txt` return 200 with the CSP, `X-Content-Type-Options`, `Referrer-Policy`, and `Permissions-Policy`; `/assets/*` has `Cache-Control: public, max-age=31536000, immutable`, the rest `public, max-age=0, must-revalidate`; `/_headers` returns the app's HTML, not the file; `index.html` references the new bundle and the calculation bundle has content version `2026-10-25.2` and 86 recipes. In the browser at 375 px: the targets view lists nine cuisine choices in Spanish with all checkboxes at 20 × 20 px; a maintain search preferring Southeast Asian shows `chicken_coconut_curry` first, then `natto_tofu_rice_bowl` and `piperrada_egg_whites`; detail pages of `tofu_sasami_steamed` (`ja`), `arroz_con_pollo_beans` (`en`), `beef_pho_rice_noodles` (`es`, "Ternera o res, Gamba o camarón (puede contener)"), and `mackerel_salt_grill_daikon` (`ja`) without overflow; the about page has eight sections and content version `2026-10-25.2`; every request goes to the same origin; the only stored key is the locale preference; no cookies; no console messages.
+- Not checked: Cloudflare's own rollback on an assets-only Worker, real devices (the optional check of `docs/RELEASE_READINESS.md` §4), and dark mode on the deployed site.
+
+### Phase 7 acceptance (2026-10-25)
+- 26 new recipes in two batches pass content validation; their English and Spanish texts were reviewed by the owner with back-translated safety notes (G1–G4, H1–H2, J1–J4); snapshot diffs were approved ("Stage 7.2", "Stage 7.3").
+- ADR-023 as revised is met: 86 recipes; cut 28, maintain 40, bulk 22; each protein group 13–17; 77 % quick; 5 % fried; Japanese 41 %.
+- Gaps of release 2 narrowed: cuisines (three new values, 12 dishes in them), ≤ 10 minutes 5 → 11, `batch` 4 → 11, `breakfast` 5 → 9, steaming 5 → 8, grilling 4 → 7 (planned 9–10; pan-fried dishes count as `pan`).
+- Speed: a full search takes about 82 ms at 4× (p90 about 93 ms), within the ADR-030 D10 threshold; a speed-up is needed before the library grows further (`docs/RELEASE_READINESS.md` §3).
+- `npm run check`, `npm run test:e2e`, and CI pass; release 3 deployed after the owner's approval. Open: the ADR-016 re-check (not before 2026-10-26 12:40 UTC, open question 16).
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in

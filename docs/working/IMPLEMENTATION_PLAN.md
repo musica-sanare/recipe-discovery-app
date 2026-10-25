@@ -1,3 +1,5 @@
+[Docs index](../en/README.md)
+
 # Implementation Plan — Recipe Discovery
 
 Status: **Draft (2026-10-18)**. Each phase ends with checks, a summary to the owner in Japanese, and a commit proposal; a commit is made only after the owner approves it. A prompt file for each phase (`prompts/`) is written and reviewed before that phase starts.
@@ -18,19 +20,19 @@ Status: **Draft (2026-10-18)**. Each phase ends with checks, a summary to the ow
 
 ## Phase 0 — Validation and foundation
 
-Status: **Complete (2026-10-18)**. Results: `docs/working/DECISIONS.md` "Stage 0.1" to "Stage 0.7" logs and ADR-016 to ADR-025. Items still open are listed in `docs/working/DECISIONS.md` "Open questions".
+Status: **Complete (2026-10-18)**. Results: [DECISIONS.md](DECISIONS.md) "Stage 0.1" to "Stage 0.7" logs and ADR-016 to ADR-025. Items still open are listed in [DECISIONS.md](DECISIONS.md) "Open questions".
 
 Goal: confirm the technical hypotheses that the specification depends on, and set up a minimal, reproducible toolchain.
 
 Foundation:
-- Verify current versions and compatibility of the candidate stack (React, Vite, TypeScript, i18next, Tailwind CSS, Zod, Vitest, Playwright, axe-core, ESLint) and the Cloudflare static-assets setup; record them in `docs/working/DECISIONS.md`.
+- Verify current versions and compatibility of the candidate stack (React, Vite, TypeScript, i18next, Tailwind CSS, Zod, Vitest, Playwright, axe-core, ESLint) and the Cloudflare static-assets setup; record them in [DECISIONS.md](DECISIONS.md).
 - npm with a committed lockfile, Node version pinning, install-script allowlist policy, strict TypeScript, lint, type-check, test, and build scripts. No deploy script.
 - Minimal app shell with `ja`/`en`/`es` message catalogs and the language switcher.
 
 Validation (each item ends with a recorded result and, where needed, an ADR):
-1. **Source columns**: compare `PROT-`/`PROTCAA` and `FAT-`/`FATNLEA` on the foods used by the validation recipes; decide the carbohydrate column (`docs/en/NUTRITION_CALCULATION.md` §2).
+1. **Source columns**: compare `PROT-`/`PROTCAA` and `FAT-`/`FATNLEA` on the foods used by the validation recipes; decide the carbohydrate column ([NUTRITION_CALCULATION.md](../en/NUTRITION_CALCULATION.md) §2).
 2. **Cooking data**: check how to extract Table 12 (weight change rates) and Tables 13–14 from the PDF; list which representative food × method pairs are exact, approximate, or hard to estimate.
-3. **Extraction script**: read the workbook from `data/raw/`, verify its checksum, write the subset with notation flags (`docs/en/DATA_SOURCES.md`).
+3. **Extraction script**: read the workbook from `data/raw/`, verify its checksum, write the subset with notation flags ([DATA_SOURCES.md](../en/DATA_SOURCES.md)).
 4. **Validation recipes**: author about 20 representative recipes (structured, three locales) and calculate them; review each ingredient's contribution.
 5. **Calculation cross-check**: compare a few recipes with an independent calculation from the source values.
 6. **Recipe count and adjustment**: rerun the coverage evaluation with the real recipes (fixed vs bounded adjustment, with diversity and required ingredients); propose the initial recipe count and the adjustment scope for the MVP.
@@ -40,11 +42,11 @@ Validation (each item ends with a recorded result and, where needed, an ADR):
 Acceptance:
 - Reproducible install and build from the lockfile; lint, type-check, tests, and build pass.
 - Each validation item has a recorded result; open items are listed as 要確認.
-- The owner has decided the provisional items in `docs/en/SPEC.md` §16 that Phase 0 is responsible for.
+- The owner has decided the provisional items in [SPEC.md](../en/SPEC.md) §16 that Phase 0 is responsible for.
 
 ## Phase 1 — Content model and build pipeline
 
-Status: **Complete (2026-10-18)**. Results: `docs/working/DECISIONS.md` "Stage 1.1" to "Stage 1.5" logs, ADR-024 (revised), ADR-026, and ADR-027. Items still open are listed in `docs/working/DECISIONS.md` "Open questions".
+Status: **Complete (2026-10-18)**. Results: [DECISIONS.md](DECISIONS.md) "Stage 1.1" to "Stage 1.5" logs, ADR-024 (revised), ADR-026, and ADR-027. Items still open are listed in [DECISIONS.md](DECISIONS.md) "Open questions".
 
 - Content schemas (food, recipe, ingredient, substitution, adjustment rules, allergen links, localized texts, glossary).
 - Build-time validation: schemas, references, locale completeness, allergen links, adjustment bounds.
@@ -55,7 +57,7 @@ Acceptance: invalid content fails the build with clear messages; tests cover eac
 
 ## Phase 2 — Nutrition engine
 
-Status: **Complete (2026-10-18)**. Results: `docs/working/DECISIONS.md` "Phase 2 start" and "Stage 2.1" to "Stage 2.6" logs, and ADR-028. Items still open are listed in `docs/working/DECISIONS.md` "Open questions".
+Status: **Complete (2026-10-18)**. Results: [DECISIONS.md](DECISIONS.md) "Phase 2 start" and "Stage 2.1" to "Stage 2.6" logs, and ADR-028. Items still open are listed in [DECISIONS.md](DECISIONS.md) "Open questions".
 
 - Pure `domain/nutrition`: formulas (c4, c5), cooking states, notation handling, uncertainty classes, ranges, rounding for display.
 - Nutrition snapshot tests for all recipes; locale invariance test.
@@ -64,7 +66,7 @@ Acceptance: formula, notation, uncertainty, and invariance tests pass; snapshots
 
 ## Phase 3 — Recommendation engine
 
-Status: **Complete (2026-10-19)**. Results: `docs/working/DECISIONS.md` "Phase 3 start" and "Stage 3.1" to "Stage 3.7" logs, "Phase 3 acceptance", and ADR-029. Items still open are listed in `docs/working/DECISIONS.md` "Open questions".
+Status: **Complete (2026-10-19)**. Results: [DECISIONS.md](DECISIONS.md) "Phase 3 start" and "Stage 3.1" to "Stage 3.7" logs, "Phase 3 acceptance", and ADR-029. Items still open are listed in [DECISIONS.md](DECISIONS.md) "Open questions".
 
 - Hard filters, fit tiers, tolerance, diversification, seeded re-suggestion, bounded adjustment solver, substitutions, relaxation suggestions, contradiction checks.
 - Deterministic reason data for message templates.
@@ -73,7 +75,7 @@ Acceptance: determinism and edge-case tests (empty, few, ties, contradictions, r
 
 ## Phase 4 — UI and localization
 
-Status: **Complete (2026-10-20)**, except the phone-class timing (open question 17). Results: `docs/en/UI_DESIGN.md`, ADR-030, and `docs/working/DECISIONS.md` "Phase 4 start", "Stage 4.1" to "Stage 4.7" logs, and "Phase 4 acceptance".
+Status: **Complete (2026-10-20)**, except the phone-class timing (open question 17). Results: [UI_DESIGN.md](../en/UI_DESIGN.md), ADR-030, and [DECISIONS.md](DECISIONS.md) "Phase 4 start", "Stage 4.1" to "Stage 4.7" logs, and "Phase 4 acceptance".
 
 - Targets and conditions screen (quick and advanced), candidates, comparison, detail, adjustment, re-suggestion, exceptional states.
 - Localized UI and content in `ja`, `en`, `es`; formatting; document language metadata; accessibility.
@@ -84,7 +86,7 @@ Acceptance: the full flow works on mobile and desktop in three locales; accessib
 
 ## Phase 5 — Quality and release preparation
 
-Status: **Complete (2026-10-24)**: deployed at https://recipe-discovery.musica-sanare.workers.dev after the owner's approval. Manual checks on real devices, screen readers, and forced colors remain (`docs/working/RELEASE_READINESS.md` §4). Logs: `docs/working/DECISIONS.md` "Phase 5 start" to "Production deployment".
+Status: **Complete (2026-10-24)**: deployed at https://recipe-discovery.musica-sanare.workers.dev after the owner's approval. Manual checks on real devices, screen readers, and forced colors remain ([RELEASE_READINESS.md](RELEASE_READINESS.md) §4). Logs: [DECISIONS.md](DECISIONS.md) "Phase 5 start" to "Production deployment".
 
 - E2E tests (desktop and mobile, three locales, long strings, locale switching, exceptional states).
 - Security headers and CSP verification; dependency and secret scans.
@@ -96,12 +98,12 @@ Acceptance: SPEC §15 acceptance criteria pass; known risks and manual checks ar
 
 ## Phase 6 — Post-release maintenance
 
-Status: **Complete (2026-10-24)**: release 2 deployed after the owner's approval. The ADR-016 re-check of `i18next` and `react-i18next` remains as maintenance (not before 2026-10-26 05:53 UTC). Logs: `docs/working/DECISIONS.md` "Manual checks" to "Phase 6 acceptance". The owner chose post-release maintenance (option A) over more content, features outside the MVP, and AI; more content is a Phase 7 candidate.
+Status: **Complete (2026-10-24)**: release 2 deployed after the owner's approval. The ADR-016 re-check of `i18next` and `react-i18next` remains as maintenance (not before 2026-10-26 05:53 UTC). Logs: [DECISIONS.md](DECISIONS.md) "Manual checks" to "Phase 6 acceptance". The owner chose post-release maintenance (option A) over more content, features outside the MVP, and AI; more content is a Phase 7 candidate.
 
-- Manual checks of `docs/working/RELEASE_READINESS.md` §4 recorded and their findings handled; ADR-016 re-check of `i18next` and `react-i18next` (not before 2026-10-26 05:53 UTC).
+- Manual checks of [RELEASE_READINESS.md](RELEASE_READINESS.md) §4 recorded and their findings handled; ADR-016 re-check of `i18next` and `react-i18next` (not before 2026-10-26 05:53 UTC).
 - Recommendation speed: profiling and optimizations that leave every engine output identical, with a library of about 100 recipes as the target (ADR-030 D10).
 - Review of the English and Spanish texts accepted without review for the release (open questions 9 and 13).
-- Egg- and soy-based recipes that fit the presets better (`docs/working/DECISIONS.md` "Stage 5.2 batch 1").
+- Egg- and soy-based recipes that fit the presets better ([DECISIONS.md](DECISIONS.md) "Stage 5.2 batch 1").
 - Evidence for the assumed error bands (open question 3); any band change needs an ADR and the owner's approval.
 - Release readiness and a redeployment after the owner's approval.
 
@@ -109,7 +111,7 @@ Acceptance: manual check results recorded; dependency pins updated or re-schedul
 
 ## Phase 7 — Content expansion
 
-Status: **Complete (2026-10-25)**: both batches added (86 recipes) and release 3 deployed after the owner's approval. Logs: `docs/working/DECISIONS.md` "Stage 7.1 expansion plan" to "Third production deployment". The owner chose more content (option B) over shopping lists, opt-in storage, meal planning, and AI; shopping lists are a Phase 8 candidate.
+Status: **Complete (2026-10-25)**: both batches added (86 recipes) and release 3 deployed after the owner's approval. Logs: [DECISIONS.md](DECISIONS.md) "Stage 7.1 expansion plan" to "Third production deployment". The owner chose more content (option B) over shopping lists, opt-in storage, meal planning, and AI; shopping lists are a Phase 8 candidate.
 
 - Expansion plan: cuisine values for dishes missing today (for example Latin American, Mediterranean, Southeast Asian; ADR-026 and ADR-029), the recipe list for two batches, new foods and their composition codes, the revised ADR-023 library size, and food safety decisions.
 - Batch 1 and batch 2 of about 13 original recipes each, aimed at the gaps of release 2: cuisines (29 of 60 recipes are Japanese), dishes of ≤ 10 minutes (5), batch cooking (4), breakfast (5), grilling (4), and steaming (5).
@@ -120,7 +122,7 @@ Acceptance: about 26 new recipes validated and reviewed in three locales with ap
 
 ## Phase 8 — Shopping list
 
-Status: **Planned (2026-10-25)**, to start in a new Claude Code session. Shopping lists were the Phase 8 candidate named when the owner chose Phase 7; they are outside the MVP in `docs/en/SPEC.md` §3, so the phase starts with a scope change and an ADR.
+Status: **Planned (2026-10-25)**, to start in a new Claude Code session. Shopping lists were the Phase 8 candidate named when the owner chose Phase 7; they are outside the MVP in [SPEC.md](../en/SPEC.md) §3, so the phase starts with a scope change and an ADR.
 
 - Design: entry points, amounts and combination rules, pantry items, persistence and privacy (ADR-015, ADR-030 D9), output (checklist, copy, print), and UI, approved before implementation.
 - A pure, deterministic, locale-free aggregation module with tests; UI and localization in three locales with the owner's review; accessibility and E2E checks.

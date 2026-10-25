@@ -1,3 +1,5 @@
+English | [日本語](../ja/DATA_SOURCES.md) · [Docs index](README.md)
+
 # Data Sources — Recipe Discovery
 
 Status: **Draft (2026-10-18)**. Terms and facts below were read from the cited pages on 2026-10-18. Terms can change; re-check before release.
@@ -25,7 +27,7 @@ Status: **Draft (2026-10-18)**. Terms and facts below were read from the cited p
 - The original workbook is **never committed**. Keep it in `data/raw/` (git-ignored) or outside the repository.
 - A script extracts only the food codes referenced by the food dictionary and only the columns used by the app, keeping notation flags (`-`, `Tr`, `(0)`, `(Tr)`, `( )`).
 - The extracted subset and a manifest (source URL, workbook update date, SHA-256, extraction script version, extraction date) are tracked in Git so that builds are reproducible without the original file.
-- Updating the source: download the new file, update the manifest, rerun the extraction, review the nutrition snapshot diff, and record the change in `docs/working/DECISIONS.md`.
+- Updating the source: download the new file, update the manifest, rerun the extraction, review the nutrition snapshot diff, and record the change in [DECISIONS.md](../working/DECISIONS.md).
 
 ### Extraction (implemented in Phase 0 Stage 0.2)
 - Place the workbook at the path given by `rawFile` in `data/composition/manifest.json` (currently `data/raw/mext/20260327-mxt_kagsei-mext-000029402_02.xlsx`, git-ignored).
@@ -34,7 +36,7 @@ Status: **Draft (2026-10-18)**. Terms and facts below were read from the cited p
 - Columns are located by the component identifier row and the Japanese headers, not by position. Extracted identifiers: `REFUSE`, `ENERC_KCAL`, `PROT-`, `PROTCAA`, `FAT-`, `FATNLEA`, `CHOAVLDF-`, `CHOCDF-`, `FIB-`, `NACL_EQ` (`shared/composition.ts`). Each value keeps its notation (`measured`, `zero`, `trace`, `estimated`, `estimated_zero`, `estimated_trace`, `unmeasured`); unrecognized cell contents stop the extraction.
 - Food names are kept in Japanese only, as published; display names in three locales belong to the food dictionary (Stage 0.4).
 - A test validates the tracked subset against the schema and the manifest without needing the workbook.
-- Attribution wording and placement: `docs/en/CONTENT_POLICY.md` §5.
+- Attribution wording and placement: [CONTENT_POLICY.md](CONTENT_POLICY.md) §5.
 
 ### Cooking tables (implemented in Phase 0 Stage 0.3)
 - Tables 12 (weight change rates), 13 (fried foods), and 14 (stir-fried and sautéed foods) exist only in the explanation PDF. Its text layer scrambles table columns, so the needed rows are **transcribed by hand** from rendered page images into `data/composition/cooking.json`, with the page number of every entry and the PDF's SHA-256 (`d1196cc8…f116`, file `data/raw/mext/20260327-mxt_kagsei-mext-000029402_0001.pdf`, git-ignored).
@@ -58,4 +60,4 @@ Status: **Draft (2026-10-18)**. Terms and facts below were read from the cited p
 
 ## 3. Reference for allergen categories
 
-Consumer Affairs Agency, allergen labelling: https://www.caa.go.jp/policies/policy/food_labeling/food_sanitation/allergy/ (used only as the category reference; see `docs/en/CONTENT_POLICY.md` §2).
+Consumer Affairs Agency, allergen labelling: https://www.caa.go.jp/policies/policy/food_labeling/food_sanitation/allergy/ (used only as the category reference; see [CONTENT_POLICY.md](CONTENT_POLICY.md) §2).

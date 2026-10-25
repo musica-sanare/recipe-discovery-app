@@ -1,3 +1,5 @@
+English | [日本語](../ja/DEVELOPMENT.md) · [Docs index](README.md)
+
 # Local Development
 
 ## Prerequisites
@@ -12,7 +14,7 @@ No accounts, API keys, or secrets are needed. Nothing in this guide creates remo
 npm ci
 ```
 
-`.npmrc` enables `engine-strict` and `strict-allow-scripts` (`docs/working/DECISIONS.md` ADR-018). If an install fails with `ESTRICTALLOWSCRIPTS`, a dependency introduced an install script: review what it does and record a decision in `package.json` `allowScripts` and in ADR-018. Do not install with `--omit=optional` (platform binaries come from optional dependencies).
+`.npmrc` enables `engine-strict` and `strict-allow-scripts` ([DECISIONS.md](../working/DECISIONS.md) ADR-018). If an install fails with `ESTRICTALLOWSCRIPTS`, a dependency introduced an install script: review what it does and record a decision in `package.json` `allowScripts` and in ADR-018. Do not install with `--omit=optional` (platform binaries come from optional dependencies).
 
 ## Commands
 
@@ -33,12 +35,12 @@ Browser previews: `.claude/launch.json` has `preview` (the production build with
 | `npm run check:licenses` | Licenses of every package in `package-lock.json` against `tools/licenses.ts` (production: MIT, ISC, Apache-2.0, BSD, 0BSD; development also MPL-2.0, BlueOak-1.0.0, MIT-0, CC0-1.0, CC-BY-4.0) |
 | `npm run test:e2e` | Playwright on the production build with headers (`npm run build && npm run preview` on port 4174): projects `desktop-chromium`, `mobile-chromium`, `mobile-webkit`; every spec in `ja`, `en`, and `es` (`e2e/`). Browsers: `npx playwright install --only-shell chromium webkit` (user cache, outside the repository) |
 | `npm run test:e2e:timing` | Phone-class timing with CPU throttling (project `timing`, Chromium); writes `test-results/timing.json` |
-| `npm run data:extract` | Regenerate `data/composition/foods.json` from the MEXT workbook in `data/raw/` (`docs/en/DATA_SOURCES.md` "Extraction") |
-| `npm run eval:coverage` | How many validation recipes meet representative targets with default and adjusted amounts, computed by the recommendation engine (`docs/working/DECISIONS.md` "Stage 0.6", "Stage 3.7") |
-| `npm run bench:recommendation` | Node timing of a full search on the repository recipes and on an in-memory synthetic library of 100 recipes (`docs/working/DECISIONS.md` "Stage 6.2") |
-| `npm run data:verify-cooking` | macOS only: check `data/composition/cooking.json` against the MEXT explanation PDF text (`docs/en/DATA_SOURCES.md` "Cooking tables") |
+| `npm run data:extract` | Regenerate `data/composition/foods.json` from the MEXT workbook in `data/raw/` ([DATA_SOURCES.md](DATA_SOURCES.md) "Extraction") |
+| `npm run eval:coverage` | How many validation recipes meet representative targets with default and adjusted amounts, computed by the recommendation engine ([DECISIONS.md](../working/DECISIONS.md) "Stage 0.6", "Stage 3.7") |
+| `npm run bench:recommendation` | Node timing of a full search on the repository recipes and on an in-memory synthetic library of 100 recipes ([DECISIONS.md](../working/DECISIONS.md) "Stage 6.2") |
+| `npm run data:verify-cooking` | macOS only: check `data/composition/cooking.json` against the MEXT explanation PDF text ([DATA_SOURCES.md](DATA_SOURCES.md) "Cooking tables") |
 
-There is intentionally no deploy script; deployment follows `docs/en/DEPLOYMENT.md` after the owner's approval.
+There is intentionally no deploy script; deployment follows [DEPLOYMENT.md](DEPLOYMENT.md) after the owner's approval.
 
 CI (`.github/workflows/ci.yml`, GitHub Actions on `ubuntu-24.04`) runs `npm ci` and `npm run check` in one job and `npm run test:e2e` with `npx playwright install --with-deps --only-shell chromium webkit` in another, on pushes to `dev` and `main` and on pull requests. It has read-only permissions, no secrets, and no deployment; the Playwright report is uploaded only when E2E fails (kept 7 days). Actions are pinned to commit SHAs.
 
@@ -65,9 +67,9 @@ docs/, prompts/         Documentation and phase prompts
 `domain/` may import only `shared/` (and content in tests); `eslint.config.js` enforces this. Tools and repository tests obtain engine input from the in-memory calculation bundle (`tools/content/repository.ts`). Files under `tools/` run with Node's built-in TypeScript type stripping, so they use only erasable syntax (`erasableSyntaxOnly`) and import local modules with the `.ts` extension.
 
 ## Adding content
-1. Add foods to `content/foods.ts` with codes from `node tools/extract-composition.ts --search <regex>`; add the codes (and cooked/raw pairs with transcribed rates) to `data/composition/` as described in `docs/en/DATA_SOURCES.md`.
+1. Add foods to `content/foods.ts` with codes from `node tools/extract-composition.ts --search <regex>`; add the codes (and cooked/raw pairs with transcribed rates) to `data/composition/` as described in [DATA_SOURCES.md](DATA_SOURCES.md).
 2. Add a recipe file under `content/recipes/` and register it in `recipes` in `content/recipes/index.ts` (not in `validationRecipes`, the fixed set that tests of reviewed counts use). The schema is `shared/content.ts` (ADR-026): give steps and safety notes keys, list what is served with the dish under `sides`, link seasonings to the ingredient they scale with (`linkedTo`), and give every recipe at least one adjustable ingredient or solver-removable side.
-3. Write `ja`, `en`, and `es` texts; follow `content/glossary.ts` and `docs/en/CONTENT_POLICY.md`. Serving steps do not name sides; the UI lists the sides that are on.
+3. Write `ja`, `en`, and `es` texts; follow `content/glossary.ts` and [CONTENT_POLICY.md](CONTENT_POLICY.md). Serving steps do not name sides; the UI lists the sides that are on.
 4. Update `CONTENT_VERSION` in `content/version.ts`.
 5. `npm run validate:content` (also part of `npm run build`) checks schemas, locales, IDs, references, cooking states, adjustment bounds, links, sides, substitutions, allergens, safety notes, protein groups, tags, glossary use, forbidden expressions, and the version. When adding a rule, add a failing fixture to `tools/content/validate.test.ts`.
 

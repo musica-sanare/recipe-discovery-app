@@ -1,10 +1,12 @@
+English | [日本語](../ja/NUTRITION_CALCULATION.md) · [Docs index](README.md)
+
 # Nutrition Calculation — Recipe Discovery
 
-Status: **Draft (2026-10-18)**. Formulas quoted from the source tables are *Verified* (read in the official PDF on 2026-10-18; see `docs/working/DECISIONS.md` "Verification log"). Column choices, rounding, tolerances, and thresholds are *Provisional* until Phase 0 and Phase 2 confirm them with real data. Changing anything here needs the owner's approval and an ADR (CLAUDE.md Part B, principle 5).
+Status: **Draft (2026-10-18)**. Formulas quoted from the source tables are *Verified* (read in the official PDF on 2026-10-18; see [DECISIONS.md](../working/DECISIONS.md) "Verification log"). Column choices, rounding, tolerances, and thresholds are *Provisional* until Phase 0 and Phase 2 confirm them with real data. Changing anything here needs the owner's approval and an ADR (CLAUDE.md Part B, principle 5).
 
 ## 1. Source data
 
-- Standard Tables of Food Composition in Japan 2020 (Eighth Revised Edition), Updated and Enlarged Version 2023 (日本食品標準成分表（八訂）増補2023年), MEXT. Workbook version: updated 2026-03-27 (includes errata). Handling rules and attribution: `docs/en/DATA_SOURCES.md`.
+- Standard Tables of Food Composition in Japan 2020 (Eighth Revised Edition), Updated and Enlarged Version 2023 (日本食品標準成分表（八訂）増補2023年), MEXT. Workbook version: updated 2026-03-27 (includes errata). Handling rules and attribution: [DATA_SOURCES.md](DATA_SOURCES.md).
 - *Verified*: all values are per 100 g of edible portion. The edible portion is the food as purchased minus the parts normally discarded; the refuse rate is the discarded share in mass %.
 - *Verified*: the tables list 2,538 foods, including cooked forms (for example boiled, grilled, stir-fried, sautéed, deep-fried, tempura, breaded and fried, steamed, microwaved).
 
@@ -20,7 +22,7 @@ Status: **Draft (2026-10-18)**. Formulas quoted from the source tables are *Veri
 
 Not displayed in the MVP: dietary fiber (`FIB-`, incomplete for 13 of 20 validation recipes) and the component-based columns `PROTCAA`, `FATNLEA`, `CHOAVLDF-` (incomplete for most recipes or misleading for protein-rich foods). They stay in the extracted subset for comparison.
 
-Measured facts (2026-10-18): in the workbook, `PROTCAA` is unmeasured for 422 foods (17%) and a median 15% lower than `PROT-`; `FATNLEA` is unmeasured for 436 foods (17%) and a median 8% lower than `FAT-`. Over the 20 validation recipes, `PROTCAA` (with a fallback) would read 2.2–9.1 g lower protein per serving. Details: `docs/working/DECISIONS.md` "Stage 0.5 calculation checks".
+Measured facts (2026-10-18): in the workbook, `PROTCAA` is unmeasured for 422 foods (17%) and a median 15% lower than `PROT-`; `FATNLEA` is unmeasured for 436 foods (17%) and a median 8% lower than `FAT-`. Over the 20 validation recipes, `PROTCAA` (with a fallback) would read 2.2–9.1 g lower protein per serving. Details: [DECISIONS.md](../working/DECISIONS.md) "Stage 0.5 calculation checks".
 
 Energy is the table value, computed by MEXT from component-based values, so it does not equal 4 × protein + 9 × fat + 4 × carbohydrate (the validation recipes differ by −0.1% to +10%, median +4%). The detail view explains this.
 
@@ -58,7 +60,7 @@ Rules:
 5. Weight change rates are relative to the raw edible portion, except where the tables remove parts after cooking (`postCookingRefuse` in `data/composition/cooking.json`, for example the shell of boiled eggs or the peel of steamed potatoes). Those entries are approximations when the recipe states the raw edible mass.
 6. For starchy staples, recipes may state the mass in the state the tables provide (cooked rice, boiled or dry pasta); no weight change rate is needed then.
 
-Cooking data: weight change rates and Tables 13–14 rows are transcribed into `data/composition/cooking.json` (`docs/en/DATA_SOURCES.md` "Cooking tables").
+Cooking data: weight change rates and Tables 13–14 rows are transcribed into `data/composition/cooking.json` ([DATA_SOURCES.md](DATA_SOURCES.md) "Cooking tables").
 
 ## 6. Fried foods (ADR-010)
 
@@ -86,7 +88,7 @@ Ranges (ADR-025, accepted 2026-10-18). A share-based threshold does not work: in
 
 | Reason (engine identifier) | Class | Error band applied to the ingredient's contribution (energy / protein / fat / carbohydrate / salt) | Basis |
 |---|---|---|---|
-| Cooking method not in the tables, raw value used (`raw_value_for_cooking`) | Approximation | −25 / −15 / −35 / −30 / −15 % to +5 / +5 / +5 / +10 / +5 % | *Measured*: cooked-to-raw retention in the tabulated pairs — protein 0.87–1.03 for meat and fish (Stage 0.3; chapter 3 medians 87–100 %), fat down to 0.66 and energy down to 0.73 for fatty meat and fish (chapter 3 medians down to 74 % and 83 %), protein and carbohydrate of boiled vegetables down to 0.67 and 0.70 (`docs/working/DECISIONS.md` "Stage 6.5") |
+| Cooking method not in the tables, raw value used (`raw_value_for_cooking`) | Approximation | −25 / −15 / −35 / −30 / −15 % to +5 / +5 / +5 / +10 / +5 % | *Measured*: cooked-to-raw retention in the tabulated pairs — protein 0.87–1.03 for meat and fish (Stage 0.3; chapter 3 medians 87–100 %), fat down to 0.66 and energy down to 0.73 for fatty meat and fish (chapter 3 medians down to 74 % and 83 %), protein and carbohydrate of boiled vegetables down to 0.67 and 0.70 ([DECISIONS.md](../working/DECISIONS.md) "Stage 6.5") |
 | Related cooked value used, for example grilled for sautéed (`related_cooked_value`) | Approximation | ±15 / ±10 / ±35 / ±10 / ±5 % | *Measured*: between non-oil methods of the same food, protein differs by up to 8 %, fat by up to 34 %, and energy by up to 14 % ("Stage 6.5") |
 | Parts removed after cooking (`post_cooking_refuse`) | Approximation | ±5 % | *Assumption*; the tables give single analyses without spread ("Stage 6.5") |
 | Fried state, oil absorption (`fried`) | Approximation | ±30 % of the ingredient's fat and of the energy from that fat | *Assumption*; Table 13 gives fat changes of −5.2 to +32.3 g per 100 g raw food by food and coating, as single analyses; applied to total fat, the band overstates foods whose fat is mostly their own ("Stage 6.5") |

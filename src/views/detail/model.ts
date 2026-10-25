@@ -109,17 +109,5 @@ export function recipeMinutes(recipe: BundleRecipe, state: RecipeState): number 
   return recipe.minutes + recipe.substitutions.filter((substitution) => state.substitutions.includes(substitution.key)).reduce((sum, substitution) => sum + (substitution.minutesDelta ?? 0), 0);
 }
 
-/**
- * The household measure for the shown amount: the authored measure scaled with the grams,
- * shown only when the result is still a multiple of 1/12 (ADR-026); otherwise grams alone.
- */
-export function scaledMeasure(recipe: BundleRecipe, ingredient: { readonly key: string; readonly grams: number; readonly substitution: string | undefined }): BundleRecipe["ingredients"][number]["measure"] {
-  const authored = recipe.ingredients.find((candidate) => candidate.key === ingredient.key);
-  const substitution = recipe.substitutions.find((candidate) => candidate.key === ingredient.substitution);
-  const measure = substitution?.measure ?? authored?.measure;
-  if (authored === undefined || measure === undefined) return undefined;
-  const authoredGrams = authored.grams * (substitution?.ratio ?? 1);
-  const quantity = (measure.quantity * ingredient.grams) / authoredGrams;
-  const twelfths = quantity * 12;
-  return Math.abs(twelfths - Math.round(twelfths)) < 1e-6 && Math.round(twelfths) > 0 ? { unit: measure.unit, quantity: Math.round(twelfths) / 12 } : undefined;
-}
+/** The household measure for the shown amount (ADR-026); shared with the shopping list. */
+export { scaledMeasure } from "../../../shared/measure";

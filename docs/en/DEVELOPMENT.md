@@ -53,6 +53,7 @@ index.html, src/        UI (React, Tailwind CSS; docs/en/UI_DESIGN.md): i18n/ ty
 shared/                 Schemas, constants, and types shared by UI, domain, content, and tools
 domain/nutrition/       Pure, locale-free nutrition engine (ADR-028); tests next to the code
 domain/recommendation/  Pure, locale-free recommendation engine (ADR-029); tests next to the code
+domain/shopping/        Pure, locale-free shopping list aggregation (ADR-032); tests next to the code
 content/                Food dictionary, recipes, glossary, content version (TypeScript, validated at build time)
 platform/               Hosting-specific output (security headers)
 tools/                  Build-time tools run directly by Node (TypeScript type stripping)

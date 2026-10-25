@@ -1,4 +1,4 @@
-<!-- source: docs/en/DEVELOPMENT.md blob 8f65f664652d328744948b315dca769034029e18 -->
+<!-- source: docs/en/DEVELOPMENT.md blob 20e9227d269db680ee12e31c825f2836cdcb6536 -->
 [English](../en/DEVELOPMENT.md) | 日本語 · [目次に戻る](README.md)
 
 > この文書は[英語版](../en/DEVELOPMENT.md)の翻訳です。内容が異なる場合は英語版が優先されます。
@@ -58,6 +58,7 @@ index.html, src/        UI (React, Tailwind CSS; docs/en/UI_DESIGN.md): i18n/ ty
 shared/                 Schemas, constants, and types shared by UI, domain, content, and tools
 domain/nutrition/       Pure, locale-free nutrition engine (ADR-028); tests next to the code
 domain/recommendation/  Pure, locale-free recommendation engine (ADR-029); tests next to the code
+domain/shopping/        Pure, locale-free shopping list aggregation (ADR-032); tests next to the code
 content/                Food dictionary, recipes, glossary, content version (TypeScript, validated at build time)
 platform/               Hosting-specific output (security headers)
 tools/                  Build-time tools run directly by Node (TypeScript type stripping)

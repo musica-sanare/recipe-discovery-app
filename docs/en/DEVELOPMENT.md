@@ -32,10 +32,10 @@ npm ci
 | `npm run check` | Lint, type-check, license check, tests, and build in sequence |
 | `npm run check:licenses` | Licenses of every package in `package-lock.json` against `tools/licenses.ts` (production: MIT, ISC, Apache-2.0, BSD, 0BSD; development also MPL-2.0, BlueOak-1.0.0, MIT-0, CC0-1.0, CC-BY-4.0) |
 | `npm run test:e2e` | Playwright on the production build with headers (`npm run build && npm run preview` on port 4174): projects `desktop-chromium`, `mobile-chromium`, `mobile-webkit`; every spec in `ja`, `en`, and `es` (`e2e/`). Browsers: `npx playwright install --only-shell chromium webkit` (user cache, outside the repository) |
-| `npm run test:e2e:timing` | Phone-class timing with CPU throttling (project `timing`, Chromium); writes `test-results/timing.json` |
+| `npm run test:e2e:timing` | Phone-class timing with CPU throttling (project `timing`, Chromium); writes `test-results/timing.json`. With `TIMING_LIBRARY=synthetic`, a network stub serves the synthetic library of `tools/synthetic-library.ts` instead of the content bundles and the numbers go to `test-results/timing-synthetic.json` |
 | `npm run data:extract` | Regenerate `data/composition/foods.json` from the MEXT workbook in `data/raw/` ([DATA_SOURCES.md](DATA_SOURCES.md) "Extraction") |
 | `npm run eval:coverage` | How many validation recipes meet representative targets with default and adjusted amounts, computed by the recommendation engine ([DECISIONS.md](../working/DECISIONS.md) "Stage 0.6", "Stage 3.7") |
-| `npm run bench:recommendation` | Node timing of a full search on the repository recipes and on an in-memory synthetic library of 100 recipes ([DECISIONS.md](../working/DECISIONS.md) "Stage 6.2") |
+| `npm run bench:recommendation` | Node timing of a full search on the repository recipes and on an in-memory synthetic library of 130 recipes (`tools/synthetic-library.ts`: recipes spread evenly over the library added again under new IDs; never published) ([DECISIONS.md](../working/DECISIONS.md) "Stage 6.2", "Stage 9.2") |
 | `npm run data:verify-cooking` | macOS only: check `data/composition/cooking.json` against the MEXT explanation PDF text ([DATA_SOURCES.md](DATA_SOURCES.md) "Cooking tables") |
 
 Browser previews: `.claude/launch.json` has `preview` (the production build with headers, port 4173) and `dev` (the Vite dev server, port 5173; engine modules can be imported in the page for measurements). Timing numbers from a hidden or background tab are not reliable.

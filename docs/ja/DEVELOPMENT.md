@@ -1,4 +1,4 @@
-<!-- source: docs/en/DEVELOPMENT.md blob 20e9227d269db680ee12e31c825f2836cdcb6536 -->
+<!-- source: docs/en/DEVELOPMENT.md blob e507454ee25819dee7aca715752b2ddddb8fde2f -->
 [English](../en/DEVELOPMENT.md) | 日本語 · [目次に戻る](README.md)
 
 > この文書は[英語版](../en/DEVELOPMENT.md)の翻訳です。内容が異なる場合は英語版が優先されます。
@@ -35,10 +35,10 @@ npm ci
 | `npm run check` | lint、型チェック、ライセンスチェック、テスト、ビルドを順に実行する |
 | `npm run check:licenses` | `package-lock.json` のすべてのパッケージのライセンスを `tools/licenses.ts` と照合する（本番：MIT、ISC、Apache-2.0、BSD、0BSD。開発用はさらに MPL-2.0、BlueOak-1.0.0、MIT-0、CC0-1.0、CC-BY-4.0） |
 | `npm run test:e2e` | ヘッダー付きの本番ビルドに対する Playwright（ポート 4174 で `npm run build && npm run preview`）：プロジェクトは `desktop-chromium`、`mobile-chromium`、`mobile-webkit`。すべての spec を `ja`、`en`、`es` で実行する（`e2e/`）。ブラウザ：`npx playwright install --only-shell chromium webkit`（ユーザーのキャッシュ。リポジトリの外） |
-| `npm run test:e2e:timing` | CPU を絞ったスマートフォン相当の速度の測定（プロジェクト `timing`、Chromium）。`test-results/timing.json` に書き出す |
+| `npm run test:e2e:timing` | CPU を絞ったスマートフォン相当の速度の測定（プロジェクト `timing`、Chromium）。`test-results/timing.json` に書き出す。`TIMING_LIBRARY=synthetic` を付けると、ネットワークのスタブがコンテンツバンドルの代わりに `tools/synthetic-library.ts` の合成ライブラリを返し、結果は `test-results/timing-synthetic.json` に書き出される |
 | `npm run data:extract` | `data/raw/` にある文部科学省のワークブックから `data/composition/foods.json` を作り直す（[DATA_SOURCES.md](DATA_SOURCES.md)「抽出」） |
 | `npm run eval:coverage` | 検証用レシピのうち、代表的な目標を既定の分量と調整後の分量で満たすものの数を、推薦エンジンで計算する（[DECISIONS.md](../working/DECISIONS.md)（英語のみ）"Stage 0.6"、"Stage 3.7"） |
-| `npm run bench:recommendation` | リポジトリのレシピと、メモリ上に作った 100 件の合成ライブラリに対する、検索全体の Node での所要時間（[DECISIONS.md](../working/DECISIONS.md)（英語のみ）"Stage 6.2"） |
+| `npm run bench:recommendation` | リポジトリのレシピと、メモリ上に作った 130 件の合成ライブラリ（`tools/synthetic-library.ts`：ライブラリ全体から均等な間隔で選んだレシピを別の ID で追加したもの。公開しない）に対する、検索全体の Node での所要時間（[DECISIONS.md](../working/DECISIONS.md)（英語のみ）"Stage 6.2"、"Stage 9.2"） |
 | `npm run data:verify-cooking` | macOS のみ：`data/composition/cooking.json` を文部科学省の説明 PDF のテキストと照合する（[DATA_SOURCES.md](DATA_SOURCES.md)「調理の表」） |
 
 ブラウザでのプレビュー：`.claude/launch.json` には `preview`（ヘッダー付きの本番ビルド、ポート 4173）と `dev`（Vite の開発サーバー、ポート 5173。測定のためにページの中でエンジンのモジュールを import できる）があります。隠れたタブやバックグラウンドのタブで測った時間は当てになりません。

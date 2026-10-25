@@ -1,9 +1,8 @@
 /**
- * Recommendation timing in Node (Phase 6 Stage 6.2, ADR-030 D10): a full search
- * (`evaluatePool` and `selectCandidates`, as the UI's `search`) on the repository
- * recipes and on a synthetic library of about 100 recipes, where the first 40
- * recipes are added again under new IDs. The synthetic library exists only in memory
- * for this measurement and is never published.
+ * Recommendation timing in Node (Phase 6 Stage 6.2, Phase 9 Stage 9.2, ADR-030 D10):
+ * a full search (`evaluatePool` and `selectCandidates`, as the UI's `search`) on the
+ * repository recipes and on the synthetic library of `tools/synthetic-library.ts`
+ * (130 recipes, in memory only, never published).
  *
  *   node tools/benchmark-recommendation.ts
  */
@@ -13,10 +12,10 @@ import { evaluatePool, selectCandidates } from "../domain/recommendation/recomme
 import type { Conditions, PoolRequest, Session } from "../domain/recommendation/types.ts";
 import { presetTargets } from "../domain/recommendation/validate.ts";
 import { repositoryEngine } from "./content/repository.ts";
+import { syntheticCalc } from "./synthetic-library.ts";
 
 const WARM_UP = 3;
 const RUNS = 15;
-const SYNTHETIC_EXTRA = 40;
 
 const none: Conditions = { excludedFoods: [], excludedAllergens: [], requiredFoods: [], cuisines: [] };
 const emptySession: Session = { shown: [], excluded: [], previous: [], keep: [] };
@@ -28,11 +27,6 @@ const scenarios: Readonly<Record<string, PoolRequest>> = {
   "maintain, tofu required": { targets: presetTargets("maintain"), servings: 1, conditions: { ...none, requiredFoods: [["tofu_firm", "tofu_silken"]] } },
   "bulk, <= 15 min": { targets: presetTargets("bulk"), servings: 1, conditions: { ...none, maxMinutes: 15 } },
 };
-
-function synthetic(calc: CalcBundle): CalcBundle {
-  const copies = calc.recipes.slice(0, SYNTHETIC_EXTRA).map((recipe): BundleRecipe => ({ ...recipe, id: `${recipe.id}__copy` }));
-  return { ...calc, recipes: [...calc.recipes, ...copies] };
-}
 
 /** Grid states the solver scores: adjustable grid sizes times the subsets of removable sides. */
 function gridPoints(recipes: readonly BundleRecipe[]): number {
@@ -67,7 +61,7 @@ function measure(request: PoolRequest, data: RecommendationData): { median: numb
 }
 
 const { calc } = repositoryEngine();
-const libraries: Readonly<Record<string, CalcBundle>> = { repository: calc, synthetic: synthetic(calc) };
+const libraries: Readonly<Record<string, CalcBundle>> = { repository: calc, synthetic: syntheticCalc(calc) };
 
 console.log(`Node ${process.version}; median / p90 of ${String(RUNS)} runs after ${String(WARM_UP)} warm-up runs, ms.\n`);
 for (const [name, bundle] of Object.entries(libraries)) {

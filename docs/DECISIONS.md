@@ -747,6 +747,35 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - Speed: a full search takes about 82 ms at 4× (p90 about 93 ms), within the ADR-030 D10 threshold; a speed-up is needed before the library grows further (`docs/RELEASE_READINESS.md` §3).
 - `npm run check`, `npm run test:e2e`, and CI pass; release 3 deployed after the owner's approval. Open: the ADR-016 re-check (not before 2026-10-26 12:40 UTC, open question 16).
 
+### History rewrite (2026-10-25)
+- The owner had the full history rewritten with `git-filter-repo` 2.47.0 before adopting the shared rules: every commit now has the author and committer `musica-sanare`, AI attribution trailers were removed from commit messages, and the Cloudflare account name and account ID were replaced with `[account name]` and `[account ID]` in docs and messages. The GitHub repository was deleted and recreated, and `dev` and `main` were pushed again. Commit counts and file contents are otherwise unchanged; the scans before and after are not part of the repository.
+- Commit messages refer to the new hashes, but docs and prompts written before the rewrite still name the old ones. Old to new:
+
+| Old | New |
+|---|---|
+| `078901a` | `f39fe88` |
+| `09449fd` | `820e807` |
+| `1267ac9` | `a989050` |
+| `26a18f0` | `5d73ce6` |
+| `2b74b07` | `aed4c52` |
+| `2de3807` | `a30652b` |
+| `2fd68b9` | `b409bf2` |
+| `407f56b` | `fd1ec26` |
+| `516038c` | `f362ad0` |
+| `64b4c2b` | `194495f` |
+| `66473f7` | `ed511a0` |
+| `692e1cf` | `71c3e02` |
+| `70cae1c` | `75d813f` |
+| `911c091` | `0bd2d3e` |
+| `9bf2356` | `8db74f4` |
+| `9ddf73d` | `483a196` |
+| `af04a17` | `57c6864` |
+| `c3b4911` | `7b66ca3` |
+| `d131546` | `03b9c83` |
+| `e07fc48` | `42453de` |
+| `edd7afe` | `7144d06` |
+| `f70d2df` | `1ef5c4e` |
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in

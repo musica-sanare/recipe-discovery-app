@@ -134,7 +134,7 @@ sequenceDiagram
 | `invalid_request` | 400 | The request fails the request schema; the provider is not called |
 | `disabled` | 503 | The environment switch is off (ADR-034 D5); the browser treats a 404 the same way |
 | `rate_limited` | 429 | The endpoint's or the provider's rate limit |
-| `budget_spent` | 503 | The provider's spend limit is reached |
+| `budget_spent` | 503 | The provider's usage allocation is used up (for Workers AI, the daily free allocation) |
 | `timeout` | 504 | No provider answer within 7 s |
 | `refused` | 502 | The provider refused the request |
 | `invalid_output` | 502 | The output fails validation |

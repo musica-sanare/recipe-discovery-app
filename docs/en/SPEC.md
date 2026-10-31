@@ -184,7 +184,7 @@ The rules are in [CONTENT_POLICY.md](CONTENT_POLICY.md). Summary:
 - No analytics or trackers by default.
 - Strict security headers (Content-Security-Policy and related headers) on all responses.
 - Any future server endpoint must validate inputs and outputs at runtime and must not log user targets or conditions.
-- Planned with ADR-034 (Phase 12): a same-origin endpoint receives only the typed free text and the locale when the user asks for an AI suggestion, and forwards them to the AI provider. It stores and logs no request body. The provider keeps API inputs and outputs for up to 30 days by default; the about page will say so before the feature is released.
+- Planned with ADR-034 (Phase 12): a same-origin endpoint receives only the typed free text and the locale when the user asks for an AI suggestion, and forwards them to Cloudflare Workers AI. It stores and logs no request body. Workers AI does not keep inputs and outputs after the request and does not train on them; the about page will say so before the feature is released. The feature runs only within the Workers AI free allocation; when that is used up for the day, the app works as without AI.
 
 ## 14. Accessibility and UX
 

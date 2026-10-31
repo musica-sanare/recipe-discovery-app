@@ -1,4 +1,4 @@
-<!-- source: docs/en/ARCHITECTURE.md blob e931bbef556e1bba7e60338a142d85450d245064 -->
+<!-- source: docs/en/ARCHITECTURE.md blob cc5635537a01198a9d56586989ac00d3714325d3 -->
 [English](../en/ARCHITECTURE.md) | 日本語 · [目次に戻る](README.md)
 
 > この文書は[英語版](../en/ARCHITECTURE.md)の翻訳。内容が異なる場合は英語版が優先する。
@@ -137,7 +137,7 @@ sequenceDiagram
 | `invalid_request` | 400 | リクエストがスキーマに合わない。提供者は呼ばない |
 | `disabled` | 503 | 環境変数のスイッチが切れている（ADR-034 D5）。ブラウザは 404 も同じに扱う |
 | `rate_limited` | 429 | エンドポイントか提供者のレート制限 |
-| `budget_spent` | 503 | 提供者の利用額の上限に達した |
+| `budget_spent` | 503 | 提供者の利用枠を使い切った（Workers AI では 1 日の無料枠） |
 | `timeout` | 504 | 提供者が 7 秒以内に答えない |
 | `refused` | 502 | 提供者がリクエストを断った |
 | `invalid_output` | 502 | 出力が検証を通らない |

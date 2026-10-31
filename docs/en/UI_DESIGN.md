@@ -2,7 +2,9 @@ English | [日本語](../ja/UI_DESIGN.md) · [Docs index](README.md)
 
 # UI Design — Recipe Discovery
 
-Status: **Accepted (owner, 2026-10-19, Stage 4.1)**. Decisions and their alternatives: [DECISIONS.md](../working/DECISIONS.md) ADR-030. This document describes the screens, navigation, state, styling, and catalog structure of the MVP user interface (Phase 4). It does not change any engine behavior; every value and status shown comes from `domain/nutrition` (ADR-028) and `domain/recommendation` (ADR-029). The shopping list (Phase 8, ADR-032, accepted 2026-10-25) adds §3.7; its items come from `domain/shopping`.
+This document describes the user interface of Recipe Discovery: views and flow, screen wireframes and states, navigation and state, styling, message catalogs, and input and adjustment details. It is for anyone who builds or reviews a screen. The UI changes no engine behavior: every value and status shown comes from `domain/nutrition` (ADR-028), `domain/recommendation` (ADR-029), and, for the shopping list, `domain/shopping`.
+
+Status: **Accepted (owner, 2026-10-19, Stage 4.1)** for the MVP user interface (Phase 4). The shopping list (Phase 8, ADR-032, accepted 2026-10-25) adds §3.7. Decisions and their alternatives: [DECISIONS.md](../working/DECISIONS.md) ADR-030.
 
 ## 1. Principles
 
@@ -14,16 +16,16 @@ Status: **Accepted (owner, 2026-10-19, Stage 4.1)**. Decisions and their alterna
 
 ## 2. Views and flow
 
-```
-Targets and conditions ──search──► Candidates ──select 2–3──► Comparison
-         ▲                            │   ▲                        │
-         │ edit conditions            │   └──────── back ──────────┘
-         └────────────────────────────┤
-                                      └──open──► Recipe detail (adjustment)
-                                                     │  ▲
-                                          add/update │  │ recipe link
-                                                     ▼  │
-                         header link (list not empty) ──► Shopping list
+```mermaid
+flowchart LR
+    targets["Targets and conditions"] -->|"search"| candidates["Candidates"]
+    candidates -->|"edit conditions"| targets
+    candidates -->|"select 2–3"| comparison["Comparison"]
+    comparison -->|"back"| candidates
+    candidates -->|"open"| detail["Recipe detail (adjustment)"]
+    detail -->|"add / update"| shopping["Shopping list"]
+    shopping -->|"recipe link"| detail
+    header["Header link (list not empty)"] --> shopping
 ```
 
 | View | URL | Content after reload |
@@ -209,19 +211,33 @@ States:
 - An invalid adjustment state cannot be reached through the controls (steppers follow the authored grid and bounds); engine errors are still mapped to messages.
 - Unknown values show "unknown" with the ingredients that lack data, never zero.
 - When a rounded value looks like it meets a bound that the full value misses, the value is shown to one decimal with "just below the target" (or "just above").
-- Shopping list (ADR-032), a section of its own after the adjustment section: "Add to shopping list" copies the current state (servings, amounts, sides, substitutions) into the list. Afterwards the block shows "In the shopping list (2 servings)" with a link to the list; when the current state differs from the list entry, it offers "Update the list" and "Remove from the list". With 10 recipes in the list, the add button is disabled and the reason is shown. Adding, updating, and removing are announced in the live region; focus stays on the block. Available with and without a search.
+- Shopping list (ADR-032): a section of its own after the adjustment section, available with and without a search.
+  - "Add to shopping list" copies the current state (servings, amounts, sides, substitutions) into the list.
+  - Afterwards the block shows "In the shopping list (2 servings)" with a link to the list. When the current state differs from the list entry, it offers "Update the list" and "Remove from the list".
+  - With 10 recipes in the list, the add button is disabled and the reason is shown.
+  - Adding, updating, and removing are announced in the live region; focus stays on the block.
 
 ### 3.5 Shared elements
 
-- Header: app name, a link to the shopping list with its recipe count (only while the list has a recipe; a shorter label at narrow widths if needed), language switcher. Footer: attribution, content and composition versions, and a link to the about page.
+- Header: app name, a link to the shopping list with its recipe count, and the language switcher. The link appears only while the list has a recipe and may use a shorter label at narrow widths.
+- Footer: attribution, content and composition versions, and a link to the about page.
+- Comparison table (§3.3) and the ingredient table of the detail view (§3.4): the visible caption sits above the scrolling region and labels it. The table keeps a visually hidden `caption`, so the caption no longer scrolls with the table.
+- The estimates disclaimer appears on candidates, comparison, and detail views. The allergen disclaimer appears wherever allergen features appear.
+- A live region announces search results, replacements, and recalculations.
 
 ### 3.6 About
 
-- `h1` "About this app" and a link to the targets view, then sections with `h2` headings: what the app does ("What this app does") and that it follows fixed rules without AI; how nutrition values are calculated (estimates, cooked values and weight change rates, approximations and hard-to-estimate items, ranges, unmeasured values shown as unknown, strict-control note); source and data versions (attribution as in the footer); allergens (the allergen disclaimer, unknown treated as "may contain"); health (not medical advice, presets as examples, medical guidance); what the app does not do; privacy (no analytics, cookies, ads, or external requests; only the language choice is stored; targets and conditions stay in memory and never enter the URL); open-source licenses with a link to `/third-party-licenses.txt`, generated by `build.license` (Vite).
+- `h1` "About this app" and a link to the targets view.
+- Then sections with `h2` headings:
+  - what the app does ("What this app does") and that it follows fixed rules without AI;
+  - how nutrition values are calculated: estimates, cooked values and weight change rates, approximations and hard-to-estimate items, ranges, unmeasured values shown as unknown, strict-control note;
+  - source and data versions (attribution as in the footer);
+  - allergens: the allergen disclaimer, unknown treated as "may contain";
+  - health: not medical advice, presets as examples, medical guidance;
+  - what the app does not do;
+  - privacy: no analytics, cookies, ads, or external requests; only the language choice is stored; targets and conditions stay in memory and never enter the URL;
+  - open-source licenses, with a link to `/third-party-licenses.txt`, generated by `build.license` (Vite).
 - No contact address ([DECISIONS.md](../working/DECISIONS.md) "Stage 5.1 release plan" P7).
-- Comparison table (§3.3) and the ingredient table of the detail view (§3.4): the visible caption sits above the scrolling region and labels it; the table keeps a visually hidden `caption`, so the caption no longer scrolls with the table.
-- The estimates disclaimer appears on candidates, comparison, and detail views; the allergen disclaimer appears wherever allergen features appear.
-- A live region announces search results, replacements, and recalculations.
 
 ### 3.7 Shopping list
 
@@ -286,11 +302,20 @@ Japanese and Spanish use the same structure, for example `買い物リスト（2
 
 ## 4. Navigation and state
 
-- No router library (ADR-030 D2). `src/navigation/` wraps the History API: views `targets`, `candidates`, `comparison`, `detail` (with a recipe ID), `about`, and `shoppingList`. Only the detail view (`/recipes/<id>`) and the about page (`/about`) have their own paths; the others use `/` with the view name in `history.state`. `popstate` restores the view; if the view needs a search that is no longer in memory, the targets view is shown with the notice.
-- Application state lives in one `useReducer` behind a context (`src/state/`): the request, the evaluated pool, the session, the seed, the displayed set, the comparison selection, per-recipe adjustment states, and the shopping list (recipe IDs with their copied states in the order added, and the checked items). A new search resets everything except the targets draft and the shopping list. No store library.
-- The pool is recomputed only when the request changes; "show a different type", "exclude this one", and comparison use `selectCandidates` on the same pool.
+- No router library (ADR-030 D2). `src/navigation/` wraps the History API with the views `targets`, `candidates`, `comparison`, `detail` (with a recipe ID), `about`, and `shoppingList`.
+- Only the detail view (`/recipes/<id>`) and the about page (`/about`) have their own paths. The others use `/` with the view name in `history.state`.
+- `popstate` restores the view. If the view needs a search that is no longer in memory, the targets view is shown with the notice.
+- Application state lives in one `useReducer` behind a context (`src/state/`). No store library. The state holds:
+  - the request, the evaluated pool, the session, the seed, the displayed set, and the comparison selection;
+  - per-recipe adjustment states;
+  - the shopping list: recipe IDs with their copied states in the order added, and the checked items.
+- A new search resets everything except the targets draft and the shopping list.
+- The pool is recomputed only when the request changes. "Show a different type", "exclude this one", and comparison use `selectCandidates` on the same pool.
 - The seed starts at 0 for every new search and increases by 1 for each "show a different type" (ADR-029 D6).
-- The recommendation runs on the main thread; phone-class timing is measured against a threshold of about 100 ms at a 4× CPU slowdown (ADR-030 D10, revised): about 50 ms after Phase 9 Stage 9.3 (about 80 ms in Stage 5.4). The solver results that do not depend on the targets are added to the engine data after the first view is shown.
+- The recommendation runs on the main thread. Phone-class timing is measured against a threshold of about 100 ms at a 4× CPU slowdown (ADR-030 D10, revised).
+  - Release 7 with 130 recipes: about 54–59 ms median and 62–66 ms p90 ([DECISIONS.md](../working/DECISIONS.md) "Phase 10 acceptance").
+  - Earlier: about 80 ms in Stage 5.4; about 50 ms after Phase 9 Stage 9.3.
+- The solver results that do not depend on the targets are added to the engine data after the first view is shown.
 
 ## 5. Styling
 

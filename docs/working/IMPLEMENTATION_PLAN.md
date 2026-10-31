@@ -173,6 +173,7 @@ Status: **In progress (2026-10-31)**, from release 8 (`2aa0c7b`); the prompt was
 - Decisions before any implementation: the feature (free-text conditions or explanation text), the provider and model, the server endpoint and its privacy, the evaluation in four locales, the cost and limits, and the UX and failure states, recorded as ADRs with the SPEC scope change.
 - A contract in `shared/` with runtime validation, a thin provider adapter, and a deterministic fallback; tests without network.
 - An on-demand evaluation in four locales against agreed thresholds, after the owner approves any account or key; the UI in four locales; release 9 only after the owner's approval.
+- Changed on 2026-10-31 (ADR-034, revised again): the Workers AI models missed the thresholds, so the free text is read by a deterministic parser in the browser, with no AI, endpoint, or key. Stage 12.4: the parser, its word lists in four locales, tests, and the evaluation on a held-out half of the intents. Stage 12.5: the UI in four locales and E2E tests.
 
 Acceptance: the decisions recorded; the feature optional and confirmed by the user, with the app unchanged when AI is disabled or failing; the evaluation thresholds met or the owner's decision; no secret in the repository or the bundle; checks and CI pass.
 

@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "source": "Drafted by Claude on 2026-10-31 for ADR-034 D4 (Stage 12.3); original texts, not copied from any source.",
   "review": {
     "ja": "reviewed",
@@ -352,7 +352,8 @@
         "conditions": {
           "requiredFoods": [
             [
-              "egg"
+              "egg",
+              "egg_white"
             ],
             [
               "tomato"

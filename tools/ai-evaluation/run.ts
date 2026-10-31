@@ -1,25 +1,19 @@
 /**
  * Runs the evaluation set through the endpoint core with a given adapter, one request at
- * a time (a daily neuron allocation is spent predictably, and the order is fixed). The
- * run stops at the first `budget_spent`.
+ * a time in a fixed order. The run stops at the first `budget_spent`.
  */
 import { foods } from "../../content/foods.ts";
 import { forbiddenExpressions } from "../../content/glossary.ts";
 import type { SuggestionAdapter } from "../../server/ai/adapter.ts";
 import { fakeAdapter } from "../../server/ai/fake.ts";
-import type { PromptFood } from "../../server/ai/prompt.ts";
 import { handleSuggest } from "../../server/ai/suggest.ts";
+import { parseConditions, type ParserFood } from "../../shared/freeText/parse.ts";
 import type { Locale } from "../../shared/locales.ts";
 import type { ValidationContext } from "../../shared/suggestion.ts";
 import type { EvaluationSet } from "./cases.ts";
 import type { CaseResult } from "./metrics.ts";
 
 export const repositoryContext: ValidationContext = { foodIds: new Set(foods.map((food) => food.id)), forbiddenExpressions };
-
-/** The prompt dictionary of a locale from the repository foods (the Worker gets the same data at build time). */
-export function promptDictionary(locale: Locale): PromptFood[] {
-  return foods.map((food) => ({ id: food.id, name: food.names[locale], aliases: food.aliases[locale] }));
-}
 
 export async function runEvaluation(set: EvaluationSet, adapter: SuggestionAdapter, locales: readonly Locale[], context: ValidationContext = repositoryContext): Promise<CaseResult[]> {
   const results: CaseResult[] = [];
@@ -32,6 +26,16 @@ export async function runEvaluation(set: EvaluationSet, adapter: SuggestionAdapt
     }
   }
   return results;
+}
+
+/** The parser's dictionary of a locale from the repository foods (the browser builds the same from the bundles). */
+export function parserFoodsOf(locale: Locale): ParserFood[] {
+  return foods.map((food) => ({ id: food.id, terms: [food.names[locale], ...food.aliases[locale]], ...(food.proteinGroup === undefined ? {} : { proteinGroup: food.proteinGroup }) }));
+}
+
+/** The deterministic parser (ADR-034, revised again) behind the adapter interface, so its output passes the same validation. */
+export function parserAdapter(): SuggestionAdapter {
+  return fakeAdapter((request) => ({ output: JSON.stringify(parseConditions(request.text, request.locale, parserFoodsOf(request.locale))) }));
 }
 
 /** A fake that answers every case with its expected output: checks the pipeline, not a model. */

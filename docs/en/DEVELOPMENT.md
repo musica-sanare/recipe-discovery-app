@@ -71,13 +71,7 @@ npm ci
 | `npm run data:verify-cooking` | macOS only: check `data/composition/cooking.json` against the MEXT explanation PDF text ([DATA_SOURCES.md](DATA_SOURCES.md) "Cooking tables") |
 | `npm run report:composition` | Per recipe and ingredient, from the nutrition engine: exact, approximation (with the ADR-028 reasons), hard to estimate, not counted, fried; fails when a cooked state has no weight change rate |
 | `npm run eval:coverage` | How many validation recipes meet representative targets with default and adjusted amounts, computed by the recommendation engine ([DECISIONS.md](../working/DECISIONS.md) "Stage 0.6", "Stage 3.7") |
-| `npm run eval:ai` | On demand, never in CI: runs the 240 cases of `data/ai-evaluation/conditions.json` through the AI endpoint core and checks the ADR-034 D4 thresholds. `--adapter expected` (default) is a fake that returns the expected outputs; `--adapter workers-ai --model <id>` calls Workers AI within the free allocation (below). Options: `--locale ja` and `--intent <id>` (repeatable), `--cases` (one line per case), `--json` ([DECISIONS.md](../working/DECISIONS.md) "Stage 12.3 evaluation set and script", "Stage 12.3 Workers AI REST transport") |
-
-The Workers AI run needs an API token limited to Workers AI and the account ID. Copy `.env.example` to `.env` (git-ignored), fill in both, and run Node with the file. Start with a few intents and check `Usage` in the output, because every case spends neurons from the daily free allocation of 10,000. The run stops at the first `budget_spent`. Never upgrade the account to Workers Paid (ADR-034 D5, revised).
-
-```bash
-node --env-file=.env tools/evaluate-ai.ts --adapter workers-ai --model @cf/qwen/qwen3-30b-a3b-fp8 --intent chickpeas --cases
-```
+| `npm run eval:ai` | On demand, never in CI: runs the 240 cases of `data/ai-evaluation/conditions.json` through the AI endpoint core and checks the ADR-034 D4 thresholds. `--adapter parser` (default) runs the deterministic parser; `--adapter expected` is a fake that returns the expected outputs and checks the pipeline. `--split dev` is for tuning and `--split holdout` decides acceptance (default `all`). Options: `--locale ja` and `--intent <id>` (repeatable), `--cases` (one line per case), `--json` ([DECISIONS.md](../working/DECISIONS.md) "Stage 12.3 evaluation set and script", "Stage 12.4 deterministic parser") |
 
 ### Browser previews
 
@@ -102,10 +96,11 @@ CI (`.github/workflows/ci.yml`, GitHub Actions on `ubuntu-24.04`) runs on pushes
 index.html, src/        UI (React, Tailwind CSS; docs/en/UI_DESIGN.md): i18n/ typed ja/en/es/fr catalogs and engine code lists,
                         format/ locale formatting, navigation/ History API views, state/ reducer and engine calls,
                         views/ screens, testing/ axe-core helper
-shared/                 Schemas (Zod), constants, and types shared by UI, domain, content, and tools; the AI endpoint
-                        contract (suggestion.ts, ADR-034)
-server/ai/              Platform-neutral core of the optional AI endpoint, provider adapter interface, fake adapter,
-                        prompt (prompt.ts), Workers AI adapter (workers-ai.ts)
+shared/                 Schemas (Zod), constants, and types shared by UI, domain, content, and tools; the free-text
+                        conditions contract (suggestion.ts, ADR-034), parser and word lists (freeText/), search
+                        normalization (search.ts)
+server/ai/              Core of the free-text conditions pipeline, adapter interface, fake adapter (reshaped in
+                        Stage 12.4)
 domain/nutrition/       Pure, locale-free nutrition engine (ADR-028); tests next to the code
 domain/recommendation/  Pure, locale-free recommendation engine (ADR-029); tests next to the code
 domain/shopping/        Pure, locale-free shopping list aggregation (ADR-032); tests next to the code
@@ -115,7 +110,7 @@ platform/               Hosting-specific output: security headers (headers.ts), 
 tools/                  Build-time tools run directly by Node (TypeScript type stripping)
 generated/content/      Content bundles written by tools/build-content.ts (git-ignored)
 data/composition/       Extraction manifest and the tracked composition subset
-data/ai-evaluation/     Evaluation set of the AI free-text conditions (ADR-034 D4), read by tools/ai-evaluation/
+data/ai-evaluation/     Evaluation set of the free-text conditions (ADR-034 D4), read by tools/ai-evaluation/
 data/raw/               Original source files, such as the MEXT workbook (git-ignored)
 test/node/              Node-side tests
 test/ui/                jsdom tests of the app on the repository content (tsconfig.ui.json)

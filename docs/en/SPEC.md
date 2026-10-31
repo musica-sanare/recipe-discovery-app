@@ -45,11 +45,11 @@ Out of target: people following medically prescribed diets (for example protein 
 
 ### Added after the MVP
 - Shopping list (Phase 8, ADR-032): section 18.
-- Optional AI free-text conditions (Phase 12, ADR-034; planned, not released): the user describes a request in their own words and gets a labelled suggestion of conditions to apply or discard. Targets, allergens, and every calculation stay deterministic, and the app works fully without it.
+- Optional free-text conditions (Phase 12, ADR-034; planned, not released): the user describes a request in their own words, and the app reads conditions from the text with deterministic rules and shows them to apply or discard. No AI is used. Targets, allergens, and every calculation stay deterministic, and the app works fully without it.
 
 ### Out of scope for MVP
 - User accounts, server-side storage, daily or weekly meal planning.
-- AI at runtime other than the optional free-text conditions above (recipe generation, AI explanations, AI substitution suggestions).
+- AI at runtime (recipe generation, AI explanations, AI substitution suggestions, AI reading of free text).
 - Packaged-product nutrition (barcodes, Open Food Facts), prices, external service integrations, analytics.
 - Photos other than original photos owned by the project (none planned for the MVP).
 - Regional ingredient availability (only a note where an ingredient may be hard to find).
@@ -184,7 +184,7 @@ The rules are in [CONTENT_POLICY.md](CONTENT_POLICY.md). Summary:
 - No analytics or trackers by default.
 - Strict security headers (Content-Security-Policy and related headers) on all responses.
 - Any future server endpoint must validate inputs and outputs at runtime and must not log user targets or conditions.
-- Planned with ADR-034 (Phase 12): a same-origin endpoint receives only the typed free text and the locale when the user asks for an AI suggestion, and forwards them to Cloudflare Workers AI. It stores and logs no request body. Workers AI does not keep inputs and outputs after the request and does not train on them; the about page will say so before the feature is released. The feature runs only within the Workers AI free allocation; when that is used up for the day, the app works as without AI.
+- The free-text conditions (Phase 12, ADR-034) are read in the browser. The typed text is sent nowhere and is not stored.
 
 ## 14. Accessibility and UX
 

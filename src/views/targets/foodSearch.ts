@@ -6,7 +6,10 @@
 import type { CalcBundle, TextBundle } from "../../../shared/bundle";
 import type { ProteinGroup } from "../../../shared/content";
 import type { Locale } from "../../../shared/locales";
+import { normalizeForSearch } from "../../../shared/search";
 import type { FoodChoice } from "./draft";
+
+export { normalizeForSearch };
 
 export interface FoodOption extends FoodChoice {
   readonly kind: "food" | "group";
@@ -16,19 +19,6 @@ export interface FoodOption extends FoodChoice {
   readonly name?: string;
   /** Normalized names and aliases. */
   readonly terms: readonly string[];
-}
-
-/**
- * `ja`: NFKC, katakana folded to hiragana; `en`: NFKC and case folding; `es`: NFKC, case
- * and accent folding; `fr`: as `es`, and the ligatures œ and æ spelled out. Every locale
- * also folds case and width, which never hurts matching.
- */
-export function normalizeForSearch(locale: Locale, text: string): string {
-  let result = text.normalize("NFKC").toLowerCase().trim();
-  if (locale === "ja") result = result.replace(/[ァ-ヶ]/g, (char) => String.fromCharCode(char.charCodeAt(0) - 0x60));
-  if (locale === "es" || locale === "fr") result = result.normalize("NFD").replace(/\p{M}/gu, "").normalize("NFC");
-  if (locale === "fr") result = result.replaceAll("œ", "oe").replaceAll("æ", "ae");
-  return result;
 }
 
 const VOWEL_ROWS: readonly (readonly [string, string])[] = [

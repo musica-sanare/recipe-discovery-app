@@ -1,4 +1,4 @@
-<!-- source: docs/en/DEVELOPMENT.md blob 27fc1ab70512c31846248f2717d96e558a261432 -->
+<!-- source: docs/en/DEVELOPMENT.md blob 2559ea086de30bdbd829c6eb8f4f93607ba58e7d -->
 [English](../en/DEVELOPMENT.md) | 日本語 · [目次に戻る](README.md)
 
 > この文書は[英語版](../en/DEVELOPMENT.md)の翻訳。内容が異なる場合は英語版が優先する。
@@ -74,13 +74,7 @@ npm ci
 | `npm run data:verify-cooking` | macOS のみ：`data/composition/cooking.json` を文部科学省の説明 PDF のテキストと照らし合わせる（[DATA_SOURCES.md](DATA_SOURCES.md)「調理の表」） |
 | `npm run report:composition` | 栄養エンジンによる、レシピと材料ごとの集計：完全一致、近似（ADR-028 の理由つき）、推定困難、数えない、揚げ物。調理後の状態に重量変化率がないと失敗する |
 | `npm run eval:coverage` | 検証用レシピのうち、代表的な目標を既定の分量と調整後の分量で満たすものの数を、推薦エンジンで数える（[DECISIONS.md](../working/DECISIONS.md)（英語のみ）"Stage 0.6"、"Stage 3.7"） |
-| `npm run eval:ai` | 必要なときだけ実行し、CI では動かさない。`data/ai-evaluation/conditions.json` の 240 件を AI エンドポイントの中核に通し、ADR-034 D4 のしきい値を確かめる。`--adapter expected`（既定）は期待値をそのまま返す fake で、`--adapter workers-ai --model <id>` は無料枠の中で Workers AI を呼ぶ（下を参照）。オプションは `--locale ja` と `--intent <id>`（どちらも繰り返し指定できる）、`--cases`（1 件 1 行で出す）、`--json`（[DECISIONS.md](../working/DECISIONS.md)（英語のみ）"Stage 12.3 evaluation set and script"、"Stage 12.3 Workers AI REST transport"） |
-
-Workers AI での実行には、Workers AI だけに権限を絞った API トークンとアカウント ID がいる。`.env.example` を `.env`（Git の対象外）にコピーして両方を書き込み、そのファイルを指定して Node を動かす。どの件も 1 日 10,000 ニューロンの無料枠を使うので、まず数件の意図で試し、出力の `Usage` を確かめる。最初に `budget_spent` が出たところで実行は止まる。アカウントを Workers Paid に上げてはいけない（ADR-034 D5 改訂）。
-
-```bash
-node --env-file=.env tools/evaluate-ai.ts --adapter workers-ai --model @cf/qwen/qwen3-30b-a3b-fp8 --intent chickpeas --cases
-```
+| `npm run eval:ai` | 必要なときだけ実行し、CI では動かさない。`data/ai-evaluation/conditions.json` の 240 件を自由文の条件化の中核に通し、ADR-034 D4 のしきい値を確かめる。`--adapter parser`（既定）は決定論的なパーサーを動かす。`--adapter expected` は期待値をそのまま返す fake で、処理の流れを確かめる。`--split dev` は調整用で、合否は `--split holdout` で決める（既定は `all`）。オプションは `--locale ja` と `--intent <id>`（どちらも繰り返し指定できる）、`--cases`（1 件 1 行で出す）、`--json`（[DECISIONS.md](../working/DECISIONS.md)（英語のみ）"Stage 12.3 evaluation set and script"、"Stage 12.4 deterministic parser"） |
 
 ### ブラウザでのプレビュー
 
@@ -107,10 +101,11 @@ CI（`.github/workflows/ci.yml`、`ubuntu-24.04` 上の GitHub Actions）は、`
 index.html, src/        UI (React, Tailwind CSS; docs/en/UI_DESIGN.md): i18n/ typed ja/en/es/fr catalogs and engine code lists,
                         format/ locale formatting, navigation/ History API views, state/ reducer and engine calls,
                         views/ screens, testing/ axe-core helper
-shared/                 Schemas (Zod), constants, and types shared by UI, domain, content, and tools; the AI endpoint
-                        contract (suggestion.ts, ADR-034)
-server/ai/              Platform-neutral core of the optional AI endpoint, provider adapter interface, fake adapter,
-                        prompt (prompt.ts), Workers AI adapter (workers-ai.ts)
+shared/                 Schemas (Zod), constants, and types shared by UI, domain, content, and tools; the free-text
+                        conditions contract (suggestion.ts, ADR-034), parser and word lists (freeText/), search
+                        normalization (search.ts)
+server/ai/              Core of the free-text conditions pipeline, adapter interface, fake adapter (reshaped in
+                        Stage 12.4)
 domain/nutrition/       Pure, locale-free nutrition engine (ADR-028); tests next to the code
 domain/recommendation/  Pure, locale-free recommendation engine (ADR-029); tests next to the code
 domain/shopping/        Pure, locale-free shopping list aggregation (ADR-032); tests next to the code
@@ -120,7 +115,7 @@ platform/               Hosting-specific output: security headers (headers.ts), 
 tools/                  Build-time tools run directly by Node (TypeScript type stripping)
 generated/content/      Content bundles written by tools/build-content.ts (git-ignored)
 data/composition/       Extraction manifest and the tracked composition subset
-data/ai-evaluation/     Evaluation set of the AI free-text conditions (ADR-034 D4), read by tools/ai-evaluation/
+data/ai-evaluation/     Evaluation set of the free-text conditions (ADR-034 D4), read by tools/ai-evaluation/
 data/raw/               Original source files, such as the MEXT workbook (git-ignored)
 test/node/              Node-side tests
 test/ui/                jsdom tests of the app on the repository content (tsconfig.ui.json)

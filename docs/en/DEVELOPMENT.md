@@ -95,7 +95,9 @@ CI (`.github/workflows/ci.yml`, GitHub Actions on `ubuntu-24.04`) runs on pushes
 index.html, src/        UI (React, Tailwind CSS; docs/en/UI_DESIGN.md): i18n/ typed ja/en/es/fr catalogs and engine code lists,
                         format/ locale formatting, navigation/ History API views, state/ reducer and engine calls,
                         views/ screens, testing/ axe-core helper
-shared/                 Schemas (Zod), constants, and types shared by UI, domain, content, and tools
+shared/                 Schemas (Zod), constants, and types shared by UI, domain, content, and tools; the AI endpoint
+                        contract (suggestion.ts, ADR-034)
+server/ai/              Platform-neutral core of the optional AI endpoint, provider adapter interface, fake adapter
 domain/nutrition/       Pure, locale-free nutrition engine (ADR-028); tests next to the code
 domain/recommendation/  Pure, locale-free recommendation engine (ADR-029); tests next to the code
 domain/shopping/        Pure, locale-free shopping list aggregation (ADR-032); tests next to the code

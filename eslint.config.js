@@ -6,23 +6,29 @@ import tseslint from "typescript-eslint";
 
 // Module boundaries (docs/en/ARCHITECTURE.md "Layers and responsibilities").
 const BUILD_AND_PLATFORM = ["**/tools/**", "**/platform/**", "**/test/**"];
+const SERVER = ["**/server/**"];
 const UI_PACKAGES = ["react", "react-*", "react/*", "react-dom/*", "i18next", "i18next/*"];
 
 // The engines are pure: no UI, i18n, platform, or build-time code, and no locale.
 const DOMAIN_FORBIDDEN_IMPORTS = [
-  { group: ["**/src/**", ...BUILD_AND_PLATFORM], message: "The domain must not depend on UI, build, or platform code." },
+  { group: ["**/src/**", ...SERVER, ...BUILD_AND_PLATFORM], message: "The domain must not depend on UI, server, build, or platform code." },
   { group: UI_PACKAGES, message: "The domain must not depend on UI or i18n packages." },
 ];
 const SHARED_FORBIDDEN_IMPORTS = [
-  { group: ["**/src/**", "**/domain/**", ...BUILD_AND_PLATFORM], message: "Shared code must not depend on other layers." },
+  { group: ["**/src/**", "**/domain/**", ...SERVER, ...BUILD_AND_PLATFORM], message: "Shared code must not depend on other layers." },
   { group: UI_PACKAGES, message: "Shared code must not depend on UI or i18n packages." },
 ];
 // Content is data: it may use shared types only.
 const CONTENT_FORBIDDEN_IMPORTS = [
-  { group: ["**/src/**", "**/domain/**", ...BUILD_AND_PLATFORM], message: "Content may import shared types only." },
+  { group: ["**/src/**", "**/domain/**", ...SERVER, ...BUILD_AND_PLATFORM], message: "Content may import shared types only." },
   { group: UI_PACKAGES, message: "Content must not depend on UI or i18n packages." },
 ];
-const UI_FORBIDDEN_IMPORTS = [{ group: BUILD_AND_PLATFORM, message: "UI code must not import build-time or platform code." }];
+// The optional AI endpoint core (ADR-034): shared contract only; the dictionary comes in as data.
+const SERVER_FORBIDDEN_IMPORTS = [
+  { group: ["**/src/**", "**/domain/**", "**/content/**", ...BUILD_AND_PLATFORM], message: "Server code may import shared code only." },
+  { group: UI_PACKAGES, message: "Server code must not depend on UI or i18n packages." },
+];
+const UI_FORBIDDEN_IMPORTS = [{ group: [...SERVER, ...BUILD_AND_PLATFORM], message: "UI code must not import server, build-time, or platform code." }];
 
 export default tseslint.config(
   { ignores: ["dist", "coverage", "node_modules"] },
@@ -50,6 +56,10 @@ export default tseslint.config(
   {
     files: ["content/**/*.ts"],
     rules: { "no-restricted-imports": ["error", { patterns: CONTENT_FORBIDDEN_IMPORTS }] },
+  },
+  {
+    files: ["server/**/*.ts"],
+    rules: { "no-restricted-imports": ["error", { patterns: SERVER_FORBIDDEN_IMPORTS }] },
   },
   {
     files: ["shared/**/*.ts"],

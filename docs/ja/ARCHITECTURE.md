@@ -1,4 +1,4 @@
-<!-- source: docs/en/ARCHITECTURE.md blob 540e9d9ae05401334f28d460c44551ca616849e6 -->
+<!-- source: docs/en/ARCHITECTURE.md blob e931bbef556e1bba7e60338a142d85450d245064 -->
 [English](../en/ARCHITECTURE.md) | 日本語 · [目次に戻る](README.md)
 
 > この文書は[英語版](../en/ARCHITECTURE.md)の翻訳。内容が異なる場合は英語版が優先する。
@@ -43,7 +43,8 @@ flowchart TD
 | `domain/nutrition` | レシピの状態（人数、副菜、連動する材料、選んだ置き換え）に対する分量の決定、材料ごと・レシピごとの栄養、調理の状態の扱い、不確かさの区分、範囲、表示する値の丸め（ADR-028） | UI、i18n、ロケール、プラットフォーム、ネットワーク |
 | `domain/recommendation` | ハードな絞り込み、適合の評価、適合の段階、多様化、シードつきの再提案、範囲内での調整ソルバー、置き換えの提案、緩和の提案、矛盾の確認 | UI、i18n、ロケール、プラットフォーム、ネットワーク |
 | `domain/shopping` | 買い物リストの集計（ADR-032）：`domain/nutrition` の `resolveAmounts` を使ったレシピの状態からの品目、食品 ID でのまとめ、欄、並び順、揚げ油、家庭での計量の合計。栄養値は扱わない | UI、i18n、ロケール、プラットフォーム、ネットワーク |
-| `shared` | ビルドツール、ドメイン、UI が使うコンテンツのスキーマと型、ID、単位、定数 | UI、プラットフォーム |
+| `shared` | ビルドツール、ドメイン、UI が使うコンテンツのスキーマと型、ID、単位、定数。任意の AI エンドポイントの HTTP の契約と出力の検証（`shared/suggestion.ts`、§7） | UI、プラットフォーム |
+| `server/ai` | 任意の AI エンドポイントの、プラットフォームによらない中核（ADR-034）：リクエストの確認、タイムアウトつきの提供者の呼び出し、出力の検証、エラーの応答。提供者のアダプターの interface と、テスト用の fake アダプター | UI、ドメイン、コンテンツ、プラットフォーム |
 | `content/`（データ） | レシピ、食品辞書、アレルゲンの結び付け、置き換え、多言語のテキスト、用語集 | — |
 | `tools/`（ビルド時） | 成分の抽出、コンテンツ検証、ポリシーの lint、栄養のスナップショット、ヘッダーの生成 | UI |
 | `src/`（UI） | React アプリ、ナビゲーション、i18n、書式、状態、アクセシビリティ（[UI_DESIGN.md](UI_DESIGN.md)） | プラットフォーム固有の API |
@@ -106,14 +107,52 @@ flowchart TD
 
 - 本番の出力は、ふつうの静的ビルド（`dist/`）だ。Cloudflare 固有なのは `platform/cloudflare/` と生成したヘッダーのファイルだけだ。
 - ドメイン、コンテンツ、UI のコードは Cloudflare の実行時 API を使わない。テストは Node で動く。
-- MVP に Worker はいらない。将来サーバーの機能（任意の AI など）を加えるなら、HTTP の契約を `shared/` に定め、提供者ごとの実装は薄いアダプターに閉じ込める。
+- 静的なアプリに Worker はいらない。サーバーの機能は HTTP の契約を `shared/` に定め、提供者ごとの実装を薄いアダプターに閉じ込める。任意の AI エンドポイント（ADR-034）もこれに従う。契約は `shared/suggestion.ts`、プラットフォームによらない中核とアダプターの interface は `server/ai/` に置き、Cloudflare 固有になるのは `platform/cloudflare/` の薄いラッパーだけだ。実際の提供者のアダプター、Worker、ラッパーはまだない（ステージ 12.3 と 12.5）。
 - デプロイ手順（[DEPLOYMENT.md](DEPLOYMENT.md)）では、Cloudflare（`platform/cloudflare/wrangler.jsonc`）と、同じ `dist/` をほかの静的ホストで配信する方法を説明している。`/assets/` の下のハッシュつきファイルには、生成した `_headers` で 1 年間の immutable なキャッシュのルールを付ける。
+
+### AI による自由入力の条件の契約
+
+エンドポイントは、利用者が自分の言葉で書いた文から検索条件の提案を作る。利用者は提案を適用するか破棄し、適用した条件だけが決定論的なエンジンに渡る（ADR-034 D1、D6）。出力はすべてエンドポイントで検証し、ブラウザでもう一度検証する。どこかで失敗したら、フォームは変わらない。
+
+```mermaid
+sequenceDiagram
+    participant B as ブラウザ
+    participant E as エンドポイント（server/ai）
+    participant A as 提供者のアダプター
+    B->>E: POST /api/suggest-conditions {text, locale}
+    E->>E: リクエストを確認
+    E->>A: 文とロケール
+    A-->>E: 出力の生テキストかアダプターのエラー
+    E->>E: 出力を検証
+    E-->>B: 条件、対象外、またはエラー
+    B->>B: 再検証して、提案かフォールバック
+```
+
+- **リクエスト**：`POST /api/suggest-conditions` に JSON `{ "text": string, "locale": "ja" | "en" | "es" | "fr" }` を送る。文は前後の空白を除いて 1〜200 個の Unicode コードポイント。ほかのフィールドがあれば拒否するので、目標、フォームの条件、アレルゲン、履歴は送れない。
+- **成功（200）**：`{ "kind": "conditions", "conditions": … }` か `{ "kind": "out_of_scope", "topic": "allergens" | "targets" | "other" }`。条件の形はエンジンの `Conditions` と同じで、`requiredFoods`（食品 ID 5 個までの「どれか一つ」の組を 5 組まで）、`excludedFoods`（食品 ID 10 個まで）、省略できる `maxMinutes`（5〜240 の整数。エンジンの入力の上下限）、省略できる `equipment`（利用者が持っている調理器具）、`cuisines` からなる。自由なテキストのフィールドはない。
+- **エラー**：`{ "kind": "error", "error": code }`。
+
+| コード | ステータス | 起きるとき |
+|---|---|---|
+| `invalid_request` | 400 | リクエストがスキーマに合わない。提供者は呼ばない |
+| `disabled` | 503 | 環境変数のスイッチが切れている（ADR-034 D5）。ブラウザは 404 も同じに扱う |
+| `rate_limited` | 429 | エンドポイントか提供者のレート制限 |
+| `budget_spent` | 503 | 提供者の利用額の上限に達した |
+| `timeout` | 504 | 提供者が 7 秒以内に答えない |
+| `refused` | 502 | 提供者がリクエストを断った |
+| `invalid_output` | 502 | 出力が検証を通らない |
+| `unavailable` | 502 | 提供者のそのほかの失敗 |
+
+- **出力の検証**（`validateProviderOutput`）は次の順に進む。4,000 文字以内か。リクエストのロケールによらず、4 つのロケールすべてで `content/glossary.ts` の禁止表現がないか。JSON として読めるか。禁止した語幹（目標、栄養素、アレルゲン、健康、火力、調理時間、自由なテキスト）を含むキーがないか。厳格なスキーマ（許したフィールドと列挙値だけ、長さの上限）に合うか。食品 ID がすべて辞書にあるか。同じ食品が必須と除外の両方にないか。重複は取り除く。中核は数えたり評価したりするために拒否の理由を返すが、文そのものは返さない。
+- **フォールバック**（ブラウザの `interpretResponse`）：応答を同じ規則でもう一度検証する。提案なら確認のために表示する。対象外のリクエストには `ai.outOfScope.<topic>` を出す（アレルゲンならアレルゲン欄への案内）。失敗はすべて `ai.error.<code>` を出す。ブラウザだけで起きる `offline`、8 秒でのブラウザのタイムアウト、条件が一つもない提案の `empty` も含む。カタログの文言は UI と一緒に加える（ステージ 12.4）。
+- **アダプター**：`SuggestionAdapter.suggest(request, signal)` は、提供者の出力の生テキストを返すか、`rate_limited`、`budget_spent`、`timeout`、`refused`、`unavailable` のどれかを持つ `AdapterError` を投げる。中核はこれをタイムアウトと競わせるので、中断のシグナルを無視するアダプターでもタイムアウトする。テストは `server/ai/fake.ts` を使い、ネットワークには出ない。
 
 ## 8. セキュリティとプライバシー
 
 - 厳格な Content-Security-Policy（`'self'` のみ）、`X-Content-Type-Options: nosniff`、`Referrer-Policy`、制限の強い `Permissions-Policy`、`frame-ancestors 'none'`。
 - 実行時にサードパーティのスクリプト、フォント、画像を使わない。
-- MVP では利用者のデータがブラウザの外に出ない。目標と条件は URL に入れない。
+- 任意の AI の機能を使わなければ、利用者のデータはブラウザの外に出ない。利用者が AI の提案を求めたときは、自由入力の文とロケールだけを送る（ADR-015 改訂）。リクエストのスキーマはほかのフィールドをすべて拒否する。目標と条件は URL に入れない。
+- AI エンドポイントの中核は何もログに残さず、リクエストの文を返すことも記録することもない。AI の出力には栄養値、アレルゲン、健康に関する記述、加熱の温度や時間、自由なテキストが入らず、エンドポイントとブラウザの両方で検証する（§7）。
 - 依存パッケージのインストールスクリプトは、許可リストの方針で管理する（フェーズ 0）。
 
 ## 9. テストの方針

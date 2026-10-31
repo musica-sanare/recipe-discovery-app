@@ -1,4 +1,4 @@
-<!-- source: docs/en/DEVELOPMENT.md blob d559d5d0ca2af57f6135e39eee9821e30fc5aea4 -->
+<!-- source: docs/en/DEVELOPMENT.md blob e8e4e47d1772b432decfa28927b7d5911e4f6a42 -->
 [English](../en/DEVELOPMENT.md) | 日本語 · [目次に戻る](README.md)
 
 > この文書は[英語版](../en/DEVELOPMENT.md)の翻訳。内容が異なる場合は英語版が優先する。
@@ -100,7 +100,9 @@ CI（`.github/workflows/ci.yml`、`ubuntu-24.04` 上の GitHub Actions）は、`
 index.html, src/        UI (React, Tailwind CSS; docs/en/UI_DESIGN.md): i18n/ typed ja/en/es/fr catalogs and engine code lists,
                         format/ locale formatting, navigation/ History API views, state/ reducer and engine calls,
                         views/ screens, testing/ axe-core helper
-shared/                 Schemas (Zod), constants, and types shared by UI, domain, content, and tools
+shared/                 Schemas (Zod), constants, and types shared by UI, domain, content, and tools; the AI endpoint
+                        contract (suggestion.ts, ADR-034)
+server/ai/              Platform-neutral core of the optional AI endpoint, provider adapter interface, fake adapter
 domain/nutrition/       Pure, locale-free nutrition engine (ADR-028); tests next to the code
 domain/recommendation/  Pure, locale-free recommendation engine (ADR-029); tests next to the code
 domain/shopping/        Pure, locale-free shopping list aggregation (ADR-032); tests next to the code

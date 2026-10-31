@@ -40,7 +40,8 @@ flowchart TD
 | `domain/nutrition` | Amount resolution for a recipe state (servings, sides, linked ingredients, chosen substitutions), per-ingredient and per-recipe nutrition, cooking-state handling, uncertainty classification, ranges, rounding for display values (ADR-028) | UI, i18n, locale, platform, network |
 | `domain/recommendation` | Hard filters, fit evaluation, fit tiers, diversification, seeded re-suggestion, bounded adjustment solver, substitution suggestions, relaxation suggestions, contradiction checks | UI, i18n, locale, platform, network |
 | `domain/shopping` | Shopping list aggregation (ADR-032): items from recipe states with `resolveAmounts` of `domain/nutrition`, combination by food ID, sections, order, frying oil, household measure totals; no nutrition values | UI, i18n, locale, platform, network |
-| `shared` | Content schemas and types, IDs, units, constants used by build tools, domain, and UI | UI, platform |
+| `shared` | Content schemas and types, IDs, units, constants used by build tools, domain, and UI; the HTTP contract and output validation of the optional AI endpoint (`shared/suggestion.ts`, §7) | UI, platform |
+| `server/ai` | Platform-neutral core of the optional AI endpoint (ADR-034): request check, provider call with a timeout, output validation, error responses; the provider adapter interface and a fake adapter for tests | UI, domain, content, platform |
 | `content/` (data) | Recipes, food dictionary, allergen links, substitutions, localized texts, glossary | — |
 | `tools/` (build time) | Composition extraction, content validation, policy lint, nutrition snapshots, header generation | UI |
 | `src/` (UI) | React app, navigation, i18n, formatting, state, accessibility ([UI_DESIGN.md](UI_DESIGN.md)) | Platform-specific APIs |
@@ -103,14 +104,52 @@ Timing measured in the browser:
 
 - The production output is a plain static build (`dist/`). Only `platform/cloudflare/` and the generated header file are Cloudflare-specific.
 - No Cloudflare runtime APIs are used by domain, content, or UI code. Tests run in Node.
-- The MVP does not need a Worker. A future server feature (for example optional AI) must define its HTTP contract in `shared/` and keep the provider-specific implementation in a thin adapter.
+- The static app needs no Worker. A server feature defines its HTTP contract in `shared/` and keeps the provider-specific implementation in a thin adapter. The optional AI endpoint (ADR-034) follows this: the contract is `shared/suggestion.ts`, the platform-neutral core and the adapter interface are in `server/ai/`, and only a thin wrapper in `platform/cloudflare/` will be Cloudflare-specific. The real provider adapter, the Worker, and the wrapper are not built yet (Stages 12.3 and 12.5).
 - The deployment runbook ([DEPLOYMENT.md](DEPLOYMENT.md)) describes Cloudflare (`platform/cloudflare/wrangler.jsonc`) and how to serve the same `dist/` from other static hosts. Hashed files under `/assets/` get a one-year immutable cache rule in the generated `_headers`.
+
+### AI free-text conditions contract
+
+The endpoint turns the user's free text into suggested search conditions; the user applies or discards them, and only applied conditions reach the deterministic engines (ADR-034 D1, D6). Every output is validated at the endpoint and again in the browser, and any failure leaves the form unchanged.
+
+```mermaid
+sequenceDiagram
+    participant B as Browser
+    participant E as Endpoint (server/ai)
+    participant A as Provider adapter
+    B->>E: POST /api/suggest-conditions {text, locale}
+    E->>E: Check the request
+    E->>A: Text and locale
+    A-->>E: Raw output text or adapter error
+    E->>E: Validate the output
+    E-->>B: Conditions, out of scope, or error
+    B->>B: Validate again, then suggestion or fallback
+```
+
+- **Request**: `POST /api/suggest-conditions` with JSON `{ "text": string, "locale": "ja" | "en" | "es" | "fr" }`. The text has 1–200 Unicode code points after trimming. Any other field is rejected, so targets, form conditions, allergens, and history cannot be sent.
+- **Success (200)**: `{ "kind": "conditions", "conditions": … }` or `{ "kind": "out_of_scope", "topic": "allergens" | "targets" | "other" }`. Conditions have the shape of the engine's `Conditions`: `requiredFoods` (up to 5 any-of sets of up to 5 food IDs), `excludedFoods` (up to 10 food IDs), optional `maxMinutes` (a whole number from 5 to 240, the engine's input limits), optional `equipment` (the equipment the user has), and `cuisines`. There is no free-text field.
+- **Errors**: `{ "kind": "error", "error": code }`:
+
+| Code | Status | When |
+|---|---|---|
+| `invalid_request` | 400 | The request fails the request schema; the provider is not called |
+| `disabled` | 503 | The environment switch is off (ADR-034 D5); the browser treats a 404 the same way |
+| `rate_limited` | 429 | The endpoint's or the provider's rate limit |
+| `budget_spent` | 503 | The provider's spend limit is reached |
+| `timeout` | 504 | No provider answer within 7 s |
+| `refused` | 502 | The provider refused the request |
+| `invalid_output` | 502 | The output fails validation |
+| `unavailable` | 502 | Any other provider failure |
+
+- **Output validation** (`validateProviderOutput`), in order: at most 4,000 characters; no forbidden expression of `content/glossary.ts` in any of the four locales, whatever the request locale; valid JSON; no key containing a forbidden stem (targets, nutrients, allergens, health, heat, cooking time, free text); the strict schema (allowed fields and enum values only, length limits); every food ID in the dictionary; no food both required and excluded. Duplicates are removed. The core returns the rejection reason for counts and the evaluation, never the text.
+- **Fallback** (`interpretResponse` in the browser): the response is validated again with the same rules. A suggestion is shown for confirmation; an out-of-scope request shows `ai.outOfScope.<topic>` (for allergens, a pointer to the allergen field); every failure shows `ai.error.<code>`, including the browser-only `offline`, a browser timeout after 8 s, and `empty` for a suggestion without any condition. The catalog strings are added with the UI (Stage 12.4).
+- **Adapter**: `SuggestionAdapter.suggest(request, signal)` returns the provider's raw output text or throws `AdapterError` with `rate_limited`, `budget_spent`, `timeout`, `refused`, or `unavailable`. The core races it against the timeout, so an adapter that ignores the abort signal still times out. Tests use `server/ai/fake.ts` and never the network.
 
 ## 8. Security and privacy
 
 - Strict Content-Security-Policy (`'self'` only), `X-Content-Type-Options: nosniff`, `Referrer-Policy`, restrictive `Permissions-Policy`, `frame-ancestors 'none'`.
 - No third-party scripts, fonts, or images at runtime.
-- No user data leaves the browser in the MVP. Targets and conditions are never put in URLs.
+- Without the optional AI feature, no user data leaves the browser. When the user asks for an AI suggestion, only the free text and the locale are sent (ADR-015 revised); the request schema rejects every other field. Targets and conditions are never put in URLs.
+- The AI endpoint core logs nothing and never returns or records the request text. AI outputs hold no nutrition values, allergens, health statements, cooking temperatures or times, or free text, and are validated at the endpoint and in the browser (§7).
 - Dependency install scripts are governed by an allowlist policy (Phase 0).
 
 ## 9. Testing strategy

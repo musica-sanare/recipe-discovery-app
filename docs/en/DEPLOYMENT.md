@@ -44,19 +44,24 @@ The Worker is assets-only. `platform/cloudflare/wrangler.jsonc` sets `name`, `co
 ### Release to production
 
 1. The release commit is on `dev`, and CI passed on it.
-2. The owner fast-forwards `main` to that commit and pushes. The push deploys:
+2. The owner merges `dev` into `main` by hand, in one of two ways. The update of `main` deploys.
+   - Locally, then push:
 
-   ```bash
-   git switch main
-   ```
+     ```bash
+     git switch main
+     ```
 
-   ```bash
-   git merge --ff-only <commit>
-   ```
+     ```bash
+     git merge dev
+     ```
 
-   ```bash
-   git push origin main
-   ```
+     ```bash
+     git push origin main
+     ```
+
+   - Through a GitHub pull request from `dev` to `main`, merged with a merge commit. Do not squash or rebase: that would put commits on `main` that are not on `dev`.
+
+   Either way, `main` gets a merge commit with the same files as the `dev` commit. Nothing else is committed to `main`.
 
 3. Workers Builds runs the build command, then the deploy command (see "Build settings"). The build log is under the Worker's **Deployments** in the dashboard, and the GitHub commit gets a check run.
 4. Verify the deployed site (see "Verify after a deploy").
@@ -112,7 +117,7 @@ On https://recipe-discovery.musica-sanare.workers.dev:
 
 ### Rollback
 
-The primary rollback goes through Git: revert the change on `dev`, wait for CI, then fast-forward `main` and push. Workers Builds deploys the result.
+The primary rollback goes through Git: revert the change on `dev`, wait for CI, then merge `dev` into `main` as in "Release to production". Workers Builds deploys the result.
 
 For an urgent rollback, the owner can pick an earlier version in the dashboard under **Deployments** → **Rollback** (the 100 most recent versions). The next push to `main` deploys `main` again, so follow up with the Git revert. Whether a dashboard rollback also restores that version's static assets is 要確認.
 

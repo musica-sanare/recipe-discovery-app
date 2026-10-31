@@ -1,4 +1,4 @@
-<!-- source: docs/en/DEPLOYMENT.md blob a2594e6ebb9bac475cbbcb78eb851c2a97cf98b7 -->
+<!-- source: docs/en/DEPLOYMENT.md blob df78ed9c90463d9680fe58f08ab0011c700f73b3 -->
 [English](../en/DEPLOYMENT.md) | 日本語 · [目次に戻る](README.md)
 
 > この文書は[英語版](../en/DEPLOYMENT.md)の翻訳。内容が異なる場合は英語版が優先する。
@@ -47,19 +47,24 @@ Worker はアセットだけで、スクリプトを持たない。`platform/clo
 ### 本番へのリリース
 
 1. リリースするコミットが `dev` にあり、そのコミットで CI が通っている。
-2. オーナーが `main` をそのコミットまで早送りして push する。この push がデプロイになる：
+2. オーナーが手作業で `dev` を `main` にマージする。方法は次の 2 つのどちらかだ。`main` が更新されるとデプロイになる。
+   - ローカルでマージして push する：
 
-   ```bash
-   git switch main
-   ```
+     ```bash
+     git switch main
+     ```
 
-   ```bash
-   git merge --ff-only <commit>
-   ```
+     ```bash
+     git merge dev
+     ```
 
-   ```bash
-   git push origin main
-   ```
+     ```bash
+     git push origin main
+     ```
+
+   - GitHub で `dev` から `main` への pull request を作り、マージコミットでマージする。squash や rebase は使わない。`dev` にないコミットが `main` にできてしまうからだ。
+
+   どちらでも、`main` には `dev` のコミットと同じファイルを持つマージコミットができる。それ以外のコミットは `main` に入れない。
 
 3. Workers Builds がビルドコマンドを実行し、続けてデプロイコマンドを実行する（「ビルドの設定」を参照）。ビルドのログはダッシュボードの Worker の **Deployments** にあり、GitHub のコミットにはチェックが付く。
 4. デプロイしたサイトを確かめる（「デプロイ後の確認」を参照）。
@@ -115,7 +120,7 @@ https://recipe-discovery.musica-sanare.workers.dev で次を確かめる：
 
 ### ロールバック
 
-主な方法は Git を通す。`dev` で変更を revert し、CI を待ってから `main` を早送りして push する。その結果を Workers Builds がデプロイする。
+主な方法は Git を通す。`dev` で変更を revert し、CI を待ってから「本番へのリリース」と同じ手順で `dev` を `main` にマージする。その結果を Workers Builds がデプロイする。
 
 急ぐときは、オーナーがダッシュボードの **Deployments** → **Rollback** で前の版を選べる（直近 100 版まで）。次に `main` へ push すると `main` の内容がまたデプロイされるので、あとで Git の revert も行う。ダッシュボードのロールバックでその版の静的アセットまで戻るかは要確認。
 

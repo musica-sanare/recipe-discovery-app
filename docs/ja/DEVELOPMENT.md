@@ -1,4 +1,4 @@
-<!-- source: docs/en/DEVELOPMENT.md blob dbc108aebae9f2591cd8597e2c3926c4d2b11810 -->
+<!-- source: docs/en/DEVELOPMENT.md blob 658d1ed5443bfdf1b72f2700f8c4846f67f82794 -->
 [English](../en/DEVELOPMENT.md) | 日本語 · [目次に戻る](README.md)
 
 > この文書は[英語版](../en/DEVELOPMENT.md)の翻訳。内容が異なる場合は英語版が優先する。
@@ -103,7 +103,8 @@ index.html, src/        UI (React, Tailwind CSS; docs/en/UI_DESIGN.md): i18n/ ty
                         views/ screens, testing/ axe-core helper
 shared/                 Schemas (Zod), constants, and types shared by UI, domain, content, and tools; the AI endpoint
                         contract (suggestion.ts, ADR-034)
-server/ai/              Platform-neutral core of the optional AI endpoint, provider adapter interface, fake adapter
+server/ai/              Platform-neutral core of the optional AI endpoint, provider adapter interface, fake adapter,
+                        prompt (prompt.ts), Workers AI adapter (workers-ai.ts)
 domain/nutrition/       Pure, locale-free nutrition engine (ADR-028); tests next to the code
 domain/recommendation/  Pure, locale-free recommendation engine (ADR-029); tests next to the code
 domain/shopping/        Pure, locale-free shopping list aggregation (ADR-032); tests next to the code

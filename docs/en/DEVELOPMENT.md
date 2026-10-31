@@ -98,7 +98,8 @@ index.html, src/        UI (React, Tailwind CSS; docs/en/UI_DESIGN.md): i18n/ ty
                         views/ screens, testing/ axe-core helper
 shared/                 Schemas (Zod), constants, and types shared by UI, domain, content, and tools; the AI endpoint
                         contract (suggestion.ts, ADR-034)
-server/ai/              Platform-neutral core of the optional AI endpoint, provider adapter interface, fake adapter
+server/ai/              Platform-neutral core of the optional AI endpoint, provider adapter interface, fake adapter,
+                        prompt (prompt.ts), Workers AI adapter (workers-ai.ts)
 domain/nutrition/       Pure, locale-free nutrition engine (ADR-028); tests next to the code
 domain/recommendation/  Pure, locale-free recommendation engine (ADR-029); tests next to the code
 domain/shopping/        Pure, locale-free shopping list aggregation (ADR-032); tests next to the code

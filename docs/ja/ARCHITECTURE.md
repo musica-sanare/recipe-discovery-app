@@ -1,4 +1,4 @@
-<!-- source: docs/en/ARCHITECTURE.md blob cc5635537a01198a9d56586989ac00d3714325d3 -->
+<!-- source: docs/en/ARCHITECTURE.md blob 62ba67d35273d08bac16efa03463947f27a166a2 -->
 [English](../en/ARCHITECTURE.md) | 日本語 · [目次に戻る](README.md)
 
 > この文書は[英語版](../en/ARCHITECTURE.md)の翻訳。内容が異なる場合は英語版が優先する。
@@ -146,6 +146,7 @@ sequenceDiagram
 - **出力の検証**（`validateProviderOutput`）は次の順に進む。4,000 文字以内か。リクエストのロケールによらず、4 つのロケールすべてで `content/glossary.ts` の禁止表現がないか。JSON として読めるか。禁止した語幹（目標、栄養素、アレルゲン、健康、火力、調理時間、自由なテキスト）を含むキーがないか。厳格なスキーマ（許したフィールドと列挙値だけ、長さの上限）に合うか。食品 ID がすべて辞書にあるか。同じ食品が必須と除外の両方にないか。重複は取り除く。中核は数えたり評価したりするために拒否の理由を返すが、文そのものは返さない。
 - **フォールバック**（ブラウザの `interpretResponse`）：応答を同じ規則でもう一度検証する。提案なら確認のために表示する。対象外のリクエストには `ai.outOfScope.<topic>` を出す（アレルゲンならアレルゲン欄への案内）。失敗はすべて `ai.error.<code>` を出す。ブラウザだけで起きる `offline`、8 秒でのブラウザのタイムアウト、条件が一つもない提案の `empty` も含む。カタログの文言は UI と一緒に加える（ステージ 12.4）。
 - **アダプター**：`SuggestionAdapter.suggest(request, signal)` は、提供者の出力の生テキストを返すか、`rate_limited`、`budget_spent`、`timeout`、`refused`、`unavailable` のどれかを持つ `AdapterError` を投げる。中核はこれをタイムアウトと競わせるので、中断のシグナルを無視するアダプターでもタイムアウトする。テストは `server/ai/fake.ts` を使い、ネットワークには出ない。
+- **Workers AI のアダプター**（`server/ai/workers-ai.ts`、ADR-034 D2 改訂）：`server/ai/prompt.ts` のプロンプト（ルール、列挙値、リクエストのロケールの辞書。リクエストの文は区切ったデータとして渡す）、`response_format` 用の JSON Schema、出力の上限 400 トークン、temperature 0 を送る。文は `response` か最初のチャット応答から読む。Workers AI のエラー 3036（1 日の無料枠を使い切った）は `budget_spent`、3040 は `rate_limited`、3007 と 3008 は `timeout`、それ以外は `unavailable` に対応させる。通信の手段（Worker のバインディングか REST API）は外から渡すので、このモジュール自体は通信しない。
 
 ## 8. セキュリティとプライバシー
 

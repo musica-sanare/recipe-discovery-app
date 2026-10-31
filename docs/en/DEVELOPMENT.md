@@ -71,7 +71,13 @@ npm ci
 | `npm run data:verify-cooking` | macOS only: check `data/composition/cooking.json` against the MEXT explanation PDF text ([DATA_SOURCES.md](DATA_SOURCES.md) "Cooking tables") |
 | `npm run report:composition` | Per recipe and ingredient, from the nutrition engine: exact, approximation (with the ADR-028 reasons), hard to estimate, not counted, fried; fails when a cooked state has no weight change rate |
 | `npm run eval:coverage` | How many validation recipes meet representative targets with default and adjusted amounts, computed by the recommendation engine ([DECISIONS.md](../working/DECISIONS.md) "Stage 0.6", "Stage 3.7") |
-| `npm run eval:ai` | On demand, never in CI: runs the 240 cases of `data/ai-evaluation/conditions.json` through the AI endpoint core and checks the ADR-034 D4 thresholds. Options: `--locale ja` (repeatable), `--json`. Only the fake adapter `expected` exists until Workers AI access is approved ([DECISIONS.md](../working/DECISIONS.md) "Stage 12.3 evaluation set and script") |
+| `npm run eval:ai` | On demand, never in CI: runs the 240 cases of `data/ai-evaluation/conditions.json` through the AI endpoint core and checks the ADR-034 D4 thresholds. `--adapter expected` (default) is a fake that returns the expected outputs; `--adapter workers-ai --model <id>` calls Workers AI within the free allocation (below). Options: `--locale ja` and `--intent <id>` (repeatable), `--cases` (one line per case), `--json` ([DECISIONS.md](../working/DECISIONS.md) "Stage 12.3 evaluation set and script", "Stage 12.3 Workers AI REST transport") |
+
+The Workers AI run needs an API token limited to Workers AI and the account ID. Copy `.env.example` to `.env` (git-ignored), fill in both, and run Node with the file. Start with a few intents and check `Usage` in the output, because every case spends neurons from the daily free allocation of 10,000. The run stops at the first `budget_spent`. Never upgrade the account to Workers Paid (ADR-034 D5, revised).
+
+```bash
+node --env-file=.env tools/evaluate-ai.ts --adapter workers-ai --model @cf/qwen/qwen3-30b-a3b-fp8 --intent chickpeas --cases
+```
 
 ### Browser previews
 

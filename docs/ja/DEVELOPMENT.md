@@ -1,4 +1,4 @@
-<!-- source: docs/en/DEVELOPMENT.md blob 658d1ed5443bfdf1b72f2700f8c4846f67f82794 -->
+<!-- source: docs/en/DEVELOPMENT.md blob 4ad99fecd0ec675a6553653e5e4e972c5502d917 -->
 [English](../en/DEVELOPMENT.md) | 日本語 · [目次に戻る](README.md)
 
 > この文書は[英語版](../en/DEVELOPMENT.md)の翻訳。内容が異なる場合は英語版が優先する。
@@ -74,7 +74,13 @@ npm ci
 | `npm run data:verify-cooking` | macOS のみ：`data/composition/cooking.json` を文部科学省の説明 PDF のテキストと照らし合わせる（[DATA_SOURCES.md](DATA_SOURCES.md)「調理の表」） |
 | `npm run report:composition` | 栄養エンジンによる、レシピと材料ごとの集計：完全一致、近似（ADR-028 の理由つき）、推定困難、数えない、揚げ物。調理後の状態に重量変化率がないと失敗する |
 | `npm run eval:coverage` | 検証用レシピのうち、代表的な目標を既定の分量と調整後の分量で満たすものの数を、推薦エンジンで数える（[DECISIONS.md](../working/DECISIONS.md)（英語のみ）"Stage 0.6"、"Stage 3.7"） |
-| `npm run eval:ai` | 必要なときだけ実行し、CI では動かさない。`data/ai-evaluation/conditions.json` の 240 件を AI エンドポイントの中核に通し、ADR-034 D4 のしきい値を確かめる。オプションは `--locale ja`（繰り返し指定できる）と `--json`。Workers AI の利用が承認されるまでは、fake アダプター `expected` だけがある（[DECISIONS.md](../working/DECISIONS.md)（英語のみ）"Stage 12.3 evaluation set and script"） |
+| `npm run eval:ai` | 必要なときだけ実行し、CI では動かさない。`data/ai-evaluation/conditions.json` の 240 件を AI エンドポイントの中核に通し、ADR-034 D4 のしきい値を確かめる。`--adapter expected`（既定）は期待値をそのまま返す fake で、`--adapter workers-ai --model <id>` は無料枠の中で Workers AI を呼ぶ（下を参照）。オプションは `--locale ja` と `--intent <id>`（どちらも繰り返し指定できる）、`--cases`（1 件 1 行で出す）、`--json`（[DECISIONS.md](../working/DECISIONS.md)（英語のみ）"Stage 12.3 evaluation set and script"、"Stage 12.3 Workers AI REST transport"） |
+
+Workers AI での実行には、Workers AI だけに権限を絞った API トークンとアカウント ID がいる。`.env.example` を `.env`（Git の対象外）にコピーして両方を書き込み、そのファイルを指定して Node を動かす。どの件も 1 日 10,000 ニューロンの無料枠を使うので、まず数件の意図で試し、出力の `Usage` を確かめる。最初に `budget_spent` が出たところで実行は止まる。アカウントを Workers Paid に上げてはいけない（ADR-034 D5 改訂）。
+
+```bash
+node --env-file=.env tools/evaluate-ai.ts --adapter workers-ai --model @cf/qwen/qwen3-30b-a3b-fp8 --intent chickpeas --cases
+```
 
 ### ブラウザでのプレビュー
 

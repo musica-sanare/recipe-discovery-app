@@ -1,6 +1,7 @@
 /**
  * Runs the evaluation set through the endpoint core with a given adapter, one request at
- * a time (a daily neuron allocation is spent predictably, and the order is fixed).
+ * a time (a daily neuron allocation is spent predictably, and the order is fixed). The
+ * run stops at the first `budget_spent`.
  */
 import { foods } from "../../content/foods.ts";
 import { forbiddenExpressions } from "../../content/glossary.ts";
@@ -26,6 +27,8 @@ export async function runEvaluation(set: EvaluationSet, adapter: SuggestionAdapt
     for (const locale of locales) {
       const result = await handleSuggest({ text: intent.texts[locale], locale }, { adapter, context, enabled: true });
       results.push({ intent: intent.id, locale, result });
+      // Every later request would fail too; the run reports the cases done so far.
+      if (result.body.kind === "error" && result.body.error === "budget_spent") return results;
     }
   }
   return results;

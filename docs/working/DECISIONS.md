@@ -1161,6 +1161,13 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - *Measured*: the system prompt has 6,167 characters in `ja`, 7,377 in `en`, 8,036 in `es`, and 8,296 in `fr`, and the JSON Schema 3,915 characters. Input is therefore larger than the 3,000 tokens assumed in "Provider change: Workers AI free allocation only": roughly 2,500–5,000 tokens (要確認 until `usage` is read in a real run). With 5,000 input tokens a request uses about 28 neurons with `qwen3-30b-a3b-fp8` (about 350 per day) and about 50 with `gemma-4-26b-a4b-it` (about 200 per day); one run of 240 cases fits in a day for qwen but needs two days for gemma (`--locale` splits the run).
 - 要確認: whether the two candidate models honour `response_format` (their pages do not list its variants); whether Qwen3 spends output tokens on reasoning within the 400-token limit; the error format of the Worker binding (the adapter reads a numeric `code` or a code in the message); whether the JSON Schema counts as input tokens.
 
+### Stage 12.3 Workers AI REST transport (2026-10-31)
+- The owner chose the Workers AI REST API with an API token limited to Workers AI for the evaluation (2026-10-31), over Wrangler. The token, the account, and every run stay within the free allocation; the account must stay on Workers Free.
+- *Verified* (REST API get-started, updated 2026-09-15, https://developers.cloudflare.com/workers-ai/get-started/rest-api/): the dashboard's Workers AI page → "Use REST API" → "Create a Workers AI API Token" (a custom token needs "Workers AI - Read" and "Workers AI - Edit"); the Account ID is on the same page; the response envelope has `result`, `success`, `errors`, and `messages`.
+- `tools/ai-evaluation/workers-ai-rest.ts`: `restRunner` posts the adapter's inputs with the bearer token, turns `success: false`, a non-OK status, or a non-JSON body into an error with the first Workers AI code (so 3036 maps to `budget_spent`), and adds the reported `usage` tokens; `neurons` converts them with the verified rates. `credentialsFromEnv` reads `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN`; `.env.example` has placeholders only, and `.env` is git-ignored. The token is never printed.
+- `npm run eval:ai`: `--adapter workers-ai --model <id>`, `--intent <id>` to try a few cases, `--cases` for one line per case, and the usage with neurons in the output. A run stops at the first `budget_spent` and exits with 1 when incomplete. Tests use a fake `fetch` (`test/node/workers-ai-rest.test.ts`).
+- Not done: no token exists and no request was sent. Next: the owner creates the token and `.env`, then a run of a few intents to measure tokens and neurons, then the full runs.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in

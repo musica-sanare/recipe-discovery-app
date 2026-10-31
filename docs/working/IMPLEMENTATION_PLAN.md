@@ -18,7 +18,7 @@ Status: **Draft (2026-10-18)**. Each phase ends with checks, a summary to the ow
 | 9 — Recommendation speed and maintenance | `prompts/09-speed-and-maintenance.md` |
 | 10 — Library expansion | `prompts/10-library-expansion.md` |
 | 11 — French locale | `prompts/11-french-locale.md` |
-| 12 — AI assistance | `prompts/12-ai-assistance.md` (draft for the owner's review; to be updated after Phase 11) |
+| 12 — AI assistance | `prompts/12-ai-assistance.md` |
 
 `prompts/FIRST_MESSAGE.md` is the kickoff message for a new Claude Code session.
 
@@ -168,14 +168,14 @@ Acceptance: every UI key and every published text exists in `fr` and was reviewe
 
 ## Phase 12 — AI assistance
 
-Status: **Planned (2026-10-31)**, after Phase 11; the prompt is a draft for the owner's review; to start in a new Claude Code session. The owner chose AI assistance after the library expansion.
+Status: **In progress (2026-10-31)**, from release 8 (`2aa0c7b`); the prompt was brought up to date after Phase 11 (four locales, release 9). The owner chose AI assistance after the library expansion and moved it after the French locale.
 
-- Decisions before any implementation: the feature (free-text conditions or explanation text), the provider and model, the server endpoint and its privacy, the evaluation in three locales, the cost and limits, and the UX and failure states, recorded as ADRs with the SPEC scope change.
+- Decisions before any implementation: the feature (free-text conditions or explanation text), the provider and model, the server endpoint and its privacy, the evaluation in four locales, the cost and limits, and the UX and failure states, recorded as ADRs with the SPEC scope change.
 - A contract in `shared/` with runtime validation, a thin provider adapter, and a deterministic fallback; tests without network.
-- An on-demand evaluation in three locales against agreed thresholds, after the owner approves any account or key; the UI in three locales; release 8 only after the owner's approval.
+- An on-demand evaluation in four locales against agreed thresholds, after the owner approves any account or key; the UI in four locales; release 9 only after the owner's approval.
 
 Acceptance: the decisions recorded; the feature optional and confirmed by the user, with the app unchanged when AI is disabled or failing; the evaluation thresholds met or the owner's decision; no secret in the repository or the bundle; checks and CI pass.
 
 ## Later (not MVP)
 
-Optional AI features (structured parsing of free-text input, explanation text; the owner chose AI assistance as the Phase 11 candidate after Phase 10, 2026-10-31), browser history features, meal planning. Each needs its own design, evaluation in three locales, and approval.
+Optional AI features (structured parsing of free-text input, explanation text; the owner chose AI assistance as the Phase 11 candidate after Phase 10, 2026-10-31), browser history features, meal planning. Each needs its own design, evaluation in every supported locale, and approval.

@@ -2,7 +2,7 @@
 
 # Release Readiness — Recipe Discovery
 
-Status: **Release 6 in preparation (2026-10-31)**: the `i18next` and `react-i18next` update of Stage 9.1 on top of release 5, content version `2026-10-25.2` (unchanged). Release 5 is deployed at https://recipe-discovery.musica-sanare.workers.dev from commit `5709506` (Cloudflare Workers static assets, version `3f566ec5-7948-488c-b7ac-cace55a24d34`) and is the rollback target. Update this document for every release; release 1 is recorded in [DECISIONS.md](DECISIONS.md) ("Stage 5.1 release plan" to "Manual checks"), release 2 in "Stage 6.6" and "Second production deployment", release 3 in "Stage 7.4" and "Third production deployment", release 4 in "Stage 8.4" and "Fourth production deployment", release 5 in "Stage 9.4" and "Fifth production deployment", release 6 in "Release 6 preparation".
+Status: **Release 6 deployed (2026-10-31)** at https://recipe-discovery.musica-sanare.workers.dev from commit `b113983` (Cloudflare Workers static assets, version `4607ad0c-58b3-4f60-aa7c-cd34befaf238`): the `i18next` and `react-i18next` update of Stage 9.1 on top of release 5, content version `2026-10-25.2` (unchanged). The post-deployment checks passed ([DECISIONS.md](DECISIONS.md) "Sixth production deployment"). Release 5 (`5709506`, version `3f566ec5-7948-488c-b7ac-cace55a24d34`) is the rollback target. Update this document for every release; release 1 is recorded in [DECISIONS.md](DECISIONS.md) ("Stage 5.1 release plan" to "Manual checks"), release 2 in "Stage 6.6" and "Second production deployment", release 3 in "Stage 7.4" and "Third production deployment", release 4 in "Stage 8.4" and "Fourth production deployment", release 5 in "Stage 9.4" and "Fifth production deployment", release 6 in "Release 6 preparation" and "Sixth production deployment".
 
 Commit hashes in this document are those after the history rewrite of 2026-10-25; older records in [DECISIONS.md](DECISIONS.md) use the earlier hashes ("History rewrite (2026-10-25)").
 
@@ -12,8 +12,8 @@ Commit hashes in this document are those after the history rewrite of 2026-10-25
 | 2 (Phase 6) | `7144d06` | `2026-10-24.8` | Deployed 2026-10-24 13:18 UTC (version `81bc7642…`); replaced by release 3 |
 | 3 (Phase 7) | `7b66ca3` | `2026-10-25.2` | Deployed 2026-10-25 02:44 UTC (version `992ce5ff…`); replaced by release 4 |
 | 4 (Phase 8) | `2bcbb9b` | `2026-10-25.2` | Deployed 2026-10-25 09:02 UTC (version `5a4ae857…`); replaced by release 5 |
-| 5 (Phase 9) | `5709506` | `2026-10-25.2` | Deployed 2026-10-25 12:26 UTC (version `3f566ec5…`) |
-| 6 (Phase 9, dependencies) | Release commit after `ebe0517` | `2026-10-25.2` | In preparation |
+| 5 (Phase 9) | `5709506` | `2026-10-25.2` | Deployed 2026-10-25 12:26 UTC (version `3f566ec5…`); replaced by release 6 |
+| 6 (Phase 9, dependencies) | `b113983` | `2026-10-25.2` | Deployed 2026-10-31 01:41 UTC (version `4607ad0c…`) |
 
 ## 0. What changes in release 6
 
@@ -46,7 +46,7 @@ Checked on `ebe0517` (the release 6 changes after it are documentation only) on 
 
 | Item | Status | What is needed |
 |---|---|---|
-| CI on the release commit | **Open** | Push `dev` and report both jobs (`check`, `e2e`); `bf48452` and `ebe0517` have not run in CI yet |
+| CI on the release commit | **Passed** | Both jobs (`check`, `e2e`) passed on `cd3f986` after Claude pushed `dev` at the owner's request (owner's report, 2026-10-31); `b113983` only changes `compatibility_date` |
 | Secret scan of the release history | **Passed** on `ebe0517` | gitleaks 8.30.1 (Homebrew, still the latest): `gitleaks git --log-opts=--all --redact` (122 commits, 3.02 MB), `gitleaks dir` on the tracked files (`git archive HEAD`, 3.2 MB) and on `dist/` (1.0 MB): no leaks (2026-10-31 01:25 UTC). No commit touches `data/raw`, `*.xlsx`, `*.pdf`, or `.env*`. Repeat if commits other than documentation follow |
 | `minimatch` advisory in the development dependencies (open question 22) | **Accepted** (owner, 2026-10-31) | Not a release condition: development only, not in the bundle; re-checked before each release |
 
@@ -80,7 +80,7 @@ Release 1 (owner, 2026-10-24, [DECISIONS.md](DECISIONS.md) "Manual checks"): iPh
 
 Releases 2 to 6 (optional, after deployment): on an iPhone, the cuisine choices on the targets view in Spanish (nine values), a search with the Southeast Asian cuisine preferred, the detail pages of a new recipe in each language (for example `beef_pho_rice_noodles`, `tofu_sasami_steamed`), for release 4 adding two recipes to the shopping list, checking items off, "Copy as text" (pasting into a notes app), and the print preview, for release 5 the time from tapping "Find recipes" to the candidates with the default targets, and for release 6 the targets view, a search, and the language switch in the three languages.
 
-## 5. Deployment proposal (release 6, awaiting the owner's approval)
+## 5. Deployment proposal (approved and deployed on 2026-10-31)
 
 | Item | Proposal |
 |---|---|
@@ -124,3 +124,7 @@ Releases 2 to 6 (optional, after deployment): on an iPhone, the cuisine choices 
 | Production deployment approved | 5 | 2026-10-25 | Owner (account [account name] confirmed with `wrangler whoami`) |
 | Deployed and checked | 5 | 2026-10-25 | Claude: `5709506`, version `3f566ec5…` ([DECISIONS.md](DECISIONS.md) "Fifth production deployment") |
 | Acceptance criteria checked | 6 | 2026-10-31 | Claude (§1) |
+| Release blockers resolved | 6 | 2026-10-31 | Owner (CI passed; `minimatch` accepted) and Claude (secret scan) |
+| Deployment proposal approved | 6 | 2026-10-31 | Owner (Wrangler download and the `compatibility_date` commit approved; dry run passed) |
+| Production deployment approved | 6 | 2026-10-31 | Owner (account [account name] confirmed with `wrangler whoami`) |
+| Deployed and checked | 6 | 2026-10-31 | Claude: `b113983`, version `4607ad0c…` ([DECISIONS.md](DECISIONS.md) "Sixth production deployment") |

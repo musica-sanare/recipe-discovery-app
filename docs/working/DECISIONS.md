@@ -954,6 +954,9 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - Speed target met against a same-session baseline with every snapshot, digest, determinism, and locale invariance test unchanged: about 50–55 ms median at 4× on the 86 recipes and 62–70 ms on a synthetic library of 130 ("Stage 9.3 browser timing", "Stage 9.3 precomputation after the first view"); the timing documents updated (ADR-030 D10, ADR-023 note, [ARCHITECTURE.md](../en/ARCHITECTURE.md) §6, [UI_DESIGN.md](../en/UI_DESIGN.md) §4).
 - `npm run check`, `npm run test:e2e`, and CI pass; releases 5 and 6 deployed after the owner's approval. Open: real-device checks (optional) and the next phase, which the owner chooses (the speed margin now allows a larger library, ADR-023 note).
 
+### Next phases (2026-10-31)
+- The owner chose to expand the recipe library first (Phase 10, `prompts/10-library-expansion.md`) and then to introduce AI assistance (Phase 11 candidate; its prompt is drafted at the end of Phase 10 from ADR-004 "Later candidates", principles 17 and 18 of `CLAUDE.md`, and [CONTENT_POLICY.md](../en/CONTENT_POLICY.md) §7). Phase 10 starts in a new session.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in

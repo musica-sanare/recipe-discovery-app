@@ -16,6 +16,7 @@ Status: **Draft (2026-10-18)**. Each phase ends with checks, a summary to the ow
 | 7 — Content expansion | `prompts/07-content-expansion.md` |
 | 8 — Shopping list | `prompts/08-shopping-list.md` |
 | 9 — Recommendation speed and maintenance | `prompts/09-speed-and-maintenance.md` |
+| 10 — Library expansion | `prompts/10-library-expansion.md` |
 
 `prompts/FIRST_MESSAGE.md` is the kickoff message for a new Claude Code session.
 
@@ -142,6 +143,16 @@ Status: **Complete (2026-10-31)**: releases 5 (speed) and 6 (dependencies) deplo
 
 Acceptance: ADR-016 re-checked and dependencies current or excepted; the approved speed target met with every snapshot and equality test unchanged; timing documents updated as approved; checks and CI pass.
 
+## Phase 10 — Library expansion
+
+Status: **Planned (2026-10-31)**, to start in a new Claude Code session. The owner chose more recipes first, then AI assistance (Phase 11 candidate), over opt-in storage and meal planning: Phase 9 left room under the ADR-030 D10 threshold for about 130 recipes (ADR-023 note).
+
+- Expansion plan: about 44 original recipes in three batches (about 130 in total), aimed at the remaining gaps (cuisine balance, effort 3, grilling, steaming, very quick, batch cooking, breakfast, no-cook, microwave-only, bulk, and egg- and soy-based dishes that meet a preset), new foods, the revised ADR-023 size, and the synthetic library size for measurements.
+- Per batch: foods and cooking rates with checks, texts in three locales with the owner's review, content validation, approved snapshot diffs, coverage, and the speed measured against the previous batch in the same session.
+- Release 7 after the owner's approval; at the end, a draft prompt for Phase 11 (AI assistance) for the owner's review.
+
+Acceptance: about 44 new recipes validated and reviewed in three locales with approved snapshot diffs; ADR-023 met as revised; the planned gaps narrowed; a full recommendation within about 80 ms p90 at 4× or the owner's decision; checks and CI pass; the Phase 11 prompt drafted.
+
 ## Later (not MVP)
 
-Optional AI features (structured parsing of free-text input, explanation text), browser history features, meal planning. Each needs its own design, evaluation in three locales, and approval.
+Optional AI features (structured parsing of free-text input, explanation text; the owner chose AI assistance as the Phase 11 candidate after Phase 10, 2026-10-31), browser history features, meal planning. Each needs its own design, evaluation in three locales, and approval.

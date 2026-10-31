@@ -215,7 +215,7 @@ describe("detail block and list view", () => {
   });
 });
 
-describe.each(["ja", "en", "es"] as const)("axe-core in %s", (locale) => {
+describe.each(["ja", "en", "es", "fr"] as const)("axe-core in %s", (locale) => {
   it("detail block, list view, text area fallback, and empty list have no violations", async () => {
     const { t } = createI18n(locale);
     await openDetail(RECIPE, locale);

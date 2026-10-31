@@ -3,11 +3,12 @@ import type { Recipe } from "../../shared/content.ts";
 export const recipe: Recipe = {
   id: "pork_loin_ginger",
   texts: {
-    name: { ja: "豚ロース赤身の生姜焼き", en: "Ginger pork with lean pork loin", es: "Cerdo al jengibre con lomo magro" },
+    name: { ja: "豚ロース赤身の生姜焼き", en: "Ginger pork with lean pork loin", es: "Cerdo al jengibre con lomo magro", fr: "Porc au gingembre avec de la longe maigre" },
     summary: {
       ja: "赤身の豚ロース肉と玉ねぎを、しょうがの効いたたれで焼きます。",
       en: "Lean pork loin and onion cooked in a gingery soy sauce glaze.",
       es: "Lomo de cerdo magro y cebolla cocinados en un glaseado de soja con jengibre.",
+      fr: "Longe de porc maigre et oignon cuits dans une sauce soja au gingembre réduite en glaçage.",
     },
   },
   cuisine: "japanese",
@@ -31,6 +32,7 @@ export const recipe: Recipe = {
         ja: "成分表には生の豚ロース赤身の値しかないため、生の値で計算しています。",
         en: "The tables only have a raw value for lean pork loin, so the raw value is used.",
         es: "Las tablas solo tienen un valor en crudo para el lomo magro, así que se usa ese valor.",
+        fr: "Les tables ne donnent qu'une valeur à l'état cru pour la longe de porc maigre ; la valeur à l'état cru est donc utilisée.",
       },
     },
     { key: "onion", food: "onion", grams: 60, state: "stir_fry", measure: { unit: "piece", quantity: 0.25 }, role: "vegetable" },
@@ -44,8 +46,8 @@ export const recipe: Recipe = {
     { key: "rice", food: "rice_cooked", grams: 180, state: "as_is", role: "main_carb", adjust: { kind: "grams", min: 100, max: 280, step: 10 } },
   ],
   sides: [
-    { key: "rice", label: { ja: "ご飯", en: "Rice", es: "Arroz" }, ingredients: ["rice"], solverMayRemove: true },
-    { key: "cabbage", label: { ja: "せん切りキャベツ", en: "Shredded cabbage", es: "Repollo en juliana" }, ingredients: ["cabbage"], solverMayRemove: false },
+    { key: "rice", label: { ja: "ご飯", en: "Rice", es: "Arroz", fr: "Riz" }, ingredients: ["rice"], solverMayRemove: true },
+    { key: "cabbage", label: { ja: "せん切りキャベツ", en: "Shredded cabbage", es: "Repollo en juliana", fr: "Chou émincé" }, ingredients: ["cabbage"], solverMayRemove: false },
   ],
   steps: [
     {
@@ -54,6 +56,7 @@ export const recipe: Recipe = {
         ja: "しょうがをすりおろし、しょうゆ、みりん、料理酒と混ぜてたれを作ります。玉ねぎは薄切りにします。",
         en: "Grate the ginger and mix it with the soy sauce, mirin, and cooking sake. Thinly slice the onion.",
         es: "Ralla el jengibre y mézclalo con la salsa de soja, el mirin y el sake de cocina. Corta la cebolla en láminas finas.",
+        fr: "Râpez le gingembre et mélangez-le avec la sauce soja, le mirin et le saké de cuisine. Émincez finement l'oignon.",
       },
     },
     {
@@ -62,6 +65,7 @@ export const recipe: Recipe = {
         ja: "フライパンに玉ねぎ用の油を中火で熱し、玉ねぎを3分炒めて取り出します。",
         en: "Heat the oil for the onion in a frying pan over medium heat, stir-fry the onion for 3 minutes, and set it aside.",
         es: "Calienta el aceite para la cebolla en una sartén a fuego medio, saltea la cebolla 3 minutos y resérvala.",
+        fr: "Faites chauffer l'huile de l'oignon dans une poêle à feu moyen, faites sauter l'oignon 3 minutes et réservez-le.",
       },
     },
     {
@@ -70,6 +74,7 @@ export const recipe: Recipe = {
         ja: "残りの油で豚肉を両面焼き、玉ねぎを戻してたれを加え、煮からめます。",
         en: "Cook the pork on both sides in the remaining oil, return the onion, add the sauce, and coat well.",
         es: "Cocina el cerdo por ambos lados con el resto del aceite, devuelve la cebolla, añade la salsa y baña bien el cerdo con ella.",
+        fr: "Faites cuire le porc des deux côtés dans l'huile restante, remettez l'oignon, ajoutez la sauce et enrobez bien.",
       },
     },
     {
@@ -79,6 +84,7 @@ export const recipe: Recipe = {
         ja: "キャベツをせん切りにします。",
         en: "Finely shred the cabbage.",
         es: "Corta el repollo en juliana fina.",
+        fr: "Émincez finement le chou.",
       },
     },
   ],
@@ -89,6 +95,7 @@ export const recipe: Recipe = {
         ja: "豚肉は中心まで火を通してください。切り口に赤みがないことを確認します。",
         en: "Cook pork all the way through. Check that the center is no longer pink.",
         es: "Cocina el cerdo completamente. Comprueba que el centro ya no esté rosado.",
+        fr: "Faites cuire le porc à cœur. Vérifiez que le centre n'est plus rosé.",
       },
     },
   ],

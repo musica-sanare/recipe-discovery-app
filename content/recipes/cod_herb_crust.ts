@@ -3,11 +3,12 @@ import type { Recipe } from "../../shared/content.ts";
 export const recipe: Recipe = {
   id: "cod_herb_crust",
   texts: {
-    name: { ja: "たらの香草パン粉焼き", en: "Herb-crusted cod", es: "Bacalao con costra de hierbas" },
+    name: { ja: "たらの香草パン粉焼き", en: "Herb-crusted cod", es: "Bacalao con costra de hierbas", fr: "Cabillaud en croûte d'herbes" },
     summary: {
       ja: "脂の少ないたらに、パセリとにんにくのパン粉をのせてトースターで焼きます。",
       en: "Lean cod topped with parsley and garlic breadcrumbs, baked in a toaster oven.",
       es: "Bacalao magro cubierto con pan rallado, perejil y ajo, horneado en un horno tostador.",
+      fr: "Cabillaud maigre recouvert de chapelure au persil et à l'ail, cuit au four grille-pain.",
     },
   },
   cuisine: "western",
@@ -30,6 +31,7 @@ export const recipe: Recipe = {
         ja: "成分表の値は電気ロースターで焼いたものです。",
         en: "The table value is for cod cooked on an electric roaster.",
         es: "El valor de las tablas corresponde a bacalao asado en un asador eléctrico.",
+        fr: "La valeur des tables correspond à du cabillaud cuit sur un gril électrique.",
       },
     },
     { key: "panko", food: "panko", grams: 8, state: "as_is", measure: { unit: "tbsp", quantity: 2.5 }, role: "coating", linkedTo: "cod" },
@@ -42,9 +44,9 @@ export const recipe: Recipe = {
     { key: "broccoli", food: "broccoli", grams: 80, state: "boil", role: "vegetable" },
   ],
   sides: [
-    { key: "potato", label: { ja: "レンジ蒸しのじゃがいも", en: "Microwaved potato", es: "Patata al microondas" }, ingredients: ["potato"], solverMayRemove: true },
-    { key: "broccoli", label: { ja: "ゆでブロッコリー", en: "Boiled broccoli", es: "Brócoli hervido" }, ingredients: ["broccoli"], solverMayRemove: false },
-    { key: "tomato", label: { ja: "トマト", en: "Tomato", es: "Tomate" }, ingredients: ["tomato"], solverMayRemove: false },
+    { key: "potato", label: { ja: "レンジ蒸しのじゃがいも", en: "Microwaved potato", es: "Patata al microondas", fr: "Pomme de terre au micro-ondes" }, ingredients: ["potato"], solverMayRemove: true },
+    { key: "broccoli", label: { ja: "ゆでブロッコリー", en: "Boiled broccoli", es: "Brócoli hervido", fr: "Brocoli bouilli" }, ingredients: ["broccoli"], solverMayRemove: false },
+    { key: "tomato", label: { ja: "トマト", en: "Tomato", es: "Tomate", fr: "Tomate" }, ingredients: ["tomato"], solverMayRemove: false },
   ],
   steps: [
     {
@@ -53,6 +55,7 @@ export const recipe: Recipe = {
         ja: "パン粉、みじん切りのパセリとにんにく、オリーブ油を混ぜます。",
         en: "Mix the panko, chopped parsley and garlic, and olive oil.",
         es: "Mezcla el panko, el perejil y el ajo picados y el aceite de oliva.",
+        fr: "Mélangez le panko, le persil et l'ail hachés et l'huile d'olive.",
       },
     },
     {
@@ -61,6 +64,7 @@ export const recipe: Recipe = {
         ja: "たらに塩をふってアルミホイルにのせ、パン粉をのせてトースターで10〜12分焼きます。",
         en: "Salt the cod, place it on foil, top with the breadcrumb mixture, and bake in a toaster oven for 10 to 12 minutes.",
         es: "Sala el bacalao, colócalo sobre papel de aluminio, cúbrelo con la mezcla de pan rallado y hornéalo en el horno tostador de 10 a 12 minutos.",
+        fr: "Salez le cabillaud, posez-le sur du papier aluminium, recouvrez-le du mélange de chapelure et faites-le cuire 10 à 12 minutes au four grille-pain.",
       },
     },
     {
@@ -70,6 +74,7 @@ export const recipe: Recipe = {
         ja: "じゃがいもは皮をむいてラップで包み、600Wで4〜5分加熱します。",
         en: "Peel the potato, wrap it in plastic wrap, and microwave at 600 W for 4 to 5 minutes.",
         es: "Pela la patata, envuélvela en film y caliéntala en el microondas a 600 W de 4 a 5 minutos.",
+        fr: "Pelez la pomme de terre, enveloppez-la dans du film alimentaire et faites-la cuire 4 à 5 minutes au micro-ondes à 600 W.",
       },
     },
     {
@@ -79,6 +84,7 @@ export const recipe: Recipe = {
         ja: "ブロッコリーを2分ゆでます。",
         en: "Boil the broccoli for 2 minutes.",
         es: "Hierve el brócoli 2 minutos.",
+        fr: "Faites bouillir le brocoli 2 minutes.",
       },
     },
     {
@@ -88,6 +94,7 @@ export const recipe: Recipe = {
         ja: "トマトをくし形に切ります。",
         en: "Cut the tomato into wedges.",
         es: "Corta el tomate en gajos.",
+        fr: "Coupez la tomate en quartiers.",
       },
     },
   ],
@@ -98,6 +105,7 @@ export const recipe: Recipe = {
         ja: "たらは中心まで火を通してください。身が白く不透明になり、ほぐれれば焼き上がりです。",
         en: "Cook the cod through; it is done when it is white, opaque, and flakes easily.",
         es: "Cocina el bacalao por completo: está hecho cuando es blanco, opaco y se desmenuza con facilidad.",
+        fr: "Faites cuire le cabillaud à cœur ; il est cuit quand sa chair est blanche, opaque et s'effeuille facilement.",
       },
     },
     {
@@ -106,6 +114,7 @@ export const recipe: Recipe = {
         ja: "加熱直後は蒸気でやけどしやすいので、ラップは奥から手前に向かって外してください。",
         en: "Steam can burn right after heating; peel the wrap away from you.",
         es: "El vapor puede quemar justo después de calentar; retira el film en dirección contraria a ti.",
+        fr: "La vapeur peut brûler juste après la cuisson ; retirez le film en l'écartant de vous.",
       },
     },
   ],

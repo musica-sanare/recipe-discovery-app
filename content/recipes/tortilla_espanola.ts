@@ -3,11 +3,12 @@ import type { Recipe } from "../../shared/content.ts";
 export const recipe: Recipe = {
   id: "tortilla_espanola",
   texts: {
-    name: { ja: "トルティージャ（スペイン風オムレツ）", en: "Spanish omelette (tortilla española)", es: "Tortilla española" },
+    name: { ja: "トルティージャ（スペイン風オムレツ）", en: "Spanish omelette (tortilla española)", es: "Tortilla española", fr: "Omelette espagnole (tortilla española)" },
     summary: {
       ja: "じゃがいもと玉ねぎをたっぷりのオリーブ油で揚げ煮にし、卵で厚く焼き固めるスペインの定番料理です。油の吸収量が分からないため、栄養値は推定の幅が大きくなります。",
       en: "A Spanish classic: potatoes and onion gently fried in plenty of olive oil and set in a thick egg omelette. The amount of oil absorbed is unknown, so the nutrition estimate is very uncertain.",
       es: "Un clásico español: patatas y cebolla pochadas en abundante aceite de oliva y cuajadas en una tortilla gruesa. No se sabe cuánto aceite se absorbe, así que la estimación nutricional es muy incierta.",
+      fr: "Un classique espagnol : pommes de terre et oignon confits dans beaucoup d'huile d'olive, puis pris dans une épaisse omelette. La quantité d'huile absorbée est inconnue ; l'estimation nutritionnelle est donc très incertaine.",
     },
   },
   cuisine: "spanish",
@@ -31,6 +32,7 @@ export const recipe: Recipe = {
         ja: "成分表の素揚げの値を使っています。低温でじっくり揚げ煮にするこの料理では、実際の吸油量はもっと多い可能性があります。",
         en: "Uses the table value for plain deep-fried potato. Slow frying at a lower temperature, as in this dish, may absorb more oil.",
         es: "Se usa el valor de las tablas para la patata frita sin rebozar. Freírla despacio a menor temperatura, como en este plato, puede absorber más aceite.",
+        fr: "Utilise la valeur des tables pour la pomme de terre frite nature. Une friture lente à plus basse température, comme dans ce plat, peut absorber davantage d'huile.",
       },
     },
     { key: "onion", food: "onion", grams: 100, state: "stir_fry", measure: { unit: "piece", quantity: 0.5 }, role: "vegetable", estimate: "slow_frying" },
@@ -45,6 +47,7 @@ export const recipe: Recipe = {
         ja: "揚げ煮用の油で、使った後は取り除きます。吸収される分はじゃがいもと玉ねぎの値に含まれています。",
         en: "Oil for slow frying, drained afterwards. The absorbed part is included in the potato and onion values.",
         es: "Aceite para pochar, que se escurre después. La parte absorbida está incluida en los valores de la patata y la cebolla.",
+        fr: "Huile pour la friture lente, égouttée ensuite. La part absorbée est incluse dans les valeurs de la pomme de terre et de l'oignon.",
       },
     },
     { key: "egg", food: "egg", grams: 250, state: "scramble", measure: { unit: "piece", quantity: 5 }, role: "main_protein", adjust: { kind: "count", unitGrams: 50, min: 4, max: 6 } },
@@ -59,6 +62,7 @@ export const recipe: Recipe = {
         ja: "じゃがいもを薄いいちょう切りに、玉ねぎを薄切りにします。",
         en: "Thinly slice the potatoes into quarter rounds and thinly slice the onion.",
         es: "Corta las patatas en láminas finas de cuarto de luna y la cebolla en juliana.",
+        fr: "Coupez les pommes de terre en fins quarts de rondelle et émincez finement l'oignon.",
       },
     },
     {
@@ -67,6 +71,7 @@ export const recipe: Recipe = {
         ja: "フライパンにオリーブ油を入れて弱めの中火にかけ、じゃがいもと玉ねぎを15〜20分、やわらかくなるまで揚げ煮にします。ざるに上げて油を切ります。",
         en: "Heat the olive oil in a frying pan over medium-low heat and gently fry the potatoes and onion for 15 to 20 minutes until tender. Drain in a colander.",
         es: "Calienta el aceite en una sartén a fuego medio-bajo y pocha las patatas y la cebolla de 15 a 20 minutos hasta que estén tiernas. Escúrrelas en un colador.",
+        fr: "Faites chauffer l'huile d'olive dans une poêle à feu moyen-doux et faites confire doucement les pommes de terre et l'oignon 15 à 20 minutes jusqu'à ce qu'ils soient tendres. Égouttez dans une passoire.",
       },
     },
     {
@@ -75,6 +80,7 @@ export const recipe: Recipe = {
         ja: "卵を溶いて塩を加え、じゃがいもと玉ねぎを混ぜて5分置きます。",
         en: "Beat the eggs with the salt, mix in the potatoes and onion, and leave for 5 minutes.",
         es: "Bate los huevos con la sal, mezcla las patatas y la cebolla y deja reposar 5 minutos.",
+        fr: "Battez les œufs avec le sel, incorporez les pommes de terre et l'oignon, et laissez reposer 5 minutes.",
       },
     },
     {
@@ -83,6 +89,7 @@ export const recipe: Recipe = {
         ja: "フライパンを拭いて焼き用のオリーブ油を熱し、卵液を流し入れて弱火で5分焼きます。皿を使って裏返し、さらに3〜4分、中まで固まるまで焼きます。",
         en: "Wipe the pan, heat the oil for cooking, pour in the mixture, and cook over low heat for 5 minutes. Flip it with a plate and cook for 3 to 4 more minutes until set in the middle.",
         es: "Limpia la sartén, calienta el aceite para cuajar, vierte la mezcla y cocina a fuego bajo 5 minutos. Dale la vuelta con un plato y cocina de 3 a 4 minutos más hasta que cuaje por dentro.",
+        fr: "Essuyez la poêle, faites chauffer l'huile de cuisson, versez le mélange et faites cuire 5 minutes à feu doux. Retournez la tortilla à l'aide d'une assiette et faites cuire encore 3 à 4 minutes jusqu'à ce que le centre soit pris.",
       },
     },
   ],
@@ -93,6 +100,7 @@ export const recipe: Recipe = {
         ja: "大量の油を使うので、火から離れないでください。高温の油は発火やけがの原因になります。裏返すときは熱い油や卵液がこぼれないよう注意します。",
         en: "This uses a lot of oil; stay at the stove. Hot oil can catch fire or cause burns. Take care not to spill hot oil or egg when flipping.",
         es: "Se usa mucho aceite: no te alejes del fuego. El aceite caliente puede incendiarse o causar quemaduras. Ten cuidado de no derramar aceite caliente ni huevo al darle la vuelta.",
+        fr: "Ce plat utilise beaucoup d'huile : restez près du feu. L'huile chaude peut s'enflammer ou provoquer des brûlures. En retournant la tortilla, attention à ne pas renverser d'huile chaude ni d'œuf.",
       },
     },
     {
@@ -101,6 +109,7 @@ export const recipe: Recipe = {
         ja: "中心まで卵が固まるまで加熱してください。半熟に仕上げる場合も、生の卵が残らないようにします。",
         en: "Cook until the egg is set in the middle; even a softer tortilla should not contain raw egg.",
         es: "Cocina hasta que el huevo cuaje en el centro; incluso una tortilla jugosa no debe tener huevo crudo.",
+        fr: "Faites cuire jusqu'à ce que l'œuf soit pris au centre ; même une tortilla plus moelleuse ne doit pas contenir d'œuf cru.",
       },
     },
   ],

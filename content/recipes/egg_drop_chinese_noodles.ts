@@ -3,11 +3,12 @@ import type { Recipe } from "../../shared/content.ts";
 export const recipe: Recipe = {
   id: "egg_drop_chinese_noodles",
   texts: {
-    name: { ja: "かき玉の中華そば", en: "Egg drop noodle soup", es: "Sopa de fideos con huevo" },
+    name: { ja: "かき玉の中華そば", en: "Egg drop noodle soup", es: "Sopa de fideos con huevo", fr: "Soupe de nouilles aux filaments d'œuf" },
     summary: {
       ja: "しょうゆ味のスープに溶き卵を流し入れて、中華めんともやしにかけます。",
       en: "Beaten eggs swirled into a soy-based broth and poured over wheat noodles and bean sprouts.",
       es: "Huevos batidos vertidos en un caldo de soja y servidos sobre fideos de trigo y brotes de soja.",
+      fr: "Œufs battus versés en filaments dans un bouillon à la sauce soja, servis sur des nouilles de blé et des pousses de soja.",
     },
   },
   cuisine: "chinese",
@@ -32,6 +33,7 @@ export const recipe: Recipe = {
         ja: "成分表にスープで加熱した溶き卵の値がないため、ゆで卵の値で計算しています。",
         en: "The tables have no value for egg cooked in soup, so the boiled-egg value is used.",
         es: "Las tablas no tienen un valor para huevo cocinado en sopa, así que se usa el valor del huevo cocido.",
+        fr: "Les tables n'ont pas de valeur pour l'œuf cuit dans une soupe ; la valeur de l'œuf dur est donc utilisée.",
       },
     },
     { key: "noodles", food: "chinese_noodles", grams: 120, state: "boil", measure: { unit: "piece", quantity: 1 }, role: "main_carb", adjust: { kind: "grams", min: 100, max: 200, step: 20 } },
@@ -51,6 +53,7 @@ export const recipe: Recipe = {
         ja: "たっぷりの湯で中華めんを袋の表示どおりにゆで、最後の1分でもやしを加えます。湯を切って器に盛ります。",
         en: "Boil the noodles in plenty of water as directed on the package, adding the bean sprouts for the last minute. Drain and transfer to a bowl.",
         es: "Cuece los fideos en abundante agua según el envase y añade los brotes de soja en el último minuto. Escúrrelos y pásalos a un cuenco.",
+        fr: "Faites cuire les nouilles dans une grande quantité d'eau comme indiqué sur l'emballage, en ajoutant les pousses de soja pendant la dernière minute. Égouttez et mettez dans un bol.",
       },
     },
     {
@@ -59,6 +62,7 @@ export const recipe: Recipe = {
         ja: "別の鍋に水350mL、しょうゆ、料理酒、すりおろしたしょうがを入れて煮立て、同量の水で溶いた片栗粉でとろみをつけます。",
         en: "In another pot, bring 350 mL of water, the soy sauce, cooking sake, and grated ginger to a boil, then thicken with the potato starch mixed with the same amount of water.",
         es: "En otra olla, lleva a ebullición 350 mL de agua, la salsa de soja, el sake de cocina y el jengibre rallado, y espesa con la fécula disuelta en la misma cantidad de agua.",
+        fr: "Dans une autre casserole, portez à ébullition 350 mL d'eau, la sauce soja, le saké de cuisine et le gingembre râpé, puis épaississez avec la fécule délayée dans autant d'eau.",
       },
     },
     {
@@ -67,6 +71,7 @@ export const recipe: Recipe = {
         ja: "スープが煮立っているところに溶き卵を少しずつ回し入れ、ふんわり固まるまで30秒ほど加熱します。",
         en: "With the broth at a boil, drizzle in the beaten eggs a little at a time and cook for about 30 seconds until they set into soft ribbons.",
         es: "Con el caldo hirviendo, vierte poco a poco los huevos batidos y cocina unos 30 segundos hasta que cuajen en hebras suaves.",
+        fr: "Le bouillon à ébullition, versez les œufs battus en filet, petit à petit, et laissez cuire environ 30 secondes jusqu'à ce qu'ils prennent en filaments moelleux.",
       },
     },
     {
@@ -75,6 +80,7 @@ export const recipe: Recipe = {
         ja: "めんにスープをかけ、ごま油をたらして小口切りの青ねぎを散らします。",
         en: "Pour the broth over the noodles, drizzle with sesame oil, and scatter the thinly sliced green onion.",
         es: "Vierte el caldo sobre los fideos, rocía con aceite de sésamo y esparce la cebolleta en rodajas finas.",
+        fr: "Versez le bouillon sur les nouilles, arrosez d'huile de sésame et parsemez d'oignon vert finement émincé.",
       },
     },
   ],
@@ -85,6 +91,7 @@ export const recipe: Recipe = {
         ja: "卵は固まるまで加熱してください。",
         en: "Cook the eggs until set.",
         es: "Cocina los huevos hasta que cuajen.",
+        fr: "Faites cuire les œufs jusqu'à ce qu'ils soient pris.",
       },
     },
   ],

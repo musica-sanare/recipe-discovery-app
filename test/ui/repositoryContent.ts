@@ -14,9 +14,10 @@ const bodies: Record<string, unknown> = {
   "/text-ja.json": buildTextBundle(input, "ja"),
   "/text-en.json": buildTextBundle(input, "en"),
   "/text-es.json": buildTextBundle(input, "es"),
+  "/text-fr.json": buildTextBundle(input, "fr"),
 };
 
-export const repositoryUrls: ContentUrls = { calc: "/calc.json", text: { ja: "/text-ja.json", en: "/text-en.json", es: "/text-es.json" } };
+export const repositoryUrls: ContentUrls = { calc: "/calc.json", text: { ja: "/text-ja.json", en: "/text-en.json", es: "/text-es.json", fr: "/text-fr.json" } };
 
 export function repositoryFetch(url: string): Promise<Response> {
   const body = bodies[url];

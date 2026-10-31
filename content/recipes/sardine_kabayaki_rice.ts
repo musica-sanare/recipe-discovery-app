@@ -3,11 +3,12 @@ import type { Recipe } from "../../shared/content.ts";
 export const recipe: Recipe = {
   id: "sardine_kabayaki_rice",
   texts: {
-    name: { ja: "いわしの蒲焼き丼", en: "Sardine kabayaki rice bowl", es: "Bol de arroz con sardinas kabayaki" },
+    name: { ja: "いわしの蒲焼き丼", en: "Sardine kabayaki rice bowl", es: "Bol de arroz con sardinas kabayaki", fr: "Bol de riz aux sardines kabayaki" },
     summary: {
       ja: "開いたいわしに片栗粉をまぶしてフライパンで焼き、甘辛いたれをからめてご飯にのせます。せん切りキャベツを添えます。",
       en: "Butterflied sardines dusted with potato starch, pan-fried, glazed with a sweet soy sauce, and served over rice with shredded cabbage.",
       es: "Sardinas abiertas espolvoreadas con fécula de patata, hechas en la sartén, glaseadas con salsa de soja dulce y servidas sobre arroz con col en tiras.",
+      fr: "Sardines ouvertes en papillon, farinées à la fécule, poêlées, laquées d'une sauce soja sucrée et servies sur du riz avec du chou émincé.",
     },
   },
   cuisine: "japanese",
@@ -32,6 +33,7 @@ export const recipe: Recipe = {
         ja: "成分表にフライパンで焼いたいわしの値がないため、丸ごと焼いた値で計算しています。焼いた後に頭や骨を除いた値なので、開いた身では近似になります。",
         en: "The tables have no value for pan-fried sardine, so the value for whole grilled sardine is used. That value is for the fish after removing the head and bones, so for butterflied fillets it is an approximation.",
         es: "Las tablas no tienen un valor para la sardina hecha en la sartén, así que se usa el valor de la sardina entera asada. Ese valor es el del pescado sin cabeza ni espinas tras asarlo, así que para la sardina abierta es una aproximación.",
+        fr: "Les tables n'ont pas de valeur pour la sardine poêlée ; la valeur de la sardine entière grillée est donc utilisée. Cette valeur concerne le poisson sans tête ni arêtes ; pour des filets ouverts en papillon, c'est donc une approximation.",
       },
     },
     { key: "starch", food: "potato_starch", grams: 6, state: "as_is", measure: { unit: "tsp", quantity: 2 }, role: "coating", linkedTo: "sardine" },
@@ -50,6 +52,7 @@ export const recipe: Recipe = {
         ja: "いわしは頭と内臓を除いて手開きにし、中骨を取ります。水気を拭いて片栗粉を薄くまぶします。しょうゆ、みりん、砂糖を混ぜておきます。キャベツはせん切りにします。",
         en: "Remove the heads and guts of the sardines, open them by hand, and take out the backbones. Pat them dry and dust lightly with the potato starch. Mix the soy sauce, mirin, and sugar. Shred the cabbage.",
         es: "Quita la cabeza y las tripas a las sardinas, ábrelas con las manos y retira la espina central. Sécalas y espolvoréalas ligeramente con la fécula. Mezcla la salsa de soja, el mirin y el azúcar. Corta la col en tiras finas.",
+        fr: "Retirez la tête et les viscères des sardines, ouvrez-les à la main et retirez l'arête centrale. Séchez-les en tapotant et saupoudrez-les légèrement de fécule. Mélangez la sauce soja, le mirin et le sucre. Émincez le chou.",
       },
     },
     {
@@ -58,6 +61,7 @@ export const recipe: Recipe = {
         ja: "フライパンに油を中火で熱し、いわしを身の側から2〜3分焼き、裏返して2分焼きます。たれを加えて煮からめます。",
         en: "Heat the oil in a frying pan over medium heat and cook the sardines flesh side down for 2–3 minutes, then turn and cook for 2 minutes. Add the sauce and toss to glaze.",
         es: "Calienta el aceite en una sartén a fuego medio y haz las sardinas por el lado de la carne 2-3 minutos; dales la vuelta y cocínalas 2 minutos más. Añade la salsa y remueve para glasearlas.",
+        fr: "Faites chauffer l'huile dans une poêle à feu moyen et faites cuire les sardines côté chair 2 à 3 minutes, puis retournez-les et faites cuire 2 minutes. Ajoutez la sauce et enrobez pour les laquer.",
       },
     },
     {
@@ -66,6 +70,7 @@ export const recipe: Recipe = {
         ja: "ご飯を器に盛り、キャベツといわしをのせ、残ったたれをかけます。",
         en: "Put the rice in a bowl, top with the cabbage and sardines, and pour the remaining sauce over.",
         es: "Pon el arroz en un bol, coloca encima la col y las sardinas y vierte el resto de la salsa.",
+        fr: "Mettez le riz dans un bol, garnissez de chou et de sardines, et versez le reste de la sauce dessus.",
       },
     },
   ],
@@ -76,6 +81,7 @@ export const recipe: Recipe = {
         ja: "魚は中心まで白く不透明になるまで焼いてください。",
         en: "Cook the fish until it is white and opaque in the center.",
         es: "Cocina el pescado hasta que esté blanco y opaco en el centro.",
+        fr: "Faites cuire le poisson jusqu'à ce qu'il soit blanc et opaque au centre.",
       },
     },
     {
@@ -84,6 +90,7 @@ export const recipe: Recipe = {
         ja: "開いたいわしにも小骨が残っていることがあります。食べるときは骨に注意してください。",
         en: "Butterflied sardines may still have small bones; take care when eating.",
         es: "Las sardinas abiertas pueden tener alguna espina pequeña; ten cuidado al comerlas.",
+        fr: "Les sardines ouvertes peuvent encore contenir de petites arêtes ; faites attention en mangeant.",
       },
     },
   ],

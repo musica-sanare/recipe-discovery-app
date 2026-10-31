@@ -3,11 +3,12 @@ import type { Recipe } from "../../shared/content.ts";
 export const recipe: Recipe = {
   id: "gapao_chicken_rice",
   texts: {
-    name: { ja: "鶏むね肉のガパオライス", en: "Chicken breast gapao rice", es: "Arroz gapao con pechuga de pollo" },
+    name: { ja: "鶏むね肉のガパオライス", en: "Chicken breast gapao rice", es: "Arroz gapao con pechuga de pollo", fr: "Riz gapao au blanc de poulet" },
     summary: {
       ja: "タイのガパオをヒントに、細かく刻んだ鶏むね肉と野菜をナンプラーとオイスターソースで炒め、バジルを加えます。目玉焼きと一緒にご飯にのせます。",
       en: "Inspired by Thai gapao: finely chopped chicken breast and vegetables stir-fried with fish sauce and oyster sauce, finished with basil, served over rice with a fried egg.",
       es: "Inspirado en el gapao tailandés: pechuga de pollo picada y verduras salteadas con salsa de pescado y salsa de ostras, terminadas con albahaca, sobre arroz con un huevo frito.",
+      fr: "Inspiré du gapao thaïlandais : blanc de poulet haché au couteau et légumes sautés à la sauce de poisson et à la sauce d'huître, finis au basilic, servis sur du riz avec un œuf au plat.",
     },
   },
   cuisine: "southeast_asian",
@@ -31,6 +32,7 @@ export const recipe: Recipe = {
         ja: "成分表に炒めた鶏むね肉の値がないため、生の値で計算しています。",
         en: "The tables have no value for stir-fried chicken breast, so the raw value is used.",
         es: "Las tablas no tienen un valor para la pechuga de pollo salteada, así que se usa el valor en crudo.",
+        fr: "Les tables n'ont pas de valeur pour le blanc de poulet sauté ; la valeur à l'état cru est donc utilisée.",
       },
     },
     { key: "oil", food: "vegetable_oil", grams: 4, state: "as_is", measure: { unit: "tsp", quantity: 1 }, role: "fat", linkedTo: "chicken" },
@@ -54,6 +56,7 @@ export const recipe: Recipe = {
         ja: "鶏むね肉を包丁で5mm角程度に細かく刻みます。にんにくはみじん切り、玉ねぎと赤ピーマンは1cm角に切ります。",
         en: "Chop the chicken breast finely with a knife, into pieces of about 5 mm. Finely chop the garlic and dice the onion and red pepper into 1 cm pieces.",
         es: "Pica la pechuga a cuchillo en trozos de unos 5 mm. Pica fino el ajo y corta la cebolla y el pimiento rojo en dados de 1 cm.",
+        fr: "Hachez finement le blanc de poulet au couteau, en morceaux d'environ 5 mm. Hachez finement l'ail et coupez l'oignon et le poivron rouge en dés de 1 cm.",
       },
     },
     {
@@ -62,6 +65,7 @@ export const recipe: Recipe = {
         ja: "フライパンに卵用の油を中火で熱し、目玉焼きを作って取り出します。",
         en: "Heat the oil for the egg in a frying pan over medium heat, fry the egg, and set it aside.",
         es: "Calienta en una sartén a fuego medio el aceite del huevo, fríe el huevo y resérvalo.",
+        fr: "Faites chauffer l'huile de l'œuf dans une poêle à feu moyen, faites cuire l'œuf au plat et réservez-le.",
       },
     },
     {
@@ -70,6 +74,7 @@ export const recipe: Recipe = {
         ja: "同じフライパンに油とにんにく、一味唐辛子を入れて中火にかけ、香りが出たら鶏肉を加え、ほぐしながら4〜5分、色が完全に変わるまで炒めます。玉ねぎと赤ピーマンを加えて2分炒め、ナンプラー、オイスターソース、砂糖で調味し、火を止めてバジルを混ぜます。",
         en: "Put the oil, garlic, and ground chili in the same pan over medium heat. When fragrant, add the chicken and stir-fry for 4–5 minutes, breaking it up, until it has completely changed color. Add the onion and red pepper, stir-fry for 2 minutes, season with the fish sauce, oyster sauce, and sugar, turn off the heat, and stir in the basil.",
         es: "Pon en la misma sartén el aceite, el ajo y la guindilla molida a fuego medio. Cuando huela, añade el pollo y saltéalo 4-5 minutos, deshaciéndolo, hasta que cambie de color por completo. Añade la cebolla y el pimiento rojo, saltea 2 minutos, sazona con la salsa de pescado, la salsa de ostras y el azúcar, apaga el fuego y mezcla la albahaca.",
+        fr: "Mettez l'huile, l'ail et le piment moulu dans la même poêle à feu moyen. Quand ils deviennent parfumés, ajoutez le poulet et faites-le sauter 4 à 5 minutes en l'émiettant, jusqu'à ce qu'il ait complètement changé de couleur. Ajoutez l'oignon et le poivron rouge, faites sauter 2 minutes, assaisonnez avec la sauce de poisson, la sauce d'huître et le sucre, éteignez le feu et incorporez le basilic.",
       },
     },
     {
@@ -78,6 +83,7 @@ export const recipe: Recipe = {
         ja: "ご飯を器に盛り、炒めたものと目玉焼きをのせます。",
         en: "Put the rice in a bowl and top with the stir-fry and the fried egg.",
         es: "Pon el arroz en un plato y coloca encima el salteado y el huevo frito.",
+        fr: "Mettez le riz dans un bol et garnissez-le du sauté et de l'œuf au plat.",
       },
     },
   ],
@@ -88,6 +94,7 @@ export const recipe: Recipe = {
         ja: "細かく刻んだ肉は中心まで火を通してください。ピンク色が残らないよう、ほぐしながら炒めます。",
         en: "Cook finely chopped meat through, breaking it up until no pink remains.",
         es: "Cocina bien la carne picada, deshaciéndola hasta que no quede nada rosado.",
+        fr: "Faites bien cuire la viande hachée en l'émiettant, jusqu'à ce qu'il ne reste plus de rose.",
       },
     },
     {
@@ -96,6 +103,7 @@ export const recipe: Recipe = {
         ja: "黄身がやわらかい卵は、妊娠中の方、乳幼児、高齢の方、体調のすぐれない方には向きません。その場合は黄身まで固まるまで加熱してください。",
         en: "Eggs with runny yolks are not recommended for pregnant people, young children, older adults, or anyone unwell; for them, cook until the yolks are firm.",
         es: "Los huevos con la yema líquida no se recomiendan para embarazadas, niños pequeños, personas mayores o enfermas; en esos casos, cocínalos hasta que la yema esté firme.",
+        fr: "Les œufs au jaune coulant sont déconseillés aux femmes enceintes, aux jeunes enfants, aux personnes âgées et aux personnes malades ; pour elles, faites cuire jusqu'à ce que les jaunes soient fermes.",
       },
     },
   ],

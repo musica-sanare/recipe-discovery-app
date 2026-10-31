@@ -3,11 +3,12 @@ import type { Recipe } from "../../shared/content.ts";
 export const recipe: Recipe = {
   id: "khao_pad_egg_shrimp",
   texts: {
-    name: { ja: "卵とえびのカオパット", en: "Khao pad with egg and shrimp", es: "Khao pad de huevo y gambas" },
+    name: { ja: "卵とえびのカオパット", en: "Khao pad with egg and shrimp", es: "Khao pad de huevo y gambas", fr: "Khao pad aux œufs et aux crevettes" },
     summary: {
       ja: "タイの炒めご飯カオパットを、卵と卵白、えびでボリュームを出して作ります。ライムときゅうりを添えます。",
       en: "Thai khao pad fried rice made hearty with eggs, egg whites, and shrimp, served with lime and cucumber.",
       es: "Arroz frito tailandés khao pad, contundente con huevos, claras y gambas, servido con lima y pepino.",
+      fr: "Le riz sauté thaïlandais khao pad, rendu copieux avec des œufs, des blancs d'œufs et des crevettes, servi avec du citron vert et du concombre.",
     },
   },
   cuisine: "southeast_asian",
@@ -32,6 +33,7 @@ export const recipe: Recipe = {
         ja: "成分表に炒めた卵白の値がないため、生の値で計算しています。",
         en: "The tables have no value for scrambled egg white, so the raw value is used.",
         es: "Las tablas no tienen un valor para la clara revuelta, así que se usa el valor en crudo.",
+        fr: "Les tables n'ont pas de valeur pour le blanc d'œuf brouillé ; la valeur à l'état cru est donc utilisée.",
       },
     },
     {
@@ -45,6 +47,7 @@ export const recipe: Recipe = {
         ja: "成分表に炒めたえびの値がないため、生の値で計算しています。",
         en: "The tables have no value for stir-fried shrimp, so the raw value is used.",
         es: "Las tablas no tienen un valor para las gambas salteadas, así que se usa el valor en crudo.",
+        fr: "Les tables n'ont pas de valeur pour les crevettes sautées ; la valeur à l'état cru est donc utilisée.",
       },
     },
     { key: "oil", food: "vegetable_oil", grams: 4, state: "as_is", measure: { unit: "tsp", quantity: 1 }, role: "fat" },
@@ -65,6 +68,7 @@ export const recipe: Recipe = {
         ja: "えびは背わたを取ります。玉ねぎは粗みじん、青ねぎは小口切り、きゅうりは輪切りにします。卵と卵白を合わせてよく溶きます。",
         en: "Devein the shrimp. Coarsely chop the onion, slice the green onion thinly, and slice the cucumber into rounds. Beat the eggs and egg whites together well.",
         es: "Quita el intestino a las gambas. Pica la cebolla en trozos, corta la cebolleta en rodajas finas y el pepino en rodajas. Bate bien juntos los huevos y las claras.",
+        fr: "Retirez la veine des crevettes. Hachez grossièrement l'oignon, émincez finement l'oignon vert et coupez le concombre en rondelles. Battez bien ensemble les œufs et les blancs d'œufs.",
       },
     },
     {
@@ -73,6 +77,7 @@ export const recipe: Recipe = {
         ja: "フライパンに卵用の油を強めの中火で熱し、卵液を入れて大きく混ぜ、固まったら取り出します。",
         en: "Heat the oil for the eggs in a frying pan over medium-high heat, add the egg mixture, stir in large strokes, and take it out once set.",
         es: "Calienta en una sartén a fuego medio-alto el aceite de los huevos, añade el huevo batido, remueve con movimientos amplios y sácalo cuando cuaje.",
+        fr: "Faites chauffer l'huile des œufs dans une poêle à feu moyen-vif, ajoutez les œufs battus, remuez à grands gestes et retirez-les dès qu'ils sont pris.",
       },
     },
     {
@@ -81,6 +86,7 @@ export const recipe: Recipe = {
         ja: "同じフライパンに油を熱し、玉ねぎとえびを炒めます。えびの色が変わったらご飯を加えてほぐしながら炒め、ナンプラー、オイスターソース、砂糖で調味します。卵を戻して混ぜ、青ねぎを加えます。",
         en: "Heat the oil in the same pan and stir-fry the onion and shrimp. When the shrimp change color, add the rice and stir-fry, breaking it up, then season with the fish sauce, oyster sauce, and sugar. Return the eggs, toss, and add the green onion.",
         es: "Calienta el aceite en la misma sartén y saltea la cebolla y las gambas. Cuando las gambas cambien de color, añade el arroz y saltéalo, soltándolo, y sazona con la salsa de pescado, la salsa de ostras y el azúcar. Devuelve el huevo, mezcla y añade la cebolleta.",
+        fr: "Faites chauffer l'huile dans la même poêle et faites sauter l'oignon et les crevettes. Quand les crevettes changent de couleur, ajoutez le riz et faites sauter en l'égrainant, puis assaisonnez avec la sauce de poisson, la sauce d'huître et le sucre. Remettez les œufs, mélangez et ajoutez l'oignon vert.",
       },
     },
     {
@@ -89,6 +95,7 @@ export const recipe: Recipe = {
         ja: "器に盛り、きゅうりを添えて、ライム果汁をかけて食べます。",
         en: "Plate it with the cucumber and squeeze the lime juice over before eating.",
         es: "Sírvelo con el pepino y rocía con el zumo de lima antes de comer.",
+        fr: "Dressez avec le concombre et pressez le jus de citron vert dessus avant de manger.",
       },
     },
   ],
@@ -99,6 +106,7 @@ export const recipe: Recipe = {
         ja: "えびは全体が赤くなり、身が白く不透明になるまで加熱してください。",
         en: "Cook the shrimp until they are pink all over and the flesh is white and opaque.",
         es: "Cocina las gambas hasta que estén rosadas por completo y la carne esté blanca y opaca.",
+        fr: "Faites cuire les crevettes jusqu'à ce qu'elles soient roses partout et que leur chair soit blanche et opaque.",
       },
     },
     {
@@ -107,6 +115,7 @@ export const recipe: Recipe = {
         ja: "卵は固まるまで加熱してください。",
         en: "Cook the eggs until set.",
         es: "Cocina los huevos hasta que cuajen.",
+        fr: "Faites cuire les œufs jusqu'à ce qu'ils soient pris.",
       },
     },
   ],

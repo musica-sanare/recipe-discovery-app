@@ -26,7 +26,7 @@ describe("locale preference", () => {
   });
 
   it("ignores an invalid stored value and uses the browser language", () => {
-    expect(resolveInitialLocale(memoryStorage({ [LOCALE_STORAGE_KEY]: "fr" }), ["fr-FR", "es-MX"])).toBe("es");
+    expect(resolveInitialLocale(memoryStorage({ [LOCALE_STORAGE_KEY]: "de" }), ["de-DE", "es-MX"])).toBe("es");
   });
 
   it("falls back to Japanese", () => {
@@ -36,6 +36,7 @@ describe("locale preference", () => {
 
   it("matches the primary language case-insensitively", () => {
     expect(detectBrowserLocale(["EN-gb"])).toBe("en");
+    expect(detectBrowserLocale(["fr-CA"])).toBe("fr");
   });
 
   it("survives unavailable storage", () => {

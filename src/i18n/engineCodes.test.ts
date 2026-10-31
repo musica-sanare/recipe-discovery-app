@@ -58,7 +58,7 @@ describe("engine codes in the UI catalogs", () => {
     expect(missing).toEqual([]);
   });
 
-  it.each(["en", "es"] as const)("%s shows the number alone for pieces (ADR-026)", (locale) => {
+  it.each(["en", "es", "fr"] as const)("%s shows the number alone for pieces (ADR-026)", (locale) => {
     const household = resources[locale].translation.unit.household;
     expect([household.piece_one, household.piece_other]).toEqual(["{{amount}}", "{{amount}}"]);
   });

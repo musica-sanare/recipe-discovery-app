@@ -216,13 +216,13 @@ describe("navigation (ADR-030 D2)", () => {
 });
 
 describe("accessibility (axe-core, ADR-030 D11)", () => {
-  it.each(["ja", "en", "es"] as const)("the targets view has no violations in %s", async (locale) => {
+  it.each(["ja", "en", "es", "fr"] as const)("the targets view has no violations in %s", async (locale) => {
     renderApp(locale);
     await screen.findByRole("heading", { level: 1 });
     expect(await axeViolations()).toEqual([]);
   });
 
-  it.each(["ja", "en", "es"] as const)("the reload notice and the not-found detail have no violations in %s", async (locale) => {
+  it.each(["ja", "en", "es", "fr"] as const)("the reload notice and the not-found detail have no violations in %s", async (locale) => {
     window.history.replaceState({ view: "comparison" }, "", "/");
     renderApp(locale);
     await screen.findByRole("heading", { level: 1 });
@@ -235,7 +235,7 @@ describe("accessibility (axe-core, ADR-030 D11)", () => {
     expect(await axeViolations()).toEqual([]);
   });
 
-  it.each(["ja", "en", "es"] as const)("the content error state has no violations in %s", async (locale) => {
+  it.each(["ja", "en", "es", "fr"] as const)("the content error state has no violations in %s", async (locale) => {
     vi.mocked(fetch).mockRejectedValueOnce(new TypeError("Failed to fetch"));
     renderApp(locale);
     await screen.findByRole("alert");

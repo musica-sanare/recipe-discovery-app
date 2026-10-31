@@ -33,7 +33,7 @@ describe.each(SUPPORTED_LOCALES)("messages in %s", (locale) => {
   it.each(CONTRADICTIONS)("contradiction $severity has a complete message with formatted numbers", (contradiction) => {
     const message = contradictionMessage(contradiction, t, locale);
     expect(message).not.toMatch(/\{\{|contradiction\./);
-    expect(message).toContain(contradiction.severity === "blocking" ? (locale === "es" ? "1230" : "1,230") : "480");
+    expect(message).toContain(contradiction.severity === "blocking" ? { ja: "1,230", en: "1,230", es: "1230", fr: "1\u202f230" }[locale] : "480");
   });
 });
 

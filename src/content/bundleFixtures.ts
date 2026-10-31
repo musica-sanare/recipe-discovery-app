@@ -41,11 +41,17 @@ const FOOD_TEXTS: Readonly<Record<Locale, TextBundle["foods"]>> = {
     egg: { name: "Huevo", aliases: [] },
     potato: { name: "Patata", aliases: ["papa"] },
   },
+  fr: {
+    chicken_breast: { name: "Blanc de poulet sans peau", aliases: ["blanc de poulet"] },
+    chicken_thigh: { name: "Haut de cuisse de poulet sans peau", aliases: ["cuisse de poulet"] },
+    egg: { name: "Œuf", aliases: [] },
+    potato: { name: "Pomme de terre", aliases: ["patate"] },
+  },
 };
 
 export const fixtureText = (locale: Locale): TextBundle => ({ ...fixtureVersions, locale, foods: FOOD_TEXTS[locale], recipes: {} });
 
-export const fixtureUrls: ContentUrls = { calc: "/calc.json", text: { ja: "/text-ja.json", en: "/text-en.json", es: "/text-es.json" } };
+export const fixtureUrls: ContentUrls = { calc: "/calc.json", text: { ja: "/text-ja.json", en: "/text-en.json", es: "/text-es.json", fr: "/text-fr.json" } };
 
 /** A fetch that serves the fixture bundles at `fixtureUrls`. */
 export function fixtureFetch(url: string): Promise<Response> {
@@ -54,6 +60,7 @@ export function fixtureFetch(url: string): Promise<Response> {
     [fixtureUrls.text.ja]: fixtureText("ja"),
     [fixtureUrls.text.en]: fixtureText("en"),
     [fixtureUrls.text.es]: fixtureText("es"),
+    [fixtureUrls.text.fr]: fixtureText("fr"),
   };
   const body = bodies[url];
   return Promise.resolve(body === undefined ? new Response("Not found", { status: 404 }) : Response.json(body));

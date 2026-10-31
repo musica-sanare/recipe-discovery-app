@@ -1,7 +1,7 @@
 /**
  * Forbidden-expression matching (docs/en/CONTENT_POLICY.md §2, §4), shared by content
  * validation and the UI catalog test. Japanese matches substrings; English matches at
- * word starts; Spanish matches after a non-letter, both case-insensitively.
+ * word starts; Spanish and French match after a non-letter, all case-insensitively.
  */
 import type { Locale } from "./locales.ts";
 
@@ -12,6 +12,7 @@ export function forbiddenIn(locale: Locale, text: string, expressions: readonly 
     case "en":
       return expressions.filter((word) => new RegExp(`\\b${word}`, "i").test(text));
     case "es":
+    case "fr":
       return expressions.filter((word) => new RegExp(`(^|[^\\p{L}])${word}`, "iu").test(text));
   }
 }

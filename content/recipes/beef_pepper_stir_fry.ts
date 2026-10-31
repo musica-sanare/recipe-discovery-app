@@ -3,11 +3,12 @@ import type { Recipe } from "../../shared/content.ts";
 export const recipe: Recipe = {
   id: "beef_pepper_stir_fry",
   texts: {
-    name: { ja: "牛もも肉とピーマンの細切り炒め", en: "Shredded beef and green pepper stir-fry", es: "Salteado de ternera y pimiento verde en tiras" },
+    name: { ja: "牛もも肉とピーマンの細切り炒め", en: "Shredded beef and green pepper stir-fry", es: "Salteado de ternera y pimiento verde en tiras", fr: "Sauté de bœuf et de poivron vert en lanières" },
     summary: {
       ja: "細切りの牛もも肉とピーマンを、しょうゆとしょうがで手早く炒めます。ご飯を添えます。",
       en: "Thin strips of lean beef and green pepper quickly stir-fried with soy sauce and ginger, served with rice.",
       es: "Tiras finas de ternera magra y pimiento verde salteadas rápidamente con salsa de soja y jengibre, con arroz.",
+      fr: "Fines lanières de bœuf maigre et de poivron vert sautées rapidement à la sauce soja et au gingembre, servies avec du riz.",
     },
   },
   cuisine: "chinese",
@@ -31,6 +32,7 @@ export const recipe: Recipe = {
         ja: "成分表に炒めた牛もも肉の値がないため、生の値で計算しています。",
         en: "The tables have no value for stir-fried beef round, so the raw value is used.",
         es: "Las tablas no tienen un valor para la ternera salteada, así que se usa el valor en crudo.",
+        fr: "Les tables n'ont pas de valeur pour la tende de tranche de bœuf sautée ; la valeur à l'état cru est donc utilisée.",
       },
     },
     { key: "starch", food: "potato_starch", grams: 3, state: "as_is", measure: { unit: "tsp", quantity: 1 }, role: "coating", linkedTo: "beef" },
@@ -44,7 +46,7 @@ export const recipe: Recipe = {
     { key: "rice", food: "rice_cooked", grams: 200, state: "as_is", role: "main_carb", adjust: { kind: "grams", min: 100, max: 300, step: 10 } },
   ],
   sides: [
-    { key: "rice", label: { ja: "ご飯", en: "Rice", es: "Arroz" }, ingredients: ["rice"], solverMayRemove: true },
+    { key: "rice", label: { ja: "ご飯", en: "Rice", es: "Arroz", fr: "Riz" }, ingredients: ["rice"], solverMayRemove: true },
   ],
   steps: [
     {
@@ -53,6 +55,7 @@ export const recipe: Recipe = {
         ja: "牛肉を細切りにし、料理酒をもみ込んでから片栗粉をまぶします。ピーマンは細切りにし、しょうがはせん切りにします。",
         en: "Cut the beef into thin strips, rub in the cooking sake, and coat with the potato starch. Cut the green peppers into strips and the ginger into fine matchsticks.",
         es: "Corta la ternera en tiras finas, mézclala con el sake de cocina y rebózala con la fécula de patata. Corta los pimientos verdes en tiras y el jengibre en bastoncitos finos.",
+        fr: "Coupez le bœuf en fines lanières, frottez-le avec le saké de cuisine et enrobez-le de fécule de pomme de terre. Coupez les poivrons verts en lanières et le gingembre en fine julienne.",
       },
     },
     {
@@ -61,6 +64,7 @@ export const recipe: Recipe = {
         ja: "フライパンにピーマン用の油を強めの中火で熱し、ピーマンを1分炒めて取り出します。",
         en: "Heat the oil for the peppers in a frying pan over medium-high heat, stir-fry the peppers for 1 minute, and set them aside.",
         es: "Calienta el aceite de los pimientos en una sartén a fuego medio-alto, saltea los pimientos 1 minuto y resérvalos.",
+        fr: "Faites chauffer l'huile des poivrons dans une poêle à feu moyen-vif, faites sauter les poivrons 1 minute et réservez-les.",
       },
     },
     {
@@ -69,6 +73,7 @@ export const recipe: Recipe = {
         ja: "牛肉用の油を足し、しょうがと牛肉を色が完全に変わるまで炒めます。ピーマンを戻し、しょうゆと砂糖を加えて炒め合わせます。",
         en: "Add the oil for the beef and stir-fry the ginger and beef until the beef is browned all over. Return the peppers, add the soy sauce and sugar, and toss together.",
         es: "Añade el aceite de la ternera y saltea el jengibre y la ternera hasta que esté dorada por completo. Devuelve los pimientos, añade la salsa de soja y el azúcar y mezcla.",
+        fr: "Ajoutez l'huile du bœuf et faites sauter le gingembre et le bœuf jusqu'à ce que la viande soit dorée de toutes parts. Remettez les poivrons, ajoutez la sauce soja et le sucre et mélangez.",
       },
     },
     {
@@ -77,6 +82,7 @@ export const recipe: Recipe = {
         ja: "器に盛ります。",
         en: "Transfer to a plate.",
         es: "Sírvelo en un plato.",
+        fr: "Dressez sur une assiette.",
       },
     },
   ],
@@ -87,6 +93,7 @@ export const recipe: Recipe = {
         ja: "細切りにした牛肉は、色が完全に変わるまで炒めてください。",
         en: "Stir-fry the beef strips until they are browned all over.",
         es: "Saltea las tiras de ternera hasta que estén doradas por completo.",
+        fr: "Faites sauter les lanières de bœuf jusqu'à ce qu'elles soient dorées de toutes parts.",
       },
     },
   ],

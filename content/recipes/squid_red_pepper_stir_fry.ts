@@ -3,11 +3,12 @@ import type { Recipe } from "../../shared/content.ts";
 export const recipe: Recipe = {
   id: "squid_red_pepper_stir_fry",
   texts: {
-    name: { ja: "いかとパプリカの甘辛炒め", en: "Spicy-sweet squid and red pepper stir-fry", es: "Salteado dulce y picante de calamar y pimiento rojo" },
+    name: { ja: "いかとパプリカの甘辛炒め", en: "Spicy-sweet squid and red pepper stir-fry", es: "Salteado dulce y picante de calamar y pimiento rojo", fr: "Sauté de calmar et poivron rouge sucré-pimenté" },
     summary: {
       ja: "韓国の家庭料理をヒントに、いかとパプリカ、玉ねぎを豆板醤入りの甘辛だれで炒めます。ご飯を添えます。",
       en: "Inspired by Korean home cooking: squid, red pepper, and onion stir-fried in a sweet chili bean sauce, with rice.",
       es: "Inspirado en la cocina casera coreana: calamar, pimiento rojo y cebolla salteados en una salsa dulce de pasta de habas picante, con arroz.",
+      fr: "Inspiré de la cuisine familiale coréenne : calmar, poivron rouge et oignon sautés dans une sauce sucrée à la pâte de piment aux fèves, avec du riz.",
     },
   },
   cuisine: "korean",
@@ -31,6 +32,7 @@ export const recipe: Recipe = {
         ja: "成分表に炒めたいかの値がないため、生の値で計算しています。内臓と軟骨を除いた重さです。",
         en: "The tables have no value for stir-fried squid, so the raw value is used. Weight after removing the innards and cartilage.",
         es: "Las tablas no tienen un valor para el calamar salteado, así que se usa el valor en crudo. Peso sin vísceras ni pluma.",
+        fr: "Les tables n'ont pas de valeur pour le calmar sauté ; la valeur à l'état cru est donc utilisée. Poids après retrait des viscères et du cartilage.",
       },
     },
     { key: "oil_squid", food: "vegetable_oil", grams: 3, state: "as_is", measure: { unit: "tsp", quantity: 0.75 }, role: "fat", linkedTo: "squid" },
@@ -45,7 +47,7 @@ export const recipe: Recipe = {
     { key: "rice", food: "rice_cooked", grams: 200, state: "as_is", role: "main_carb", adjust: { kind: "grams", min: 100, max: 300, step: 10 } },
   ],
   sides: [
-    { key: "rice", label: { ja: "ご飯", en: "Rice", es: "Arroz" }, ingredients: ["rice"], solverMayRemove: true },
+    { key: "rice", label: { ja: "ご飯", en: "Rice", es: "Arroz", fr: "Riz" }, ingredients: ["rice"], solverMayRemove: true },
   ],
   steps: [
     {
@@ -54,6 +56,7 @@ export const recipe: Recipe = {
         ja: "いかの胴は1cm幅の輪切りに、足は2本ずつに切ります。パプリカは細切り、玉ねぎはくし形に切り、にんにくはすりおろして、豆板醤、しょうゆ、砂糖と混ぜます。",
         en: "Cut the squid body into 1 cm rings and the tentacles into pairs. Cut the red pepper into strips and the onion into wedges. Grate the garlic and mix it with the doubanjiang, soy sauce, and sugar.",
         es: "Corta el cuerpo del calamar en anillas de 1 cm y los tentáculos de dos en dos. Corta el pimiento rojo en tiras y la cebolla en gajos. Ralla el ajo y mézclalo con el doubanjiang, la salsa de soja y el azúcar.",
+        fr: "Coupez le corps du calmar en anneaux de 1 cm et les tentacules deux par deux. Coupez le poivron rouge en lanières et l'oignon en quartiers. Râpez l'ail et mélangez-le avec le doubanjiang, la sauce soja et le sucre.",
       },
     },
     {
@@ -62,6 +65,7 @@ export const recipe: Recipe = {
         ja: "フライパンに野菜用の油を強めの中火で熱し、玉ねぎとパプリカを2分炒めて取り出します。",
         en: "Heat the oil for the vegetables in a frying pan over medium-high heat, stir-fry the onion and red pepper for 2 minutes, and set them aside.",
         es: "Calienta el aceite de las verduras en una sartén a fuego medio-alto, saltea la cebolla y el pimiento rojo 2 minutos y resérvalos.",
+        fr: "Faites chauffer l'huile des légumes dans une poêle à feu moyen-vif, faites sauter l'oignon et le poivron rouge 2 minutes et réservez-les.",
       },
     },
     {
@@ -70,6 +74,7 @@ export const recipe: Recipe = {
         ja: "いか用の油を足し、いかを白く不透明になるまで2分炒めます。野菜を戻してたれを加え、手早く炒め合わせます。",
         en: "Add the oil for the squid and stir-fry the squid for 2 minutes until white and opaque. Return the vegetables, add the sauce, and toss quickly.",
         es: "Añade el aceite del calamar y saltea el calamar 2 minutos hasta que esté blanco y opaco. Devuelve las verduras, añade la salsa y mezcla rápidamente.",
+        fr: "Ajoutez l'huile du calmar et faites sauter le calmar 2 minutes, jusqu'à ce qu'il soit blanc et opaque. Remettez les légumes, ajoutez la sauce et mélangez rapidement.",
       },
     },
     {
@@ -78,6 +83,7 @@ export const recipe: Recipe = {
         ja: "ごま油を回しかけます。",
         en: "Drizzle with the sesame oil.",
         es: "Rocía con el aceite de sésamo.",
+        fr: "Arrosez d'huile de sésame.",
       },
     },
   ],
@@ -88,6 +94,7 @@ export const recipe: Recipe = {
         ja: "いかは身が白く不透明になるまで加熱してください。",
         en: "Cook the squid until the flesh is white and opaque.",
         es: "Cocina el calamar hasta que la carne esté blanca y opaca.",
+        fr: "Faites cuire le calmar jusqu'à ce que sa chair soit blanche et opaque.",
       },
     },
   ],

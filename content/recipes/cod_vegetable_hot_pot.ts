@@ -3,11 +3,12 @@ import type { Recipe } from "../../shared/content.ts";
 export const recipe: Recipe = {
   id: "cod_vegetable_hot_pot",
   texts: {
-    name: { ja: "たらと野菜のスープ鍋", en: "Cod and vegetable hot pot", es: "Olla caliente de bacalao y verduras" },
+    name: { ja: "たらと野菜のスープ鍋", en: "Cod and vegetable hot pot", es: "Olla caliente de bacalao y verduras", fr: "Marmite de cabillaud et de légumes" },
     summary: {
       ja: "たらと豆腐、キャベツ、しいたけを昆布のいらないスープで煮て、レモンじょうゆで食べます。ご飯を添えます。",
       en: "Cod, tofu, cabbage, and shiitake simmered in a simple broth and eaten with lemon soy sauce, with rice.",
       es: "Bacalao, tofu, repollo y shiitake cocidos en un caldo sencillo y servidos con salsa de soja y limón, con arroz.",
+      fr: "Cabillaud, tofu, chou et shiitake mijotés dans un bouillon simple et dégustés avec une sauce soja au citron, avec du riz.",
     },
   },
   cuisine: "japanese",
@@ -32,6 +33,7 @@ export const recipe: Recipe = {
         ja: "成分表に煮たたらの値がないため、生の値で計算しています。切り身1切れ約100gです。",
         en: "The tables have no value for simmered cod, so the raw value is used. One fillet is about 100 g.",
         es: "Las tablas no tienen un valor para el bacalao cocido, así que se usa el valor en crudo. Un filete pesa unos 100 g.",
+        fr: "Les tables n'ont pas de valeur pour le cabillaud mijoté ; la valeur à l'état cru est donc utilisée. Un filet pèse environ 100 g.",
       },
     },
     {
@@ -46,6 +48,7 @@ export const recipe: Recipe = {
         ja: "成分表に加熱した豆腐の値がないため、加熱前の値で計算しています。",
         en: "The tables have no value for cooked tofu, so the uncooked value is used.",
         es: "Las tablas no tienen un valor para el tofu cocinado, así que se usa el valor sin cocinar.",
+        fr: "Les tables n'ont pas de valeur pour le tofu cuit ; la valeur avant cuisson est donc utilisée.",
       },
     },
     { key: "cabbage", food: "cabbage", grams: 100, state: "boil", role: "vegetable" },
@@ -57,7 +60,7 @@ export const recipe: Recipe = {
     { key: "rice", food: "rice_cooked", grams: 180, state: "as_is", role: "main_carb", adjust: { kind: "grams", min: 100, max: 300, step: 10 } },
   ],
   sides: [
-    { key: "rice", label: { ja: "ご飯", en: "Rice", es: "Arroz" }, ingredients: ["rice"], solverMayRemove: true },
+    { key: "rice", label: { ja: "ご飯", en: "Rice", es: "Arroz", fr: "Riz" }, ingredients: ["rice"], solverMayRemove: true },
   ],
   steps: [
     {
@@ -66,6 +69,7 @@ export const recipe: Recipe = {
         ja: "たらを3等分に切ります。豆腐は4等分、キャベツはざく切り、長ねぎは斜め切りにし、しいたけは軸を取ります。しょうゆとレモン汁を混ぜてたれを作ります。",
         en: "Cut the cod into three pieces. Quarter the tofu, roughly chop the cabbage, slice the long onion on the diagonal, and remove the shiitake stems. Mix the soy sauce and lemon juice for the dipping sauce.",
         es: "Corta el bacalao en tres trozos. Corta el tofu en cuartos, trocea el repollo, corta el puerro japonés en diagonal y quita los pies de los shiitake. Mezcla la salsa de soja y el zumo de limón para la salsa.",
+        fr: "Coupez le cabillaud en trois morceaux. Coupez le tofu en quatre, coupez grossièrement le chou, émincez le poireau japonais en biais et retirez le pied des shiitake. Mélangez la sauce soja et le jus de citron pour la sauce.",
       },
     },
     {
@@ -74,6 +78,7 @@ export const recipe: Recipe = {
         ja: "鍋に水500mLと料理酒を入れて煮立て、キャベツ、しいたけ、長ねぎを入れて3分煮ます。たらと豆腐を加え、弱めの中火で5分煮ます。",
         en: "Bring 500 mL of water and the cooking sake to a boil in a pot, add the cabbage, shiitake, and long onion, and simmer for 3 minutes. Add the cod and tofu and simmer over medium-low heat for 5 minutes.",
         es: "Lleva a ebullición 500 mL de agua y el sake de cocina en una olla, añade el repollo, los shiitake y el puerro japonés y cuece 3 minutos. Agrega el bacalao y el tofu y cuece a fuego medio-bajo 5 minutos.",
+        fr: "Portez à ébullition 500 mL d'eau et le saké de cuisine dans une casserole, ajoutez le chou, les shiitake et le poireau japonais et laissez mijoter 3 minutes. Ajoutez le cabillaud et le tofu et laissez mijoter 5 minutes à feu moyen-doux.",
       },
     },
     {
@@ -82,6 +87,7 @@ export const recipe: Recipe = {
         ja: "取り分けて、たれをつけて食べます。",
         en: "Serve into bowls and eat with the dipping sauce.",
         es: "Sirve en cuencos y acompaña con la salsa.",
+        fr: "Servez dans des bols et dégustez avec la sauce.",
       },
     },
   ],
@@ -92,6 +98,7 @@ export const recipe: Recipe = {
         ja: "魚は中心まで白く不透明になるまで煮てください。",
         en: "Simmer the fish until it is white and opaque in the center.",
         es: "Cuece el pescado hasta que esté blanco y opaco en el centro.",
+        fr: "Faites mijoter le poisson jusqu'à ce qu'il soit blanc et opaque au centre.",
       },
     },
   ],

@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { RULES, formatIssue, validateContent, type ContentInput, type Rule } from "./validate.ts";
 
-const text = (ja: string, en: string, es: string) => ({ ja, en, es });
-const noAliases = { ja: [], en: [], es: [] };
+const text = (ja: string, en: string, es: string, fr: string) => ({ ja, en, es, fr });
+const noAliases = { ja: [], en: [], es: [], fr: [] };
 
 /** A minimal valid content set; each test breaks one rule. */
 function fixture() {
@@ -10,20 +10,20 @@ function fixture() {
     foods: [
       {
         id: "chicken",
-        names: text("鶏肉", "Chicken", "Pollo"),
+        names: text("鶏肉", "Chicken", "Pollo", "Poulet"),
         aliases: noAliases,
         composition: { raw: "11220", grill: "11288" },
         allergens: [{ allergen: "chicken", confidence: "contains" }],
         proteinGroup: "chicken",
       },
-      { id: "egg", names: text("卵", "Egg", "Huevo"), aliases: noAliases, composition: { raw: "12004" }, allergens: [{ allergen: "egg", confidence: "contains" }], proteinGroup: "egg" },
-      { id: "rice", names: text("ご飯", "Rice", "Arroz"), aliases: noAliases, composition: { as_is: "01088" }, allergens: [] },
-      { id: "cabbage", names: text("キャベツ", "Cabbage", "Repollo"), aliases: noAliases, composition: { raw: "06061" }, allergens: [] },
-      { id: "salt", names: text("塩", "Salt", "Sal"), aliases: noAliases, composition: { as_is: "17012" }, allergens: [] },
+      { id: "egg", names: text("卵", "Egg", "Huevo", "Œuf"), aliases: noAliases, composition: { raw: "12004" }, allergens: [{ allergen: "egg", confidence: "contains" }], proteinGroup: "egg" },
+      { id: "rice", names: text("ご飯", "Rice", "Arroz", "Riz"), aliases: noAliases, composition: { as_is: "01088" }, allergens: [] },
+      { id: "cabbage", names: text("キャベツ", "Cabbage", "Repollo", "Chou"), aliases: noAliases, composition: { raw: "06061" }, allergens: [] },
+      { id: "salt", names: text("塩", "Salt", "Sal", "Sel"), aliases: noAliases, composition: { as_is: "17012" }, allergens: [] },
     ] as Record<string, unknown>[],
     recipe: {
       id: "test_recipe",
-      texts: { name: text("焼き鳥", "Grilled chicken", "Pollo a la plancha"), summary: text("鶏肉を焼きます。", "Grilled chicken.", "Pollo a la plancha.") },
+      texts: { name: text("焼き鳥", "Grilled chicken", "Pollo a la plancha", "Poulet grillé"), summary: text("鶏肉を焼きます。", "Grilled chicken.", "Pollo a la plancha.", "Poulet grillé.") },
       cuisine: "japanese",
       goals: ["cut"],
       mainProteinGroup: "chicken",
@@ -40,14 +40,14 @@ function fixture() {
         { key: "rice", food: "rice", grams: 150, state: "as_is", role: "main_carb", adjust: { kind: "grams", min: 100, max: 250, step: 10 } },
       ] as Record<string, unknown>[],
       sides: [
-        { key: "rice", label: text("ご飯", "Rice", "Arroz"), ingredients: ["rice"], solverMayRemove: true },
-        { key: "cabbage", label: text("キャベツ", "Cabbage", "Repollo"), ingredients: ["cabbage"], solverMayRemove: false },
+        { key: "rice", label: text("ご飯", "Rice", "Arroz", "Riz"), ingredients: ["rice"], solverMayRemove: true },
+        { key: "cabbage", label: text("キャベツ", "Cabbage", "Repollo", "Chou"), ingredients: ["cabbage"], solverMayRemove: false },
       ] as Record<string, unknown>[],
       steps: [
-        { key: "cook", text: text("鶏肉を中火で焼きます。", "Cook the chicken over medium heat.", "Cocina el pollo a fuego medio.") },
-        { key: "cabbage", side: "cabbage", text: text("キャベツを切ります。", "Cut the cabbage.", "Corta el repollo.") },
+        { key: "cook", text: text("鶏肉を中火で焼きます。", "Cook the chicken over medium heat.", "Cocina el pollo a fuego medio.", "Faites cuire le poulet à feu moyen.") },
+        { key: "cabbage", side: "cabbage", text: text("キャベツを切ります。", "Cut the cabbage.", "Corta el repollo.", "Coupez le chou.") },
       ] as Record<string, unknown>[],
-      safetyNotes: [{ key: "doneness", text: text("中心まで火を通します。", "Cook through.", "Cocina por completo.") }] as Record<string, unknown>[],
+      safetyNotes: [{ key: "doneness", text: text("中心まで火を通します。", "Cook through.", "Cocina por completo.", "Faites cuire à cœur.") }] as Record<string, unknown>[],
       substitutions: [] as Record<string, unknown>[],
     },
   };
@@ -60,8 +60,8 @@ function input(content: Fixture, overrides: Partial<ContentInput> = {}): Content
     foods: content.foods,
     recipes: [{ file: "content/recipes/test_recipe.ts", recipe: content.recipe }],
     unregisteredFiles: [],
-    glossary: [text("中火", "medium heat", "fuego medio")],
-    forbiddenExpressions: { ja: ["痩せ"], en: ["burn fat"], es: ["quema grasa"] },
+    glossary: [text("中火", "medium heat", "fuego medio", "feu moyen")],
+    forbiddenExpressions: { ja: ["痩せ"], en: ["burn fat"], es: ["quema grasa"], fr: ["brûle-graisse"] },
     compositionCodes: new Set(["11220", "11288", "12004", "01088", "06061", "17012"]),
     ratedCodes: new Set(["11288"]),
     contentVersion: "2026-10-18.1",
@@ -85,9 +85,10 @@ interface Case {
 const cases: readonly Case[] = [
   { name: "a value outside the schema", rule: "schema", field: "effort", breakIt: (c) => void (c.recipe.effort = 4) },
   { name: "a missing Spanish text", rule: "locale", field: "texts.name.es", breakIt: (c) => void Reflect.deleteProperty(c.recipe.texts.name, "es") },
+  { name: "a missing French text", rule: "locale", field: "texts.name.fr", breakIt: (c) => void Reflect.deleteProperty(c.recipe.texts.name, "fr") },
   { name: "a blank Japanese step", rule: "locale", field: "steps.0.text.ja", breakIt: (c) => void ((c.recipe.steps[0]?.["text"] as ReturnType<typeof text>).ja = " ") },
   { name: "a duplicate food id", rule: "unique-id", field: "id", breakIt: (c) => void c.foods.push({ ...c.foods[4] }) },
-  { name: "a duplicate step key", rule: "unique-id", field: "steps", breakIt: (c) => void c.recipe.steps.push({ key: "cook", text: text("盛ります。", "Plate.", "Emplata.") }) },
+  { name: "a duplicate step key", rule: "unique-id", field: "steps", breakIt: (c) => void c.recipe.steps.push({ key: "cook", text: text("盛ります。", "Plate.", "Emplata.", "Dressez.") }) },
   { name: "a file name that differs from the id", rule: "registry", field: "id", breakIt: (c) => ({ recipes: [{ file: "content/recipes/other_name.ts", recipe: c.recipe }] }) },
   { name: "an unregistered recipe file", rule: "registry", field: "(file)", breakIt: () => ({ unregisteredFiles: ["content/recipes/orphan.ts"] }) },
   { name: "an unknown food", rule: "reference", field: "ingredients.salt.food", breakIt: (c) => void (ingredient(c, "salt")["food"] = "pepper") },
@@ -120,7 +121,7 @@ const cases: readonly Case[] = [
     name: "a step note below the default amount",
     rule: "adjustment",
     field: "steps.cook.notes",
-    breakIt: (c) => void (c.recipe.steps[0] = { ...c.recipe.steps[0], notes: [{ ingredient: "chicken", atLeastGrams: 100, text: text("大きいフライパンを使います。", "Use a larger pan.", "Usa una sartén más grande.") }] }),
+    breakIt: (c) => void (c.recipe.steps[0] = { ...c.recipe.steps[0], notes: [{ ingredient: "chicken", atLeastGrams: 100, text: text("大きいフライパンを使います。", "Use a larger pan.", "Usa una sartén más grande.", "Utilisez une plus grande poêle.") }] }),
   },
   { name: "a link to a fixed ingredient", rule: "link", field: "ingredients.salt.linkedTo", breakIt: (c) => void (ingredient(c, "salt")["linkedTo"] = "cabbage") },
   { name: "an ingredient in two sides", rule: "side", field: "sides", breakIt: (c) => void (c.recipe.sides[1] = { ...c.recipe.sides[1], ingredients: ["cabbage", "rice"] }) },
@@ -129,13 +130,15 @@ const cases: readonly Case[] = [
     name: "a substitution for a counted ingredient without bounds",
     rule: "substitution",
     field: "substitutions.chicken_egg.adjust",
-    breakIt: (c) => void c.recipe.substitutions.push({ key: "chicken_egg", ingredient: "egg", food: "chicken", state: "grill", ratio: 1, note: text("鶏肉でも作れます。", "Works with chicken.", "También con pollo.") }),
+    breakIt: (c) => void c.recipe.substitutions.push({ key: "chicken_egg", ingredient: "egg", food: "chicken", state: "grill", ratio: 1, note: text("鶏肉でも作れます。", "Works with chicken.", "También con pollo.", "Fonctionne aussi avec du poulet.") }),
   },
   { name: "a duplicate allergen", rule: "allergen", field: "allergens", breakIt: (c) => void (c.foods[0] = { ...c.foods[0], allergens: [{ allergen: "chicken", confidence: "contains" }, { allergen: "chicken", confidence: "may_contain" }] }) },
   { name: "chicken without a safety note", rule: "safety-note", field: "safetyNotes", breakIt: (c) => void (c.recipe.safetyNotes = []) },
   { name: "a main protein group of no main protein", rule: "protein-group", field: "mainProteinGroup", breakIt: (c) => void (c.recipe.mainProteinGroup = "pork") },
   { name: "a no_cook recipe with a cooked ingredient", rule: "tag", field: "ingredients.chicken", breakIt: (c) => void (c.recipe.tags = ["no_cook"]) },
   { name: "a glossary term translated differently", rule: "glossary", field: "steps.0.text.en", breakIt: (c) => void ((c.recipe.steps[0]?.["text"] as ReturnType<typeof text>).en = "Cook the chicken over moderate heat.") },
+  { name: "a glossary term translated differently in French", rule: "glossary", field: "steps.0.text.fr", breakIt: (c) => void ((c.recipe.steps[0]?.["text"] as ReturnType<typeof text>).fr = "Faites cuire le poulet à feu modéré.") },
+  { name: "a health claim in French", rule: "forbidden-expression", field: "texts.summary.fr", breakIt: (c) => void (c.recipe.texts.summary.fr = "Un poulet brûle-graisse.") },
   { name: "a health claim", rule: "forbidden-expression", field: "texts.summary.en", breakIt: (c) => void (c.recipe.texts.summary.en = "Grilled chicken to burn fat.") },
   { name: "a content version in another format", rule: "version", field: "CONTENT_VERSION", breakIt: () => ({ contentVersion: "2026-10-18" }) },
 ];

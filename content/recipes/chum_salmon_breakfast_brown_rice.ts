@@ -3,11 +3,12 @@ import type { Recipe } from "../../shared/content.ts";
 export const recipe: Recipe = {
   id: "chum_salmon_breakfast_brown_rice",
   texts: {
-    name: { ja: "焼き鮭と玄米の朝ごはん", en: "Grilled chum salmon breakfast with brown rice", es: "Desayuno de salmón keta asado con arroz integral" },
+    name: { ja: "焼き鮭と玄米の朝ごはん", en: "Grilled chum salmon breakfast with brown rice", es: "Desayuno de salmón keta asado con arroz integral", fr: "Petit-déjeuner de saumon kéta grillé et riz complet" },
     summary: {
       ja: "和食の朝ごはんを、トースターで焼いた生鮭、玄米ご飯、豆腐とねぎのみそ汁、ほうれん草のおひたしでそろえます。",
       en: "A Japanese breakfast set: chum salmon grilled in a toaster oven, brown rice, miso soup with tofu and green onion, and boiled spinach with soy sauce.",
       es: "Un desayuno japonés: salmón keta asado en el horno tostador, arroz integral, sopa de miso con tofu y cebolleta, y espinacas hervidas con salsa de soja.",
+      fr: "Un petit-déjeuner japonais : saumon kéta grillé au four grille-pain, riz complet, soupe miso au tofu et à l'oignon vert, et épinards bouillis à la sauce soja.",
     },
   },
   cuisine: "japanese",
@@ -34,6 +35,7 @@ export const recipe: Recipe = {
         ja: "成分表に煮た豆腐の値がないため、生の値で計算しています。",
         en: "The tables have no value for simmered tofu, so the raw value is used.",
         es: "Las tablas no tienen un valor para el tofu cocido, así que se usa el valor en crudo.",
+        fr: "Les tables n'ont pas de valeur pour le tofu mijoté ; la valeur à l'état cru est donc utilisée.",
       },
     },
     { key: "green_onion", food: "green_onion", grams: 5, state: "raw", role: "vegetable" },
@@ -48,6 +50,7 @@ export const recipe: Recipe = {
         ja: "生鮭に塩をふって10分おき、水気を拭きます。アルミホイルを敷いたトースターの天板にのせ、10〜12分焼きます。",
         en: "Sprinkle the salmon with the salt, leave for 10 minutes, and pat dry. Put it on a toaster oven tray lined with aluminum foil and cook for 10–12 minutes.",
         es: "Echa la sal al salmón, déjalo 10 minutos y sécalo. Ponlo en la bandeja del horno tostador forrada con papel de aluminio y ásalo 10-12 minutos.",
+        fr: "Saupoudrez le saumon de sel, laissez reposer 10 minutes et épongez-le. Posez-le sur la plaque du four grille-pain recouverte de papier aluminium et faites-le cuire 10 à 12 minutes.",
       },
     },
     {
@@ -56,6 +59,7 @@ export const recipe: Recipe = {
         ja: "ほうれん草を熱湯で1分ほどゆで、水にとって絞り、3cm長さに切ってしょうゆをかけます。",
         en: "Boil the spinach for about 1 minute, cool it in water, squeeze it, cut it into 3 cm lengths, and pour the soy sauce over.",
         es: "Hierve las espinacas aproximadamente 1 minuto, enfríalas en agua, escúrrelas, córtalas en trozos de 3 cm y rocíalas con la salsa de soja.",
+        fr: "Faites bouillir les épinards environ 1 minute, refroidissez-les dans l'eau, pressez-les, coupez-les en tronçons de 3 cm et arrosez-les de sauce soja.",
       },
     },
     {
@@ -64,6 +68,7 @@ export const recipe: Recipe = {
         ja: "小鍋に水200mLを沸かし、さいの目に切った豆腐を入れて温めます。火を弱めてみそを溶き入れ、沸騰させずに火を止め、小口切りの青ねぎを加えます。",
         en: "Bring 200 mL of water to a boil in a small pan, add the diced tofu, and warm it. Lower the heat, dissolve the miso in it, turn off the heat before it boils, and add the sliced green onion.",
         es: "Lleva a ebullición 200 mL de agua en un cazo, añade el tofu en dados y caliéntalo. Baja el fuego, disuelve el miso, apaga el fuego antes de que hierva y añade la cebolleta en rodajas.",
+        fr: "Portez 200 mL d'eau à ébullition dans une petite casserole, ajoutez le tofu en dés et faites-le chauffer. Baissez le feu, délayez le miso, éteignez le feu avant l'ébullition et ajoutez l'oignon vert émincé.",
       },
     },
     {
@@ -72,6 +77,7 @@ export const recipe: Recipe = {
         ja: "鮭の中まで火が通っていることを確かめ、玄米ご飯、みそ汁、おひたしと一緒に並べます。",
         en: "Check that the salmon is cooked through and serve it with the brown rice, miso soup, and spinach.",
         es: "Comprueba que el salmón esté bien hecho y sírvelo con el arroz integral, la sopa de miso y las espinacas.",
+        fr: "Vérifiez que le saumon est cuit à cœur et servez-le avec le riz complet, la soupe miso et les épinards.",
       },
     },
   ],
@@ -82,6 +88,7 @@ export const recipe: Recipe = {
         ja: "鮭は中心まで火を通してください。身がほぐれやすく、不透明になっていれば焼き上がりです。",
         en: "Cook the salmon through; it is done when it is opaque and flakes easily.",
         es: "Cocina el salmón por completo: está hecho cuando es opaco y se desmenuza con facilidad.",
+        fr: "Faites cuire le saumon à cœur ; il est cuit quand sa chair est opaque et s'effeuille facilement.",
       },
     },
     {
@@ -90,6 +97,7 @@ export const recipe: Recipe = {
         ja: "切り身にも小骨が残っていることがあります。食べるときは骨に注意してください。",
         en: "Fillets may still have small bones; take care when eating.",
         es: "Los filetes pueden tener alguna espina pequeña; ten cuidado al comerlos.",
+        fr: "Les filets peuvent encore contenir de petites arêtes ; faites attention en mangeant.",
       },
     },
   ],

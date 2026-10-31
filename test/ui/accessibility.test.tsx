@@ -30,7 +30,7 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-const LOCALES = ["ja", "en", "es"] as const;
+const LOCALES = ["ja", "en", "es", "fr"] as const;
 
 async function form(locale: Locale) {
   render(
@@ -78,8 +78,8 @@ describe.each(LOCALES)("exceptional states in %s (axe-core)", (locale) => {
     set("fatMax", "10");
     submit();
     await screen.findAllByRole("article");
-    fireEvent.click(screen.getByRole("button", { name: { ja: "別のタイプを見る", en: "Show a different type", es: "Ver otro tipo" }[locale] }));
-    fireEvent.click(screen.getByRole("button", { name: { ja: "近い候補を見る", en: "Show close alternatives", es: "Ver alternativas cercanas" }[locale] }));
+    fireEvent.click(screen.getByRole("button", { name: { ja: "別のタイプを見る", en: "Show a different type", es: "Ver otro tipo", fr: "Voir un autre type" }[locale] }));
+    fireEvent.click(screen.getByRole("button", { name: { ja: "近い候補を見る", en: "Show close alternatives", es: "Ver alternativas cercanas", fr: "Voir des alternatives proches" }[locale] }));
     expect(await axeViolations()).toEqual([]);
   });
 
@@ -87,10 +87,10 @@ describe.each(LOCALES)("exceptional states in %s (axe-core)", (locale) => {
     await form(locale);
     presetCut();
     fireEvent.click(document.querySelectorAll("input[name=equipment-mode]")[1] as HTMLElement);
-    addExcluded({ ja: "卵", en: "egg", es: "huevo" }[locale]);
-    addExcluded({ ja: "ご飯", en: "rice", es: "arroz" }[locale]);
+    addExcluded({ ja: "卵", en: "egg", es: "huevo", fr: "œuf" }[locale]);
+    addExcluded({ ja: "ご飯", en: "rice", es: "arroz", fr: "riz" }[locale]);
     submit();
-    await screen.findByRole("heading", { level: 2, name: { ja: "条件に合うレシピがありません", en: "No recipes match the conditions", es: "Ninguna receta cumple las condiciones" }[locale] });
+    await screen.findByRole("heading", { level: 2, name: { ja: "条件に合うレシピがありません", en: "No recipes match the conditions", es: "Ninguna receta cumple las condiciones", fr: "Aucune recette ne remplit les conditions" }[locale] });
     expect(await axeViolations()).toEqual([]);
   });
 
@@ -100,8 +100,8 @@ describe.each(LOCALES)("exceptional states in %s (axe-core)", (locale) => {
     submit();
     const [first] = await screen.findAllByRole("article");
     fireEvent.click(first?.querySelector("h3 a") as HTMLElement);
-    await screen.findByRole("heading", { level: 2, name: { ja: "1人分の栄養（推定値）", en: "Per serving (estimates)", es: "Por ración (estimaciones)" }[locale] });
-    fireEvent.click(screen.getByRole("button", { name: { ja: "元の量に戻す", en: "Reset the amounts", es: "Restablecer las cantidades" }[locale] }));
+    await screen.findByRole("heading", { level: 2, name: { ja: "1人分の栄養（推定値）", en: "Per serving (estimates)", es: "Por ración (estimaciones)", fr: "Par portion (estimations)" }[locale] });
+    fireEvent.click(screen.getByRole("button", { name: { ja: "元の量に戻す", en: "Reset the amounts", es: "Restablecer las cantidades", fr: "Rétablir les quantités" }[locale] }));
     expect(await axeViolations()).toEqual([]);
   });
 });

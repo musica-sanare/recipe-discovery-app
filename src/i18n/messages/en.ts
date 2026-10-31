@@ -15,6 +15,7 @@ export const en: Messages = {
       ja: "日本語",
       en: "English",
       es: "Español",
+      fr: "Français",
     },
   },
   common: {

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { roundForDisplay } from "../../domain/nutrition/rounding";
+import { SUPPORTED_LOCALES, type Locale } from "../../shared/locales";
 import {
   boundaryNote,
   formatDifference,
@@ -25,6 +26,9 @@ describe("formatNutrient", () => {
     ["en", "NACL_EQ", 1.15, "1.2"],
     ["es", "NACL_EQ", 1.15, "1,2"],
     ["es", "NACL_EQ", 2, "2,0"],
+    ["fr", "ENERC_KCAL", 1034.4, "1\u202f030"],
+    ["fr", "NACL_EQ", 1.15, "1,2"],
+    ["fr", "NACL_EQ", 2, "2,0"],
   ] as const)("%s %s %s → %s", (locale, nutrient, value, expected) => {
     expect(formatNutrient(locale, nutrient, value)).toBe(expected);
   });
@@ -39,8 +43,24 @@ describe("formatNutrient", () => {
     expect(formatNutrient("ja", "FAT-", null)).toBeNull();
   });
 
+  it("shows the same rounded value in every locale, whatever the separators", () => {
+    const plain = (text: string | null) => text?.replace(/[\u202f\u00a0 ]/g, "") ?? null;
+    // ja and en group with commas; es and fr use the comma as the decimal mark.
+    const parse = (locale: Locale, text: string | null) => {
+      const digits = plain(text);
+      if (digits === null) return null;
+      return Number(locale === "es" || locale === "fr" ? digits.replace(/\./g, "").replace(",", ".") : digits.replace(/,/g, ""));
+    };
+    for (const nutrient of ["ENERC_KCAL", "PROT-", "FAT-", "NACL_EQ"] as const) {
+      for (const value of [0, 0.04, 0.45, 1.15, 7.4999, 34.6, 43.915, 498, 1034.4, 12345.6]) {
+        const shown = SUPPORTED_LOCALES.map((locale) => parse(locale, formatNutrient(locale, nutrient, value)));
+        expect(new Set(shown)).toEqual(new Set([roundForDisplay(nutrient, value)]));
+      }
+    }
+  });
+
   it("does not depend on anything but the locale for separators", () => {
-    const values = ["ja", "en", "es"].map((locale) => formatNutrient(locale as "ja", "NACL_EQ", 3.25)?.replace(",", "."));
+    const values = ["ja", "en", "es", "fr"].map((locale) => formatNutrient(locale as "ja", "NACL_EQ", 3.25)?.replace(",", "."));
     expect(new Set(values)).toEqual(new Set(["3.3"]));
   });
 });
@@ -50,6 +70,7 @@ describe("formatNutrientRange", () => {
     ["ja", "500～540"],
     ["en", "500–540"],
     ["es", "500-540"],
+    ["fr", "500\u2013540"],
   ] as const)("%s uses its range format", (locale, expected) => {
     expect(formatNutrientRange(locale, "ENERC_KCAL", 498, 543)).toBe(expected);
   });
@@ -68,6 +89,7 @@ describe("formatGap", () => {
   it("never shows a non-zero gap as zero", () => {
     expect(formatGap("en", "PROT-", 0.4)).toBe("0.4");
     expect(formatGap("es", "PROT-", 0.4)).toBe("0,4");
+    expect(formatGap("fr", "PROT-", 0.4)).toBe("0,4");
     expect(formatGap("ja", "ENERC_KCAL", 3)).toBe("3");
   });
 });
@@ -78,6 +100,7 @@ describe("formatDifference", () => {
     expect(formatDifference("en", "PROT-", 35.4, 44.6)).toBe("+10");
     expect(formatDifference("ja", "ENERC_KCAL", 512, 448)).toBe("-60");
     expect(formatDifference("es", "NACL_EQ", 1.1, 1.2)).toBe("+0,1");
+    expect(formatDifference("fr", "NACL_EQ", 1.1, 1.2)).toBe("+0,1");
     expect(formatDifference("en", "FAT-", 8.2, 7.9)).toBe("0");
   });
 
@@ -98,6 +121,7 @@ describe("boundary notes", () => {
     ["ja", "34.6"],
     ["en", "34.6"],
     ["es", "34,6"],
+    ["fr", "34,6"],
   ] as const)("%s shows one more decimal", (locale, expected) => {
     expect(formatPrecise(locale, "PROT-", 34.6)).toBe(expected);
   });
@@ -117,13 +141,28 @@ describe("household quantities", () => {
     ["es", 1.5, "1 y 1/2"],
     ["ja", 0.25, "1/4"],
     ["es", 2, "2"],
+    ["fr", 1.5, "1 et 1/2"],
+    ["fr", 0.5, "1/2"],
   ] as const)("%s %s → %s", (locale, quantity, expected) => {
-    const templates = { ja: (w: string, f: string) => `${w}と${f}`, en: (w: string, f: string) => `${w} ${f}`, es: (w: string, f: string) => `${w} y ${f}` };
+    const templates = {
+      ja: (w: string, f: string) => `${w}と${f}`,
+      en: (w: string, f: string) => `${w} ${f}`,
+      es: (w: string, f: string) => `${w} y ${f}`,
+      fr: (w: string, f: string) => `${w} et ${f}`,
+    };
     expect(formatQuantity(locale, quantity, templates[locale])).toBe(expected);
   });
 
   it("uses the singular up to one unit", () => {
     expect([0.5, 1, 1.5, 2].map(householdPluralCount)).toEqual([1, 1, 2, 2]);
+  });
+
+  it("passes only counts whose plural category is one or other in every locale", () => {
+    // French puts 0 and 1.5 in "one" and has a "many" category; the counts passed are 1 and 2 only.
+    for (const locale of SUPPORTED_LOCALES) {
+      const rules = new Intl.PluralRules(locale);
+      expect([1, 2].map((count) => rules.select(count))).toEqual(locale === "ja" ? ["other", "other"] : ["one", "other"]);
+    }
   });
 });
 
@@ -132,12 +171,14 @@ describe("other numbers", () => {
     ["ja", "25%"],
     ["en", "25%"],
     ["es", "25 %"],
+    ["fr", "25 %"],
   ] as const)("%s percent", (locale, expected) => {
     expect(formatPercent(locale, 0.25).replace(/\u00a0/g, " ")).toBe(expected);
   });
 
   it("formats fractional scaled counts with one decimal", () => {
     expect(formatNumber("es", 1.5, 1)).toBe("1,5");
+    expect(formatNumber("fr", 1234.5, 1)).toBe("1\u202f234,5");
   });
 });
 

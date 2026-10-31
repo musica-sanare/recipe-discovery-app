@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { ShoppingEntry, ShoppingList } from "../../../domain/shopping/list";
+import type { Locale } from "../../../shared/locales";
 import { createI18n } from "../../i18n/createI18n";
 import { entrySummary, shoppingText } from "./text";
 
@@ -21,7 +22,7 @@ const list: ShoppingList = {
   ],
 };
 
-const text = (locale: "ja" | "en" | "es", checked: readonly string[] = []) => shoppingText({ t: createI18n(locale).t, locale, foodName, recipeName, entries, list, checked });
+const text = (locale: Locale, checked: readonly string[] = []) => shoppingText({ t: createI18n(locale).t, locale, foodName, recipeName, entries, list, checked });
 
 describe("copied text (docs/en/UI_DESIGN.md §3.7)", () => {
   it("lists the recipes, the unchecked items by section, and the basis note in Japanese", () => {

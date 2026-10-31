@@ -3,11 +3,12 @@ import type { Recipe } from "../../shared/content.ts";
 export const recipe: Recipe = {
   id: "natto_cold_soba",
   texts: {
-    name: { ja: "納豆と小松菜の冷たいそば", en: "Cold soba with natto and komatsuna", es: "Soba fría con natto y komatsuna" },
+    name: { ja: "納豆と小松菜の冷たいそば", en: "Cold soba with natto and komatsuna", es: "Soba fría con natto y komatsuna", fr: "Soba froides au natto et au komatsuna" },
     summary: {
       ja: "冷やしたそばに、納豆とゆでた小松菜をのせて、しょうゆとみりんのつゆをかけます。",
       en: "Chilled soba topped with natto and blanched komatsuna, with a soy and mirin dressing.",
       es: "Soba fría con natto y komatsuna escaldada, con un aliño de salsa de soja y mirin.",
+      fr: "Soba froides garnies de natto et de komatsuna blanchi, avec une sauce à la sauce soja et au mirin.",
     },
   },
   cuisine: "japanese",
@@ -30,6 +31,7 @@ export const recipe: Recipe = {
         ja: "1パック約45gです。",
         en: "About 45 g per pack.",
         es: "Unos 45 g por envase.",
+        fr: "Environ 45 g par barquette.",
       },
     },
     {
@@ -44,6 +46,7 @@ export const recipe: Recipe = {
         ja: "ゆでそばの重さです（1玉約170g）。乾麺を使う場合は、ゆで上がりの重さで考えてください。",
         en: "Weight of boiled soba (about 170 g per portion). If you use dried soba, use the boiled weight.",
         es: "Peso de la soba cocida (unos 170 g por porción). Si usas soba seca, ten en cuenta el peso ya cocido.",
+        fr: "Poids des soba cuites (environ 170 g par portion). Si vous utilisez des soba sèches, comptez le poids après cuisson.",
       },
     },
     { key: "komatsuna", food: "komatsuna", grams: 60, state: "boil", role: "vegetable" },
@@ -59,6 +62,7 @@ export const recipe: Recipe = {
         ja: "小鍋にしょうゆ、みりん、水60mLを入れてひと煮立ちさせ、冷まします。",
         en: "Bring the soy sauce, mirin, and 60 mL of water to a boil in a small pot, then let it cool.",
         es: "Lleva a ebullición la salsa de soja, el mirin y 60 mL de agua en un cazo pequeño y deja que se enfríe.",
+        fr: "Portez à ébullition la sauce soja, le mirin et 60 mL d'eau dans une petite casserole, puis laissez refroidir.",
       },
     },
     {
@@ -67,6 +71,7 @@ export const recipe: Recipe = {
         ja: "小松菜を1分ゆでて水にとり、水気を絞って4cm長さに切ります。",
         en: "Boil the komatsuna for 1 minute, cool it in water, squeeze it dry, and cut it into 4 cm lengths.",
         es: "Hierve la komatsuna 1 minuto, enfríala en agua, escúrrela bien y córtala en trozos de 4 cm.",
+        fr: "Faites bouillir le komatsuna 1 minute, refroidissez-le dans l'eau, pressez-le et coupez-le en tronçons de 4 cm.",
       },
     },
     {
@@ -75,6 +80,7 @@ export const recipe: Recipe = {
         ja: "そばを湯通しして冷水でしめ、水気をよく切ります。",
         en: "Dip the soba briefly in boiling water, rinse it in cold water, and drain well.",
         es: "Pasa la soba un momento por agua hirviendo, acláralo con agua fría y escúrrelo bien.",
+        fr: "Plongez brièvement les soba dans l'eau bouillante, rincez-les à l'eau froide et égouttez-les bien.",
       },
     },
     {
@@ -83,6 +89,7 @@ export const recipe: Recipe = {
         ja: "器にそばを盛り、よく混ぜた納豆と小松菜、小口切りの青ねぎをのせて、つゆをかけます。",
         en: "Put the soba in a bowl, top with the well-stirred natto, the komatsuna, and the thinly sliced green onion, and pour over the dressing.",
         es: "Pon la soba en un cuenco, cubre con el natto bien removido, la komatsuna y la cebolleta en rodajas finas, y vierte el aliño.",
+        fr: "Mettez les soba dans un bol, garnissez-les du natto bien remué, du komatsuna et de l'oignon vert finement émincé, et versez la sauce dessus.",
       },
     },
   ],
@@ -93,6 +100,7 @@ export const recipe: Recipe = {
         ja: "そばは重いアレルギー症状を起こすことがある食品です。そばを扱った調理器具や湯にも注意してください。",
         en: "Buckwheat can cause severe allergic reactions. Take care with pots, utensils, and water that have been used for soba.",
         es: "El alforfón puede causar reacciones alérgicas graves. Ten cuidado con las ollas, los utensilios y el agua que se hayan usado para la soba.",
+        fr: "Le sarrasin peut provoquer des réactions allergiques graves. Faites attention aux casseroles, ustensiles et à l'eau ayant servi pour les soba.",
       },
     },
   ],

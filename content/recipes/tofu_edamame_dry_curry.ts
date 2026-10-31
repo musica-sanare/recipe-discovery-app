@@ -3,11 +3,12 @@ import type { Recipe } from "../../shared/content.ts";
 export const recipe: Recipe = {
   id: "tofu_edamame_dry_curry",
   texts: {
-    name: { ja: "豆腐と枝豆のドライカレー", en: "Tofu and edamame dry curry", es: "Curri seco de tofu y edamame" },
+    name: { ja: "豆腐と枝豆のドライカレー", en: "Tofu and edamame dry curry", es: "Curri seco de tofu y edamame", fr: "Curry sec au tofu et aux edamame" },
     summary: {
       ja: "ひき肉の代わりに崩した木綿豆腐を使い、枝豆と野菜をカレー粉で炒めてご飯にのせます。",
       en: "Crumbled firm tofu in place of ground meat, stir-fried with edamame, vegetables, and curry powder, served over rice.",
       es: "Tofu firme desmenuzado en lugar de carne picada, salteado con edamame, verduras y curri en polvo, servido sobre arroz.",
+      fr: "Du tofu ferme émietté à la place de la viande hachée, sauté avec des edamame, des légumes et du curry en poudre, servi sur du riz.",
     },
   },
   cuisine: "japanese",
@@ -32,6 +33,7 @@ export const recipe: Recipe = {
         ja: "成分表に加熱した豆腐の値がないため、加熱前の値で計算しています。",
         en: "The tables have no value for cooked tofu, so the uncooked value is used.",
         es: "Las tablas no tienen un valor para el tofu cocinado, así que se usa el valor sin cocinar.",
+        fr: "Les tables n'ont pas de valeur pour le tofu cuit ; la valeur avant cuisson est donc utilisée.",
       },
     },
     { key: "oil", food: "vegetable_oil", grams: 2, state: "as_is", measure: { unit: "tsp", quantity: 0.5 }, role: "fat", linkedTo: "tofu" },
@@ -54,6 +56,7 @@ export const recipe: Recipe = {
         ja: "木綿豆腐をキッチンペーパーで包んで10分置き、水気を切ります。玉ねぎ、にんじん、にんにくはみじん切りにします。",
         en: "Wrap the firm tofu in paper towels for 10 minutes to drain. Finely chop the onion, carrot, and garlic.",
         es: "Envuelve el tofu firme en papel de cocina 10 minutos para escurrirlo. Pica fino la cebolla, la zanahoria y el ajo.",
+        fr: "Enveloppez le tofu ferme dans du papier absorbant pendant 10 minutes pour l'égoutter. Hachez finement l'oignon, la carotte et l'ail.",
       },
     },
     {
@@ -62,6 +65,7 @@ export const recipe: Recipe = {
         ja: "フライパンに玉ねぎ用の油を中火で熱し、玉ねぎ、にんじん、にんにくを3分炒めます。",
         en: "Heat the oil for the onion in a frying pan over medium heat and stir-fry the onion, carrot, and garlic for 3 minutes.",
         es: "Calienta el aceite de la cebolla en una sartén a fuego medio y saltea la cebolla, la zanahoria y el ajo 3 minutos.",
+        fr: "Faites chauffer l'huile de l'oignon dans une poêle à feu moyen et faites sauter l'oignon, la carotte et l'ail 3 minutes.",
       },
     },
     {
@@ -70,6 +74,7 @@ export const recipe: Recipe = {
         ja: "残りの油を足し、豆腐を崩し入れて水分が飛ぶまで5分炒めます。カレー粉を加えて1分炒めます。",
         en: "Add the remaining oil, crumble in the tofu, and stir-fry for 5 minutes until dry. Add the curry powder and stir-fry for 1 minute.",
         es: "Añade el resto del aceite, desmenuza el tofu dentro y saltéalo 5 minutos hasta que se seque. Agrega el curri y saltea 1 minuto.",
+        fr: "Ajoutez le reste de l'huile, émiettez-y le tofu et faites sauter 5 minutes jusqu'à ce qu'il soit sec. Ajoutez le curry en poudre et faites sauter 1 minute.",
       },
     },
     {
@@ -78,6 +83,7 @@ export const recipe: Recipe = {
         ja: "トマト缶、枝豆、しょうゆ、塩を加え、汁気がなくなるまで3分炒め煮にします。",
         en: "Add the canned tomatoes, edamame, soy sauce, and salt and cook, stirring, for 3 minutes until the liquid is gone.",
         es: "Añade el tomate en lata, el edamame, la salsa de soja y la sal y cocina, removiendo, 3 minutos hasta que no quede líquido.",
+        fr: "Ajoutez les tomates en conserve, les edamame, la sauce soja et le sel, et faites cuire 3 minutes en remuant jusqu'à ce que le liquide ait disparu.",
       },
     },
     {
@@ -86,6 +92,7 @@ export const recipe: Recipe = {
         ja: "ご飯にのせます。",
         en: "Spoon over the rice.",
         es: "Sírvelo sobre el arroz.",
+        fr: "Déposez sur le riz.",
       },
     },
   ],

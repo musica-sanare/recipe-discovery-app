@@ -3,11 +3,12 @@ import type { Recipe } from "../../shared/content.ts";
 export const recipe: Recipe = {
   id: "tuna_tofu_bowl",
   texts: {
-    name: { ja: "ツナと豆腐のサラダ丼", en: "Tuna and tofu salad rice bowl", es: "Bol de arroz con ensalada de atún y tofu" },
+    name: { ja: "ツナと豆腐のサラダ丼", en: "Tuna and tofu salad rice bowl", es: "Bol de arroz con ensalada de atún y tofu", fr: "Bol de riz en salade au thon et au tofu" },
     summary: {
       ja: "火を使わず、ツナ缶と豆腐、レタスをご飯にのせて、しょうゆとごま油で仕上げます。",
       en: "No cooking needed: canned tuna, tofu, and lettuce over rice with soy sauce and sesame oil.",
       es: "Sin cocinar: atún en lata, tofu y lechuga sobre arroz con salsa de soja y aceite de sésamo.",
+      fr: "Sans cuisson : thon en conserve, tofu et laitue sur du riz, avec de la sauce soja et de l'huile de sésame.",
     },
   },
   cuisine: "japanese",
@@ -31,6 +32,7 @@ export const recipe: Recipe = {
         ja: "汁気を切った重さです（小缶1つ約70g）。",
         en: "Drained weight (about 70 g per small can).",
         es: "Peso escurrido (unos 70 g por lata pequeña).",
+        fr: "Poids égoutté (environ 70 g par petite boîte).",
       },
     },
     { key: "tofu", food: "tofu_silken", grams: 150, state: "raw", measure: { unit: "block", quantity: 0.5 }, role: "main_protein" },
@@ -48,6 +50,7 @@ export const recipe: Recipe = {
         ja: "ツナ缶の汁気を切ります。豆腐は水気を軽く切ってひと口大に切ります。",
         en: "Drain the tuna. Lightly drain the tofu and cut it into bite-size cubes.",
         es: "Escurre el atún. Escurre ligeramente el tofu y córtalo en dados.",
+        fr: "Égouttez le thon. Égouttez légèrement le tofu et coupez-le en cubes de la taille d'une bouchée.",
       },
     },
     {
@@ -56,6 +59,7 @@ export const recipe: Recipe = {
         ja: "器にご飯を盛り、ちぎったレタス、豆腐、ツナをのせます。",
         en: "Put the rice in a bowl and top with torn lettuce, tofu, and tuna.",
         es: "Pon el arroz en un bol y cúbrelo con la lechuga troceada, el tofu y el atún.",
+        fr: "Mettez le riz dans un bol et garnissez de laitue déchirée, de tofu et de thon.",
       },
     },
     {
@@ -64,6 +68,7 @@ export const recipe: Recipe = {
         ja: "しょうゆとごま油をかけ、青ねぎを散らします。",
         en: "Drizzle with soy sauce and sesame oil and scatter the green onion.",
         es: "Rocía con salsa de soja y aceite de sésamo y esparce la cebolleta.",
+        fr: "Arrosez de sauce soja et d'huile de sésame, et parsemez d'oignon vert.",
       },
     },
   ],
@@ -74,6 +79,7 @@ export const recipe: Recipe = {
         ja: "加熱しない料理なので、豆腐とツナ缶は開封後すぐに使い、作ったらすぐに食べてください。",
         en: "As nothing is cooked, use the tofu and tuna right after opening and eat the bowl straight away.",
         es: "Como no se cocina nada, usa el tofu y el atún nada más abrirlos y come el bol enseguida.",
+        fr: "Comme rien n'est cuit, utilisez le tofu et le thon dès l'ouverture et mangez le bol aussitôt.",
       },
     },
   ],

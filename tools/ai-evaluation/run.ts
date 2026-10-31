@@ -7,6 +7,7 @@ import { forbiddenExpressions } from "../../content/glossary.ts";
 import type { SuggestionAdapter } from "../../server/ai/adapter.ts";
 import { fakeAdapter } from "../../server/ai/fake.ts";
 import { handleSuggest } from "../../server/ai/suggest.ts";
+import { parseConditions, type ParserFood } from "../../shared/freeText/parse.ts";
 import type { Locale } from "../../shared/locales.ts";
 import type { ValidationContext } from "../../shared/suggestion.ts";
 import type { EvaluationSet } from "./cases.ts";
@@ -25,6 +26,16 @@ export async function runEvaluation(set: EvaluationSet, adapter: SuggestionAdapt
     }
   }
   return results;
+}
+
+/** The parser's dictionary of a locale from the repository foods (the browser builds the same from the bundles). */
+export function parserFoodsOf(locale: Locale): ParserFood[] {
+  return foods.map((food) => ({ id: food.id, terms: [food.names[locale], ...food.aliases[locale]], ...(food.proteinGroup === undefined ? {} : { proteinGroup: food.proteinGroup }) }));
+}
+
+/** The deterministic parser (ADR-034, revised again) behind the adapter interface, so its output passes the same validation. */
+export function parserAdapter(): SuggestionAdapter {
+  return fakeAdapter((request) => ({ output: JSON.stringify(parseConditions(request.text, request.locale, parserFoodsOf(request.locale))) }));
 }
 
 /** A fake that answers every case with its expected output: checks the pipeline, not a model. */

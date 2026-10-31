@@ -1,4 +1,4 @@
-<!-- source: docs/en/DEVELOPMENT.md blob e098b7dd4897df76c2b046dc218f4f4cdc02ff0b -->
+<!-- source: docs/en/DEVELOPMENT.md blob 2559ea086de30bdbd829c6eb8f4f93607ba58e7d -->
 [English](../en/DEVELOPMENT.md) | 日本語 · [目次に戻る](README.md)
 
 > この文書は[英語版](../en/DEVELOPMENT.md)の翻訳。内容が異なる場合は英語版が優先する。
@@ -74,7 +74,7 @@ npm ci
 | `npm run data:verify-cooking` | macOS のみ：`data/composition/cooking.json` を文部科学省の説明 PDF のテキストと照らし合わせる（[DATA_SOURCES.md](DATA_SOURCES.md)「調理の表」） |
 | `npm run report:composition` | 栄養エンジンによる、レシピと材料ごとの集計：完全一致、近似（ADR-028 の理由つき）、推定困難、数えない、揚げ物。調理後の状態に重量変化率がないと失敗する |
 | `npm run eval:coverage` | 検証用レシピのうち、代表的な目標を既定の分量と調整後の分量で満たすものの数を、推薦エンジンで数える（[DECISIONS.md](../working/DECISIONS.md)（英語のみ）"Stage 0.6"、"Stage 3.7"） |
-| `npm run eval:ai` | 必要なときだけ実行し、CI では動かさない。`data/ai-evaluation/conditions.json` の 240 件を自由文の条件化の中核に通し、ADR-034 D4 のしきい値を確かめる。`--adapter expected`（既定）は期待値をそのまま返す fake で、処理の流れを確かめる。決定論的なパーサーはステージ 12.4 で加える。オプションは `--locale ja` と `--intent <id>`（どちらも繰り返し指定できる）、`--cases`（1 件 1 行で出す）、`--json`（[DECISIONS.md](../working/DECISIONS.md)（英語のみ）"Stage 12.3 evaluation set and script"、"Stage 12.3 Workers AI runs and the switch to a deterministic parser"） |
+| `npm run eval:ai` | 必要なときだけ実行し、CI では動かさない。`data/ai-evaluation/conditions.json` の 240 件を自由文の条件化の中核に通し、ADR-034 D4 のしきい値を確かめる。`--adapter parser`（既定）は決定論的なパーサーを動かす。`--adapter expected` は期待値をそのまま返す fake で、処理の流れを確かめる。`--split dev` は調整用で、合否は `--split holdout` で決める（既定は `all`）。オプションは `--locale ja` と `--intent <id>`（どちらも繰り返し指定できる）、`--cases`（1 件 1 行で出す）、`--json`（[DECISIONS.md](../working/DECISIONS.md)（英語のみ）"Stage 12.3 evaluation set and script"、"Stage 12.4 deterministic parser"） |
 
 ### ブラウザでのプレビュー
 
@@ -102,7 +102,8 @@ index.html, src/        UI (React, Tailwind CSS; docs/en/UI_DESIGN.md): i18n/ ty
                         format/ locale formatting, navigation/ History API views, state/ reducer and engine calls,
                         views/ screens, testing/ axe-core helper
 shared/                 Schemas (Zod), constants, and types shared by UI, domain, content, and tools; the free-text
-                        conditions contract (suggestion.ts, ADR-034)
+                        conditions contract (suggestion.ts, ADR-034), parser and word lists (freeText/), search
+                        normalization (search.ts)
 server/ai/              Core of the free-text conditions pipeline, adapter interface, fake adapter (reshaped in
                         Stage 12.4)
 domain/nutrition/       Pure, locale-free nutrition engine (ADR-028); tests next to the code

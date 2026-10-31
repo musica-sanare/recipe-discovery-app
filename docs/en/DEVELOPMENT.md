@@ -71,7 +71,7 @@ npm ci
 | `npm run data:verify-cooking` | macOS only: check `data/composition/cooking.json` against the MEXT explanation PDF text ([DATA_SOURCES.md](DATA_SOURCES.md) "Cooking tables") |
 | `npm run report:composition` | Per recipe and ingredient, from the nutrition engine: exact, approximation (with the ADR-028 reasons), hard to estimate, not counted, fried; fails when a cooked state has no weight change rate |
 | `npm run eval:coverage` | How many validation recipes meet representative targets with default and adjusted amounts, computed by the recommendation engine ([DECISIONS.md](../working/DECISIONS.md) "Stage 0.6", "Stage 3.7") |
-| `npm run eval:ai` | On demand, never in CI: runs the 240 cases of `data/ai-evaluation/conditions.json` through the AI endpoint core and checks the ADR-034 D4 thresholds. `--adapter expected` (default) is a fake that returns the expected outputs and checks the pipeline; the deterministic parser joins in Stage 12.4. Options: `--locale ja` and `--intent <id>` (repeatable), `--cases` (one line per case), `--json` ([DECISIONS.md](../working/DECISIONS.md) "Stage 12.3 evaluation set and script", "Stage 12.3 Workers AI runs and the switch to a deterministic parser") |
+| `npm run eval:ai` | On demand, never in CI: runs the 240 cases of `data/ai-evaluation/conditions.json` through the AI endpoint core and checks the ADR-034 D4 thresholds. `--adapter parser` (default) runs the deterministic parser; `--adapter expected` is a fake that returns the expected outputs and checks the pipeline. `--split dev` is for tuning and `--split holdout` decides acceptance (default `all`). Options: `--locale ja` and `--intent <id>` (repeatable), `--cases` (one line per case), `--json` ([DECISIONS.md](../working/DECISIONS.md) "Stage 12.3 evaluation set and script", "Stage 12.4 deterministic parser") |
 
 ### Browser previews
 
@@ -97,7 +97,8 @@ index.html, src/        UI (React, Tailwind CSS; docs/en/UI_DESIGN.md): i18n/ ty
                         format/ locale formatting, navigation/ History API views, state/ reducer and engine calls,
                         views/ screens, testing/ axe-core helper
 shared/                 Schemas (Zod), constants, and types shared by UI, domain, content, and tools; the free-text
-                        conditions contract (suggestion.ts, ADR-034)
+                        conditions contract (suggestion.ts, ADR-034), parser and word lists (freeText/), search
+                        normalization (search.ts)
 server/ai/              Core of the free-text conditions pipeline, adapter interface, fake adapter (reshaped in
                         Stage 12.4)
 domain/nutrition/       Pure, locale-free nutrition engine (ADR-028); tests next to the code

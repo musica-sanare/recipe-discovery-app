@@ -21,8 +21,9 @@ export const SUGGEST_LIMITS = {
   /** Characters of the raw provider output. */
   outputLength: 4000,
   requiredItems: 5,
-  foodsPerItem: 5,
-  excludedFoods: 10,
+  /** Room for the largest group word ("fish", 9 foods) and a few more (Stage 12.4). */
+  foodsPerItem: 12,
+  excludedFoods: 20,
   /** The engine's input limits (domain/recommendation/validate.ts `INPUT_LIMITS`; a test keeps them equal). */
   maxMinutes: { min: 5, max: 240 },
 } as const;

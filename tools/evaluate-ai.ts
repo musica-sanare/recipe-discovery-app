@@ -1,21 +1,22 @@
 /**
  * On-demand evaluation of the free-text conditions (ADR-034 D4, Stage 12.3); never a CI
- * job. `expected` is a fake that returns each case's expected output and checks the
- * pipeline. The Workers AI adapter was removed after its measurements (ADR-034, revised
- * 2026-10-31); the deterministic parser is added as an adapter in Stage 12.4.
+ * job. `parser` runs the deterministic parser (ADR-034, revised again); `expected` is a
+ * fake that returns each case's expected output and checks the pipeline. `--split dev`
+ * is for tuning, `--split holdout` decides acceptance.
  *
- *   node tools/evaluate-ai.ts [--adapter expected] [--locale ja]... [--intent <id>]... [--cases] [--json]
+ *   node tools/evaluate-ai.ts [--adapter parser|expected] [--split all|dev|holdout] [--locale ja]... [--intent <id>]... [--cases] [--json]
  */
 import { parseArgs } from "node:util";
 import type { SuggestionAdapter } from "../server/ai/adapter.ts";
 import { isLocale, SUPPORTED_LOCALES, type Locale } from "../shared/locales.ts";
-import { loadEvaluationSet } from "./ai-evaluation/cases.ts";
+import { loadEvaluationSet, splitIntents, SPLITS, type Split } from "./ai-evaluation/cases.ts";
 import { FIELDS, THRESHOLDS, canonicalOutput, outputOf, report, type Scores } from "./ai-evaluation/metrics.ts";
-import { expectedAnswers, runEvaluation } from "./ai-evaluation/run.ts";
+import { expectedAnswers, parserAdapter, runEvaluation } from "./ai-evaluation/run.ts";
 
 const { values } = parseArgs({
   options: {
-    adapter: { type: "string", default: "expected" },
+    adapter: { type: "string", default: "parser" },
+    split: { type: "string", default: "all" },
     locale: { type: "string", multiple: true },
     intent: { type: "string", multiple: true },
     cases: { type: "boolean", default: false },
@@ -29,13 +30,17 @@ for (const locale of values.locale ?? SUPPORTED_LOCALES) {
   locales.push(locale);
 }
 
-const fullSet = loadEvaluationSet();
+const isSplit = (split: string): split is Split => (SPLITS as readonly string[]).includes(split);
+if (!isSplit(values.split)) throw new Error(`Unknown split ${values.split}: use ${SPLITS.join(", ")}.`);
+const fullSet = splitIntents(loadEvaluationSet(), values.split);
 const unknownIntents = (values.intent ?? []).filter((id) => !fullSet.intents.some((intent) => intent.id === id));
 if (unknownIntents.length > 0) throw new Error(`Unknown intents: ${unknownIntents.join(", ")}`);
 const set = values.intent === undefined ? fullSet : { ...fullSet, intents: fullSet.intents.filter((intent) => values.intent?.includes(intent.id)) };
 
-if (values.adapter !== "expected") throw new Error(`Unknown adapter ${values.adapter}: use "expected".`);
-const adapter: SuggestionAdapter = expectedAnswers(set);
+let adapter: SuggestionAdapter;
+if (values.adapter === "parser") adapter = parserAdapter();
+else if (values.adapter === "expected") adapter = expectedAnswers(set);
+else throw new Error(`Unknown adapter ${values.adapter}: use "parser" or "expected".`);
 
 const results = await runEvaluation(set, adapter, locales);
 const result = report(results, set.intents);
@@ -57,7 +62,7 @@ const line = (name: string, scores: Scores) =>
 if (values.json) {
   console.log(JSON.stringify({ adapter: values.adapter, version: set.version, review: set.review, planned, ...result }, null, 2));
 } else {
-  console.log(`Adapter: ${values.adapter}; evaluation set version ${String(set.version)}; review ${JSON.stringify(set.review)}`);
+  console.log(`Adapter: ${values.adapter}; split ${values.split}; evaluation set version ${String(set.version)}; review ${JSON.stringify(set.review)}`);
   if (values.cases) {
     for (const { intent, locale, result: caseResult } of results) {
       const output = canonicalOutput(outputOf(caseResult)) ?? `${caseResult.body.kind === "error" ? caseResult.body.error : ""}${caseResult.rejection === undefined ? "" : ` (${caseResult.rejection})`}`;

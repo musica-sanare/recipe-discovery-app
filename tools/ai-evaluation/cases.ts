@@ -36,3 +36,16 @@ export type Intent = EvaluationSet["intents"][number];
 export function loadEvaluationSet(path: URL = CASES_PATH): EvaluationSet {
   return z.parse(evaluationSetSchema, JSON.parse(readFileSync(path, "utf8")));
 }
+
+export const SPLITS = ["all", "dev", "holdout"] as const;
+export type Split = (typeof SPLITS)[number];
+
+/**
+ * The parser is tuned on `dev` only, and `holdout` decides acceptance (ADR-034 D4, revised
+ * again). Intents alternate by their position in the file, so both halves cover every
+ * category; the split never depends on the results.
+ */
+export function splitIntents(set: EvaluationSet, split: Split): EvaluationSet {
+  if (split === "all") return set;
+  return { ...set, intents: set.intents.filter((_, index) => (index % 2 === 0) === (split === "dev")) };
+}

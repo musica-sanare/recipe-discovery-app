@@ -17,6 +17,7 @@ Status: **Draft (2026-10-18)**. Each phase ends with checks, a summary to the ow
 | 8 — Shopping list | `prompts/08-shopping-list.md` |
 | 9 — Recommendation speed and maintenance | `prompts/09-speed-and-maintenance.md` |
 | 10 — Library expansion | `prompts/10-library-expansion.md` |
+| 11 — AI assistance | `prompts/11-ai-assistance.md` (draft for the owner's review) |
 
 `prompts/FIRST_MESSAGE.md` is the kickoff message for a new Claude Code session.
 
@@ -145,13 +146,23 @@ Acceptance: ADR-016 re-checked and dependencies current or excepted; the approve
 
 ## Phase 10 — Library expansion
 
-Status: **In progress (2026-10-31)**: the three batches are added (130 recipes; [DECISIONS.md](DECISIONS.md) "Stage 10.1 expansion plan" to "Stage 10.4 batch 3: recipes", ADR-023 revised); release 7 deployed after the owner's approval ("Seventh production deployment"); the Phase 11 prompt draft (Stage 10.6) remains. The owner chose more recipes first, then AI assistance (Phase 11 candidate), over opt-in storage and meal planning: Phase 9 left room under the ADR-030 D10 threshold for about 130 recipes (ADR-023 note).
+Status: **Complete (2026-10-31)**: three batches added (130 recipes) and release 7 deployed after the owner's approval. Logs: [DECISIONS.md](DECISIONS.md) "Phase 10 start" to "Phase 10 acceptance" and "Stage 10.6 Phase 11 prompt draft". The owner chose more recipes first, then AI assistance (Phase 11 candidate), over opt-in storage and meal planning.
 
 - Expansion plan: about 44 original recipes in three batches (about 130 in total), aimed at the remaining gaps (cuisine balance, effort 3, grilling, steaming, very quick, batch cooking, breakfast, no-cook, microwave-only, bulk, and egg- and soy-based dishes that meet a preset), new foods, the revised ADR-023 size, and the synthetic library size for measurements.
 - Per batch: foods and cooking rates with checks, texts in three locales with the owner's review, content validation, approved snapshot diffs, coverage, and the speed measured against the previous batch in the same session.
 - Release 7 after the owner's approval; at the end, a draft prompt for Phase 11 (AI assistance) for the owner's review.
 
 Acceptance: about 44 new recipes validated and reviewed in three locales with approved snapshot diffs; ADR-023 met as revised; the planned gaps narrowed; a full recommendation within about 80 ms p90 at 4× or the owner's decision; checks and CI pass; the Phase 11 prompt drafted.
+
+## Phase 11 — AI assistance
+
+Status: **Planned (2026-10-31)**, the prompt is a draft for the owner's review; to start in a new Claude Code session. The owner chose AI assistance after the library expansion.
+
+- Decisions before any implementation: the feature (free-text conditions or explanation text), the provider and model, the server endpoint and its privacy, the evaluation in three locales, the cost and limits, and the UX and failure states, recorded as ADRs with the SPEC scope change.
+- A contract in `shared/` with runtime validation, a thin provider adapter, and a deterministic fallback; tests without network.
+- An on-demand evaluation in three locales against agreed thresholds, after the owner approves any account or key; the UI in three locales; release 8 only after the owner's approval.
+
+Acceptance: the decisions recorded; the feature optional and confirmed by the user, with the app unchanged when AI is disabled or failing; the evaluation thresholds met or the owner's decision; no secret in the repository or the bundle; checks and CI pass.
 
 ## Later (not MVP)
 

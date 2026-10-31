@@ -3,11 +3,12 @@ import type { Recipe } from "../../shared/content.ts";
 export const recipe: Recipe = {
   id: "swordfish_lemon_herb",
   texts: {
-    name: { ja: "めかじきのレモンハーブ焼き", en: "Lemon and herb swordfish", es: "Pez espada al limón y hierbas" },
+    name: { ja: "めかじきのレモンハーブ焼き", en: "Lemon and herb swordfish", es: "Pez espada al limón y hierbas", fr: "Espadon au citron et aux herbes" },
     summary: {
       ja: "めかじきをにんにくとパセリで焼き、レモン汁で仕上げます。じゃがいもを添えます。",
       en: "Swordfish pan-fried with garlic and parsley and finished with lemon juice, with potatoes.",
       es: "Pez espada a la sartén con ajo y perejil, terminado con zumo de limón, con patatas.",
+      fr: "Espadon poêlé à l'ail et au persil, relevé de jus de citron, avec des pommes de terre.",
     },
   },
   cuisine: "western",
@@ -32,6 +33,7 @@ export const recipe: Recipe = {
         ja: "成分表にソテーしためかじきの値がないため、焼いた値で計算しています。切り身1切れ約100〜120gです。",
         en: "The tables have no value for pan-fried swordfish, so the grilled value is used. One fillet is about 100–120 g.",
         es: "Las tablas no tienen un valor para el pez espada a la sartén, así que se usa el valor a la parrilla. Un filete pesa unos 100-120 g.",
+        fr: "Les tables n'ont pas de valeur pour l'espadon poêlé ; la valeur grillée est donc utilisée. Un filet pèse environ 100 à 120 g.",
       },
     },
     { key: "oil_fish", food: "olive_oil", grams: 2, state: "as_is", measure: { unit: "tsp", quantity: 0.5 }, role: "fat", linkedTo: "fish" },
@@ -43,7 +45,7 @@ export const recipe: Recipe = {
     { key: "potato", food: "potato", grams: 250, state: "microwave", measure: { unit: "piece", quantity: 2 }, role: "main_carb", adjust: { kind: "grams", min: 100, max: 350, step: 50 } },
   ],
   sides: [
-    { key: "potato", label: { ja: "じゃがいも", en: "Potatoes", es: "Patatas" }, ingredients: ["potato"], solverMayRemove: true },
+    { key: "potato", label: { ja: "じゃがいも", en: "Potatoes", es: "Patatas", fr: "Pommes de terre" }, ingredients: ["potato"], solverMayRemove: true },
   ],
   steps: [
     {
@@ -52,6 +54,7 @@ export const recipe: Recipe = {
         ja: "めかじきに塩とこしょうをふります。にんにくとパセリはみじん切りにします。",
         en: "Season the swordfish with salt and pepper. Finely chop the garlic and parsley.",
         es: "Salpimienta el pez espada. Pica fino el ajo y el perejil.",
+        fr: "Salez et poivrez l'espadon. Hachez finement l'ail et le persil.",
       },
     },
     {
@@ -60,6 +63,7 @@ export const recipe: Recipe = {
         ja: "フライパンにオリーブオイルとにんにくを入れて中火にかけ、めかじきを片面3分ずつ、中まで白くなるまで焼きます。",
         en: "Put the olive oil and garlic in a frying pan over medium heat and cook the swordfish for 3 minutes on each side until it is opaque all the way through.",
         es: "Pon el aceite de oliva y el ajo en una sartén a fuego medio y cocina el pez espada 3 minutos por cada lado hasta que esté opaco por dentro.",
+        fr: "Mettez l'huile d'olive et l'ail dans une poêle à feu moyen et faites cuire l'espadon 3 minutes de chaque côté, jusqu'à ce qu'il soit opaque jusqu'au centre.",
       },
     },
     {
@@ -68,6 +72,7 @@ export const recipe: Recipe = {
         ja: "器に盛り、レモン汁をかけてパセリを散らします。",
         en: "Transfer to a plate, pour over the lemon juice, and scatter the parsley.",
         es: "Sírvelo en un plato, riega con el zumo de limón y esparce el perejil.",
+        fr: "Dressez sur une assiette, arrosez de jus de citron et parsemez de persil.",
       },
     },
     {
@@ -77,6 +82,7 @@ export const recipe: Recipe = {
         ja: "じゃがいもをよく洗い、皮つきのまま1個ずつラップで包んで600Wで5〜6分、竹串がすっと通るまで加熱します。皮をむいて添えます。",
         en: "Scrub the potatoes, wrap each one in plastic wrap with the skin on, and heat at 600 W for 5–6 minutes until a skewer slides in easily. Peel and serve alongside.",
         es: "Lava bien las patatas, envuelve cada una con piel en film y caliéntalas a 600 W durante 5-6 minutos hasta que un palillo entre con facilidad. Pélalas y sírvelas al lado.",
+        fr: "Brossez les pommes de terre, enveloppez-les une à une avec la peau dans du film alimentaire et faites-les chauffer à 600 W pendant 5 à 6 minutes, jusqu'à ce qu'une brochette s'y enfonce facilement. Pelez-les et servez-les à côté.",
       },
     },
   ],
@@ -87,6 +93,7 @@ export const recipe: Recipe = {
         ja: "めかじきは中心まで白くなるまで焼いてください。",
         en: "Cook the swordfish until it is opaque in the center.",
         es: "Cocina el pez espada hasta que esté opaco en el centro.",
+        fr: "Faites cuire l'espadon jusqu'à ce qu'il soit opaque au centre.",
       },
     },
     {
@@ -95,6 +102,7 @@ export const recipe: Recipe = {
         ja: "加熱直後は蒸気でやけどしやすいので、ラップは奥から手前に向かって外してください。",
         en: "Steam can burn right after heating; peel the wrap away from you.",
         es: "El vapor puede quemar justo después de calentar; retira el film en dirección contraria a ti.",
+        fr: "La vapeur peut brûler juste après la cuisson ; retirez le film en l'écartant de vous.",
       },
     },
   ],

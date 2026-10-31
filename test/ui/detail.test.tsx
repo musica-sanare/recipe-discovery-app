@@ -55,7 +55,7 @@ async function openDetail(id: string, locale: Locale = "ja") {
 
 /** The per-serving values as shown, by nutrient label. */
 function shownValues(): Record<string, string> {
-  const list = within(screen.getByRole("region", { name: /1人分の栄養|Per serving|Por ración/ })).getAllByRole("term");
+  const list = within(screen.getByRole("region", { name: /1人分の栄養|Per serving|Por ración|Par portion/ })).getAllByRole("term");
   return Object.fromEntries(list.map((term) => [term.textContent, term.nextElementSibling?.querySelector("span")?.textContent ?? ""]));
 }
 
@@ -131,6 +131,19 @@ describe("recipe detail without a search", () => {
     await screen.findByRole("heading", { level: 2, name: "Por ración (estimaciones)" }, { timeout: 5000 });
     expect(digits().map((value) => value.replace(/[^\d.]/g, ""))).toEqual(ja.map((value) => value.replace(/[^\d.]/g, "")));
   });
+
+  it("keeps the underlying values through ja → fr → ja", async () => {
+    await openDetail("beef_steak_potatoes");
+    const ja = shownValues();
+    const numbers = (values: Record<string, string>) =>
+      Object.values(values).map((value) => value.replace(/(\d)[.,\u202f\u00a0](\d{3})/g, "$1$2").replace(",", ".").replace(/[^\d.]/g, ""));
+    fireEvent.change(screen.getByRole("combobox", { name: "言語" }), { target: { value: "fr" } });
+    await screen.findByRole("heading", { level: 2, name: "Par portion (estimations)" }, { timeout: 5000 });
+    expect(numbers(shownValues())).toEqual(numbers(ja));
+    fireEvent.change(screen.getByRole("combobox", { name: "Langue" }), { target: { value: "ja" } });
+    await screen.findByRole("heading", { level: 2, name: "1人分の栄養（推定値）" }, { timeout: 5000 });
+    expect(shownValues()).toEqual(ja);
+  });
 });
 
 describe("recipe detail after a search", () => {
@@ -160,10 +173,10 @@ describe("recipe detail after a search", () => {
 });
 
 describe("accessibility of the detail view (axe-core)", () => {
-  it.each(["ja", "en", "es"] as const)("%s has no violations, also after changes", async (locale) => {
+  it.each(["ja", "en", "es", "fr"] as const)("%s has no violations, also after changes", async (locale) => {
     await openDetail("chicken_thigh_karaage", locale);
     expect(await axeViolations()).toEqual([]);
-    fireEvent.click(screen.getAllByRole("button", { name: /人数|Servings|Raciones/ })[1] as HTMLElement);
+    fireEvent.click(screen.getAllByRole("button", { name: /人数|Servings|Raciones|Portions/ })[1] as HTMLElement);
     expect(await axeViolations()).toEqual([]);
   });
 });

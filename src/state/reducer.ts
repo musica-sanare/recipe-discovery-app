@@ -7,6 +7,7 @@ import type { RecipeState } from "../../domain/nutrition/amounts";
 import type { EvaluatedPool } from "../../domain/recommendation/pool";
 import type { Recommended, Selection } from "../../domain/recommendation/recommend";
 import type { RecipeId, Session } from "../../domain/recommendation/types";
+import { SHOPPING_LIST_MAX_RECIPES, type ShoppingEntry } from "../../domain/shopping/list";
 import type { TargetsDraft } from "../views/targets/draft";
 
 export const MAX_COMPARE = 3;
@@ -46,6 +47,14 @@ export function orderInPlace(previous: readonly RecipeId[], next: readonly Recip
   return [...ordered, ...fresh];
 }
 
+/** The shopping list (ADR-032 D2, D5): copied recipe states in the order added, and checked item keys. */
+export interface ShoppingListState {
+  readonly entries: readonly ShoppingEntry[];
+  readonly checked: readonly string[];
+}
+
+export const EMPTY_SHOPPING_LIST: ShoppingListState = { entries: [], checked: [] };
+
 export interface AppState {
   /** The targets form as typed, so it survives view changes (not reloads). */
   readonly draft: TargetsDraft | undefined;
@@ -54,9 +63,11 @@ export interface AppState {
   readonly compare: readonly RecipeId[];
   /** Adjusted states per recipe in the detail view; a missing entry means the starting state. */
   readonly adjustments: Readonly<Partial<Record<RecipeId, RecipeState>>>;
+  /** Kept by a new search; lost on reload like everything else. */
+  readonly shoppingList: ShoppingListState;
 }
 
-export const INITIAL_STATE: AppState = { draft: undefined, search: undefined, compare: [], adjustments: {} };
+export const INITIAL_STATE: AppState = { draft: undefined, search: undefined, compare: [], adjustments: {}, shoppingList: EMPTY_SHOPPING_LIST };
 
 export type AppAction =
   | { readonly type: "draftChanged"; readonly draft: TargetsDraft }
@@ -64,6 +75,14 @@ export type AppAction =
   | { readonly type: "resuggested"; readonly session: Session; readonly seed: number; readonly selection: Selection }
   | { readonly type: "toggledCompare"; readonly recipe: RecipeId }
   | { readonly type: "adjusted"; readonly recipe: RecipeId; readonly state: RecipeState | undefined }
+  /**
+   * Adds a recipe at the end or replaces its entry in place. `uncheck` names the items whose
+   * total changed (`changedItemKeys`), computed by the caller because the reducer has no content.
+   */
+  | { readonly type: "shoppingSaved"; readonly entry: ShoppingEntry; readonly uncheck: readonly string[] }
+  | { readonly type: "shoppingRemoved"; readonly recipe: RecipeId; readonly uncheck: readonly string[] }
+  | { readonly type: "shoppingCleared" }
+  | { readonly type: "shoppingChecked"; readonly item: string; readonly checked: boolean }
   | { readonly type: "cleared" };
 
 export function appReducer(state: AppState, action: AppAction): AppState {
@@ -84,6 +103,7 @@ export function appReducer(state: AppState, action: AppAction): AppState {
         },
         compare: [],
         adjustments: {},
+        shoppingList: state.shoppingList,
       };
     case "resuggested": {
       const search = state.search;
@@ -116,7 +136,32 @@ export function appReducer(state: AppState, action: AppAction): AppState {
       const others = Object.fromEntries(Object.entries(state.adjustments).filter(([recipe]) => recipe !== action.recipe));
       return { ...state, adjustments: action.state === undefined ? others : { ...others, [action.recipe]: action.state } };
     }
+    case "shoppingSaved": {
+      const { entries } = state.shoppingList;
+      const index = entries.findIndex((entry) => entry.recipe === action.entry.recipe);
+      if (index < 0 && entries.length >= SHOPPING_LIST_MAX_RECIPES) return state;
+      const next = index < 0 ? [...entries, action.entry] : entries.map((entry, position) => (position === index ? action.entry : entry));
+      return { ...state, shoppingList: { entries: next, checked: withoutKeys(state.shoppingList.checked, action.uncheck) } };
+    }
+    case "shoppingRemoved":
+      return {
+        ...state,
+        shoppingList: {
+          entries: state.shoppingList.entries.filter((entry) => entry.recipe !== action.recipe),
+          checked: withoutKeys(state.shoppingList.checked, action.uncheck),
+        },
+      };
+    case "shoppingCleared":
+      return { ...state, shoppingList: EMPTY_SHOPPING_LIST };
+    case "shoppingChecked": {
+      const others = state.shoppingList.checked.filter((key) => key !== action.item);
+      return { ...state, shoppingList: { ...state.shoppingList, checked: action.checked ? [...others, action.item] : others } };
+    }
     case "cleared":
       return INITIAL_STATE;
   }
+}
+
+function withoutKeys(keys: readonly string[], remove: readonly string[]): readonly string[] {
+  return remove.length === 0 ? keys : keys.filter((key) => !remove.includes(key));
 }

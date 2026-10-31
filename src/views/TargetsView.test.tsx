@@ -204,14 +204,14 @@ describe("ingredient autocomplete (ADR-030 D6)", () => {
 });
 
 describe("accessibility of the form (axe-core)", () => {
-  it.each(["ja", "en", "es"] as const)("%s: open form with choices, errors, and a warning has no violations", async (locale) => {
+  it.each(["ja", "en", "es", "fr"] as const)("%s: open form with choices, errors, and a warning has no violations", async (locale) => {
     await renderForm(locale);
     openAdvanced();
     fireEvent.click(screen.getAllByRole("radio")[5] as HTMLElement);
     const boxes = screen.getAllByRole("combobox");
     fireEvent.change(boxes[0] as HTMLElement, { target: { value: "egg" } });
     fireEvent.change(document.getElementById("targets-fatMax") as HTMLElement, { target: { value: "abc" } });
-    fireEvent.click(screen.getByRole("button", { name: /^(レシピを探す|Find recipes|Buscar recetas)$/ }));
+    fireEvent.click(screen.getByRole("button", { name: /^(レシピを探す|Find recipes|Buscar recetas|Chercher des recettes)$/ }));
     await screen.findByRole("alert");
     expect(await axeViolations()).toEqual([]);
   });

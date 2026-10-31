@@ -3,11 +3,12 @@ import type { Recipe } from "../../shared/content.ts";
 export const recipe: Recipe = {
   id: "beef_pho_rice_noodles",
   texts: {
-    name: { ja: "牛もも肉のフォー風スープ", en: "Pho-style beef and rice noodle soup", es: "Sopa de fideos de arroz con ternera al estilo pho" },
+    name: { ja: "牛もも肉のフォー風スープ", en: "Pho-style beef and rice noodle soup", es: "Sopa de fideos de arroz con ternera al estilo pho", fr: "Soupe de nouilles de riz au bœuf façon pho" },
     summary: {
       ja: "ベトナムのフォーをヒントに、しょうがとナンプラーのスープで牛もも肉の薄切りを煮て、米の麺にのせます。牛肉はスープでしっかり火を通します。",
       en: "Inspired by Vietnamese pho: thinly sliced lean beef cooked in a ginger and fish sauce broth over rice noodles. The beef is cooked through in the broth.",
       es: "Inspirado en el pho vietnamita: ternera magra en lonchas finas cocida en un caldo de jengibre y salsa de pescado sobre fideos de arroz. La ternera se cuece por completo en el caldo.",
+      fr: "Inspiré du pho vietnamien : bœuf maigre en fines tranches cuit dans un bouillon au gingembre et à la sauce de poisson, sur des nouilles de riz. Le bœuf cuit entièrement dans le bouillon.",
     },
   },
   cuisine: "southeast_asian",
@@ -32,6 +33,7 @@ export const recipe: Recipe = {
         ja: "成分表にゆでたビーフンの値がないため、乾物の値で計算しています。",
         en: "The tables have no value for boiled rice noodles, so the dry value is used.",
         es: "Las tablas no tienen un valor para los fideos de arroz cocidos, así que se usa el valor en seco.",
+        fr: "Les tables n'ont pas de valeur pour les nouilles de riz cuites ; la valeur sèche est donc utilisée.",
       },
     },
     { key: "fish_sauce", food: "fish_sauce", grams: 12, state: "as_is", measure: { unit: "tsp", quantity: 2 }, role: "seasoning" },
@@ -50,6 +52,7 @@ export const recipe: Recipe = {
         ja: "ビーフンを袋の表示どおりにゆでるか湯で戻し、水気を切って器に入れます。",
         en: "Boil or soak the rice noodles as directed on the package, drain, and put them in a bowl.",
         es: "Cuece o remoja los fideos de arroz según las indicaciones del envase, escúrrelos y ponlos en un cuenco.",
+        fr: "Faites cuire ou tremper les nouilles de riz selon les indications de l'emballage, égouttez-les et mettez-les dans un bol.",
       },
     },
     {
@@ -58,6 +61,7 @@ export const recipe: Recipe = {
         ja: "鍋に水400ml、薄切りにした玉ねぎとしょうがを入れて煮立て、中火で5分煮ます。ナンプラーで味をととのえます。",
         en: "Put 400 ml of water and the sliced onion and ginger in a pot, bring to a boil, and simmer over medium heat for 5 minutes. Season with the fish sauce.",
         es: "Pon 400 ml de agua y la cebolla y el jengibre en láminas en una olla, lleva a ebullición y cuece a fuego medio 5 minutos. Sazona con la salsa de pescado.",
+        fr: "Mettez 400 ml d'eau, l'oignon et le gingembre émincés dans une casserole, portez à ébullition et laissez mijoter 5 minutes à feu moyen. Assaisonnez avec la sauce de poisson.",
       },
     },
     {
@@ -66,6 +70,7 @@ export const recipe: Recipe = {
         ja: "もやしを加えて1分煮ます。牛肉を1枚ずつ広げて入れ、赤い部分がなくなるまで1〜2分煮ます。",
         en: "Add the bean sprouts and simmer for 1 minute. Add the beef one slice at a time, spreading it out, and simmer for 1–2 minutes until no red remains.",
         es: "Añade los brotes de soja y cuece 1 minuto. Echa la ternera loncha a loncha, extendiéndola, y cuécela 1-2 minutos hasta que no quede nada rojo.",
+        fr: "Ajoutez les pousses de soja et laissez mijoter 1 minute. Ajoutez le bœuf tranche par tranche en l'étalant et laissez mijoter 1 à 2 minutes, jusqu'à ce qu'il ne reste plus de rouge.",
       },
     },
     {
@@ -74,6 +79,7 @@ export const recipe: Recipe = {
         ja: "麺の上に牛肉、もやし、スープをかけ、刻んだ青ねぎとパクチーをのせます。食べる直前にライム果汁をかけます。",
         en: "Pour the beef, bean sprouts, and broth over the noodles and top with the chopped green onion and cilantro. Add the lime juice just before eating.",
         es: "Vierte la ternera, los brotes de soja y el caldo sobre los fideos y añade la cebolleta y el cilantro picados. Echa el zumo de lima justo antes de comer.",
+        fr: "Versez le bœuf, les pousses de soja et le bouillon sur les nouilles et garnissez d'oignon vert et de coriandre hachés. Ajoutez le jus de citron vert juste avant de manger.",
       },
     },
   ],
@@ -84,6 +90,7 @@ export const recipe: Recipe = {
         ja: "牛肉は生のまま麺にのせず、スープで赤い部分がなくなるまで煮てください。",
         en: "Do not put raw beef on the noodles; simmer it in the broth until no red remains.",
         es: "No pongas la ternera cruda sobre los fideos; cuécela en el caldo hasta que no quede nada rojo.",
+        fr: "Ne posez pas le bœuf cru sur les nouilles ; faites-le mijoter dans le bouillon jusqu'à ce qu'il ne reste plus de rouge.",
       },
     },
     {
@@ -92,6 +99,7 @@ export const recipe: Recipe = {
         ja: "生で食べる野菜とハーブは、流水でよく洗ってください。",
         en: "Wash raw vegetables and herbs well under running water.",
         es: "Lava bien con agua corriente las verduras y hierbas que se comen crudas.",
+        fr: "Lavez bien sous l'eau courante les légumes et les herbes consommés crus.",
       },
     },
   ],

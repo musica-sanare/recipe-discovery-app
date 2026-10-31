@@ -1,16 +1,44 @@
 import { writeFileSync, mkdirSync } from "node:fs";
 import type { Page } from "@playwright/test";
+import type { CalcBundle, TextBundle } from "../shared/bundle.ts";
+import { SYNTHETIC_TOTAL, syntheticCalc, syntheticText } from "../tools/synthetic-library.ts";
 import { BROWSER_LOCALE, choosePresetCut, expect, heading1, openAdvanced, openTargets, search, setNumber, t, test } from "./support.ts";
 
 // Phone-class timing (open question 17, ADR-030 D10): click to committed and laid-out DOM,
 // in Chromium with CDP CPU throttling. Run with `npm run test:e2e:timing`; the numbers are
 // written to test-results/timing.json and recorded in docs/working/DECISIONS.md "Stage 5.4".
+// With TIMING_LIBRARY=synthetic, the content bundles are replaced in the network stub by the
+// synthetic library of tools/synthetic-library.ts (measurement only, never published), and the
+// numbers go to test-results/timing-synthetic.json ("Stage 9.2").
 const RATES = [1, 4, 6] as const;
 const RUNS = 15;
 const WARM_UP = 2;
+const SYNTHETIC = process.env["TIMING_LIBRARY"] === "synthetic";
+const OUTPUT = SYNTHETIC ? "test-results/timing-synthetic.json" : "test-results/timing.json";
 
 test.use({ locale: BROWSER_LOCALE.ja });
 test.describe.configure({ mode: "serial" });
+
+/**
+ * Serves the synthetic library instead of the repository's bundles; the text bundles load
+ * after the calculation bundle. Returns the number of recipes last served.
+ */
+async function useSyntheticLibrary(page: Page): Promise<() => number> {
+  let calc: CalcBundle | undefined;
+  let served = 0;
+  await page.route("**/assets/calc-*.json", async (route) => {
+    const original = (await (await route.fetch()).json()) as CalcBundle;
+    calc = original;
+    const synthetic = syntheticCalc(original);
+    served = synthetic.recipes.length;
+    await route.fulfill({ json: synthetic });
+  });
+  await page.route("**/assets/text-*.json", async (route) => {
+    if (calc === undefined) throw new Error("The text bundle loaded before the calculation bundle");
+    await route.fulfill({ json: syntheticText((await (await route.fetch()).json()) as TextBundle, calc) });
+  });
+  return () => served;
+}
 
 /** Clicks the button and resolves with the time until the first DOM commit under `main` has been laid out. */
 async function timeClick(page: Page, name: string): Promise<number> {
@@ -65,6 +93,7 @@ const results: Record<string, Record<string, ReturnType<typeof summary>>> = {};
 for (const rate of RATES) {
   test(`timing at ${String(rate)}× CPU slowdown @timing`, async ({ page }) => {
     test.setTimeout(240_000);
+    const servedRecipes = SYNTHETIC ? await useSyntheticLibrary(page) : undefined;
     const cdp = await page.context().newCDPSession(page);
     await cdp.send("Emulation.setCPUThrottlingRate", { rate });
     const searchLabel = t("ja", "targets.search");
@@ -107,9 +136,10 @@ for (const rate of RATES) {
     }
     rows["recalculation"] = summary(recalc);
 
+    if (servedRecipes) expect(servedRecipes()).toBe(SYNTHETIC_TOTAL);
     results[`${String(rate)}x`] = rows;
     console.log(`CPU ${String(rate)}×`, JSON.stringify(rows));
     mkdirSync("test-results", { recursive: true });
-    writeFileSync("test-results/timing.json", `${JSON.stringify({ measured: new Date().toISOString(), browser: page.context().browser()?.version(), runs: RUNS, results }, null, 2)}\n`);
+    writeFileSync(OUTPUT, `${JSON.stringify({ measured: new Date().toISOString(), browser: page.context().browser()?.version(), library: SYNTHETIC ? `synthetic ${String(SYNTHETIC_TOTAL)}` : "repository", runs: RUNS, results }, null, 2)}\n`);
   });
 }

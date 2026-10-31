@@ -3,11 +3,12 @@ import type { Recipe } from "../../shared/content.ts";
 export const recipe: Recipe = {
   id: "pork_fillet_curry_rice",
   texts: {
-    name: { ja: "豚ヒレと野菜のカレー炒めごはん", en: "Curried pork tenderloin and vegetables over rice", es: "Salteado de solomillo de cerdo y verduras al curri con arroz" },
+    name: { ja: "豚ヒレと野菜のカレー炒めごはん", en: "Curried pork tenderloin and vegetables over rice", es: "Salteado de solomillo de cerdo y verduras al curri con arroz", fr: "Filet mignon de porc et légumes au curry sur riz" },
     summary: {
       ja: "豚ヒレ肉と玉ねぎ、パプリカをカレー粉で炒めて、ご飯にのせます。",
       en: "Pork tenderloin, onion, and red pepper stir-fried with curry powder and served over rice.",
       es: "Solomillo de cerdo, cebolla y pimiento rojo salteados con curri en polvo y servidos sobre arroz.",
+      fr: "Filet mignon de porc, oignon et poivron rouge sautés au curry en poudre et servis sur du riz.",
     },
   },
   cuisine: "japanese",
@@ -31,6 +32,7 @@ export const recipe: Recipe = {
         ja: "成分表に炒めた豚ヒレ肉の値がないため、生の値で計算しています。",
         en: "The tables have no value for stir-fried pork tenderloin, so the raw value is used.",
         es: "Las tablas no tienen un valor para el solomillo de cerdo salteado, así que se usa el valor en crudo.",
+        fr: "Les tables n'ont pas de valeur pour le filet mignon de porc sauté ; la valeur à l'état cru est donc utilisée.",
       },
     },
     { key: "oil_pork", food: "vegetable_oil", grams: 4, state: "as_is", measure: { unit: "tsp", quantity: 1 }, role: "fat", linkedTo: "pork" },
@@ -50,6 +52,7 @@ export const recipe: Recipe = {
         ja: "豚ヒレ肉を1cm幅に切ります。玉ねぎはくし形に、パプリカは細切りにします。",
         en: "Cut the pork tenderloin into 1 cm slices. Cut the onion into wedges and the red pepper into strips.",
         es: "Corta el solomillo de cerdo en lonchas de 1 cm. Corta la cebolla en gajos y el pimiento rojo en tiras.",
+        fr: "Coupez le filet mignon en tranches de 1 cm. Coupez l'oignon en quartiers et le poivron rouge en lanières.",
       },
     },
     {
@@ -58,6 +61,7 @@ export const recipe: Recipe = {
         ja: "フライパンに野菜用の油を中火で熱し、玉ねぎとパプリカを3分炒めて取り出します。",
         en: "Heat the oil for the vegetables in a frying pan over medium heat, stir-fry the onion and red pepper for 3 minutes, and set them aside.",
         es: "Calienta el aceite de las verduras en una sartén a fuego medio, saltea la cebolla y el pimiento rojo 3 minutos y resérvalos.",
+        fr: "Faites chauffer l'huile des légumes dans une poêle à feu moyen, faites sauter l'oignon et le poivron rouge 3 minutes et réservez-les.",
       },
     },
     {
@@ -66,6 +70,7 @@ export const recipe: Recipe = {
         ja: "豚肉用の油を足して豚肉を色が完全に変わるまで炒め、野菜を戻します。カレー粉、しょうゆ、塩を加えて炒め合わせます。",
         en: "Add the oil for the pork and stir-fry the pork until it has changed color completely, then return the vegetables. Add the curry powder, soy sauce, and salt and toss together.",
         es: "Añade el aceite del cerdo, saltea el cerdo hasta que cambie de color por completo y devuelve las verduras. Agrega el curri, la salsa de soja y la sal y mezcla.",
+        fr: "Ajoutez l'huile du porc et faites sauter le porc jusqu'à ce qu'il ait complètement changé de couleur, puis remettez les légumes. Ajoutez le curry en poudre, la sauce soja et le sel, et mélangez.",
       },
     },
     {
@@ -74,6 +79,7 @@ export const recipe: Recipe = {
         ja: "ご飯にのせます。",
         en: "Spoon over the rice.",
         es: "Sírvelo sobre el arroz.",
+        fr: "Déposez sur le riz.",
       },
     },
   ],
@@ -84,6 +90,7 @@ export const recipe: Recipe = {
         ja: "豚肉は中心まで火を通してください。切り口に赤みがないことを確認します。",
         en: "Cook the pork through. Check that no pink remains when you cut it.",
         es: "Cocina bien el cerdo. Comprueba que no quede nada rosado al cortarlo.",
+        fr: "Faites cuire le porc à cœur. Vérifiez qu'il ne reste pas de rose à la découpe.",
       },
     },
   ],

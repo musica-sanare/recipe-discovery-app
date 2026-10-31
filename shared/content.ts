@@ -1,7 +1,7 @@
 /**
  * Content format for foods and recipes (MVP schema, ADR-026). Content is authored as
  * TypeScript in `content/` and validated with these schemas. Food identity is
- * locale-neutral; every text exists in ja/en/es.
+ * locale-neutral; every text exists in ja/en/es/fr.
  */
 import * as z from "zod/mini";
 import { COOKING_METHODS } from "./cooking.ts";
@@ -10,10 +10,10 @@ export const nonBlank = z.string().check(z.refine((text) => text.trim() !== "", 
 export const slug = z.string().check(z.regex(/^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$/));
 export const foodCode = z.string().check(z.regex(/^\d{5}$/));
 
-export const localizedTextSchema = z.object({ ja: nonBlank, en: nonBlank, es: nonBlank });
+export const localizedTextSchema = z.object({ ja: nonBlank, en: nonBlank, es: nonBlank, fr: nonBlank });
 export type LocalizedText = z.infer<typeof localizedTextSchema>;
 
-export const localizedListSchema = z.object({ ja: z.array(nonBlank), en: z.array(nonBlank), es: z.array(nonBlank) });
+export const localizedListSchema = z.object({ ja: z.array(nonBlank), en: z.array(nonBlank), es: z.array(nonBlank), fr: z.array(nonBlank) });
 
 /**
  * Japanese allergen categories (docs/en/CONTENT_POLICY.md §2): 9 mandatory items

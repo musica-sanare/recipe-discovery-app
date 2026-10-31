@@ -3,11 +3,12 @@ import type { Recipe } from "../../shared/content.ts";
 export const recipe: Recipe = {
   id: "salmon_yogurt_cucumber",
   texts: {
-    name: { ja: "サーモンのグリル ヨーグルトきゅうりソース", en: "Grilled salmon with yogurt-cucumber sauce", es: "Salmón asado con salsa de yogur y pepino" },
+    name: { ja: "サーモンのグリル ヨーグルトきゅうりソース", en: "Grilled salmon with yogurt-cucumber sauce", es: "Salmón asado con salsa de yogur y pepino", fr: "Saumon grillé sauce yaourt et concombre" },
     summary: {
       ja: "地中海のヨーグルトソースをヒントに、トースターで焼いたサーモンに、きゅうりとにんにくのヨーグルトソースを添えます。パンを添えます。",
       en: "Inspired by Mediterranean yogurt sauces: salmon cooked in a toaster oven with a yogurt sauce of cucumber and garlic, with bread.",
       es: "Inspirado en las salsas de yogur mediterráneas: salmón al horno tostador con una salsa de yogur, pepino y ajo, con pan.",
+      fr: "Inspiré des sauces au yaourt méditerranéennes : saumon cuit au four grille-pain avec une sauce au yaourt, au concombre et à l'ail, avec du pain.",
     },
   },
   cuisine: "mediterranean",
@@ -29,7 +30,7 @@ export const recipe: Recipe = {
     { key: "bread", food: "bread", grams: 120, state: "as_is", measure: { unit: "slice", quantity: 2 }, role: "main_carb", adjust: { kind: "count", unitGrams: 60, min: 1, max: 3 } },
   ],
   sides: [
-    { key: "bread", label: { ja: "パン", en: "Bread", es: "Pan" }, ingredients: ["bread"], solverMayRemove: true },
+    { key: "bread", label: { ja: "パン", en: "Bread", es: "Pan", fr: "Pain" }, ingredients: ["bread"], solverMayRemove: true },
   ],
   steps: [
     {
@@ -38,6 +39,7 @@ export const recipe: Recipe = {
         ja: "サーモンに塩をふり、アルミホイルを敷いたトースターの天板にのせて10〜12分焼きます。",
         en: "Season the salmon with the salt, put it on the foil-lined tray of a toaster oven, and cook for 10–12 minutes.",
         es: "Sala el salmón, ponlo en la bandeja del horno tostador cubierta con papel de aluminio y hornéalo 10-12 minutos.",
+        fr: "Salez le saumon, posez-le sur la plaque du four grille-pain garnie de papier aluminium et faites cuire 10 à 12 minutes.",
       },
     },
     {
@@ -46,6 +48,7 @@ export const recipe: Recipe = {
         ja: "焼いている間に、きゅうりを粗くすりおろして軽く水気を絞ります。ヨーグルト、すりおろしたにんにく、レモン果汁、刻んだパセリと混ぜます。",
         en: "While it cooks, coarsely grate the cucumber and squeeze out some of the liquid. Mix with the yogurt, grated garlic, lemon juice, and chopped parsley.",
         es: "Mientras se hace, ralla el pepino en trozos gruesos y escúrrelo un poco. Mézclalo con el yogur, el ajo rallado, el zumo de limón y el perejil picado.",
+        fr: "Pendant la cuisson, râpez grossièrement le concombre et pressez-le pour retirer une partie du jus. Mélangez avec le yaourt, l'ail râpé, le jus de citron et le persil haché.",
       },
     },
     {
@@ -54,6 +57,7 @@ export const recipe: Recipe = {
         ja: "サーモンを器に盛り、ソースを添えます。",
         en: "Plate the salmon with the sauce alongside.",
         es: "Sirve el salmón con la salsa al lado.",
+        fr: "Dressez le saumon avec la sauce à côté.",
       },
     },
     {
@@ -63,6 +67,7 @@ export const recipe: Recipe = {
         ja: "パンを添えます。",
         en: "Serve with the bread.",
         es: "Acompáñalo con el pan.",
+        fr: "Servez avec le pain.",
       },
     },
   ],
@@ -73,6 +78,7 @@ export const recipe: Recipe = {
         ja: "サーモンは中心まで火を通してください。身がほぐれやすく、不透明になっていれば焼き上がりです。",
         en: "Cook the salmon through; it is done when it is opaque and flakes easily.",
         es: "Cocina el salmón por completo: está hecho cuando es opaco y se desmenuza con facilidad.",
+        fr: "Faites cuire le saumon à cœur ; il est cuit quand sa chair est opaque et s'effeuille facilement.",
       },
     },
     {
@@ -81,6 +87,7 @@ export const recipe: Recipe = {
         ja: "生で食べる野菜とハーブは、流水でよく洗ってください。",
         en: "Wash raw vegetables and herbs well under running water.",
         es: "Lava bien con agua corriente las verduras y hierbas que se comen crudas.",
+        fr: "Lavez bien sous l'eau courante les légumes et les herbes consommés crus.",
       },
     },
   ],

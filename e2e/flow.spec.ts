@@ -1,6 +1,7 @@
 import {
   BROWSER_LOCALE,
   LOCALES,
+  type Locale,
   cardNames,
   choosePresetCut,
   expect,
@@ -92,7 +93,7 @@ test.describe("locale switching", () => {
     await choosePresetCut(page);
     await search(page, "ja");
     await heading1(page, t("ja", "nav.views.candidates"));
-    // Separators differ by locale (1,030 / 1030 / 1.030); the digits must not.
+    // Separators differ by locale (1,030 / 1030 / 1.030 / 1 030); the digits must not.
     const digits = () =>
       page
         .getByRole("article")
@@ -100,8 +101,11 @@ test.describe("locale switching", () => {
         .allTextContents()
         .then((cells) => cells.map((cell) => cell.replace(/(\d)[.,\s](\d{3})/g, "$1$2").match(/\d+(?:[.,]\d+)?/g)?.join(" ")));
     const ja = await digits();
-    for (const locale of ["en", "es"] as const) {
-      await page.getByRole("combobox", { name: t(locale === "en" ? "ja" : "en", "language.label") }).selectOption(locale);
+    // Ends back in ja: switching through every locale and back must leave the numbers unchanged.
+    let previous: Locale = "ja";
+    for (const locale of ["en", "es", "fr", "ja"] as const) {
+      await page.getByRole("combobox", { name: t(previous, "language.label") }).selectOption(locale);
+      previous = locale;
       await heading1(page, t(locale, "nav.views.candidates"));
       await expect(page.locator("html")).toHaveAttribute("lang", locale);
       expect(await digits()).toEqual(ja);

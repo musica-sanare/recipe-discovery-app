@@ -29,7 +29,7 @@ If any path does not exist, report it rather than silently inventing its content
 5. Follow `docs/en/NUTRITION_CALCULATION.md`; changing a formula, a source column, or a rounding rule is a decision that needs the owner's approval and an ADR.
 
 ### Localization
-6. The UI and all content support Japanese, English, and Spanish (`ja`, `en`, `es`) from the MVP. This is part of the owner's product identity, not an optional extra.
+6. The UI and all content support Japanese, English, Spanish, and French (`ja`, `en`, `es`, `fr`). `ja`, `en`, and `es` are part of the owner's product identity and have been required since the MVP; `fr` was added in Phase 11 (ADR-033). None of them is an optional extra.
 7. Localization covers UI strings, recipe names, ingredient names, cooking steps, notes, input and validation messages, error states, and accessibility labels. Keep UI strings out of components and domain logic; use typed keys.
 8. Food identity is locale-neutral. Translation never affects calculation: calculation functions do not accept a locale, and switching the language must not change any calculated value.
 9. Translations are canonical content stored in the repository. Do not machine-translate at runtime.
@@ -87,6 +87,12 @@ If any path does not exist, report it rather than silently inventing its content
 - Do not proceed to the next phase until the current phase's acceptance criteria pass.
 - If a decision would materially change cost, security, deployment, privacy, data model, or nutrition accuracy, stop and ask before proceeding.
 - When several designs are viable, present the options, trade-offs, and a recommendation instead of choosing silently.
+
+## Deployment
+- A push to `main` deploys to production: Cloudflare Workers Builds builds the pushed commit and runs `platform/cloudflare/deploy.ts` (ADR-035, `docs/en/DEPLOYMENT.md` §3). When asking the owner about a push to `main`, say that it deploys.
+- Pushes to `dev` do not deploy; CI checks them. `main` only receives commits that passed CI on `dev`, by fast-forward.
+- Claude never deploys, never runs Wrangler with a login, and never changes the Workers Builds settings or the Cloudflare account (shared `deployment.md` and `paid-services.md`). A local `node platform/cloudflare/deploy.ts --dry-run` needs no login but downloads Wrangler, so it needs the owner's approval.
+- The account stays on Workers Free. Changes to `WRANGLER_VERSION` in `platform/cloudflare/deploy.ts` and to `compatibility_date` go through a reviewed commit.
 
 ## Overrides of shared rules
 None.

@@ -15,6 +15,10 @@ Status: **Draft (2026-10-18)**. Each phase ends with checks, a summary to the ow
 | 6 — Post-release maintenance | `prompts/06-post-release-maintenance.md` |
 | 7 — Content expansion | `prompts/07-content-expansion.md` |
 | 8 — Shopping list | `prompts/08-shopping-list.md` |
+| 9 — Recommendation speed and maintenance | `prompts/09-speed-and-maintenance.md` |
+| 10 — Library expansion | `prompts/10-library-expansion.md` |
+| 11 — French locale | `prompts/11-french-locale.md` |
+| 12 — AI assistance | `prompts/12-ai-assistance.md` |
 
 `prompts/FIRST_MESSAGE.md` is the kickoff message for a new Claude Code session.
 
@@ -122,7 +126,7 @@ Acceptance: about 26 new recipes validated and reviewed in three locales with ap
 
 ## Phase 8 — Shopping list
 
-Status: **Planned (2026-10-25)**, to start in a new Claude Code session. Shopping lists were the Phase 8 candidate named when the owner chose Phase 7; they are outside the MVP in [SPEC.md](../en/SPEC.md) §3, so the phase starts with a scope change and an ADR.
+Status: **Complete (2026-10-25)**: release 4 deployed after the owner's approval. Logs: [DECISIONS.md](DECISIONS.md) "Stage 8.1 shopping list design" to "Phase 8 acceptance" (ADR-032, [SPEC.md](../en/SPEC.md) §18). Shopping lists were the Phase 8 candidate named when the owner chose Phase 7; they were outside the MVP in [SPEC.md](../en/SPEC.md) §3, so the phase started with a scope change and an ADR. The ADR-016 re-check of `i18next` and `react-i18next` remains as maintenance (not before 2026-10-26 12:40 UTC).
 
 - Design: entry points, amounts and combination rules, pantry items, persistence and privacy (ADR-015, ADR-030 D9), output (checklist, copy, print), and UI, approved before implementation.
 - A pure, deterministic, locale-free aggregation module with tests; UI and localization in three locales with the owner's review; accessibility and E2E checks.
@@ -131,6 +135,47 @@ Status: **Planned (2026-10-25)**, to start in a new Claude Code session. Shoppin
 
 Acceptance: approved ADR and SPEC change; the module covered by tests and a snapshot; lists built, checked off, copied, and printed in three locales on desktop and mobile; nutrition and scenario snapshots unchanged; checks and CI pass.
 
+## Phase 9 — Recommendation speed and maintenance
+
+Status: **Complete (2026-10-31)**: releases 5 (speed) and 6 (dependencies) deployed after the owner's approval. Logs: [DECISIONS.md](DECISIONS.md) "Phase 9 start" to "Phase 9 acceptance". The owner chose recommendation speed and maintenance (option A) over more recipes, opt-in storage, and meal planning or AI: a full recommendation is near the ADR-030 D10 threshold (p90 about 99–100 ms at 4×, [RELEASE_READINESS.md](RELEASE_READINESS.md) §3), which blocks a larger library, and the ADR-016 re-check is due after 2026-10-26 12:40 UTC.
+
+- Dependency maintenance: the ADR-016 re-check of `i18next` and `react-i18next`, the other dependencies under ADR-016, and the ADR-017 state.
+- Recommendation speed: profiling on the current library and a synthetic larger one, options with their equality proof and a target approved by the owner, then the implementation with every engine output unchanged, measured against a same-session baseline.
+- Release 5 only if users receive a change, after the owner's approval.
+
+Acceptance: ADR-016 re-checked and dependencies current or excepted; the approved speed target met with every snapshot and equality test unchanged; timing documents updated as approved; checks and CI pass.
+
+## Phase 10 — Library expansion
+
+Status: **Complete (2026-10-31)**: three batches added (130 recipes) and release 7 deployed after the owner's approval. Logs: [DECISIONS.md](DECISIONS.md) "Phase 10 start" to "Phase 10 acceptance" and "Stage 10.6 Phase 11 prompt draft". The owner chose more recipes first, then AI assistance (Phase 11 candidate), over opt-in storage and meal planning.
+
+- Expansion plan: about 44 original recipes in three batches (about 130 in total), aimed at the remaining gaps (cuisine balance, effort 3, grilling, steaming, very quick, batch cooking, breakfast, no-cook, microwave-only, bulk, and egg- and soy-based dishes that meet a preset), new foods, the revised ADR-023 size, and the synthetic library size for measurements.
+- Per batch: foods and cooking rates with checks, texts in three locales with the owner's review, content validation, approved snapshot diffs, coverage, and the speed measured against the previous batch in the same session.
+- Release 7 after the owner's approval; at the end, a draft prompt for Phase 11 (AI assistance) for the owner's review.
+
+Acceptance: about 44 new recipes validated and reviewed in three locales with approved snapshot diffs; ADR-023 met as revised; the planned gaps narrowed; a full recommendation within about 80 ms p90 at 4× or the owner's decision; checks and CI pass; the Phase 11 prompt drafted.
+
+## Phase 11 — French locale
+
+Status: **Complete (2026-10-31)**: French in the UI and all content, release 8 deployed after the owner's approval. Logs: [DECISIONS.md](DECISIONS.md) "Phase 11 start: French locale" to "Phase 11 acceptance" and ADR-033. The owner asked for French before AI assistance, which moves to Phase 12.
+
+- Infrastructure: `fr` in the locale list, content schemas, bundles, formatting, search normalization, forbidden expressions, glossaries, and every locale-parameterized test; no runtime fallback.
+- Texts: the UI catalog, the food dictionary, and the recipe texts in three batches, each reviewed by the owner with back-translated safety texts.
+- Locale invariance extended to `fr`: identical calculation bundles, nutrition, recommendations, and displayed values in every locale.
+- `CLAUDE.md` and the stable docs list four locales; release 8 only after the owner's approval.
+
+Acceptance: every UI key and every published text exists in `fr` and was reviewed; locale invariance tests pass in four locales; `npm run check`, `npm run test:e2e`, and CI pass; the app checked in `fr` at desktop width and 375 px.
+
+## Phase 12 — AI assistance
+
+Status: **In progress (2026-10-31)**, from release 8 (`2aa0c7b`); the prompt was brought up to date after Phase 11 (four locales, release 9). The owner chose AI assistance after the library expansion and moved it after the French locale.
+
+- Decisions before any implementation: the feature (free-text conditions or explanation text), the provider and model, the server endpoint and its privacy, the evaluation in four locales, the cost and limits, and the UX and failure states, recorded as ADRs with the SPEC scope change.
+- A contract in `shared/` with runtime validation, a thin provider adapter, and a deterministic fallback; tests without network.
+- An on-demand evaluation in four locales against agreed thresholds, after the owner approves any account or key; the UI in four locales; release 9 only after the owner's approval.
+
+Acceptance: the decisions recorded; the feature optional and confirmed by the user, with the app unchanged when AI is disabled or failing; the evaluation thresholds met or the owner's decision; no secret in the repository or the bundle; checks and CI pass.
+
 ## Later (not MVP)
 
-Optional AI features (structured parsing of free-text input, explanation text), browser history features, meal planning. Each needs its own design, evaluation in three locales, and approval.
+Optional AI features (structured parsing of free-text input, explanation text; the owner chose AI assistance as the Phase 11 candidate after Phase 10, 2026-10-31), browser history features, meal planning. Each needs its own design, evaluation in every supported locale, and approval.

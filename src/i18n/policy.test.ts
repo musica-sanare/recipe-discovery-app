@@ -22,11 +22,12 @@ describe("UI catalogs and the content policy", () => {
     expect(forbiddenIn("ja", "脂肪燃焼をサポート", forbiddenExpressions.ja)).toContain("脂肪燃焼");
     expect(forbiddenIn("en", "Allergen-free and tasty", forbiddenExpressions.en)).toContain("allergen-free");
     expect(forbiddenIn("es", "Receta sin alérgenos", forbiddenExpressions.es)).toContain("sin alérgenos");
+    expect(forbiddenIn("fr", "Recette sans allergènes", forbiddenExpressions.fr)).toContain("sans allergène");
+    expect(forbiddenIn("fr", "Un plat Détox", forbiddenExpressions.fr)).toContain("détox");
   });
 
   it("translates glossary terms consistently (docs/en/CONTENT_POLICY.md §6)", () => {
-    const en = new Map(texts(resources.en.translation));
-    const es = new Map(texts(resources.es.translation));
+    const translated = SUPPORTED_LOCALES.filter((locale) => locale !== "ja").map((locale) => [locale, new Map(texts(resources[locale].translation))] as const);
     const terms = [...glossary, ...uiGlossary].sort((a, b) => b.ja.length - a.ja.length);
     const problems: string[] = [];
     // The MEXT attribution keeps its Japanese wording in every locale.
@@ -35,8 +36,9 @@ describe("UI catalogs and the content policy", () => {
       for (const term of terms) {
         if (!rest.includes(term.ja)) continue;
         rest = rest.replaceAll(term.ja, "");
-        if (!(en.get(key) ?? "").toLowerCase().includes(term.en.toLowerCase())) problems.push(`${key}.en: "${term.ja}" → "${term.en}"`);
-        if (!(es.get(key) ?? "").toLowerCase().includes(term.es.toLowerCase())) problems.push(`${key}.es: "${term.ja}" → "${term.es}"`);
+        for (const [locale, messages] of translated) {
+          if (!(messages.get(key) ?? "").toLowerCase().includes(term[locale].toLowerCase())) problems.push(`${key}.${locale}: "${term.ja}" → "${term[locale]}"`);
+        }
       }
     }
     expect(problems).toEqual([]);

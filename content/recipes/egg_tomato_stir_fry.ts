@@ -3,11 +3,12 @@ import type { Recipe } from "../../shared/content.ts";
 export const recipe: Recipe = {
   id: "egg_tomato_stir_fry",
   texts: {
-    name: { ja: "卵とトマトの炒め物", en: "Egg and tomato stir-fry", es: "Salteado de huevo y tomate" },
+    name: { ja: "卵とトマトの炒め物", en: "Egg and tomato stir-fry", es: "Salteado de huevo y tomate", fr: "Œufs sautés à la tomate" },
     summary: {
       ja: "卵白を足してふんわり炒めた卵と、さっと火を通したトマトを合わせる中国の家庭料理。ご飯を添えます。",
       en: "A Chinese home-style dish of fluffy scrambled eggs with extra egg whites and briefly cooked tomato, served with rice.",
       es: "Un plato casero chino de huevos revueltos esponjosos con claras extra y tomate apenas cocinado, servido con arroz.",
+      fr: "Un plat familial chinois d'œufs brouillés moelleux, enrichis de blancs d'œufs, avec de la tomate à peine cuite, servi avec du riz.",
     },
   },
   cuisine: "chinese",
@@ -34,6 +35,7 @@ export const recipe: Recipe = {
         ja: "成分表に加熱した卵白の値がないため、生の値で計算しています。残った黄身は別の料理に使えます。市販の液卵白でも作れます。",
         en: "The tables have no value for cooked egg white, so the raw value is used. Use the leftover yolks in another dish, or use liquid egg white from a carton.",
         es: "Las tablas no tienen un valor para la clara cocinada, así que se usa el valor en crudo. Usa las yemas que sobren en otro plato, o usa clara de huevo líquida envasada.",
+        fr: "Les tables n'ont pas de valeur pour le blanc d'œuf cuit ; la valeur à l'état cru est donc utilisée. Utilisez les jaunes restants dans un autre plat, ou prenez du blanc d'œuf liquide en brique.",
       },
     },
     { key: "oil_egg_white", food: "vegetable_oil", grams: 2, state: "as_is", role: "fat", linkedTo: "egg_white" },
@@ -49,6 +51,7 @@ export const recipe: Recipe = {
         ja: "成分表に加熱したトマトの値がないため、生の値で計算しています。",
         en: "The tables have no value for cooked tomato, so the raw value is used.",
         es: "Las tablas no tienen un valor para el tomate cocinado, así que se usa el valor en crudo.",
+        fr: "Les tables n'ont pas de valeur pour la tomate cuite ; la valeur à l'état cru est donc utilisée.",
       },
     },
     { key: "oil_tomato", food: "vegetable_oil", grams: 2, state: "as_is", role: "fat" },
@@ -58,7 +61,7 @@ export const recipe: Recipe = {
     { key: "rice", food: "rice_cooked", grams: 200, state: "as_is", role: "main_carb", adjust: { kind: "grams", min: 100, max: 300, step: 10 } },
   ],
   sides: [
-    { key: "rice", label: { ja: "ご飯", en: "Rice", es: "Arroz" }, ingredients: ["rice"], solverMayRemove: true },
+    { key: "rice", label: { ja: "ご飯", en: "Rice", es: "Arroz", fr: "Riz" }, ingredients: ["rice"], solverMayRemove: true },
   ],
   steps: [
     {
@@ -67,6 +70,7 @@ export const recipe: Recipe = {
         ja: "トマトをくし形に切ります。卵と卵白に塩を加えて一緒に溶きほぐします。",
         en: "Cut the tomato into wedges. Beat the eggs and egg whites together with the salt.",
         es: "Corta el tomate en gajos. Bate los huevos y las claras juntos con la sal.",
+        fr: "Coupez la tomate en quartiers. Battez ensemble les œufs et les blancs d'œufs avec le sel.",
       },
     },
     {
@@ -75,6 +79,7 @@ export const recipe: Recipe = {
         ja: "フライパンに卵用と卵白用の油を強めの中火で熱し、卵液を流し入れて大きく混ぜ、白身まで固まったら取り出します。",
         en: "Heat the oil for the eggs and egg whites in a frying pan over medium-high heat, pour in the egg mixture, fold it in large curds, and take it out once the whites are set.",
         es: "Calienta el aceite de los huevos y las claras en una sartén a fuego medio-alto, vierte la mezcla, remuévela en grumos grandes y sácala cuando cuajen las claras.",
+        fr: "Faites chauffer l'huile des œufs dans une poêle à feu moyen-vif, versez les œufs battus, remuez-les en gros morceaux et retirez-les dès que les blancs sont pris.",
       },
     },
     {
@@ -83,6 +88,7 @@ export const recipe: Recipe = {
         ja: "トマト用の油を足してトマトを1分炒め、砂糖を加えます。卵を戻して炒め合わせ、青ねぎを散らします。",
         en: "Add the oil for the tomato, stir-fry the tomato for 1 minute, and add the sugar. Return the eggs, toss together, and scatter the green onion.",
         es: "Añade el aceite del tomate, saltea el tomate 1 minuto y agrega el azúcar. Devuelve los huevos, mezcla y esparce la cebolleta.",
+        fr: "Ajoutez l'huile de la tomate, faites sauter la tomate 1 minute et ajoutez le sucre. Remettez les œufs, mélangez et parsemez d'oignon vert.",
       },
     },
     {
@@ -91,6 +97,7 @@ export const recipe: Recipe = {
         ja: "器に盛ります。",
         en: "Transfer to a plate.",
         es: "Sírvelo en un plato.",
+        fr: "Dressez sur une assiette.",
       },
     },
   ],
@@ -101,6 +108,7 @@ export const recipe: Recipe = {
         ja: "卵は固まるまで加熱してください。",
         en: "Cook the eggs until set.",
         es: "Cocina los huevos hasta que cuajen.",
+        fr: "Faites cuire les œufs jusqu'à ce qu'ils soient pris.",
       },
     },
   ],

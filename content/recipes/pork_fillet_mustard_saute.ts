@@ -3,11 +3,12 @@ import type { Recipe } from "../../shared/content.ts";
 export const recipe: Recipe = {
   id: "pork_fillet_mustard_saute",
   texts: {
-    name: { ja: "豚ヒレ肉のソテー 粒マスタードソース", en: "Pork tenderloin with wholegrain mustard sauce", es: "Solomillo de cerdo con salsa de mostaza en grano" },
+    name: { ja: "豚ヒレ肉のソテー 粒マスタードソース", en: "Pork tenderloin with wholegrain mustard sauce", es: "Solomillo de cerdo con salsa de mostaza en grano", fr: "Filet mignon de porc sauce moutarde à l'ancienne" },
     summary: {
       ja: "脂の少ない豚ヒレ肉を焼き、粒マスタードとレモンのソースで仕上げます。",
       en: "Lean pork tenderloin, pan-seared and finished with a wholegrain mustard and lemon sauce.",
       es: "Solomillo de cerdo magro a la sartén con una salsa de mostaza en grano y limón.",
+      fr: "Filet mignon de porc maigre saisi à la poêle et nappé d'une sauce à la moutarde à l'ancienne et au citron.",
     },
   },
   cuisine: "western",
@@ -30,8 +31,8 @@ export const recipe: Recipe = {
     { key: "rice", food: "rice_cooked", grams: 150, state: "as_is", role: "main_carb", adjust: { kind: "grams", min: 100, max: 250, step: 10 } },
   ],
   sides: [
-    { key: "rice", label: { ja: "ご飯", en: "Rice", es: "Arroz" }, ingredients: ["rice"], solverMayRemove: true },
-    { key: "spinach", label: { ja: "ゆでほうれん草", en: "Boiled spinach", es: "Espinacas hervidas" }, ingredients: ["spinach"], solverMayRemove: false },
+    { key: "rice", label: { ja: "ご飯", en: "Rice", es: "Arroz", fr: "Riz" }, ingredients: ["rice"], solverMayRemove: true },
+    { key: "spinach", label: { ja: "ゆでほうれん草", en: "Boiled spinach", es: "Espinacas hervidas", fr: "Épinards bouillis" }, ingredients: ["spinach"], solverMayRemove: false },
   ],
   steps: [
     {
@@ -40,6 +41,7 @@ export const recipe: Recipe = {
         ja: "豚ヒレ肉を2cm厚さに切り、塩とこしょうをふります。",
         en: "Cut the pork tenderloin into 2 cm medallions and season with salt and pepper.",
         es: "Corta el solomillo en medallones de 2 cm y salpimiéntalos.",
+        fr: "Coupez le filet mignon en médaillons de 2 cm, salez et poivrez.",
       },
     },
     {
@@ -49,6 +51,7 @@ export const recipe: Recipe = {
         ja: "ほうれん草をゆでて水にとり、水気を絞って食べやすく切ります。",
         en: "Boil the spinach, cool it in water, squeeze out the water, and cut it into short lengths.",
         es: "Hierve las espinacas, enfríalas en agua, exprímelas bien y córtalas en trozos.",
+        fr: "Faites bouillir les épinards, refroidissez-les dans l'eau, pressez-les et coupez-les en tronçons courts.",
       },
     },
     {
@@ -57,6 +60,7 @@ export const recipe: Recipe = {
         ja: "フライパンにオリーブ油を中火で熱し、豚肉を片面3〜4分ずつ焼きます。",
         en: "Heat the olive oil in a frying pan over medium heat and cook the pork for 3 to 4 minutes on each side.",
         es: "Calienta el aceite de oliva en una sartén a fuego medio y cocina el cerdo de 3 a 4 minutos por cada lado.",
+        fr: "Faites chauffer l'huile d'olive dans une poêle à feu moyen et faites cuire le porc 3 à 4 minutes de chaque côté.",
       },
     },
     {
@@ -65,6 +69,7 @@ export const recipe: Recipe = {
         ja: "火を止めて粒マスタード、しょうゆ、レモン果汁を加えてからめます。",
         en: "Turn off the heat, add the mustard, soy sauce, and lemon juice, and coat the pork.",
         es: "Apaga el fuego, añade la mostaza, la salsa de soja y el zumo de limón, y baña el cerdo.",
+        fr: "Éteignez le feu, ajoutez la moutarde, la sauce soja et le jus de citron, et enrobez-en le porc.",
       },
     },
   ],
@@ -75,6 +80,7 @@ export const recipe: Recipe = {
         ja: "豚肉は中心まで火を通してください。切り口に赤みがなく、肉汁が透明になっていることを確認します。",
         en: "Cook pork all the way through. Check that the center is no longer pink and the juices run clear.",
         es: "Cocina el cerdo completamente. Comprueba que el centro ya no esté rosado y que los jugos salgan transparentes.",
+        fr: "Faites cuire le porc à cœur. Vérifiez que le centre n'est plus rosé et que le jus qui s'écoule est clair.",
       },
     },
   ],

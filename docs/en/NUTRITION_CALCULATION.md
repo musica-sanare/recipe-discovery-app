@@ -2,12 +2,14 @@ English | [日本語](../ja/NUTRITION_CALCULATION.md) · [Docs index](README.md)
 
 # Nutrition Calculation — Recipe Discovery
 
-Status: **Draft (2026-10-18)**. Formulas quoted from the source tables are *Verified* (read in the official PDF on 2026-10-18; see [DECISIONS.md](../working/DECISIONS.md) "Verification log"). Column choices, rounding, tolerances, and thresholds are *Provisional* until Phase 0 and Phase 2 confirm them with real data. Changing anything here needs the owner's approval and an ADR (CLAUDE.md Part B, principle 5).
+This document defines how Recipe Discovery calculates nutrition values: the source data and columns, how source notations are handled, recipe amounts, cooked and fried ingredients, uncertainty and ranges, rounding, target fit, and amount adjustment. It is for anyone who checks or changes a calculation. Changing anything here needs the owner's approval and an ADR (`CLAUDE.md`, project principle 5).
+
+Status: **In use**. Formulas quoted from the source tables are *Verified*: they were read in the official PDF on 2026-10-18 ([DECISIONS.md](../working/DECISIONS.md) "Verification log"). Column choices, rounding, tolerances, and thresholds are decided in ADR-011, ADR-025, and ADR-028; the open items are in §13.
 
 ## 1. Source data
 
 - Standard Tables of Food Composition in Japan 2020 (Eighth Revised Edition), Updated and Enlarged Version 2023 (日本食品標準成分表（八訂）増補2023年), MEXT. Workbook version: updated 2026-03-27 (includes errata). Handling rules and attribution: [DATA_SOURCES.md](DATA_SOURCES.md).
-- *Verified*: all values are per 100 g of edible portion. The edible portion is the food as purchased minus the parts normally discarded; the refuse rate is the discarded share in mass %.
+- *Verified*: all values are per 100 g of edible portion. The edible portion is the food as purchased minus the parts normally discarded. The refuse rate is the discarded share in mass %.
 - *Verified*: the tables list 2,538 foods, including cooked forms (for example boiled, grilled, stir-fried, sautéed, deep-fried, tempura, breaded and fried, steamed, microwaved).
 
 ## 2. Nutrients and source columns (ADR-011, accepted 2026-10-18)
@@ -20,11 +22,16 @@ Status: **Draft (2026-10-18)**. Formulas quoted from the source tables are *Veri
 | Carbohydrate | `CHOCDF-` (炭水化物, includes dietary fiber) | Complete for every validation recipe; does not add residual "carbohydrate" to meat, fish, and eggs as `CHOAVLDF-` does |
 | Salt equivalent (optional) | `NACL_EQ` | Nearly complete |
 
-Not displayed in the MVP: dietary fiber (`FIB-`, incomplete for 13 of 20 validation recipes) and the component-based columns `PROTCAA`, `FATNLEA`, `CHOAVLDF-` (incomplete for most recipes or misleading for protein-rich foods). They stay in the extracted subset for comparison.
+Not displayed in the MVP, but kept in the extracted subset for comparison:
+- dietary fiber (`FIB-`): incomplete for 13 of 20 validation recipes;
+- the component-based columns `PROTCAA`, `FATNLEA`, `CHOAVLDF-`: incomplete for most recipes or misleading for protein-rich foods.
 
-Measured facts (2026-10-18): in the workbook, `PROTCAA` is unmeasured for 422 foods (17%) and a median 15% lower than `PROT-`; `FATNLEA` is unmeasured for 436 foods (17%) and a median 8% lower than `FAT-`. Over the 20 validation recipes, `PROTCAA` (with a fallback) would read 2.2–9.1 g lower protein per serving. Details: [DECISIONS.md](../working/DECISIONS.md) "Stage 0.5 calculation checks".
+Measured facts (2026-10-18; details: [DECISIONS.md](../working/DECISIONS.md) "Stage 0.5 calculation checks"):
+- In the workbook, `PROTCAA` is unmeasured for 422 foods (17%) and a median 15% lower than `PROT-`.
+- `FATNLEA` is unmeasured for 436 foods (17%) and a median 8% lower than `FAT-`.
+- Over the 20 validation recipes, `PROTCAA` (with a fallback) would read 2.2–9.1 g lower protein per serving.
 
-Energy is the table value, computed by MEXT from component-based values, so it does not equal 4 × protein + 9 × fat + 4 × carbohydrate (the validation recipes differ by −0.1% to +10%, median +4%). The detail view explains this.
+Energy is the table value, which MEXT computes from component-based values. So it does not equal 4 × protein + 9 × fat + 4 × carbohydrate: the validation recipes differ by −0.1% to +10%, median +4%. The detail view explains this.
 
 ## 3. Notation in the source tables and how it is handled
 
@@ -49,16 +56,16 @@ Energy is the table value, computed by MEXT from component-based values, so it d
 - (c1) `weight change rate (%) = mass after cooking / mass before cooking × 100`.
 - (c4) Nutrient amount in the whole cooked food:
   `amount = cooked value per 100 g edible × raw edible mass (g) / 100 × weight change rate (%) / 100`.
-- Weight change rates are in "Table 12: outline of cooking methods and weight change rates" in the PDF (not in the workbook; extraction method decided in Phase 0).
+- Weight change rates are in "Table 12: outline of cooking methods and weight change rates" in the PDF, not in the workbook. The needed rows are transcribed by hand (ADR-020).
 - The analyses were done without seasonings except for a few foods. Seasonings are therefore always separate ingredients in recipes.
 
 Rules:
 1. If the food and cooking method exist in the tables, use the cooked value with (c4). Mapping class: **exact**.
-2. If the cooked form does not exist (example: skinless young chicken breast has raw and grilled, but not boiled), use the raw value. Mapping class: **approximation**, with the reason shown. Whether to apply the group-level "rates of change of components by cooking" (chapter 3) is decided in Phase 0.
+2. If the cooked form does not exist, use the raw value. Example: skinless young chicken breast has raw and grilled, but not boiled. Mapping class: **approximation**, with the reason shown. Whether to apply the group-level "rates of change of components by cooking" (chapter 3) is still open (§13).
 3. **No double counting of cooking oil.** Cooked values for stir-fried, sautéed, and fried foods already include the oil absorbed during the analysis (Tables 13–14). When such a cooked value is used, the oil used for cooking that food is **not** added as a separate ingredient. *Verified* (Table 14): 100 g of raw vegetables stir-fried with 5.0 g of oil gained 2.7–4.6 g of fat; farmed Atlantic salmon sautéed with 5.0 g of oil lost 2.8 g.
-4. Cooking oil when no oil-cooked form is used (raw or other cooked values): the authored amount of oil is counted in full and shown as an assumption (ADR-022). Table 14 indicates 80–98% of pan oil stays in the food; for the validation recipes the difference is 0.3–0.9 g of fat per serving.
-5. Weight change rates are relative to the raw edible portion, except where the tables remove parts after cooking (`postCookingRefuse` in `data/composition/cooking.json`, for example the shell of boiled eggs or the peel of steamed potatoes). Those entries are approximations when the recipe states the raw edible mass.
-6. For starchy staples, recipes may state the mass in the state the tables provide (cooked rice, boiled or dry pasta); no weight change rate is needed then.
+4. Cooking oil when no oil-cooked form is used (raw or other cooked values): the authored amount of oil is counted in full and shown as an assumption (ADR-022). Table 14 indicates that 80–98% of pan oil stays in the food; for the validation recipes the difference is 0.3–0.9 g of fat per serving.
+5. Weight change rates are relative to the raw edible portion. The exception is where the tables remove parts after cooking (`postCookingRefuse` in `data/composition/cooking.json`, for example the shell of boiled eggs or the peel of steamed potatoes). Those entries are approximations when the recipe states the raw edible mass.
+6. For starchy staples, recipes may state the mass in the state the tables provide (cooked rice, boiled or dry pasta). No weight change rate is needed then.
 
 Cooking data: weight change rates and Tables 13–14 rows are transcribed into `data/composition/cooking.json` ([DATA_SOURCES.md](DATA_SOURCES.md) "Cooking tables").
 
@@ -82,18 +89,31 @@ A range that straddles a target boundary yields "near / uncertain", never "met".
 | Approximation | Similar food used, raw value or related cooked value for a cooked ingredient, parts removed after cooking, tabulated fried form, estimated `( )` values | "approx." and reason in the basis |
 | Hard to estimate | Slow frying in a large amount of oil, absorbed frying oil without a tabulated fried form, liquid discarded after cooking | Assumption stated; range shown when significant |
 
-Household measures such as "a pinch" do not change the class: recipes state grams, and the measure is a display aid noted in the basis. Trace and estimated-zero values (`Tr`, `(0)`, `(Tr)`) are flags only (§3). An ingredient's class is the most severe class of its reasons (ADR-028).
+- Household measures such as "a pinch" do not change the class: recipes state grams, and the measure is a display aid noted in the basis.
+- Trace and estimated-zero values (`Tr`, `(0)`, `(Tr)`) are flags only (§3).
+- An ingredient's class is the most severe class of its reasons (ADR-028).
 
-Ranges (ADR-025, accepted 2026-10-18). A share-based threshold does not work: in 15 of 20 validation recipes, approximated or fried ingredients contribute more than 10% of the energy, protein, or fat, mostly because the main protein itself is an approximation (76–89% of the protein in those recipes). Instead, each counted ingredient gets an error band by reason, the bands are added per nutrient, and a range is shown when its width exceeds twice the display unit (20 kcal; 2 g for protein, fat, and carbohydrate).
+### Ranges (ADR-025, accepted 2026-10-18)
 
-| Reason (engine identifier) | Class | Error band applied to the ingredient's contribution (energy / protein / fat / carbohydrate / salt) | Basis |
+Each counted ingredient gets an error band by reason. The bands are added per nutrient, and a range is shown when its width exceeds twice the display unit (20 kcal; 2 g for protein, fat, and carbohydrate).
+
+A share-based threshold does not work. In 15 of 20 validation recipes, approximated or fried ingredients contribute more than 10% of the energy, protein, or fat. The main reason is that the main protein itself is an approximation (76–89% of the protein in those recipes).
+
+| Reason (engine identifier) | Class | Error band on the ingredient's contribution (energy / protein / fat / carbohydrate / salt) | Basis |
 |---|---|---|---|
-| Cooking method not in the tables, raw value used (`raw_value_for_cooking`) | Approximation | −25 / −15 / −35 / −30 / −15 % to +5 / +5 / +5 / +10 / +5 % | *Measured*: cooked-to-raw retention in the tabulated pairs — protein 0.87–1.03 for meat and fish (Stage 0.3; chapter 3 medians 87–100 %), fat down to 0.66 and energy down to 0.73 for fatty meat and fish (chapter 3 medians down to 74 % and 83 %), protein and carbohydrate of boiled vegetables down to 0.67 and 0.70 ([DECISIONS.md](../working/DECISIONS.md) "Stage 6.5") |
-| Related cooked value used, for example grilled for sautéed (`related_cooked_value`) | Approximation | ±15 / ±10 / ±35 / ±10 / ±5 % | *Measured*: between non-oil methods of the same food, protein differs by up to 8 %, fat by up to 34 %, and energy by up to 14 % ("Stage 6.5") |
-| Parts removed after cooking (`post_cooking_refuse`) | Approximation | ±5 % | *Assumption*; the tables give single analyses without spread ("Stage 6.5") |
-| Fried state, oil absorption (`fried`) | Approximation | ±30 % of the ingredient's fat and of the energy from that fat | *Assumption*; Table 13 gives fat changes of −5.2 to +32.3 g per 100 g raw food by food and coating, as single analyses; applied to total fat, the band overstates foods whose fat is mostly their own ("Stage 6.5") |
-| Slow frying in a large amount of oil, authored as hard to estimate (`slow_frying`) | Hard to estimate | 0 to +50 % of the ingredient's fat and of the energy from that fat | *Assumption*; studies disagree on the direction (about +32 % oil uptake at 120 °C against 180 °C for unblanched potato slices in one study, the opposite in others) ("Stage 6.5") |
+| Cooking method not in the tables, raw value used (`raw_value_for_cooking`) | Approximation | −25 / −15 / −35 / −30 / −15 % to +5 / +5 / +5 / +10 / +5 % | *Measured* (1) |
+| Related cooked value used, for example grilled for sautéed (`related_cooked_value`) | Approximation | ±15 / ±10 / ±35 / ±10 / ±5 % | *Measured* (2) |
+| Parts removed after cooking (`post_cooking_refuse`) | Approximation | ±5 % | *Assumption* (3) |
+| Fried state, oil absorption (`fried`) | Approximation | ±30 % of the ingredient's fat and of the energy from that fat | *Assumption* (4) |
+| Slow frying in a large amount of oil, authored as hard to estimate (`slow_frying`) | Hard to estimate | 0 to +50 % of the ingredient's fat and of the energy from that fat | *Assumption* (5) |
 | Estimated `( )` value in a displayed nutrient (`estimated_source_value`) | Approximation | None (flag and reason only) | No evidence for a band yet |
+
+Basis of the bands (all from [DECISIONS.md](../working/DECISIONS.md) "Stage 6.5"):
+1. Cooked-to-raw retention in the tabulated pairs. Protein: 0.87–1.03 for meat and fish (Stage 0.3; chapter 3 medians 87–100 %). Fat down to 0.66 and energy down to 0.73 for fatty meat and fish (chapter 3 medians down to 74 % and 83 %). Protein and carbohydrate of boiled vegetables down to 0.67 and 0.70.
+2. Between non-oil methods of the same food, protein differs by up to 8 %, fat by up to 34 %, and energy by up to 14 %.
+3. The tables give single analyses without spread.
+4. Table 13 gives fat changes of −5.2 to +32.3 g per 100 g raw food by food and coating, as single analyses. Applied to total fat, the band overstates foods whose fat is mostly their own.
+5. Studies disagree on the direction: about +32 % oil uptake at 120 °C against 180 °C for unblanched potato slices in one study, the opposite in others.
 
 Rules (ADR-028):
 - Energy from fat is fat × 9 kcal/g (*Assumption*, stated in the basis).
@@ -108,24 +128,25 @@ The assumptions are labelled as such in the basis and revisited when better evid
 - Internal calculation uses full precision; rounding applies only to displayed values.
 - Per-serving values = recipe totals / servings.
 - Display rounding (ADR-025): kcal to the nearest 10; protein, fat, and carbohydrate to whole grams; salt to 0.1 g. Energy is shown in steps of 10 because the table energy and the 4P + 9F + 4C estimate already differ by a median of 4 %.
-- Fit status is always computed from full-precision values, never from rounded ones (rounded values changed the status in 2 of 60 recipe-preset combinations). When the rounded display looks like it meets a bound that the full value misses (for example 34.6 g shown as 35 g against a 35 g minimum), the detail view shows the value to one decimal with "just below the target".
+- Fit status is always computed from full-precision values, never from rounded ones. Rounded values changed the status in 2 of 60 recipe-preset combinations.
+- When the rounded display looks like it meets a bound that the full value misses (for example 34.6 g shown as 35 g against a 35 g minimum), the detail view shows the value to one decimal with "just below the target".
 - Formatting (decimal separator, unit labels) is locale-specific; values are not.
 
 ## 9. Target fit
 
 - Each target is a range or a bound. Status per nutrient: **met** (inside), **near** (outside but within tolerance), **not met**.
-- Tolerance (ADR-025): ±10% of the bound; protein up to 3 g below its minimum. It matches the size of the main approximation error (up to about 13% for meat calculated from raw values); ±15% made "near" much more frequent for the maintenance preset (2 → 5 of 20 recipes) without adding information.
-- Uncertain values: evaluated on the range when a range is shown; straddling a boundary gives "near". A range that is not shown is evaluated as its point value (ADR-029 D1).
+- Tolerance (ADR-025): ±10% of the bound; protein up to 3 g below its minimum. It matches the size of the main approximation error (up to about 13% for meat calculated from raw values). ±15% made "near" much more frequent for the maintenance preset (2 → 5 of 20 recipes) without adding information.
+- Uncertain values are evaluated on the range when a range is shown; straddling a boundary gives "near". A range that is not shown is evaluated as its point value (ADR-029 D1).
 - A nutrient with an unmeasured counted value has the status "unknown" and is never "met" (ADR-029 D2).
 
 ## 10. Bounded amount adjustment
 
 - Only ingredients marked adjustable in the recipe can change, within their authored minimum, maximum, and step. Integer units stay integers (amount = count × unit grams).
 - Linked ingredients (for example the seasonings of the main protein) scale proportionally with their leader: amount = default amount × leader amount / leader default amount.
-- Amounts and bounds refer to the recipe's authored servings; a servings change multiplies every resolved amount afterwards, so per-serving values do not depend on the number of servings (ADR-028).
-- A chosen substitution replaces the ingredient's food, state, cooking method, and amount (default × ratio, with its own bounds if given) during amount resolution; ingredients linked to it keep their proportion (ADR-028).
-- Sides (ADR-024, ADR-026): a side that is switched off contributes 0 g, including the ingredients linked to it. The solver may switch off only sides marked for it; otherwise a side's adjustable ingredient stays within its range, whose minimum is the smallest natural portion.
-- The solver searches the allowed grid and picks the solution that meets the targets with the smallest relative change from the default amounts; ties use a stable order. The result is deterministic. Search method, objective, and tie-breaking: ADR-029 D4.
+- Amounts and bounds refer to the recipe's authored servings. A servings change multiplies every resolved amount afterwards, so per-serving values do not depend on the number of servings (ADR-028).
+- A chosen substitution replaces the ingredient's food, state, cooking method, and amount (default × ratio, with its own bounds if given) during amount resolution. Ingredients linked to it keep their proportion (ADR-028).
+- Sides (ADR-024, ADR-026): a side that is switched off contributes 0 g, including the ingredients linked to it. The solver may switch off only sides marked for it. Otherwise a side's adjustable ingredient stays within its range, whose minimum is the smallest natural portion.
+- The solver searches the allowed grid and picks the solution that meets the targets with the smallest relative change from the default amounts. Ties use a stable order, so the result is deterministic. Search method, objective, and tie-breaking: ADR-029 D4.
 - If no in-bounds solution meets all targets, the closest solution is shown as "near" with the remaining gaps.
 
 ## 11. Locale invariance
@@ -140,12 +161,12 @@ Nutrition and recommendation functions take no locale input. Tests calculate eve
 - Fried-food handling.
 - Adjustment solver: bounds, steps, integer units, linked ingredients, minimal change, determinism.
 - Snapshot tests of every recipe's calculated values.
-- Phase 0 cross-check: compare a few recipes with an independent calculation from the source values (the MEXT online database can combine foods; whether its results can be compared directly is to be checked).
+- Phase 0 cross-check: compare a few recipes with an independent calculation from the source values. The MEXT online database can combine foods; whether its results can be compared directly is to be checked.
 
 ## 13. Open items (要確認)
 
 1. ~~Carbohydrate column~~: `CHOCDF-` (ADR-011). Display names in three locales are set with the UI catalogs.
-2. How to extract Table 12 (weight change rates) and Tables 13–14 reliably from the PDF.
-3. Whether to use the chapter 3 group-level rates of change for missing cooked forms.
+2. ~~How to extract Table 12 (weight change rates) and Tables 13–14 reliably from the PDF~~: hand transcription with automated checks (ADR-020).
+3. Whether to use the chapter 3 group-level rates of change for missing cooked forms. The chapter 3 medians serve so far only as evidence for the error bands (Stage 6.5).
 4. ~~Tolerance, rounding, and range threshold values~~: decided in ADR-025. Evidence for the error bands: Stage 6.5 (ADR-028 revised); `post_cooking_refuse`, `fried`, and `slow_frying` remain assumptions.
 5. Expected accuracy versus real cooking cannot be quantified without measurement; the UI states the limits instead.

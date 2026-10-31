@@ -3,11 +3,12 @@ import type { Recipe } from "../../shared/content.ts";
 export const recipe: Recipe = {
   id: "mackerel_salt_grill_daikon",
   texts: {
-    name: { ja: "さばの塩焼き 大根おろし添え", en: "Salt-grilled mackerel with grated daikon", es: "Caballa asada con sal y daikon rallado" },
+    name: { ja: "さばの塩焼き 大根おろし添え", en: "Salt-grilled mackerel with grated daikon", es: "Caballa asada con sal y daikon rallado", fr: "Maquereau grillé au sel et daikon râpé" },
     summary: {
       ja: "和食の定番の焼き魚です。塩をふったさばをトースターで焼き、大根おろしとほうれん草のおひたしを添えます。ご飯を添えます。",
       en: "A classic Japanese grilled fish: salted mackerel cooked in a toaster oven, with grated daikon and dressed spinach, and rice.",
       es: "Un pescado asado clásico de la cocina japonesa: caballa con sal al horno tostador, con daikon rallado y espinacas aliñadas, y arroz.",
+      fr: "Un classique du poisson grillé japonais : maquereau salé cuit au four grille-pain, avec du daikon râpé, des épinards assaisonnés et du riz.",
     },
   },
   cuisine: "japanese",
@@ -31,6 +32,7 @@ export const recipe: Recipe = {
         ja: "切り身1切れ約100gです。さばは脂の多い魚なので、脂質が多めになります。",
         en: "One fillet is about 100 g. Mackerel is an oily fish, so the fat is relatively high.",
         es: "Un filete pesa unos 100 g. La caballa es un pescado azul, así que la grasa es relativamente alta.",
+        fr: "Un filet pèse environ 100 g. Le maquereau est un poisson gras ; sa teneur en lipides est donc relativement élevée.",
       },
     },
     { key: "salt", food: "salt", grams: 1, state: "as_is", measure: { unit: "pinch", quantity: 2 }, role: "seasoning", linkedTo: "mackerel" },
@@ -41,7 +43,7 @@ export const recipe: Recipe = {
     { key: "rice", food: "rice_cooked", grams: 150, state: "as_is", role: "main_carb", adjust: { kind: "grams", min: 100, max: 250, step: 25 } },
   ],
   sides: [
-    { key: "rice", label: { ja: "ご飯", en: "Rice", es: "Arroz" }, ingredients: ["rice"], solverMayRemove: true },
+    { key: "rice", label: { ja: "ご飯", en: "Rice", es: "Arroz", fr: "Riz" }, ingredients: ["rice"], solverMayRemove: true },
   ],
   steps: [
     {
@@ -50,6 +52,7 @@ export const recipe: Recipe = {
         ja: "さばの両面に塩をふって10分置き、出てきた水気をキッチンペーパーで拭きます。",
         en: "Salt the mackerel on both sides, leave for 10 minutes, and pat off the liquid with paper towels.",
         es: "Sala la caballa por ambos lados, déjala 10 minutos y seca el líquido con papel de cocina.",
+        fr: "Salez le maquereau des deux côtés, laissez reposer 10 minutes et épongez le liquide avec du papier absorbant.",
       },
     },
     {
@@ -58,6 +61,7 @@ export const recipe: Recipe = {
         ja: "その間に、ほうれん草を沸騰した湯で1分ゆでて水にとり、水気を絞って4cm長さに切り、しょうゆ小さじ半分をかけます。",
         en: "Meanwhile, boil the spinach for 1 minute, cool it in water, squeeze it dry, cut it into 4 cm lengths, and dress with half a teaspoon of soy sauce.",
         es: "Mientras tanto, hierve las espinacas 1 minuto, enfríalas en agua, escúrrelas bien, córtalas en trozos de 4 cm y alíñalas con media cucharadita de salsa de soja.",
+        fr: "Pendant ce temps, faites bouillir les épinards 1 minute, refroidissez-les dans l'eau, pressez-les, coupez-les en tronçons de 4 cm et assaisonnez-les d'une demi-cuillère à café de sauce soja.",
       },
     },
     {
@@ -66,6 +70,7 @@ export const recipe: Recipe = {
         ja: "アルミホイルを敷いたトースターの天板にさばを皮を上にしてのせ、12〜15分焼きます。",
         en: "Put the mackerel skin side up on the foil-lined tray of a toaster oven and cook for 12–15 minutes.",
         es: "Pon la caballa con la piel hacia arriba en la bandeja del horno tostador cubierta con papel de aluminio y ásala 12-15 minutos.",
+        fr: "Posez le maquereau côté peau vers le haut sur la plaque du four grille-pain garnie de papier aluminium et faites cuire 12 à 15 minutes.",
       },
     },
     {
@@ -74,6 +79,7 @@ export const recipe: Recipe = {
         ja: "だいこんをすりおろして軽く水気を切り、さばに添えてしょうゆをかけます。おひたしも添えます。",
         en: "Grate the daikon, drain it lightly, and serve it with the mackerel, topped with the soy sauce. Add the spinach on the side.",
         es: "Ralla el daikon, escúrrelo un poco y sírvelo con la caballa con la salsa de soja por encima. Añade las espinacas al lado.",
+        fr: "Râpez le daikon, égouttez-le légèrement et servez-le avec le maquereau, arrosé de sauce soja. Ajoutez les épinards à côté.",
       },
     },
     {
@@ -83,6 +89,7 @@ export const recipe: Recipe = {
         ja: "ご飯を添えます。",
         en: "Serve with the rice.",
         es: "Acompáñalo con el arroz.",
+        fr: "Servez avec le riz.",
       },
     },
   ],
@@ -93,6 +100,7 @@ export const recipe: Recipe = {
         ja: "魚は中心まで白く不透明になるまで焼いてください。",
         en: "Cook the fish until it is white and opaque in the center.",
         es: "Cocina el pescado hasta que esté blanco y opaco en el centro.",
+        fr: "Faites cuire le poisson jusqu'à ce qu'il soit blanc et opaque au centre.",
       },
     },
     {
@@ -101,6 +109,7 @@ export const recipe: Recipe = {
         ja: "切り身にも小骨が残っていることがあります。食べるときは骨に注意してください。",
         en: "Fillets may still have small bones; take care when eating.",
         es: "Los filetes pueden tener alguna espina pequeña; ten cuidado al comerlos.",
+        fr: "Les filets peuvent encore contenir de petites arêtes ; faites attention en mangeant.",
       },
     },
     {
@@ -109,6 +118,7 @@ export const recipe: Recipe = {
         ja: "生で食べる野菜とハーブは、流水でよく洗ってください。",
         en: "Wash raw vegetables and herbs well under running water.",
         es: "Lava bien con agua corriente las verduras y hierbas que se comen crudas.",
+        fr: "Lavez bien sous l'eau courante les légumes et les herbes consommés crus.",
       },
     },
   ],

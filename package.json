@@ -7,6 +7,7 @@
   "engines": {
     "node": ">=24.15.0"
   },
+  "packageManager": "npm@11.17.0",
   "scripts": {
     "dev": "npm run content:build && vite",
     "build": "npm run validate:content && npm run content:build && tsc -b && vite build",
@@ -25,13 +26,14 @@
     "data:extract": "node tools/extract-composition.ts",
     "data:verify-cooking": "node tools/verify-cooking-transcription.ts",
     "eval:coverage": "node tools/evaluate-coverage.ts",
+    "eval:ai": "node tools/evaluate-ai.ts",
     "bench:recommendation": "node tools/benchmark-recommendation.ts"
   },
   "dependencies": {
-    "i18next": "26.4.7",
+    "i18next": "^26.5.12",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
-    "react-i18next": "17.0.20",
+    "react-i18next": "^17.1.9",
     "zod": "^4.6.7"
   },
   "devDependencies": {
@@ -46,14 +48,14 @@
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.2",
     "axe-core": "^4.14.0",
-    "eslint": "^10.13.0",
+    "eslint": "^10.14.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.7",
     "globals": "^17.13.0",
     "jsdom": "^30.1.3",
     "tailwindcss": "^4.3.3",
     "typescript": "~6.0.3",
-    "typescript-eslint": "^8.72.0",
+    "typescript-eslint": "^8.72.1",
     "vite": "^8.3.5",
     "vitest": "^5.0.5"
   },

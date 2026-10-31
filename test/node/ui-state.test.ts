@@ -4,6 +4,7 @@ import { recommendationDataFromBundle } from "../../domain/recommendation/data.t
 import { evaluatePool, selectCandidates } from "../../domain/recommendation/recommend.ts";
 import type { Conditions, PoolRequest } from "../../domain/recommendation/types.ts";
 import { presetTargets } from "../../domain/recommendation/validate.ts";
+import { SHOPPING_LIST_MAX_RECIPES } from "../../domain/shopping/list.ts";
 import { appReducer, EMPTY_SESSION, INITIAL_STATE, MAX_COMPARE, type AppState, type SearchState } from "../../src/state/reducer.ts";
 import { differentType, excludeOne, search } from "../../src/state/recommendation.ts";
 import { repositoryEngine, validationBundleInput } from "../../tools/content/repository.ts";
@@ -104,5 +105,33 @@ describe("reducer", () => {
     const result = search(cut, data);
     if (!result.ok) throw new Error("search");
     expect(appReducer(state, { type: "searched", ...result.value }).adjustments).toEqual({});
+  });
+
+  it("adds shopping list entries at the end, replaces them in place, and keeps the list across a new search", () => {
+    const [first, second] = calc.recipes;
+    if (first === undefined || second === undefined) throw new Error("no recipe");
+    let state = appReducer(INITIAL_STATE, { type: "shoppingSaved", entry: { recipe: first.id, state: defaultState(first) }, uncheck: [] });
+    state = appReducer(state, { type: "shoppingSaved", entry: { recipe: second.id, state: defaultState(second) }, uncheck: [] });
+    state = appReducer(state, { type: "shoppingChecked", item: "salt", checked: true });
+    state = appReducer(state, { type: "shoppingChecked", item: "egg", checked: true });
+    state = appReducer(state, { type: "shoppingSaved", entry: { recipe: first.id, state: { ...defaultState(first), servings: 2 } }, uncheck: ["salt"] });
+    expect(state.shoppingList.entries.map((entry) => [entry.recipe, entry.state.servings])).toEqual([
+      [first.id, 2],
+      [second.id, second.servings],
+    ]);
+    expect(state.shoppingList.checked).toEqual(["egg"]);
+    const result = search(cut, data);
+    if (!result.ok) throw new Error("search");
+    expect(appReducer(state, { type: "searched", ...result.value }).shoppingList).toBe(state.shoppingList);
+    state = appReducer(state, { type: "shoppingChecked", item: "egg", checked: false });
+    state = appReducer(state, { type: "shoppingRemoved", recipe: first.id, uncheck: [] });
+    expect(state.shoppingList.entries.map((entry) => entry.recipe)).toEqual([second.id]);
+    expect(appReducer(state, { type: "shoppingCleared" }).shoppingList).toEqual({ entries: [], checked: [] });
+  });
+
+  it(`keeps at most ${String(SHOPPING_LIST_MAX_RECIPES)} recipes in the shopping list`, () => {
+    let state = INITIAL_STATE;
+    for (const recipe of calc.recipes.slice(0, SHOPPING_LIST_MAX_RECIPES + 1)) state = appReducer(state, { type: "shoppingSaved", entry: { recipe: recipe.id, state: defaultState(recipe) }, uncheck: [] });
+    expect(state.shoppingList.entries).toHaveLength(SHOPPING_LIST_MAX_RECIPES);
   });
 });

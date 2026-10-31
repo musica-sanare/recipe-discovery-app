@@ -2,14 +2,15 @@ import AxeBuilder from "@axe-core/playwright";
 import { test as base, expect, type Page } from "@playwright/test";
 import { en } from "../src/i18n/messages/en.ts";
 import { es } from "../src/i18n/messages/es.ts";
+import { fr } from "../src/i18n/messages/fr.ts";
 import { ja } from "../src/i18n/messages/ja.ts";
 
-export type Locale = "ja" | "en" | "es";
-export const LOCALES: readonly Locale[] = ["ja", "en", "es"];
+export type Locale = "ja" | "en" | "es" | "fr";
+export const LOCALES: readonly Locale[] = ["ja", "en", "es", "fr"];
 /** Browser languages that the app's detection maps to each locale. */
-export const BROWSER_LOCALE: Readonly<Record<Locale, string>> = { ja: "ja-JP", en: "en-US", es: "es-ES" };
+export const BROWSER_LOCALE: Readonly<Record<Locale, string>> = { ja: "ja-JP", en: "en-US", es: "es-ES", fr: "fr-FR" };
 
-const CATALOGS = { ja, en, es } as const;
+const CATALOGS = { ja, en, es, fr } as const;
 
 /** A UI string from the typed catalogs, with `{{name}}` placeholders filled. */
 export function t(locale: Locale, key: string, vars: Readonly<Record<string, string | number>> = {}): string {

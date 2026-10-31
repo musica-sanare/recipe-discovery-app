@@ -35,7 +35,7 @@ function renderApp(locale: Locale, path: string) {
   );
 }
 
-const TITLES: Record<Locale, string> = { ja: "このアプリについて", en: "About this app", es: "Acerca de esta app" };
+const TITLES: Record<Locale, string> = { ja: "このアプリについて", en: "About this app", es: "Acerca de esta app", fr: "À propos de cette app" };
 
 const SECTIONS: Record<Locale, readonly string[]> = {
   ja: ["このアプリでできること", "栄養値の計算", "出典とデータの版", "アレルゲン", "健康について", "このアプリがしないこと", "プライバシー", "オープンソースのライセンス"],
@@ -59,10 +59,20 @@ const SECTIONS: Record<Locale, readonly string[]> = {
     "Privacidad",
     "Licencias de código abierto",
   ],
+  fr: [
+    "À quoi sert cette app",
+    "Comment les valeurs nutritionnelles sont calculées",
+    "Source et versions des données",
+    "Allergènes",
+    "À propos de la santé",
+    "Ce que cette app ne fait pas",
+    "Confidentialité",
+    "Licences open source",
+  ],
 };
 
 describe("about page", () => {
-  it.each(["ja", "en", "es"] as const)("%s: opens from its own path with every section and no violations", async (locale) => {
+  it.each(["ja", "en", "es", "fr"] as const)("%s: opens from its own path with every section and no violations", async (locale) => {
     renderApp(locale, "/about");
     const heading = await screen.findByRole("heading", { level: 1 });
     expect(heading.textContent).toBe(TITLES[locale]);

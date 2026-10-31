@@ -3,11 +3,12 @@ import type { Recipe } from "../../shared/content.ts";
 export const recipe: Recipe = {
   id: "pork_shabu_salad",
   texts: {
-    name: { ja: "豚もも肉の冷しゃぶサラダ", en: "Chilled pork shabu-shabu salad", es: "Ensalada fría de cerdo shabu-shabu" },
+    name: { ja: "豚もも肉の冷しゃぶサラダ", en: "Chilled pork shabu-shabu salad", es: "Ensalada fría de cerdo shabu-shabu", fr: "Salade de porc shabu-shabu froide" },
     summary: {
       ja: "さっとゆでた豚もも肉を、レタスとトマトにのせて酢じょうゆのたれでいただきます。",
       en: "Quickly boiled lean pork over lettuce and tomato with a soy and vinegar dressing.",
       es: "Cerdo magro escaldado sobre lechuga y tomate con un aliño de soja y vinagre.",
+      fr: "Porc maigre rapidement poché, sur de la laitue et de la tomate, avec une sauce à la sauce soja et au vinaigre.",
     },
   },
   cuisine: "japanese",
@@ -30,7 +31,7 @@ export const recipe: Recipe = {
     { key: "rice", food: "rice_cooked", grams: 150, state: "as_is", role: "main_carb", adjust: { kind: "grams", min: 100, max: 250, step: 10 } },
   ],
   sides: [
-    { key: "rice", label: { ja: "ご飯", en: "Rice", es: "Arroz" }, ingredients: ["rice"], solverMayRemove: true },
+    { key: "rice", label: { ja: "ご飯", en: "Rice", es: "Arroz", fr: "Riz" }, ingredients: ["rice"], solverMayRemove: true },
   ],
   steps: [
     {
@@ -39,6 +40,7 @@ export const recipe: Recipe = {
         ja: "酢、しょうゆ、ごま油、砂糖を混ぜてたれを作ります。レタスはちぎり、トマトはくし形に切ります。",
         en: "Mix the vinegar, soy sauce, sesame oil, and sugar for the dressing. Tear the lettuce and cut the tomato into wedges.",
         es: "Mezcla el vinagre, la salsa de soja, el aceite de sésamo y el azúcar para el aliño. Trocea la lechuga y corta el tomate en gajos.",
+        fr: "Mélangez le vinaigre, la sauce soja, l'huile de sésame et le sucre pour la sauce. Déchirez la laitue et coupez la tomate en quartiers.",
       },
     },
     {
@@ -47,6 +49,7 @@ export const recipe: Recipe = {
         ja: "鍋に湯を沸かして火を弱め、薄切りの豚肉を1枚ずつ入れて、色が完全に変わるまでゆでます。",
         en: "Bring water to a boil, lower the heat, and add the thinly sliced pork one piece at a time. Cook until it has completely changed color.",
         es: "Lleva agua a ebullición, baja el fuego y añade las lonchas finas de cerdo de una en una. Cuécelas hasta que cambien de color por completo.",
+        fr: "Portez de l'eau à ébullition, baissez le feu et ajoutez le porc en fines tranches, une à une. Faites cuire jusqu'à ce qu'il ait complètement changé de couleur.",
       },
     },
     {
@@ -55,6 +58,7 @@ export const recipe: Recipe = {
         ja: "ざるに上げて水気を切り、粗熱を取ります。",
         en: "Drain in a colander and let cool slightly.",
         es: "Escúrrelas en un colador y déjalas templar.",
+        fr: "Égouttez dans une passoire et laissez tiédir un peu.",
       },
     },
     {
@@ -63,6 +67,7 @@ export const recipe: Recipe = {
         ja: "野菜の上に豚肉をのせ、たれをかけて青ねぎを散らします。",
         en: "Arrange the pork over the vegetables, pour over the dressing, and scatter the green onion.",
         es: "Coloca el cerdo sobre las verduras, vierte el aliño y esparce la cebolleta.",
+        fr: "Disposez le porc sur les légumes, versez la sauce et parsemez d'oignon vert.",
       },
     },
   ],
@@ -73,6 +78,7 @@ export const recipe: Recipe = {
         ja: "豚肉はピンク色が残らないよう、完全に色が変わるまで加熱してください。",
         en: "Cook the pork until no pink remains.",
         es: "Cocina el cerdo hasta que no quede nada rosado.",
+        fr: "Faites cuire le porc jusqu'à ce qu'il ne reste plus de rose.",
       },
     },
   ],

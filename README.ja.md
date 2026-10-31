@@ -1,24 +1,27 @@
-<!-- source: README.md blob a7d14f8cf608c13a8d789a630171e1e85a578269 -->
+<!-- source: README.md blob bbb6af48deff94bf24fb86bde7cdccb173c68994 -->
 [English](README.md) | 日本語
 
-> この文書は[英語版](README.md)の翻訳です。内容が異なる場合は英語版が優先されます。
+> この文書は[英語版](README.md)の翻訳。内容が異なる場合は英語版が優先する。
 
 # Recipe Discovery
 
-Recipe Discovery は、栄養を管理している人（たとえば筋力トレーニングや体組成の目標がある人）が、自分では思いつかなかった料理を見つけるためのアプリです。栄養の目標と実際の条件を設定し、候補のレシピを比べて分量を調整できます。栄養値は、日本食品標準成分表（八訂）増補2023年（文部科学省）と明示された材料の分量から、このアプリが決定論的に計算した推定値です。AI は使っていません。日本語、英語、スペイン語に対応しています。
+Recipe Discovery は、栄養を管理している人（筋力トレーニングや体組成に目標がある人など）が、自分では思いつかない料理に出会うためのアプリだ。栄養の目標と実際の条件を決めると、候補のレシピを比べたり分量を調整したりできる。栄養値は、日本食品標準成分表（八訂）増補2023年（文部科学省）と、明示した材料の分量から、このアプリが決定論的に計算した推定値だ。AI は使わない。日本語、英語、スペイン語、フランス語に対応している。
 
-**状態：** フェーズ 7 が完了し、リリース 3 を https://recipe-discovery.musica-sanare.workers.dev に公開しています（[Release readiness](docs/working/RELEASE_READINESS.md)、英語のみ）。ライセンス：[MIT](LICENSE)。ただし `data/composition/` にある文部科学省由来のデータは対象外です（[データソース](docs/ja/DATA_SOURCES.md)）。
+**状態：** フェーズ 10（ライブラリの拡充、130 レシピ）が完了し、リリース 7 を https://recipe-discovery.musica-sanare.workers.dev に公開している（[Release readiness](docs/working/RELEASE_READINESS.md)、英語のみ）。ライセンスは [MIT](LICENSE)。ただし `data/composition/` にある文部科学省由来のデータは除く（[データソース](docs/ja/DATA_SOURCES.md)）。
 
 ## クイックスタート
 
-Node.js `>=24.15.0` と npm が必要です。
+Node.js `>=24.15.0` と npm が必要。
 
 ```bash
 npm ci
+```
+
+```bash
 npm run dev
 ```
 
-`npm run check` で lint、型チェック、テスト、コンテンツ検証、本番ビルドを実行します。コマンドの一覧：[ローカル開発](docs/ja/DEVELOPMENT.md)。
+`npm run check` は lint、型チェック、ライセンスチェック、テスト、本番ビルドを順に実行する。本番ビルドにはコンテンツ検証も含まれる。コマンドの一覧は[ローカル開発](docs/ja/DEVELOPMENT.md)にある。
 
 ## ドキュメント
 

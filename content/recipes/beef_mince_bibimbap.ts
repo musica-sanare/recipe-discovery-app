@@ -3,11 +3,12 @@ import type { Recipe } from "../../shared/content.ts";
 export const recipe: Recipe = {
   id: "beef_mince_bibimbap",
   texts: {
-    name: { ja: "牛ひき肉とナムルのビビンバ丼", en: "Ground beef bibimbap with namul", es: "Bibimbap de carne picada con namul" },
+    name: { ja: "牛ひき肉とナムルのビビンバ丼", en: "Ground beef bibimbap with namul", es: "Bibimbap de carne picada con namul", fr: "Bibimbap au bœuf haché et namul" },
     summary: {
       ja: "甘辛く炒めた牛ひき肉と、もやし、にんじん、ほうれん草のナムルをご飯にのせて混ぜて食べます。",
       en: "Sweet and savory ground beef with bean sprout, carrot, and spinach namul over rice, mixed before eating.",
       es: "Carne picada salteada en salsa dulce y salada con namul de brotes de soja, zanahoria y espinacas sobre arroz, para mezclar antes de comer.",
+      fr: "Bœuf haché sucré-salé et namul de pousses de soja, de carotte et d'épinards sur du riz, à mélanger avant de manger.",
     },
   },
   cuisine: "korean",
@@ -39,6 +40,7 @@ export const recipe: Recipe = {
         ja: "鍋に湯を沸かし、細切りのにんじんを2分、もやしを1分、ほうれん草を1分ゆでます。ほうれん草は水にとって絞り、4cm長さに切ります。水気を切った野菜をごま油と塩で和えます。",
         en: "Bring a pot of water to a boil and cook the carrot strips for 2 minutes, the bean sprouts for 1 minute, and the spinach for 1 minute. Cool the spinach in water, squeeze it dry, and cut it into 4 cm lengths. Toss the drained vegetables with the sesame oil and salt.",
         es: "Lleva a ebullición una olla con agua y cuece la zanahoria en tiras 2 minutos, los brotes de soja 1 minuto y las espinacas 1 minuto. Enfría las espinacas en agua, exprímelas bien y córtalas en trozos de 4 cm. Mezcla las verduras escurridas con el aceite de sésamo y la sal.",
+        fr: "Portez une casserole d'eau à ébullition et faites cuire la carotte en lanières 2 minutes, les pousses de soja 1 minute et les épinards 1 minute. Refroidissez les épinards dans l'eau, pressez-les bien et coupez-les en tronçons de 4 cm. Mélangez les légumes égouttés avec l'huile de sésame et le sel.",
       },
     },
     {
@@ -47,6 +49,7 @@ export const recipe: Recipe = {
         ja: "フライパンを中火で熱し、油をひかずに牛ひき肉とみじん切りのにんにくを炒めます。肉の色が変わったら、しょうゆ、砂糖、豆板醤を加えて汁気がなくなるまで炒めます。",
         en: "Heat a frying pan over medium heat and stir-fry the ground beef and chopped garlic without oil. When the meat has browned, add the soy sauce, sugar, and doubanjiang and cook until the liquid is gone.",
         es: "Calienta una sartén a fuego medio y saltea la carne picada con el ajo picado sin aceite. Cuando la carne se dore, añade la salsa de soja, el azúcar y el doubanjiang y cocina hasta que no quede líquido.",
+        fr: "Faites chauffer une poêle à feu moyen et faites sauter le bœuf haché et l'ail haché sans huile. Quand la viande est dorée, ajoutez la sauce soja, le sucre et le doubanjiang et laissez cuire jusqu'à ce qu'il ne reste plus de liquide.",
       },
     },
     {
@@ -55,6 +58,7 @@ export const recipe: Recipe = {
         ja: "ご飯にナムルと牛ひき肉をのせます。",
         en: "Top the rice with the namul and the beef.",
         es: "Cubre el arroz con el namul y la carne.",
+        fr: "Garnissez le riz du namul et du bœuf.",
       },
     },
   ],
@@ -65,6 +69,7 @@ export const recipe: Recipe = {
         ja: "ひき肉は中心まで火を通してください。ピンク色が残らないよう、ほぐしながら炒めます。",
         en: "Cook ground meat through, breaking it up until no pink remains.",
         es: "Cocina bien la carne picada, deshaciéndola hasta que no quede nada rosado.",
+        fr: "Faites bien cuire la viande hachée en l'émiettant, jusqu'à ce qu'il ne reste plus de rose.",
       },
     },
   ],

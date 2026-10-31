@@ -26,7 +26,7 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-const SEARCH = { ja: "レシピを探す", en: "Find recipes", es: "Buscar recetas" } as const;
+const SEARCH = { ja: "レシピを探す", en: "Find recipes", es: "Buscar recetas", fr: "Chercher des recettes" } as const;
 
 async function openForm(locale: Locale = "ja") {
   render(
@@ -56,16 +56,38 @@ async function searchWith(locale: Locale, setup: () => void = () => undefined) {
   await openForm(locale);
   setup();
   fireEvent.click(screen.getByRole("button", { name: SEARCH[locale] }));
-  await screen.findByRole("heading", { level: 1, name: { ja: "候補", en: "Candidates", es: "Candidatas" }[locale] });
+  await screen.findByRole("heading", { level: 1, name: { ja: "候補", en: "Candidates", es: "Candidatas", fr: "Suggestions" }[locale] });
 }
 
-const cards = () => within(screen.getByRole("list", { name: /目標を満たす候補|Candidates that meet the targets|Candidatas que cumplen/ })).getAllByRole("article");
+const cards = () => within(screen.getByRole("list", { name: /目標を満たす候補|Candidates that meet the targets|Candidatas que cumplen|Suggestions qui atteignent/ })).getAllByRole("article");
 const cardNames = () => cards().map((card) => within(card).getByRole("heading", { level: 3 }).textContent);
 const cut = () => {
-  fireEvent.click(screen.getByRole("radio", { name: /減量の例|Cutting example|Ejemplo de definición/ }));
+  fireEvent.click(screen.getByRole("radio", { name: /減量の例|Cutting example|Ejemplo de definición|Exemple de sèche/ }));
 };
 
+// Each card's detail link and the number in each nutrient line, with separators removed.
+const cardSnapshot = () =>
+  cards().map((card) => ({
+    href: within(card).getAllByRole("link")[0]?.getAttribute("href"),
+    values: [...card.querySelectorAll("dd > span:first-child")].map((span) => span.textContent.replace(/(\d)[.,\u202f\u00a0](\d{3})/g, "$1$2").replace(",", ".").replace(/[^\d.]/g, "")),
+  }));
+
 describe("candidates", () => {
+  it("keeps the same candidates, order, and values through ja → fr → ja", async () => {
+    await searchWith("ja", cut);
+    const ja = cardSnapshot();
+    expect(ja.length).toBeGreaterThanOrEqual(3);
+    expect(ja.every((card) => card.href?.startsWith("/recipes/") === true && card.values.length >= 4 && card.values.every((value) => value !== ""))).toBe(true);
+    const jaNames = cardNames();
+    fireEvent.change(screen.getByRole("combobox", { name: "言語" }), { target: { value: "fr" } });
+    await screen.findByRole("heading", { level: 1, name: "Suggestions" });
+    expect(cardSnapshot()).toEqual(ja);
+    fireEvent.change(screen.getByRole("combobox", { name: "Langue" }), { target: { value: "ja" } });
+    await screen.findByRole("heading", { level: 1, name: "候補" });
+    expect(cardSnapshot()).toEqual(ja);
+    expect(cardNames()).toEqual(jaNames);
+  });
+
   it("shows 3–5 cards with statuses as text, a reason line, and links to the details", async () => {
     await searchWith("ja", cut);
     expect(cards()).toHaveLength(5);
@@ -209,9 +231,9 @@ describe("locale invariance of displayed values", () => {
 });
 
 describe("accessibility of the result views (axe-core)", () => {
-  it.each(["ja", "en", "es"] as const)("%s: candidates, alternatives, relaxations, and comparison have no violations", async (locale) => {
+  it.each(["ja", "en", "es", "fr"] as const)("%s: candidates, alternatives, relaxations, and comparison have no violations", async (locale) => {
     await searchWith(locale, () => {
-      addFood("required", { ja: "豆腐", en: "tofu", es: "tofu" }[locale]);
+      addFood("required", { ja: "豆腐", en: "tofu", es: "tofu", fr: "tofu" }[locale]);
     });
     expect(await axeViolations()).toEqual([]);
     cleanup();

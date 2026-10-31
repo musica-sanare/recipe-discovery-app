@@ -6,6 +6,7 @@
 import * as z from "zod/mini";
 import { foodSchema, recipeSchema, type Food, type LocalizedText, type Recipe, type RecipeIngredient } from "../../shared/content.ts";
 import { isFried } from "../../shared/recipe.ts";
+import { SUPPORTED_LOCALES, type Locale } from "../../shared/locales.ts";
 import { forbiddenIn } from "../../shared/policy.ts";
 
 export const RULES = [
@@ -38,7 +39,7 @@ export interface Issue {
   readonly message: string;
 }
 
-type Localized<T> = { readonly ja: T; readonly en: T; readonly es: T };
+type Localized<T> = Readonly<Record<Locale, T>>;
 
 export interface ContentInput {
   readonly foods: readonly unknown[];
@@ -56,7 +57,7 @@ export interface ContentInput {
 
 export const FOODS_FILE = "content/foods.ts";
 export const VERSION_FILE = "content/version.ts";
-const LOCALES = ["ja", "en", "es"] as const;
+const LOCALES = SUPPORTED_LOCALES;
 /** Protein groups whose recipes need a doneness or handling note (docs/en/CONTENT_POLICY.md §3). */
 const SAFETY_GROUPS: ReadonlySet<string> = new Set(["chicken", "pork", "beef", "fish", "egg"]);
 
@@ -256,20 +257,18 @@ function languageIssues(value: unknown, file: string, subject: string, input: Co
   const glossary = [...input.glossary].sort((a, b) => b.ja.length - a.ja.length);
   const issues: Issue[] = [];
   for (const { path, value: text } of localizedObjects(value)) {
-    const { ja, en, es } = text;
-    if (typeof ja !== "string" || typeof en !== "string" || typeof es !== "string") continue;
-    let japanese = ja;
+    if (!LOCALES.every((locale) => typeof text[locale] === "string")) continue;
+    const texts = text as Record<Locale, string>;
+    let japanese = texts.ja;
     for (const term of glossary) {
       if (!japanese.includes(term.ja)) continue;
       japanese = japanese.replaceAll(term.ja, "");
-      if (!en.toLowerCase().includes(term.en.toLowerCase())) issues.push({ file, subject, field: `${path}.en`, rule: "glossary", message: `"${term.ja}" must be "${term.en}"` });
-      if (!es.toLowerCase().includes(term.es.toLowerCase())) issues.push({ file, subject, field: `${path}.es`, rule: "glossary", message: `"${term.ja}" must be "${term.es}"` });
+      for (const locale of LOCALES) {
+        if (locale === "ja") continue;
+        if (!texts[locale].toLowerCase().includes(term[locale].toLowerCase())) issues.push({ file, subject, field: `${path}.${locale}`, rule: "glossary", message: `"${term.ja}" must be "${term[locale]}"` });
+      }
     }
-    const found = [
-      ...forbiddenIn("ja", ja, input.forbiddenExpressions.ja).map((word) => ["ja", word] as const),
-      ...forbiddenIn("en", en, input.forbiddenExpressions.en).map((word) => ["en", word] as const),
-      ...forbiddenIn("es", es, input.forbiddenExpressions.es).map((word) => ["es", word] as const),
-    ];
+    const found = LOCALES.flatMap((locale) => forbiddenIn(locale, texts[locale], input.forbiddenExpressions[locale]).map((word) => [locale, word] as const));
     for (const [locale, word] of found) issues.push({ file, subject, field: `${path}.${locale}`, rule: "forbidden-expression", message: `contains "${word}" (docs/en/CONTENT_POLICY.md §2, §4)` });
   }
   return issues;

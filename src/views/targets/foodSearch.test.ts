@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import type { Locale } from "../../../shared/locales";
 import { fixtureCalc, fixtureText } from "../../content/bundleFixtures";
 import { foodOptions, normalizeForSearch, searchFoods } from "./foodSearch";
 
@@ -12,12 +13,14 @@ describe("normalizeForSearch", () => {
 
   it("folds accents and case in Spanish but not in English", () => {
     expect(normalizeForSearch("es", "Plátano")).toBe("platano");
+    expect(normalizeForSearch("fr", "Œufs brouillés")).toBe("oeufs brouilles");
+    expect(normalizeForSearch("fr", "Pâtes")).toBe("pates");
     expect(normalizeForSearch("en", "Jalapeño")).toBe("jalapeño");
   });
 });
 
 describe("searchFoods", () => {
-  const options = (locale: "ja" | "en" | "es") => foodOptions(fixtureCalc, fixtureText(locale), label);
+  const options = (locale: Locale) => foodOptions(fixtureCalc, fixtureText(locale), label);
 
   it("offers protein groups with more than one food, resolved to food IDs", () => {
     const groups = options("en").filter((option) => option.kind === "group");

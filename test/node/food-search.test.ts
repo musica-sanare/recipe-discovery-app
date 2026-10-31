@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import type { Locale } from "../../shared/locales.ts";
 import { buildTextBundle } from "../../tools/content/bundle.ts";
 import { repositoryBundleInput, repositoryEngine } from "../../tools/content/repository.ts";
 import { foodOptions, queryVariants, searchFoods } from "../../src/views/targets/foodSearch.ts";
@@ -6,8 +7,8 @@ import { foodOptions, queryVariants, searchFoods } from "../../src/views/targets
 // Ingredient search on the repository dictionary (ADR-030 D6, open question 21).
 const input = repositoryBundleInput();
 const { calc } = repositoryEngine(input);
-const options = (locale: "ja" | "en" | "es") => foodOptions(calc, buildTextBundle(input, locale), (group) => group);
-const found = (locale: "ja" | "en" | "es", query: string) => searchFoods(options(locale), locale, query, new Set(), 20).map((option) => option.key);
+const options = (locale: Locale) => foodOptions(calc, buildTextBundle(input, locale), (group) => group);
+const found = (locale: Locale, query: string) => searchFoods(options(locale), locale, query, new Set(), 20).map((option) => option.key);
 
 describe("ingredient search on the repository dictionary", () => {
   it.each([
@@ -54,7 +55,7 @@ describe("ingredient search on the repository dictionary", () => {
   });
 
   it("finds every food by its own name in every locale", () => {
-    for (const locale of ["ja", "en", "es"] as const) {
+    for (const locale of ["ja", "en", "es", "fr"] as const) {
       const text = buildTextBundle(input, locale);
       const missing = calc.foods.filter((food) => !found(locale, text.foods[food.id]?.name ?? "").includes(food.id)).map((food) => food.id);
       expect(missing).toEqual([]);

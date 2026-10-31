@@ -27,6 +27,8 @@ export interface SolveInput {
   readonly forced: ForcedState;
   /** Sides holding a required food; the solver keeps them on. */
   readonly lockedSides: readonly string[];
+  /** From `precompute` for the same recipe and engine data; used only where it applies. */
+  readonly precomputed?: Precomputed;
 }
 
 export interface AmountChange {
@@ -64,6 +66,11 @@ interface Adjustable {
 }
 
 const COST_EPSILON = 1e-9;
+/**
+ * Pruning (Phase 9 Stage 9.3, O4) compares a lower bound of the relative change, summed in
+ * another order than `cost`; the margin covers that rounding (about 1e-14 for these sums).
+ */
+const PRUNE_MARGIN = 1e-12;
 
 function gridValues(adjust: Adjust): number[] {
   if (adjust.kind === "count") return Array.from({ length: adjust.max - adjust.min + 1 }, (_, index) => adjust.min + index);
@@ -193,17 +200,39 @@ interface Active {
   readonly index: number;
 }
 
-type Evaluator = (sidesOff: readonly string[], active: readonly Active[], defaults: readonly number[]) => (values: readonly number[]) => Nutrition;
+type StateFor = (sidesOff: readonly string[], values: readonly number[]) => RecipeState;
+
+/**
+ * Scores the states of one side combination. The search reports each value it sets at a
+ * depth (in `active` order) with `set` before it goes deeper, and asks for the values of a
+ * complete state with `evaluate`.
+ */
+interface Scorer {
+  readonly set: (depth: number, value: number) => void;
+  readonly evaluate: (values: readonly number[]) => Nutrition;
+}
+
+type Evaluator = (sidesOff: readonly string[], active: readonly Active[], defaults: readonly number[]) => Scorer;
 
 interface Search {
   readonly best: Candidate;
   readonly adjustables: readonly Adjustable[];
-  readonly stateFor: (sidesOff: readonly string[], values: readonly number[]) => RecipeState;
+  readonly stateFor: StateFor;
   readonly defaultFit: Fit;
 }
 
-function search(input: SolveInput, data: EngineData, makeEvaluator: (stateFor: Search["stateFor"]) => Evaluator): Search {
-  const { recipe, targets, servings, forced, lockedSides } = input;
+/** The parts of a search that depend only on the recipe, the forced state, and the servings. */
+interface Prepared {
+  readonly all: readonly Adjustable[];
+  readonly defaults: readonly number[];
+  readonly stateFor: StateFor;
+  /** Whether an ingredient is switched off (itself or through its leader) with these sides off. */
+  readonly isOffWith: (sidesOff: readonly string[]) => (key: string) => boolean;
+  /** Adjustable ingredients that stay on and have more than one value. */
+  readonly activeWith: (sidesOff: readonly string[]) => Active[];
+}
+
+function prepare(recipe: SolverRecipe, forced: ForcedState, servings: number): Prepared {
   const all = adjustables(recipe, forced);
   const sideOf = new Map(recipe.sides.flatMap((side) => side.ingredients.map((key): [string, string] => [key, side.key])));
   const leaderOf = new Map(recipe.ingredients.map((ingredient) => [ingredient.key, ingredient.linkedTo]));
@@ -211,11 +240,7 @@ function search(input: SolveInput, data: EngineData, makeEvaluator: (stateFor: S
     const leader = leaderOf.get(key);
     return sideOf.get(key) ?? (leader === undefined ? undefined : sideOf.get(leader));
   };
-  const removable = recipe.sides
-    .filter((side) => side.solverMayRemove && !forced.sidesOff.includes(side.key) && !lockedSides.includes(side.key))
-    .map((side) => side.key);
-
-  const stateFor = (sidesOff: readonly string[], values: readonly number[]): RecipeState => {
+  const stateFor: StateFor = (sidesOff, values) => {
     const amounts: Record<string, number> = {};
     all.forEach((adjustable, index) => {
       const value = values[index];
@@ -223,10 +248,30 @@ function search(input: SolveInput, data: EngineData, makeEvaluator: (stateFor: S
     });
     return { servings, sidesOff: [...new Set([...forced.sidesOff, ...sidesOff])].sort(), amounts, substitutions: forced.substitutions };
   };
+  const isOffWith = (sidesOff: readonly string[]) => {
+    const off = new Set([...forced.sidesOff, ...sidesOff]);
+    return (key: string) => {
+      const side = sideOfIngredient(key);
+      return side !== undefined && off.has(side);
+    };
+  };
+  const activeWith = (sidesOff: readonly string[]) => {
+    const isOff = isOffWith(sidesOff);
+    return all.flatMap((adjustable, index): Active[] => (!isOff(adjustable.key) && adjustable.values.length > 1 ? [{ adjustable, index }] : []));
+  };
+  return { all, defaults: all.map((adjustable) => adjustable.defaultValue), stateFor, isOffWith, activeWith };
+}
+
+function search(input: SolveInput, data: EngineData, makeEvaluator: (stateFor: StateFor, baseline: RecipeNutrition) => Evaluator, precomputed?: Precomputed): Search {
+  const { recipe, targets, servings, forced, lockedSides } = input;
+  const { all, defaults, stateFor, isOffWith, activeWith } = prepare(recipe, forced, servings);
+  const removable = recipe.sides
+    .filter((side) => side.solverMayRemove && !forced.sidesOff.includes(side.key) && !lockedSides.includes(side.key))
+    .map((side) => side.key);
 
   // Relative change against the forced default state; ingredients already at 0 g cannot change.
   const fitOf = fitEvaluator(targets);
-  const baseline = calculate(recipe, stateFor([], all.map((adjustable) => adjustable.defaultValue)), data);
+  const baseline = precomputed?.baseline ?? calculate(recipe, stateFor([], defaults), data);
   const defaultFit = fitOf(baseline);
   const baseGrams = new Map(baseline.ingredients.map((ingredient) => [ingredient.key, ingredient.grams]));
   const changeable = [...new Set([...all.map((adjustable) => adjustable.key), ...recipe.sides.filter((side) => removable.includes(side.key)).flatMap((side) => side.ingredients)])].filter(
@@ -234,19 +279,18 @@ function search(input: SolveInput, data: EngineData, makeEvaluator: (stateFor: S
   );
   const adjustableIndex = new Map(all.map((adjustable, index) => [adjustable.key, index]));
 
-  const evaluator = makeEvaluator(stateFor);
+  const evaluator = makeEvaluator(stateFor, baseline);
   let best: Candidate | undefined;
+  /**
+   * Whether every state whose relative change is at least `bound` loses to the best state so
+   * far: once that state meets every target, no state has a better fit (met states compare
+   * equal), so a cost above its cost plus the tie margin loses (`compareCandidates`). Such
+   * states would never replace the best one, so skipping them leaves every result unchanged.
+   */
+  const beaten = (bound: number) => best !== undefined && best.fit.tier === "met" && bound > best.cost + COST_EPSILON + PRUNE_MARGIN;
   for (let mask = 0; mask < 2 ** removable.length; mask++) {
     const sidesOff = removable.filter((_, bit) => (mask >> bit) & 1);
-    const off = new Set([...forced.sidesOff, ...sidesOff]);
-    const isOff = (key: string) => {
-      const side = sideOfIngredient(key);
-      return side !== undefined && off.has(side);
-    };
-    const defaults = all.map((adjustable) => adjustable.defaultValue);
-    const active = all.flatMap((adjustable, index): Active[] => (!isOff(adjustable.key) && adjustable.values.length > 1 ? [{ adjustable, index }] : []));
-    const evaluate = evaluator(sidesOff, active, defaults);
-    const values = [...defaults];
+    const isOff = isOffWith(sidesOff);
     // The terms of the relative change in `changeable` order, so that the sum is added
     // in the same order for every state: 1 for a side switched off, or an ingredient.
     const terms = changeable.flatMap((key): (CostTerm | null)[] => {
@@ -255,6 +299,15 @@ function search(input: SolveInput, data: EngineData, makeEvaluator: (stateFor: S
       const adjustable = index === undefined ? undefined : all[index];
       return adjustable && index !== undefined ? [{ index, defaultValue: adjustable.defaultValue }] : [];
     });
+    // Every term is at least 0, so the switched-off terms bound the cost of every state of
+    // this combination from below; a combination that cannot beat a best state is skipped.
+    const offTerms = terms.filter((term) => term === null).length;
+    if (beaten(offTerms)) continue;
+    const active = activeWith(sidesOff);
+    const scorer = evaluator(sidesOff, active, defaults);
+    const values = [...defaults];
+    // Per depth, the default of the active ingredient when it has a term of the relative change.
+    const termDefaults = active.map(({ index }) => terms.find((term) => term !== null && term.index === index)?.defaultValue ?? null);
     const cost = () => {
       let sum = 0;
       for (const term of terms) {
@@ -262,23 +315,28 @@ function search(input: SolveInput, data: EngineData, makeEvaluator: (stateFor: S
       }
       return sum;
     };
-    const visit = (depth: number): void => {
+    // `lower`: the switched-off terms plus the terms of the values set above `depth`.
+    const visit = (depth: number, lower: number): void => {
       if (depth === active.length) {
         // `values` is copied only when the state becomes the best one.
-        const candidate: Candidate = { sidesOff, values, fit: fitOf(evaluate(values)), cost: cost() };
+        const candidate: Candidate = { sidesOff, values, fit: fitOf(scorer.evaluate(values)), cost: cost() };
         if (!best || compareCandidates(candidate, best) < 0) best = { ...candidate, values: [...values] };
         return;
       }
       const entry = active[depth];
       if (!entry) return;
       const { adjustable, index } = entry;
+      const termDefault = termDefaults[depth] ?? null;
       for (const value of adjustable.values) {
+        const bound = termDefault === null ? lower : lower + Math.abs(value - termDefault) / termDefault;
+        if (beaten(bound)) continue;
         values[index] = value;
-        visit(depth + 1);
+        scorer.set(depth, value);
+        visit(depth + 1, bound);
       }
       values[index] = adjustable.defaultValue;
     };
-    visit(0);
+    visit(0, offTerms);
   }
   if (!best) throw new Error(`No state for ${JSON.stringify(input.forced)}`);
   return { best, adjustables: all, stateFor, defaultFit };
@@ -286,49 +344,107 @@ function search(input: SolveInput, data: EngineData, makeEvaluator: (stateFor: S
 
 const exhaustiveEvaluator =
   (recipe: SolverRecipe, data: EngineData) =>
-  (stateFor: Search["stateFor"]): Evaluator =>
-  (sidesOff) =>
-  (values) =>
-    calculate(recipe, stateFor(sidesOff, values), data);
+  (stateFor: StateFor): Evaluator =>
+  (sidesOff) => ({
+    set: () => undefined,
+    evaluate: (values) => calculate(recipe, stateFor(sidesOff, values), data),
+  });
+
+interface Slope {
+  readonly index: number;
+  readonly from: number;
+  readonly slope: readonly (number | null)[];
+}
+
+/** The linear model of one side combination: the values at the default amounts and one slope per active ingredient. */
+export interface LinearModel {
+  readonly base: readonly (number | null)[];
+  readonly slopes: readonly Slope[];
+}
+
+/**
+ * The model from engine calls; `baseline` is the engine result of the default amounts
+ * with no side switched off by the solver, the state of the combination without sides off.
+ */
+function linearModel(recipe: SolverRecipe, data: EngineData, stateFor: StateFor, sidesOff: readonly string[], active: readonly Active[], defaults: readonly number[], baseline: RecipeNutrition): LinearModel {
+  const at = (values: readonly number[]) => vector(calculate(recipe, stateFor(sidesOff, values), data));
+  const base = sidesOff.length === 0 ? vector(baseline) : at(defaults);
+  // One probe per ingredient: the first grid value that differs from the default.
+  const slopes = active.map(({ adjustable, index }) => {
+    const from = adjustable.defaultValue;
+    const to = adjustable.values.find((value) => !isDefault(adjustable, value)) ?? from;
+    const probe = [...defaults];
+    probe[index] = to;
+    const slope = at(probe).map((value, entry) => {
+      const reference = base[entry];
+      return value === null || reference === null || reference === undefined ? null : (value - reference) / (to - from);
+    });
+    return { index, from, slope };
+  });
+  return { base, slopes };
+}
+
+const sidesKey = (sidesOff: readonly string[]) => sidesOff.join(",");
+
+/**
+ * Engine results that do not depend on the targets (Phase 9 Stage 9.3): the default state
+ * and the linear model of every combination of solver-removable sides, for servings
+ * `PRECOMPUTED_SERVINGS` without forced sides or substitutions. Built once per bundle
+ * (`recommendationDataFromBundle`) and passed to `solve` as input; `solve` uses them only
+ * for that case, where they equal what it would compute itself.
+ */
+export interface Precomputed {
+  readonly baseline: RecipeNutrition;
+  /** By the sides switched off, in authored order. */
+  readonly models: ReadonlyMap<string, LinearModel>;
+}
+
+export const PRECOMPUTED_SERVINGS = 1;
+const UNFORCED: ForcedState = { sidesOff: [], substitutions: [] };
+
+export function precompute(recipe: SolverRecipe, data: EngineData): Precomputed {
+  const { defaults, stateFor, activeWith } = prepare(recipe, UNFORCED, PRECOMPUTED_SERVINGS);
+  const baseline = calculate(recipe, stateFor([], defaults), data);
+  const removable = recipe.sides.filter((side) => side.solverMayRemove).map((side) => side.key);
+  const models = new Map<string, LinearModel>();
+  for (let mask = 0; mask < 2 ** removable.length; mask++) {
+    const sidesOff = removable.filter((_, bit) => (mask >> bit) & 1);
+    models.set(sidesKey(sidesOff), linearModel(recipe, data, stateFor, sidesOff, activeWith(sidesOff), defaults, baseline));
+  }
+  return { baseline, models };
+}
+
+/** The precomputed results when they apply to this input. */
+function applicable(input: SolveInput): Precomputed | undefined {
+  const { forced, servings, precomputed } = input;
+  return servings === PRECOMPUTED_SERVINGS && forced.sidesOff.length === 0 && forced.substitutions.length === 0 ? precomputed : undefined;
+}
 
 const linearEvaluator =
-  (recipe: SolverRecipe, data: EngineData) =>
-  (stateFor: Search["stateFor"]): Evaluator =>
+  (recipe: SolverRecipe, data: EngineData, precomputed: Precomputed | undefined) =>
+  (stateFor: StateFor, baseline: RecipeNutrition): Evaluator =>
   (sidesOff, active, defaults) => {
-    const at = (values: readonly number[]) => vector(calculate(recipe, stateFor(sidesOff, values), data));
-    const base = at(defaults);
-    // One probe per ingredient: the first grid value that differs from the default.
-    const slopes = active.map(({ adjustable, index }) => {
-      const from = adjustable.defaultValue;
-      const to = adjustable.values.find((value) => !isDefault(adjustable, value)) ?? from;
-      const probe = [...defaults];
-      probe[index] = to;
-      const slope = at(probe).map((value, entry) => {
-        const reference = base[entry];
-        return value === null || reference === null || reference === undefined ? null : (value - reference) / (to - from);
-      });
-      return { index, from, slope };
-    });
-    const predicted: (number | null)[] = base.map(() => null);
+    const { base, slopes } = precomputed?.models.get(sidesKey(sidesOff)) ?? linearModel(recipe, data, stateFor, sidesOff, active, defaults, baseline);
+    if (slopes.length !== active.length || slopes.some((slope, depth) => slope.index !== active[depth]?.index)) throw new Error("Linear model does not match the active ingredients");
+    // `sums[depth]` holds base + Σ rate × (value − default) over the slopes before `depth`,
+    // added in slope order as one sum per state would add them, so every prediction is the
+    // same number; `null` once a value or a rate is unknown. `sums[slopes.length]` is the state's prediction.
+    const sums: (number | null)[][] = [base.map((value) => value ?? null), ...slopes.map(() => base.map((): number | null => null))];
     const into = scratch();
-    return (values) => {
-      for (let entry = 0; entry < base.length; entry++) {
-        const value = base[entry] ?? null;
-        predicted[entry] = null;
-        if (value === null) continue;
-        let sum = value;
-        let known = true;
-        for (const { index, from, slope } of slopes) {
-          const rate = slope[entry];
-          if (rate === null || rate === undefined) {
-            known = false;
-            break;
-          }
-          sum += rate * ((values[index] ?? from) - from);
+    return {
+      set: (depth, value) => {
+        const slope = slopes[depth];
+        const previous = sums[depth];
+        const next = sums[depth + 1];
+        if (!slope || !previous || !next) return;
+        const delta = value - slope.from;
+        for (let entry = 0; entry < base.length; entry++) {
+          const sum = previous[entry] ?? null;
+          const rate = slope.slope[entry];
+          next[entry] = sum === null || rate === null || rate === undefined ? null : sum + rate * delta;
         }
-        if (known) predicted[entry] = sum;
-      }
-      return fromVector(predicted, into);
+      },
+      evaluate: () => fromVector(sums[slopes.length] ?? [], into),
     };
   };
 
@@ -361,7 +477,8 @@ export function solveExhaustive(input: SolveInput, data: EngineData): Solution {
 
 /** The ADR-029 D4 solver: linear scoring, engine recalculation, exhaustive fallback. */
 export function solve(input: SolveInput, data: EngineData): Solution {
-  const found = search(input, data, linearEvaluator(input.recipe, data));
+  const usable = applicable(input);
+  const found = search(input, data, linearEvaluator(input.recipe, data, usable), usable);
   const nutrition = calculate(input.recipe, found.stateFor(found.best.sidesOff, found.best.values), data);
   if (!sameFit(evaluateFit(nutrition, input.targets), found.best.fit)) return solveExhaustive(input, data);
   return solution(input, found, nutrition, "linear");

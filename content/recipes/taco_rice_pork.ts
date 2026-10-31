@@ -3,11 +3,12 @@ import type { Recipe } from "../../shared/content.ts";
 export const recipe: Recipe = {
   id: "taco_rice_pork",
   texts: {
-    name: { ja: "豚もも肉のタコライス", en: "Taco rice with lean pork", es: "Taco rice con cerdo magro" },
+    name: { ja: "豚もも肉のタコライス", en: "Taco rice with lean pork", es: "Taco rice con cerdo magro", fr: "Taco rice au porc maigre" },
     summary: {
       ja: "沖縄のタコライスを、刻んだ豚もも肉で作ります。チリパウダーで炒めた肉と、レタス、トマト、チーズをご飯にのせます。",
       en: "Okinawan taco rice made with chopped lean pork: meat stir-fried with chili powder over rice with lettuce, tomato, and cheese.",
       es: "El taco rice de Okinawa con cerdo magro picado: carne salteada con chile en polvo sobre arroz con lechuga, tomate y queso.",
+      fr: "Le taco rice d'Okinawa préparé avec du porc maigre haché au couteau : viande sautée au chili en poudre, sur du riz avec de la laitue, de la tomate et du fromage.",
     },
   },
   cuisine: "okinawan",
@@ -31,6 +32,7 @@ export const recipe: Recipe = {
         ja: "成分表に炒めた豚もも肉の値がないため、生の値で計算しています。",
         en: "The tables have no value for stir-fried pork leg, so the raw value is used.",
         es: "Las tablas no tienen un valor para la pierna de cerdo salteada, así que se usa el valor en crudo.",
+        fr: "Les tables n'ont pas de valeur pour le jambon de porc frais sauté ; la valeur à l'état cru est donc utilisée.",
       },
     },
     { key: "oil", food: "vegetable_oil", grams: 2, state: "as_is", measure: { unit: "tsp", quantity: 0.5 }, role: "fat", linkedTo: "pork" },
@@ -52,6 +54,7 @@ export const recipe: Recipe = {
         ja: "豚もも肉を包丁で5mm角程度に細かく刻みます。玉ねぎはみじん切り、レタスは細切り、トマトは1cm角に切ります。",
         en: "Chop the pork finely with a knife, into pieces of about 5 mm. Finely chop the onion, shred the lettuce, and cut the tomato into 1 cm dice.",
         es: "Pica el cerdo a cuchillo en trozos de unos 5 mm. Pica fina la cebolla, corta la lechuga en tiras y el tomate en dados de 1 cm.",
+        fr: "Hachez finement le porc au couteau, en morceaux d'environ 5 mm. Hachez finement l'oignon, émincez la laitue et coupez la tomate en dés de 1 cm.",
       },
     },
     {
@@ -60,6 +63,7 @@ export const recipe: Recipe = {
         ja: "フライパンに油を中火で熱し、玉ねぎを2分炒めます。豚肉を加え、ほぐしながら色が変わるまで炒めます。",
         en: "Heat the oil in a frying pan over medium heat and stir-fry the onion for 2 minutes. Add the pork and stir-fry, breaking it up, until it changes color.",
         es: "Calienta el aceite en una sartén a fuego medio y saltea la cebolla 2 minutos. Añade el cerdo y saltéalo, deshaciéndolo, hasta que cambie de color.",
+        fr: "Faites chauffer l'huile dans une poêle à feu moyen et faites sauter l'oignon 2 minutes. Ajoutez le porc et faites-le sauter en l'émiettant jusqu'à ce qu'il change de couleur.",
       },
     },
     {
@@ -68,6 +72,7 @@ export const recipe: Recipe = {
         ja: "チリパウダー、しょうゆ、トマト缶を加え、汁気がほぼなくなるまで3分炒め煮にします。",
         en: "Add the chili powder, soy sauce, and canned tomatoes and cook for 3 minutes until the liquid has almost gone.",
         es: "Añade el chile en polvo, la salsa de soja y el tomate en lata y cocina 3 minutos hasta que casi no quede líquido.",
+        fr: "Ajoutez le chili en poudre, la sauce soja et les tomates en conserve, et faites cuire 3 minutes jusqu'à ce que le liquide ait presque disparu.",
       },
     },
     {
@@ -76,6 +81,7 @@ export const recipe: Recipe = {
         ja: "器にご飯を盛り、レタス、肉、トマト、ちぎったチーズの順にのせます。",
         en: "Put the rice in a bowl and top with the lettuce, the meat, the tomato, and the torn cheese.",
         es: "Pon el arroz en un cuenco y cúbrelo con la lechuga, la carne, el tomate y el queso troceado.",
+        fr: "Mettez le riz dans un bol et garnissez de laitue, de viande, de tomate et de fromage effiloché.",
       },
     },
   ],
@@ -86,6 +92,7 @@ export const recipe: Recipe = {
         ja: "細かく刻んだ肉は中心まで火を通してください。ピンク色が残らないよう、ほぐしながら炒めます。",
         en: "Cook finely chopped meat through, breaking it up until no pink remains.",
         es: "Cocina bien la carne picada, deshaciéndola hasta que no quede nada rosado.",
+        fr: "Faites bien cuire la viande hachée en l'émiettant, jusqu'à ce qu'il ne reste plus de rose.",
       },
     },
     {
@@ -94,6 +101,7 @@ export const recipe: Recipe = {
         ja: "生で食べる野菜とハーブは、流水でよく洗ってください。",
         en: "Wash raw vegetables and herbs well under running water.",
         es: "Lava bien con agua corriente las verduras y hierbas que se comen crudas.",
+        fr: "Lavez bien sous l'eau courante les légumes et les herbes consommés crus.",
       },
     },
   ],

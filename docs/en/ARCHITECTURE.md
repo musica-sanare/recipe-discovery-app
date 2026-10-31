@@ -2,27 +2,34 @@ English | [日本語](../ja/ARCHITECTURE.md) · [Docs index](README.md)
 
 # Architecture — Recipe Discovery
 
-Status: **Draft (2026-10-18)**. The structure below is the intended direction ([DECISIONS.md](../working/DECISIONS.md) ADR-001 to ADR-014). Exact package versions, file names, and the data model details are confirmed in Phase 0 and Phase 1; anything not yet verified is marked *Proposed*.
+This document describes how Recipe Discovery is built: the layers and their boundaries, the data model, localization, the build-time pipeline, the recommendation flow in the browser, platform independence, security, and testing. It is for developers who change code or content. Commands and the current directory layout are in [DEVELOPMENT.md](DEVELOPMENT.md).
+
+Status: **In use**. Drafted on 2026-10-18 and implemented in Phases 0–10. Decisions are recorded in [DECISIONS.md](../working/DECISIONS.md) (ADR-001 to ADR-014 and later ADRs).
 
 ## 1. Overview
 
-The MVP is a **static single-page application** with all content prepared at build time and all calculation done in the browser.
+The MVP is a **static single-page application**. All content is prepared at build time, and all calculation runs in the browser.
 
-```
-Repository content (recipes, food dictionary, translations)
-        │                       MEXT workbook (outside Git)
-        │                               │ extraction script
-        ▼                               ▼
-  Build-time pipeline: validate content ──► extracted composition subset (tracked)
-        │  (schemas, locale completeness, food mappings, allergens, policy lint,
-        │   nutrition regression snapshots)
-        ▼
-  Static assets: app bundle + versioned content JSON
-        │
-        ▼
-  Browser: UI ─► recommendation engine ─► nutrition engine (pure, locale-free)
+```mermaid
+flowchart TD
+    content["Repository content (recipes, food dictionary, translations)"]
+    workbook["MEXT workbook (outside Git)"]
+    pipeline["Build-time pipeline: validate content"]
+    subset["Extracted composition subset (tracked)"]
+    assets["Static assets: app bundle + versioned content JSON"]
+    ui["Browser: UI"]
+    recommendation["Recommendation engine"]
+    nutrition["Nutrition engine (pure, locale-free)"]
+    workbook -->|"extraction script"| subset
+    content --> pipeline
+    pipeline --> subset
+    pipeline --> assets
+    assets --> ui
+    ui --> recommendation
+    recommendation --> nutrition
 ```
 
+- The pipeline checks schemas, locale completeness, food mappings, allergens, and policy lint, and keeps nutrition regression snapshots (§5).
 - No application server, database, admin UI, or AI in the MVP (ADR-002, ADR-004).
 - Hosting: Cloudflare static assets, with platform-specific configuration isolated (ADR-001).
 
@@ -32,95 +39,133 @@ Repository content (recipes, food dictionary, translations)
 |---|---|---|
 | `domain/nutrition` | Amount resolution for a recipe state (servings, sides, linked ingredients, chosen substitutions), per-ingredient and per-recipe nutrition, cooking-state handling, uncertainty classification, ranges, rounding for display values (ADR-028) | UI, i18n, locale, platform, network |
 | `domain/recommendation` | Hard filters, fit evaluation, fit tiers, diversification, seeded re-suggestion, bounded adjustment solver, substitution suggestions, relaxation suggestions, contradiction checks | UI, i18n, locale, platform, network |
-| `shared` | Content schemas and types, IDs, units, constants used by build tools, domain, and UI | UI, platform |
+| `domain/shopping` | Shopping list aggregation (ADR-032): items from recipe states with `resolveAmounts` of `domain/nutrition`, combination by food ID, sections, order, frying oil, household measure totals; no nutrition values | UI, i18n, locale, platform, network |
+| `shared` | Content schemas and types, IDs, units, constants used by build tools, domain, and UI; the HTTP contract and output validation of the optional AI endpoint (`shared/suggestion.ts`, §7) | UI, platform |
+| `server/ai` | Platform-neutral core of the optional AI endpoint (ADR-034): request check, provider call with a timeout, output validation, error responses; the provider adapter interface and a fake adapter for tests | UI, domain, content, platform |
 | `content/` (data) | Recipes, food dictionary, allergen links, substitutions, localized texts, glossary | — |
 | `tools/` (build time) | Composition extraction, content validation, policy lint, nutrition snapshots, header generation | UI |
 | `src/` (UI) | React app, navigation, i18n, formatting, state, accessibility ([UI_DESIGN.md](UI_DESIGN.md)) | Platform-specific APIs |
 | `platform/` | Hosting configuration (Cloudflare) and generated security headers | Domain logic |
 
-Boundaries are enforced with lint import restrictions and a boundary test, as in the owner's other projects.
-
-*Proposed* directory layout:
-
-```text
-src/                    UI (React)
-domain/nutrition/       Pure nutrition engine
-domain/recommendation/  Pure ranking, diversity, adjustment
-shared/                 Schemas (Zod), types, units, constants
-content/recipes/        One file per recipe (structured, localized texts)
-content/foods.ts        Food dictionary (locale-neutral IDs, mappings, names, aliases, allergens)
-content/glossary.ts     Translation glossary and forbidden expressions
-data/composition/       Extracted composition subset (generated, tracked) + manifest
-data/raw/               MEXT workbook (git-ignored)
-tools/                  Extraction, validation, lint, snapshots
-platform/cloudflare/    Hosting config and header output
-test/, e2e/             Tests
-docs/                   Documentation
-```
+Lint import restrictions and a boundary test enforce these boundaries, as in the owner's other projects. The directory layout: [DEVELOPMENT.md](DEVELOPMENT.md) "Layout (current)".
 
 ## 3. Data model (outline)
 
-Details are finalized in Phase 1 and documented in [NUTRITION_CALCULATION.md](NUTRITION_CALCULATION.md) and the content schemas.
+The schema is `shared/content.ts` (ADR-026). Calculation rules are in [NUTRITION_CALCULATION.md](NUTRITION_CALCULATION.md).
 
-- **Food**: locale-neutral `id` (stable slug); `composition` references (food code and data version per cooking state, for example `raw` and `grilled`); weight change rates per cooking method; refuse rate; allergen links with confidence (`contains`, `may_contain`, `unknown`); localized `names` and search `aliases` for `ja`, `en`, `es`.
+- **Food**: locale-neutral `id` (stable slug); `composition` references (food code and data version per cooking state, for example `raw` and `grilled`); weight change rates per cooking method; refuse rate; allergen links with confidence (`contains`, `may_contain`, `unknown`); localized `names` and search `aliases` for every locale (`ja`, `en`, `es`, `fr`).
 - **Recipe**: `id`; time; effort; cuisine; goals; main protein group; tags; equipment; servings; ingredients; sides; keyed steps and food safety notes; substitutions; localized texts. "Quick" and "fried" are derived.
 - **RecipeIngredient**: food ID; raw edible grams; cooking state and method; household measure (unit and quantity); role; adjustment bounds (grams or whole units); `linkedTo` leader; hard-to-estimate marker.
 - **Side**: localized label, ingredients, and whether "fit to my targets" may switch it off.
 - **Substitution**: from food to food with a ratio, optional bounds, and replaced step texts and safety notes.
-- Schema: `shared/content.ts` (ADR-026).
 - **Composition subset**: per food code, the selected nutrient values with their notation flags (`measured`, `estimated`, `trace`, `zero`, `unmeasured`), source version, and checksum manifest.
 
 ## 4. Localization
 
-- Library: the owner's established approach (i18next with typed TypeScript message catalogs) is the candidate; confirmed in Phase 0 (ADR-005).
-- UI catalogs: `ja` defines the message type; `en` and `es` must match it at compile time.
-- Content: every recipe and food carries `ja`, `en`, and `es` texts; the build fails on missing or blank entries.
-- **Food identity is separate from translation** (ADR-006). Ingredients reference locale-neutral food IDs; names and aliases are display and search data only. Nutrition functions do not accept a locale parameter, enforced by their types.
-- Search normalization per locale: Unicode NFKC and hiragana/katakana folding for `ja` (a long-vowel mark in the query also matches the vowel it lengthens and, after o- and e-row kana, う or い); case folding for `en`; case and accent folding for `es`. Aliases cover regional terms (for example `patata` / `papa`).
+- Library: i18next with typed TypeScript message catalogs, the owner's established approach (ADR-005).
+- UI catalogs: `ja` defines the message type; `en`, `es`, and `fr` must match it at compile time.
+- Content: every recipe and food carries `ja`, `en`, `es`, and `fr` texts; the build fails on missing or blank entries.
+- **Food identity is separate from translation** (ADR-006). Ingredients reference locale-neutral food IDs; names and aliases are display and search data only. Nutrition functions do not accept a locale parameter, and their types enforce this.
+- Search normalization per locale:
+  - `ja`: Unicode NFKC and hiragana/katakana folding. A long-vowel mark in the query also matches the vowel it lengthens and, after o- and e-row kana, う or い.
+  - `en`: case folding.
+  - `es`: case and accent folding.
+  - `fr`: case and accent folding, with `œ` and `æ` read as `oe` and `ae`.
+  - Aliases cover regional terms (for example `patata` / `papa`).
 - Household units are display labels per locale (大さじ / tbsp / cucharada). Amounts are stored in grams; a tablespoon is defined as 15 mL.
 - Formatting uses `Intl` APIs. Values are formatted only at the presentation layer.
-- Locale detection and persistence (*Proposed*, same pattern as the owner's other apps): stored locale preference if valid, otherwise the first supported language in `navigator.languages`, otherwise `ja`. Only the locale preference is stored.
+- Locale detection and persistence (same pattern as the owner's other apps, `src/i18n/localePreference.ts`): the stored locale preference if valid, otherwise the first supported language in `navigator.languages`, otherwise `ja`. Only the locale preference is stored.
 
 ## 5. Build-time pipeline
 
-1. **Extraction**: a script reads the MEXT workbook from `data/raw/` (git-ignored), checks its SHA-256 against the manifest, and writes only the food codes referenced by the food dictionary and only the selected columns, with notation flags. Output and manifest are tracked ([DATA_SOURCES.md](DATA_SOURCES.md)).
+1. **Extraction**: a script reads the MEXT workbook from `data/raw/` (git-ignored) and checks its SHA-256 against the manifest. It writes only the food codes referenced by the food dictionary and only the selected columns, with notation flags. Output and manifest are tracked ([DATA_SOURCES.md](DATA_SOURCES.md)).
 2. **Content validation**: schemas; unique IDs; every ingredient maps to a food and every food to composition data; locale completeness; adjustment bounds valid; substitutions valid; allergen links present (or explicitly `unknown`).
 3. **Policy lint**: forbidden health or efficacy expressions in all locales ([CONTENT_POLICY.md](CONTENT_POLICY.md)).
-4. **Nutrition snapshots**: per-recipe calculated values are stored as test snapshots so that data or formula changes produce a reviewable diff.
-5. **Content bundles** (ADR-027): `tools/build-content.ts` writes a locale-neutral calculation bundle and one text bundle per locale to `generated/content/` (git-ignored); Vite adds a content hash to each file name.
+4. **Nutrition snapshots**: per-recipe calculated values are stored as test snapshots, so data or formula changes produce a reviewable diff.
+5. **Content bundles** (ADR-027): `tools/build-content.ts` writes a locale-neutral calculation bundle and one text bundle per locale to `generated/content/` (git-ignored). Vite adds a content hash to each file name.
 6. **Header generation**: security headers are defined once and written in the hosting platform's format.
 
 ## 6. Recommendation flow (browser)
 
-1. Load the calculation bundle and the text bundle of the active locale (static, content-hashed), validate them with `zod/mini` and against each other, and show the error state with a retry action when a bundle is unreachable or invalid (`src/content/`). Switching the locale loads only its text bundle, before the language changes, so the views stay mounted.
-2. Validate user inputs; detect contradictory targets (`src/views/TargetsView.tsx` with `domain/recommendation`).
-3. Hard filters → fit evaluation (default amounts, then bounded adjustment) → fit tiers → diversification → stable ordering, on the main thread (ADR-030 D10).
+1. Load the calculation bundle and the text bundle of the active locale (static, content-hashed) (`src/content/`). Validate them with `zod/mini` and against each other. When a bundle is unreachable or invalid, show the error state with a retry action. Switching the locale loads only its text bundle, before the language changes, so the views stay mounted.
+2. Validate user inputs and detect contradictory targets (`src/views/TargetsView.tsx` with `domain/recommendation`).
+3. Hard filters → fit evaluation (default amounts, then bounded adjustment) → fit tiers → diversification → stable ordering, on the main thread (ADR-030 D10). The solver results that do not depend on the targets are computed once per calculation bundle, after the first view is shown (`src/state/providers.tsx`, `withPrecomputed` in `domain/recommendation/data.ts`). A search gives the same result with or without them.
 4. Render candidates and deterministic reason texts from the typed catalogs (`src/views/candidates/`).
-5. Recalculate on every adjustment in the detail view (`src/views/DetailView.tsx`). Measured in the browser (Stage 4.7): a full recommendation about 25 ms inside the UI on a desktop, a re-suggestion about 2 ms and a recalculation about 3 ms from click to layout; with a 4× CPU slowdown a full recommendation takes about 66 ms (Stage 6.2; about 80 ms in Stage 5.4), within the 100 ms threshold of ADR-030 D10 (revised).
-6. State stays in memory (`src/state/`, ADR-015, ADR-030 D9); only the recipe detail and the about page have their own URLs (`src/navigation/`, ADR-030 D2).
+5. Recalculate on every adjustment in the detail view (`src/views/DetailView.tsx`). Timing is in the next list.
+6. State stays in memory (`src/state/`, ADR-015, ADR-030 D9). Only the recipe detail and the about page have their own URLs (`src/navigation/`, ADR-030 D2).
+7. The shopping list (ADR-032) keeps the recipe states the user added in memory. `domain/shopping` aggregates them only when the list changes or is shown, never during a recommendation.
+
+Timing measured in the browser:
+- Desktop (Stage 4.7): a full recommendation about 25 ms inside the UI; a re-suggestion about 2 ms and a recalculation about 3 ms from click to layout.
+- 4× CPU slowdown, release 7 with 130 recipes: a full recommendation about 54–59 ms median and 62–66 ms p90 ([DECISIONS.md](../working/DECISIONS.md) "Phase 10 acceptance"). This is within the 100 ms threshold of ADR-030 D10 (revised).
+- Earlier at 4×: 66 ms in Stage 6.2 on 60 recipes; about 80–88 ms before Stage 9.3; about 50 ms after Stage 9.3.
 
 ## 7. Platform independence
 
 - The production output is a plain static build (`dist/`). Only `platform/cloudflare/` and the generated header file are Cloudflare-specific.
 - No Cloudflare runtime APIs are used by domain, content, or UI code. Tests run in Node.
-- The MVP does not need a Worker. A future server feature (for example optional AI) must define its HTTP contract in `shared/` and keep the provider-specific implementation in a thin adapter.
+- The static app needs no Worker. A server feature defines its HTTP contract in `shared/` and keeps the provider-specific implementation in a thin adapter. The optional AI endpoint (ADR-034) follows this: the contract is `shared/suggestion.ts`, the platform-neutral core and the adapter interface are in `server/ai/`, and only a thin wrapper in `platform/cloudflare/` will be Cloudflare-specific. The real provider adapter, the Worker, and the wrapper are not built yet (Stages 12.3 and 12.5).
 - The deployment runbook ([DEPLOYMENT.md](DEPLOYMENT.md)) describes Cloudflare (`platform/cloudflare/wrangler.jsonc`) and how to serve the same `dist/` from other static hosts. Hashed files under `/assets/` get a one-year immutable cache rule in the generated `_headers`.
+
+### AI free-text conditions contract
+
+The endpoint turns the user's free text into suggested search conditions; the user applies or discards them, and only applied conditions reach the deterministic engines (ADR-034 D1, D6). Every output is validated at the endpoint and again in the browser, and any failure leaves the form unchanged.
+
+```mermaid
+sequenceDiagram
+    participant B as Browser
+    participant E as Endpoint (server/ai)
+    participant A as Provider adapter
+    B->>E: POST /api/suggest-conditions {text, locale}
+    E->>E: Check the request
+    E->>A: Text and locale
+    A-->>E: Raw output text or adapter error
+    E->>E: Validate the output
+    E-->>B: Conditions, out of scope, or error
+    B->>B: Validate again, then suggestion or fallback
+```
+
+- **Request**: `POST /api/suggest-conditions` with JSON `{ "text": string, "locale": "ja" | "en" | "es" | "fr" }`. The text has 1–200 Unicode code points after trimming. Any other field is rejected, so targets, form conditions, allergens, and history cannot be sent.
+- **Success (200)**: `{ "kind": "conditions", "conditions": … }` or `{ "kind": "out_of_scope", "topic": "allergens" | "targets" | "other" }`. Conditions have the shape of the engine's `Conditions`: `requiredFoods` (up to 5 any-of sets of up to 5 food IDs), `excludedFoods` (up to 10 food IDs), optional `maxMinutes` (a whole number from 5 to 240, the engine's input limits), optional `equipment` (the equipment the user has), and `cuisines`. There is no free-text field.
+- **Errors**: `{ "kind": "error", "error": code }`:
+
+| Code | Status | When |
+|---|---|---|
+| `invalid_request` | 400 | The request fails the request schema; the provider is not called |
+| `disabled` | 503 | The environment switch is off (ADR-034 D5); the browser treats a 404 the same way |
+| `rate_limited` | 429 | The endpoint's or the provider's rate limit |
+| `budget_spent` | 503 | The provider's usage allocation is used up (for Workers AI, the daily free allocation) |
+| `timeout` | 504 | No provider answer within 7 s |
+| `refused` | 502 | The provider refused the request |
+| `invalid_output` | 502 | The output fails validation |
+| `unavailable` | 502 | Any other provider failure |
+
+- **Output validation** (`validateProviderOutput`), in order: at most 4,000 characters; no forbidden expression of `content/glossary.ts` in any of the four locales, whatever the request locale; valid JSON; no key containing a forbidden stem (targets, nutrients, allergens, health, heat, cooking time, free text); the strict schema (allowed fields and enum values only, length limits); every food ID in the dictionary; no food both required and excluded. Duplicates are removed. The core returns the rejection reason for counts and the evaluation, never the text.
+- **Fallback** (`interpretResponse` in the browser): the response is validated again with the same rules. A suggestion is shown for confirmation; an out-of-scope request shows `ai.outOfScope.<topic>` (for allergens, a pointer to the allergen field); every failure shows `ai.error.<code>`, including the browser-only `offline`, a browser timeout after 8 s, and `empty` for a suggestion without any condition. The catalog strings are added with the UI (Stage 12.4).
+- **Adapter**: `SuggestionAdapter.suggest(request, signal)` returns the provider's raw output text or throws `AdapterError` with `rate_limited`, `budget_spent`, `timeout`, `refused`, or `unavailable`. The core races it against the timeout, so an adapter that ignores the abort signal still times out. Tests use `server/ai/fake.ts` and never the network.
+- **Workers AI adapter** (`server/ai/workers-ai.ts`, ADR-034 D2 revised): sends the prompt of `server/ai/prompt.ts` (the rules, the enums, and the dictionary in the request locale, with the request text as delimited data), a JSON Schema for `response_format`, at most 400 output tokens, and temperature 0. It reads the text from `response` or the first chat completion, maps Workers AI error 3036 (daily free allocation used up) to `budget_spent`, 3040 to `rate_limited`, 3007 and 3008 to `timeout`, and anything else to `unavailable`. The transport is injected (the Worker binding or the REST API), so the module makes no network call.
 
 ## 8. Security and privacy
 
 - Strict Content-Security-Policy (`'self'` only), `X-Content-Type-Options: nosniff`, `Referrer-Policy`, restrictive `Permissions-Policy`, `frame-ancestors 'none'`.
 - No third-party scripts, fonts, or images at runtime.
-- No user data leaves the browser in the MVP. Targets and conditions are never put in URLs.
+- Without the optional AI feature, no user data leaves the browser. When the user asks for an AI suggestion, only the free text and the locale are sent (ADR-015 revised); the request schema rejects every other field. Targets and conditions are never put in URLs.
+- The AI endpoint core logs nothing and never returns or records the request text. AI outputs hold no nutrition values, allergens, health statements, cooking temperatures or times, or free text, and are validated at the endpoint and in the browser (§7).
 - Dependency install scripts are governed by an allowlist policy (Phase 0).
 
 ## 9. Testing strategy
 
-- Unit tests for the nutrition and recommendation engines (determinism, rounding, uncertainty, adjustment bounds, diversity, relaxation suggestions, contradictions).
+- Unit tests for the nutrition and recommendation engines: determinism, rounding, uncertainty, adjustment bounds, diversity, relaxation suggestions, contradictions.
+- Unit tests for the shopping list aggregation: combination, scaling, sides, substitutions, order, determinism, locale independence.
 - **Locale invariance test**: every recipe calculated under each locale context yields identical internal values.
 - Content validation and policy lint run in CI and in the build.
 - Nutrition snapshot tests.
-- UI tests with jsdom (`src/**/*.test.tsx` with fixtures; `test/ui/` with the repository content); accessibility checks (axe-core, without the contrast rule) in `ja`, `en`, and `es` for every view and exceptional state, and a contrast test over the color tokens (`test/node/styles.test.ts`).
-- E2E tests (`e2e/`, Playwright) on the production build with its headers: desktop Chromium, and Chromium and WebKit at 375 px, in `ja`, `en`, and `es`: the full flow, exceptional states, locale switching, deep links, the about page, keyboard operation, axe-core with color contrast in light and dark, security headers, no request to another origin, and no CSP violation. Phone-class timing runs on demand (`npm run test:e2e:timing`).
+- UI tests with jsdom: `src/**/*.test.tsx` with fixtures, and `test/ui/` with the repository content.
+- Accessibility checks (axe-core, without the contrast rule) in every locale for every view and exceptional state. A contrast test covers the color tokens (`test/node/styles.test.ts`).
+- E2E tests (`e2e/`, Playwright) on the production build with its headers:
+  - browsers: desktop Chromium, and Chromium and WebKit at 375 px, in every locale;
+  - coverage: the full flow, exceptional states, locale switching, deep links, the about page, keyboard operation, axe-core with color contrast in light and dark, security headers, no request to another origin, and no CSP violation.
+- Phone-class timing runs on demand (`npm run test:e2e:timing`).
 
 ## 10. Not in the MVP
 

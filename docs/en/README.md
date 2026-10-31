@@ -2,7 +2,7 @@ English | [日本語](../ja/README.md) · [Repository README](../../README.md)
 
 # Recipe Discovery documentation
 
-Specification, design, calculation rules, policies, and guides for Recipe Discovery, plus the English-only working docs used during development.
+This index lists every document about Recipe Discovery. Product and content reviewers start with the specification and the policies; developers start with the architecture and the local development guide. The working docs at the end are English-only records used during development.
 
 ## Specification and design
 

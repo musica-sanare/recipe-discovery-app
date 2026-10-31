@@ -327,7 +327,7 @@ Japanese and Spanish use the same structure, for example `買い物リスト（2
 
 ## 6. Catalog structure
 
-`ja` defines the type; `en` and `es` must match (`src/i18n/messages/`). New namespaces:
+`ja` defines the type; `en`, `es`, and `fr` must match (`src/i18n/messages/`). New namespaces:
 
 | Namespace | Keys |
 |---|---|
@@ -345,20 +345,20 @@ Japanese and Spanish use the same structure, for example `買い物リスト（2
 | `nutrient` | Display names of the five nutrients and their units |
 | `uncertainty` | Classes and reasons (`raw_value_for_cooking`, `related_cooked_value`, `post_cooking_refuse`, `fried`, `slow_frying`, `estimated_source_value`), notations (trace, estimated) |
 | `assumption` | `oil_counted_in_full`, `included_in_cooked_value`, `parts_removed_after_cooking`, `energy_from_fat`, `pinch_as_stated_grams`, energy versus 4P + 9F + 4C |
-| `unit` | Household units (`HOUSEHOLD_UNITS`) with plural forms; `piece` shows the number alone in `en` and `es` (ADR-026); grams, kcal, minutes |
+| `unit` | Household units (`HOUSEHOLD_UNITS`) with plural forms; `piece` shows the number alone in `en`, `es`, and `fr` (ADR-026); grams, kcal, minutes |
 | `allergen` | Names of all `ALLERGENS` (glossary terms) and the confidence levels |
 | `disclaimer` | Estimates, allergens, strict control (P4: weigh and check labels) |
 | `attribution` | The MEXT wording in Japanese in every locale, followed by the localized equivalent, the data version, and "this app's own calculations" |
 
-- Counts use i18next plural suffixes (`_one`, `_other`). Every locale defines both keys because `ja` defines the catalog type; Japanese plural rules select `_other` only, so both hold the same Japanese text.
-- Household units choose the singular up to one unit ("1/2 clove", "1 1/2 cloves"); quantities are shown as fractions of twelfths ("1/2", "1 1/2"; Japanese "1と1/2", Spanish "1 y 1/2").
+- Counts use i18next plural suffixes (`_one`, `_other`). Every locale defines both keys because `ja` defines the catalog type; Japanese plural rules select `_other` only, so both hold the same Japanese text. French plural rules also put 0 and 1.5 in `_one`; household units pass only 1 or 2 as the count, so they need no other form.
+- Household units choose the singular up to one unit ("1/2 clove", "1 1/2 cloves"); quantities are shown as fractions of twelfths ("1/2", "1 1/2"; Japanese "1と1/2", Spanish "1 y 1/2", French "1 et 1/2").
 - A test requires a key for every engine code (input errors, contradictions, statuses, reasons, constraint items, relaxations, uncertainty reasons, assumptions, units, allergens, cuisines, equipment) in each locale.
 - The forbidden-expression check of `content/glossary.ts` is extended to the UI catalogs.
 
 ## 7. Input details
 
 - Number fields: `<input type="text" inputmode="numeric">` with a visible unit, steppers (buttons with labels such as "increase protein minimum"), and values validated by `validatePoolRequest` with `INPUT_LIMITS` (unchanged, ADR-030 D4). Empty optional fields mean "no target".
-- Ingredient autocomplete: the ARIA 1.2 combobox pattern over the food dictionary of the active text bundle. Normalization: `ja` NFKC and katakana-to-hiragana folding; `en` case folding; `es` case and accent folding. Matches names and aliases (ADR-030 D6). Results list the food's display name; no match shows "not supported".
+- Ingredient autocomplete: the ARIA 1.2 combobox pattern over the food dictionary of the active text bundle. Normalization: `ja` NFKC and katakana-to-hiragana folding; `en` case folding; `es` case and accent folding; `fr` case and accent folding, with `œ`/`æ` as `oe`/`ae`. Matches names and aliases (ADR-030 D6). Results list the food's display name; no match shows "not supported".
 - Food groups: the protein groups (`PROTEIN_GROUPS`) are offered as "chicken (any cut)" and so on. A group as a required item is one any-of item; a group as an exclusion adds every food of the group.
 - Equipment: "no limit" (default), "microwave only", or "choose" with checkboxes (ADR-030 D7).
 

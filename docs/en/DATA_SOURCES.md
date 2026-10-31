@@ -61,7 +61,7 @@ Status: **In use**. The terms and facts below were read from the cited pages on 
 - Columns are located by the component identifier row and the Japanese headers, not by position.
   - Extracted identifiers: `REFUSE`, `ENERC_KCAL`, `PROT-`, `PROTCAA`, `FAT-`, `FATNLEA`, `CHOAVLDF-`, `CHOCDF-`, `FIB-`, `NACL_EQ` (`shared/composition.ts`).
   - Each value keeps its notation (`measured`, `zero`, `trace`, `estimated`, `estimated_zero`, `estimated_trace`, `unmeasured`). Unrecognized cell contents stop the extraction.
-- Food names are kept in Japanese only, as published. Display names in three locales belong to the food dictionary (Stage 0.4).
+- Food names are kept in Japanese only, as published. Display names in every locale belong to the food dictionary (Stage 0.4).
 - A test validates the tracked subset against the schema and the manifest without needing the workbook.
 
 ### Cooking tables (implemented in Phase 0 Stage 0.3)

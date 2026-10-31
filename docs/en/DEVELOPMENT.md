@@ -53,7 +53,7 @@ npm ci
 | `npm run test:e2e:timing` | Phone-class timing with CPU throttling (project `timing`, Chromium); writes `test-results/timing.json` |
 | `npm run bench:recommendation` | Node timing of a full search on the repository recipes and on an in-memory synthetic library of 180 recipes (details below) |
 
-- `npm run test:e2e` runs `npm run build && npm run preview` on port 4174. Its projects are `desktop-chromium`, `mobile-chromium`, and `mobile-webkit`, and every spec runs in `ja`, `en`, and `es` (`e2e/`).
+- `npm run test:e2e` runs `npm run build && npm run preview` on port 4174. Its projects are `desktop-chromium`, `mobile-chromium`, and `mobile-webkit`, and every spec runs in every locale (`e2e/`).
 - Install the browsers once, into the user cache outside the repository:
 
   ```bash
@@ -92,7 +92,7 @@ CI (`.github/workflows/ci.yml`, GitHub Actions on `ubuntu-24.04`) runs on pushes
 ## Layout (current)
 
 ```text
-index.html, src/        UI (React, Tailwind CSS; docs/en/UI_DESIGN.md): i18n/ typed ja/en/es catalogs and engine code lists,
+index.html, src/        UI (React, Tailwind CSS; docs/en/UI_DESIGN.md): i18n/ typed ja/en/es/fr catalogs and engine code lists,
                         format/ locale formatting, navigation/ History API views, state/ reducer and engine calls,
                         views/ screens, testing/ axe-core helper
 shared/                 Schemas (Zod), constants, and types shared by UI, domain, content, and tools
@@ -123,14 +123,14 @@ docs/, prompts/         Documentation and phase prompts
    - list what is served with the dish under `sides`;
    - link seasonings to the ingredient they scale with (`linkedTo`);
    - give every recipe at least one adjustable ingredient or solver-removable side.
-3. Write `ja`, `en`, and `es` texts; follow `content/glossary.ts` and [CONTENT_POLICY.md](CONTENT_POLICY.md). Serving steps do not name sides; the UI lists the sides that are on.
+3. Write `ja`, `en`, `es`, and `fr` texts; follow `content/glossary.ts` and [CONTENT_POLICY.md](CONTENT_POLICY.md). Serving steps do not name sides; the UI lists the sides that are on.
 4. Update `CONTENT_VERSION` in `content/version.ts`.
 5. Run `npm run validate:content` (also part of `npm run build`). It checks schemas, locales, IDs, references, cooking states, adjustment bounds, links, sides, substitutions, allergens, safety notes, protein groups, tags, glossary use, forbidden expressions, and the version. When adding a rule, add a failing fixture to `tools/content/validate.test.ts`.
 
 ## Adding UI text
 
 1. Add the key and Japanese text to `src/i18n/messages/ja.ts`.
-2. Add the same key to `en.ts` and `es.ts`. The type checker fails until all three match, and a test rejects blank strings.
+2. Add the same key to `en.ts`, `es.ts`, and `fr.ts`. The type checker fails until all four match, and a test rejects blank strings.
 3. Use `t("your.key")`; never hard-code UI strings in components.
 4. Texts for engine codes are keyed by the code: input errors, contradictions, statuses, reasons, exclusions, relaxations, uncertainty, assumptions, units, allergens, cuisines, equipment. `src/i18n/engineCodes.ts` lists every code, and `src/i18n/engineCodes.test.ts` requires an entry in each locale. A new code in an engine union fails the type check until it is added to the list.
 5. Counts use `_one` and `_other` keys in every locale. `src/i18n/policy.test.ts` applies the forbidden expressions of `content/glossary.ts` to the catalogs.

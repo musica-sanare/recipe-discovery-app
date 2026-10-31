@@ -1,4 +1,4 @@
-<!-- source: docs/en/UI_DESIGN.md blob cfac0f2087278b7e4798c97165ad63bb035629ef -->
+<!-- source: docs/en/UI_DESIGN.md blob 0176cc0d3943b8e6df7aa2b54056219bddd6ae96 -->
 [English](../en/UI_DESIGN.md) | 日本語 · [目次に戻る](README.md)
 
 > この文書は[英語版](../en/UI_DESIGN.md)の翻訳。内容が異なる場合は英語版が優先する。
@@ -332,7 +332,7 @@ Amounts are the edible portion (without skin, bones, or shells) or the weight as
 
 ## 6. カタログの構成
 
-`ja` が型を決め、`en` と `es` はそれに一致しなければならない（`src/i18n/messages/`）。新しい名前空間：
+`ja` が型を決め、`en`、`es`、`fr` はそれに一致しなければならない（`src/i18n/messages/`）。新しい名前空間：
 
 | 名前空間 | キー |
 |---|---|
@@ -350,20 +350,20 @@ Amounts are the edible portion (without skin, bones, or shells) or the weight as
 | `nutrient` | 5 つの栄養素の表示名と単位 |
 | `uncertainty` | 区分と理由（`raw_value_for_cooking`、`related_cooked_value`、`post_cooking_refuse`、`fried`、`slow_frying`、`estimated_source_value`）、記号（微量、推定値） |
 | `assumption` | `oil_counted_in_full`、`included_in_cooked_value`、`parts_removed_after_cooking`、`energy_from_fat`、`pinch_as_stated_grams`、エネルギーと 4P + 9F + 4C の違い |
-| `unit` | 複数形つきの家庭での単位（`HOUSEHOLD_UNITS`）。`piece` は `en` と `es` で数字だけを示す（ADR-026）。グラム、kcal、分 |
+| `unit` | 複数形つきの家庭での単位（`HOUSEHOLD_UNITS`）。`piece` は `en`、`es`、`fr` で数字だけを示す（ADR-026）。グラム、kcal、分 |
 | `allergen` | すべての `ALLERGENS` の名前（用語集の用語）と確からしさの段階 |
 | `disclaimer` | 推定値、アレルゲン、厳しい管理（P4：計量して表示を確かめる） |
 | `attribution` | すべてのロケールで日本語の文部科学省の文言、続けて各ロケールでの同じ意味の文言、データの版、「このアプリ独自の計算」 |
 
-- 件数には i18next の複数形の接尾辞（`_one`、`_other`）を使う。`ja` がカタログの型を決めるので、すべてのロケールで両方のキーを持たせる。日本語の複数形の規則では `_other` だけが選ばれるため、両方に同じ日本語のテキストを入れる。
-- 家庭での単位は、1 単位までは単数形を選ぶ（"1/2 clove"、"1 1/2 cloves"）。数量は 12 分の 1 単位の分数で示す（"1/2"、"1 1/2"。日本語は "1と1/2"、スペイン語は "1 y 1/2"）。
+- 件数には i18next の複数形の接尾辞（`_one`、`_other`）を使う。`ja` がカタログの型を決めるので、すべてのロケールで両方のキーを持たせる。日本語の複数形の規則では `_other` だけが選ばれるため、両方に同じ日本語のテキストを入れる。フランス語の複数形の規則では 0 と 1.5 も `_one` になる。家庭での単位は件数として 1 か 2 しか渡さないので、ほかの形はいらない。
+- 家庭での単位は、1 単位までは単数形を選ぶ（"1/2 clove"、"1 1/2 cloves"）。数量は 12 分の 1 単位の分数で示す（"1/2"、"1 1/2"。日本語は "1と1/2"、スペイン語は "1 y 1/2"、フランス語は "1 et 1/2"）。
 - テストで、各ロケールにすべてのエンジンのコードのキーがあることを求める。対象は入力エラー、矛盾、判定、理由、制約の項目、緩和、不確かさの理由、仮定、単位、アレルゲン、料理の種類、器具だ。
 - `content/glossary.ts` による禁止表現の確認を、UI のカタログにも広げる。
 
 ## 7. 入力の詳細
 
 - 数値の欄：`<input type="text" inputmode="numeric">` に、見える単位とステッパー（「たんぱく質の下限を増やす」のようなラベルを持つボタン）を付ける。値は `validatePoolRequest` と `INPUT_LIMITS` で検証する（変更なし、ADR-030 D4）。任意の欄が空なら「目標なし」を意味する。
-- 材料の入力補完：今のテキストのバンドルの食品辞書に対する、ARIA 1.2 の combobox パターン。正規化は、`ja` が NFKC とカタカナからひらがなへの同一視、`en` が大文字・小文字の同一視、`es` が大文字・小文字とアクセントの同一視だ。名前と別名に一致させる（ADR-030 D6）。結果には食品の表示名を並べ、一致しないときは「対応していません」と示す。
+- 材料の入力補完：今のテキストのバンドルの食品辞書に対する、ARIA 1.2 の combobox パターン。正規化は、`ja` が NFKC とカタカナからひらがなへの同一視、`en` が大文字・小文字の同一視、`es` が大文字・小文字とアクセントの同一視、`fr` が大文字・小文字とアクセントの同一視（`œ`・`æ` は `oe`・`ae`）だ。名前と別名に一致させる（ADR-030 D6）。結果には食品の表示名を並べ、一致しないときは「対応していません」と示す。
 - 食品の群：たんぱく源の群（`PROTEIN_GROUPS`）を「鶏肉（部位を問わない）」のように示す。必ず使う項目としての群は「いずれか 1 つ」の 1 項目になり、除外としての群はその群の食品をすべて加える。
 - 器具：「制限なし」（既定）、「電子レンジのみ」、チェックボックスで「選ぶ」のいずれか（ADR-030 D7）。
 

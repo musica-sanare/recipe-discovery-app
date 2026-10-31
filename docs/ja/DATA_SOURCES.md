@@ -1,4 +1,4 @@
-<!-- source: docs/en/DATA_SOURCES.md blob d49312a757757f233becfb338fcc5e1ecc6862f6 -->
+<!-- source: docs/en/DATA_SOURCES.md blob 768bbcbbdefe4748bbd8e78579b0915429f308b8 -->
 [English](../en/DATA_SOURCES.md) | 日本語 · [目次に戻る](README.md)
 
 > この文書は[英語版](../en/DATA_SOURCES.md)の翻訳。内容が異なる場合は英語版が優先する。
@@ -64,7 +64,7 @@ Recipe Discovery が使うデータと、その利用条件、出典表示、リ
 - 列は位置ではなく、成分識別子の行と日本語の見出しで見つける。
   - 抽出する識別子：`REFUSE`、`ENERC_KCAL`、`PROT-`、`PROTCAA`、`FAT-`、`FATNLEA`、`CHOAVLDF-`、`CHOCDF-`、`FIB-`、`NACL_EQ`（`shared/composition.ts`）。
   - 各値は記号の区分（`measured`、`zero`、`trace`、`estimated`、`estimated_zero`、`estimated_trace`、`unmeasured`）を残す。認識できないセルの内容があると、抽出は止まる。
-- 食品名は公開されているとおり日本語だけを残す。3 つのロケールでの表示名は食品辞書が持つ（Stage 0.4）。
+- 食品名は公開されているとおり日本語だけを残す。すべてのロケールでの表示名は食品辞書が持つ（Stage 0.4）。
 - テストで、管理している成分の一部を、ワークブックなしでスキーマとマニフェストに照らして検証する。
 
 ### 調理の表（フェーズ 0 Stage 0.3 で実装）

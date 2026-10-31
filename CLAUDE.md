@@ -29,7 +29,7 @@ If any path does not exist, report it rather than silently inventing its content
 5. Follow `docs/en/NUTRITION_CALCULATION.md`; changing a formula, a source column, or a rounding rule is a decision that needs the owner's approval and an ADR.
 
 ### Localization
-6. The UI and all content support Japanese, English, and Spanish (`ja`, `en`, `es`) from the MVP. This is part of the owner's product identity, not an optional extra.
+6. The UI and all content support Japanese, English, Spanish, and French (`ja`, `en`, `es`, `fr`). `ja`, `en`, and `es` are part of the owner's product identity and have been required since the MVP; `fr` was added in Phase 11 (ADR-033). None of them is an optional extra.
 7. Localization covers UI strings, recipe names, ingredient names, cooking steps, notes, input and validation messages, error states, and accessibility labels. Keep UI strings out of components and domain logic; use typed keys.
 8. Food identity is locale-neutral. Translation never affects calculation: calculation functions do not accept a locale, and switching the language must not change any calculated value.
 9. Translations are canonical content stored in the repository. Do not machine-translate at runtime.

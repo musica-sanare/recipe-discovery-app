@@ -1,4 +1,4 @@
-<!-- source: docs/en/DEVELOPMENT.md blob dbc6cf0b1b492882e08b08a05db332680ea40972 -->
+<!-- source: docs/en/DEVELOPMENT.md blob d559d5d0ca2af57f6135e39eee9821e30fc5aea4 -->
 [English](../en/DEVELOPMENT.md) | 日本語 · [目次に戻る](README.md)
 
 > この文書は[英語版](../en/DEVELOPMENT.md)の翻訳。内容が異なる場合は英語版が優先する。
@@ -56,7 +56,7 @@ npm ci
 | `npm run test:e2e:timing` | CPU を絞ったスマートフォン相当の時間の計測（プロジェクト `timing`、Chromium）。`test-results/timing.json` に書き出す |
 | `npm run bench:recommendation` | リポジトリのレシピと、メモリ上の 180 件の合成ライブラリに対する、検索全体の Node での所要時間（詳しくは下） |
 
-- `npm run test:e2e` は、ポート 4174 で `npm run build && npm run preview` を動かす。プロジェクトは `desktop-chromium`、`mobile-chromium`、`mobile-webkit` で、すべての spec を `ja`、`en`、`es` で実行する（`e2e/`）。
+- `npm run test:e2e` は、ポート 4174 で `npm run build && npm run preview` を動かす。プロジェクトは `desktop-chromium`、`mobile-chromium`、`mobile-webkit` で、すべての spec をすべてのロケールで実行する（`e2e/`）。
 - ブラウザは一度だけ、リポジトリの外のユーザーのキャッシュに入れる：
 
   ```bash
@@ -97,7 +97,7 @@ CI（`.github/workflows/ci.yml`、`ubuntu-24.04` 上の GitHub Actions）は、`
 桁をそろえるため、構成図は英語のまま残している。
 
 ```text
-index.html, src/        UI (React, Tailwind CSS; docs/en/UI_DESIGN.md): i18n/ typed ja/en/es catalogs and engine code lists,
+index.html, src/        UI (React, Tailwind CSS; docs/en/UI_DESIGN.md): i18n/ typed ja/en/es/fr catalogs and engine code lists,
                         format/ locale formatting, navigation/ History API views, state/ reducer and engine calls,
                         views/ screens, testing/ axe-core helper
 shared/                 Schemas (Zod), constants, and types shared by UI, domain, content, and tools
@@ -128,14 +128,14 @@ docs/, prompts/         Documentation and phase prompts
    - 料理に添えるものを `sides` に挙げる。
    - 調味料は、それに合わせて増減する材料に結び付ける（`linkedTo`）。
    - どのレシピにも、調整できる材料か、ソルバーが外せる副菜を少なくとも 1 つ持たせる。
-3. `ja`、`en`、`es` のテキストを書く。`content/glossary.ts` と [CONTENT_POLICY.md](CONTENT_POLICY.md) に従う。盛り付けの手順では副菜の名前を出さない。オンの副菜は UI が一覧にする。
+3. `ja`、`en`、`es`、`fr` のテキストを書く。`content/glossary.ts` と [CONTENT_POLICY.md](CONTENT_POLICY.md) に従う。盛り付けの手順では副菜の名前を出さない。オンの副菜は UI が一覧にする。
 4. `content/version.ts` の `CONTENT_VERSION` を更新する。
 5. `npm run validate:content`（`npm run build` にも含まれる）を実行する。スキーマ、ロケール、ID、参照、調理の状態、調整の範囲、結び付け、副菜、置き換え、アレルゲン、安全の注記、たんぱく源の群、タグ、用語集の使い方、禁止表現、版を確かめる。ルールを足すときは、失敗するフィクスチャを `tools/content/validate.test.ts` に足す。
 
 ## UI テキストの追加
 
 1. キーと日本語のテキストを `src/i18n/messages/ja.ts` に足す。
-2. 同じキーを `en.ts` と `es.ts` に足す。3 つがそろうまで型チェックは失敗し、空の文字列はテストが拒む。
+2. 同じキーを `en.ts`、`es.ts`、`fr.ts` に足す。4 つがそろうまで型チェックは失敗し、空の文字列はテストが拒む。
 3. `t("your.key")` を使う。コンポーネントに UI の文字列を直接書かない。
 4. エンジンのコードのテキストは、コードをキーにする。対象は入力エラー、矛盾、判定、理由、除外、緩和、不確かさ、仮定、単位、アレルゲン、料理の種類、器具だ。`src/i18n/engineCodes.ts` がすべてのコードを挙げ、`src/i18n/engineCodes.test.ts` が各ロケールに項目があることを求める。エンジンの union に新しいコードを足すと、一覧に加えるまで型チェックが失敗する。
 5. 件数には、すべてのロケールで `_one` と `_other` のキーを使う。`src/i18n/policy.test.ts` は、`content/glossary.ts` の禁止表現をカタログにも当てる。

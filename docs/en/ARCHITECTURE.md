@@ -52,7 +52,7 @@ Lint import restrictions and a boundary test enforce these boundaries, as in the
 
 The schema is `shared/content.ts` (ADR-026). Calculation rules are in [NUTRITION_CALCULATION.md](NUTRITION_CALCULATION.md).
 
-- **Food**: locale-neutral `id` (stable slug); `composition` references (food code and data version per cooking state, for example `raw` and `grilled`); weight change rates per cooking method; refuse rate; allergen links with confidence (`contains`, `may_contain`, `unknown`); localized `names` and search `aliases` for `ja`, `en`, `es`.
+- **Food**: locale-neutral `id` (stable slug); `composition` references (food code and data version per cooking state, for example `raw` and `grilled`); weight change rates per cooking method; refuse rate; allergen links with confidence (`contains`, `may_contain`, `unknown`); localized `names` and search `aliases` for every locale (`ja`, `en`, `es`, `fr`).
 - **Recipe**: `id`; time; effort; cuisine; goals; main protein group; tags; equipment; servings; ingredients; sides; keyed steps and food safety notes; substitutions; localized texts. "Quick" and "fried" are derived.
 - **RecipeIngredient**: food ID; raw edible grams; cooking state and method; household measure (unit and quantity); role; adjustment bounds (grams or whole units); `linkedTo` leader; hard-to-estimate marker.
 - **Side**: localized label, ingredients, and whether "fit to my targets" may switch it off.
@@ -62,13 +62,14 @@ The schema is `shared/content.ts` (ADR-026). Calculation rules are in [NUTRITION
 ## 4. Localization
 
 - Library: i18next with typed TypeScript message catalogs, the owner's established approach (ADR-005).
-- UI catalogs: `ja` defines the message type; `en` and `es` must match it at compile time.
-- Content: every recipe and food carries `ja`, `en`, and `es` texts; the build fails on missing or blank entries.
+- UI catalogs: `ja` defines the message type; `en`, `es`, and `fr` must match it at compile time.
+- Content: every recipe and food carries `ja`, `en`, `es`, and `fr` texts; the build fails on missing or blank entries.
 - **Food identity is separate from translation** (ADR-006). Ingredients reference locale-neutral food IDs; names and aliases are display and search data only. Nutrition functions do not accept a locale parameter, and their types enforce this.
 - Search normalization per locale:
   - `ja`: Unicode NFKC and hiragana/katakana folding. A long-vowel mark in the query also matches the vowel it lengthens and, after o- and e-row kana, う or い.
   - `en`: case folding.
   - `es`: case and accent folding.
+  - `fr`: case and accent folding, with `œ` and `æ` read as `oe` and `ae`.
   - Aliases cover regional terms (for example `patata` / `papa`).
 - Household units are display labels per locale (大さじ / tbsp / cucharada). Amounts are stored in grams; a tablespoon is defined as 15 mL.
 - Formatting uses `Intl` APIs. Values are formatted only at the presentation layer.
@@ -120,9 +121,9 @@ Timing measured in the browser:
 - Content validation and policy lint run in CI and in the build.
 - Nutrition snapshot tests.
 - UI tests with jsdom: `src/**/*.test.tsx` with fixtures, and `test/ui/` with the repository content.
-- Accessibility checks (axe-core, without the contrast rule) in `ja`, `en`, and `es` for every view and exceptional state. A contrast test covers the color tokens (`test/node/styles.test.ts`).
+- Accessibility checks (axe-core, without the contrast rule) in every locale for every view and exceptional state. A contrast test covers the color tokens (`test/node/styles.test.ts`).
 - E2E tests (`e2e/`, Playwright) on the production build with its headers:
-  - browsers: desktop Chromium, and Chromium and WebKit at 375 px, in `ja`, `en`, and `es`;
+  - browsers: desktop Chromium, and Chromium and WebKit at 375 px, in every locale;
   - coverage: the full flow, exceptional states, locale switching, deep links, the about page, keyboard operation, axe-core with color contrast in light and dark, security headers, no request to another origin, and no CSP violation.
 - Phone-class timing runs on demand (`npm run test:e2e:timing`).
 

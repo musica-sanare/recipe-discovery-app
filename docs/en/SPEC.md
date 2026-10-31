@@ -40,7 +40,7 @@ Out of target: people following medically prescribed diets (for example protein 
 - Recipe detail: ingredients with amounts, steps, nutrition breakdown, calculation basis, uncertainty, food safety notes, attribution.
 - Serving count changes, bounded amount adjustment, predefined substitutions, and instant recalculation.
 - Re-suggestion: "show a different type", "exclude this one", and relaxation suggestions when few candidates exist.
-- Japanese, English, and Spanish for UI and all content, with a visible language switcher.
+- Japanese, English, and Spanish for UI and all content, with a visible language switcher. French was added in Phase 11 (ADR-033).
 - Exceptional-state UX (section 12).
 
 ### Added after the MVP
@@ -150,10 +150,10 @@ The rules are in [NUTRITION_CALCULATION.md](NUTRITION_CALCULATION.md). User-faci
 
 ## 10. Localization
 
-- Locales: `ja`, `en`, `es`. Default and detection behavior follows [ARCHITECTURE.md](ARCHITECTURE.md) "Localization".
+- Locales: `ja`, `en`, `es`, `fr` (`fr` since Phase 11, ADR-033). Default and detection behavior follows [ARCHITECTURE.md](ARCHITECTURE.md) "Localization".
 - Localized: UI strings, recipe names, ingredient display names and search aliases, steps, notes, substitutions, validation and error messages, accessibility labels, document language metadata.
-- Every published recipe and food must have complete content in all three locales; the build fails otherwise. Published content therefore needs no runtime fallback.
-- Numbers and units are formatted per locale (for example decimal comma in Spanish). Underlying values never change.
+- Every published recipe and food must have complete content in every locale; the build fails otherwise. Published content therefore needs no runtime fallback.
+- Numbers and units are formatted per locale (for example a decimal comma in Spanish and French). Underlying values never change.
 - Calculated nutrition values are identical in every locale.
 
 ## 11. Allergens, food safety, and health expressions
@@ -190,20 +190,20 @@ The rules are in [CONTENT_POLICY.md](CONTENT_POLICY.md). Summary:
 - Semantic HTML, keyboard operation, visible focus, labelled controls, correct `lang` attributes.
 - Comparison and nutrition bars must not rely on color alone; values are always available as text.
 - Reduced-motion support.
-- Accessibility checks run in all three locales.
+- Accessibility checks run in every locale.
 
 ## 15. MVP acceptance criteria
 
 - The complete flow (targets → conditions → candidates → comparison → detail → adjustment → re-suggestion) works on mobile and desktop without AI.
 - The same input and data always produce the same candidates, order, and nutrition values.
-- For the same recipe and amounts, internal nutrition values are identical in `ja`, `en`, and `es`.
-- All UI strings and all published content exist in the three locales (checked at build time).
+- For the same recipe and amounts, internal nutrition values are identical in every locale.
+- All UI strings and all published content exist in every locale (checked at build time).
 - Every nutrition value is traceable to food codes, data version, cooking state, and assumptions.
 - Unmeasured source values are never treated as zero; approximations and hard-to-estimate items are always shown.
 - An active allergen filter excludes recipes with matching or unknown ingredients, and the disclaimer is always visible.
 - No content contains health or efficacy claims (content validation).
 - Attribution to the source tables is shown.
-- Lint, type-check, unit tests, content validation, E2E tests, accessibility checks in three locales, and the production build pass.
+- Lint, type-check, unit tests, content validation, E2E tests, accessibility checks in every locale, and the production build pass.
 
 ## 16. Decided values
 

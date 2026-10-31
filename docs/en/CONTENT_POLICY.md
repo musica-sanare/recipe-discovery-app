@@ -58,13 +58,19 @@ Status: **In use** (drafted 2026-10-18). Legal applicability statements are mark
 ## 6. Translations (ADR-007)
 
 - Translations are canonical content stored in the repository; nothing is machine-translated at runtime.
-- Workflow: content is authored, Claude drafts `en` and `es` at authoring time, the owner reviews the diff and reports problems, and Claude fixes them. The owner's approval of the commit is the review record.
+- Workflow: content is authored, Claude drafts `en`, `es`, and `fr` at authoring time, the owner reviews the diff and reports problems, and Claude fixes them. The owner's approval of the commit is the review record.
 - Spanish food names (owner decision V1, 2026-10-24; [DECISIONS.md](../working/DECISIONS.md) "Stage 6.3 R1" and "Stage 6.3 R4"):
   - Use peninsular vocabulary (`patata`, `zumo`, `ternera`), with Latin American words as search aliases (for example `patata` / `papa`, `gamba` / `camarón`).
   - Avoid words that mean something else in Latin America (for example "frigorífico", "tostada").
   - Allergen names show both regional names.
 - Spanish dish names follow the region the dish comes from (for example "Chili con carne", "Arroz con pollo y frijoles"), while food names keep the rule above (owner, 2026-10-24, [DECISIONS.md](../working/DECISIONS.md) "Stage 7.1 expansion plan").
-- A glossary (`content/glossary.ts`) fixes cooking terms, heat levels, units, allergen names, disclaimer texts, and forbidden expressions in all three locales.
+- French texts (ADR-033):
+  - Use metropolitan French (fr-FR) vocabulary. Japanese and other regional foods keep their established name with a French description (for example "Poireau japonais (naganegi)"), and other names are search aliases.
+  - Dish names follow the region the dish comes from (for example "Arroz con pollo", "Pulpo a la gallega"), as for Spanish.
+  - Address the reader with `vous` and the imperative ("Coupez", "Faites cuire").
+  - Follow French typography: a no-break space (U+00A0) before `:`, `;`, `?`, and `!`, and inside « ». Numbers get their separators from `Intl`.
+  - No native French reviewer is available yet. The owner reviews French texts through Japanese back-translations ([DECISIONS.md](../working/DECISIONS.md) open question 23).
+- A glossary (`content/glossary.ts`) fixes cooking terms, heat levels, units, allergen names, disclaimer texts, and forbidden expressions in every locale.
 - Safety-relevant texts (allergen warnings, doneness checks, frying cautions, disclaimers) use short, plain sentences. They are back-translated during review to detect meaning drift.
 - Japanese-specific ingredients that may be hard to find abroad get a note; regional availability is otherwise out of scope.
 

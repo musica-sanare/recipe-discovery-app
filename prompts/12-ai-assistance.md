@@ -1,4 +1,6 @@
-# Prompt 11 — Phase 11: AI assistance (draft for the owner's review)
+# Prompt 12 — Phase 12: AI assistance (draft for the owner's review)
+
+> Drafted as the Phase 11 prompt at the end of Phase 10. Phase 11 became the French locale (ADR-033), so the starting point, the locale count ("three locales" now means `ja`, `en`, `es`, and `fr`), and the phase numbers must be updated before Phase 12 starts.
 
 You are the lead engineer for Recipe Discovery. Read `CLAUDE.md` and every document under `docs/en/` and `docs/working/` before making changes. Phase 0 to Phase 10 results are in `docs/working/DECISIONS.md` (in particular ADR-001, ADR-004, ADR-005, ADR-015, ADR-027, ADR-029, ADR-030; the verification log entry "Workers AI (for later phases only)"; "Seventh production deployment"; "Phase 10 acceptance"; "Open questions"). Communicate with the owner in Japanese; write repository files in English.
 

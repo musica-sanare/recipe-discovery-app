@@ -2,7 +2,7 @@ English | [日本語](README.ja.md)
 
 # Recipe Discovery
 
-Recipe Discovery helps people who track their nutrition (for example for strength training or body composition goals) discover dishes they would not have thought of on their own. Users set nutrition targets and practical conditions, then compare candidate recipes and adjust amounts. Nutrition values are this app's own deterministic estimates, calculated from 日本食品標準成分表（八訂）増補2023年 (MEXT) and explicit ingredient amounts; no AI is used. The app supports Japanese, English, and Spanish.
+Recipe Discovery helps people who track their nutrition (for example for strength training or body composition goals) discover dishes they would not have thought of on their own. Users set nutrition targets and practical conditions, then compare candidate recipes and adjust amounts. Nutrition values are this app's own deterministic estimates, calculated from 日本食品標準成分表（八訂）増補2023年 (MEXT) and explicit ingredient amounts; no AI is used. The app supports Japanese, English, Spanish, and French.
 
 **Status:** Phase 10 (library expansion, 130 recipes) is complete; release 7 is deployed at https://recipe-discovery.musica-sanare.workers.dev ([Release readiness](docs/working/RELEASE_READINESS.md)). License: [MIT](LICENSE), except the MEXT-derived data in `data/composition/` ([Data sources](docs/en/DATA_SOURCES.md)).
 

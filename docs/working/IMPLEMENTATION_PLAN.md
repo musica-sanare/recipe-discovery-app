@@ -17,7 +17,8 @@ Status: **Draft (2026-10-18)**. Each phase ends with checks, a summary to the ow
 | 8 — Shopping list | `prompts/08-shopping-list.md` |
 | 9 — Recommendation speed and maintenance | `prompts/09-speed-and-maintenance.md` |
 | 10 — Library expansion | `prompts/10-library-expansion.md` |
-| 11 — AI assistance | `prompts/11-ai-assistance.md` (draft for the owner's review) |
+| 11 — French locale | `prompts/11-french-locale.md` |
+| 12 — AI assistance | `prompts/12-ai-assistance.md` (draft for the owner's review; to be updated after Phase 11) |
 
 `prompts/FIRST_MESSAGE.md` is the kickoff message for a new Claude Code session.
 
@@ -154,9 +155,20 @@ Status: **Complete (2026-10-31)**: three batches added (130 recipes) and release
 
 Acceptance: about 44 new recipes validated and reviewed in three locales with approved snapshot diffs; ADR-023 met as revised; the planned gaps narrowed; a full recommendation within about 80 ms p90 at 4× or the owner's decision; checks and CI pass; the Phase 11 prompt drafted.
 
-## Phase 11 — AI assistance
+## Phase 11 — French locale
 
-Status: **Planned (2026-10-31)**, the prompt is a draft for the owner's review; to start in a new Claude Code session. The owner chose AI assistance after the library expansion.
+Status: **In progress (2026-10-31)**. Log: [DECISIONS.md](DECISIONS.md) "Phase 11 start: French locale" and ADR-033. The owner asked for French before AI assistance, which moves to Phase 12.
+
+- Infrastructure: `fr` in the locale list, content schemas, bundles, formatting, search normalization, forbidden expressions, glossaries, and every locale-parameterized test; no runtime fallback.
+- Texts: the UI catalog, the food dictionary, and the recipe texts in three batches, each reviewed by the owner with back-translated safety texts.
+- Locale invariance extended to `fr`: identical calculation bundles, nutrition, recommendations, and displayed values in every locale.
+- `CLAUDE.md` and the stable docs list four locales; release 8 only after the owner's approval.
+
+Acceptance: every UI key and every published text exists in `fr` and was reviewed; locale invariance tests pass in four locales; `npm run check`, `npm run test:e2e`, and CI pass; the app checked in `fr` at desktop width and 375 px.
+
+## Phase 12 — AI assistance
+
+Status: **Planned (2026-10-31)**, after Phase 11; the prompt is a draft for the owner's review; to start in a new Claude Code session. The owner chose AI assistance after the library expansion.
 
 - Decisions before any implementation: the feature (free-text conditions or explanation text), the provider and model, the server endpoint and its privacy, the evaluation in three locales, the cost and limits, and the UX and failure states, recorded as ADRs with the SPEC scope change.
 - A contract in `shared/` with runtime validation, a thin provider adapter, and a deterministic fallback; tests without network.

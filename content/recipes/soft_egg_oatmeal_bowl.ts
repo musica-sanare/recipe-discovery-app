@@ -54,7 +54,7 @@ export const recipe: Recipe = {
       text: {
         ja: "よく混ぜて表面を平らにし、卵を割り入れます。黄身を竹串で3か所ずつ刺し、ふんわりとラップをかけます。",
         en: "Stir well, level the surface, and crack the eggs on top. Pierce each yolk in three places with a skewer and cover loosely with plastic wrap.",
-        es: "Remueve bien, alisa la superficie y casca los huevos encima. Pincha cada yema en tres puntos con un palillo y cubre sin apretar con film.",
+        es: "Remueve bien, alisa la superficie y añade los huevos encima. Pincha cada yema en tres puntos con un palillo y cubre sin apretar con film.",
       },
     },
     {

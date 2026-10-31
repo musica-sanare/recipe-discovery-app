@@ -1037,6 +1037,9 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - Browser check (built preview, Playwright Chromium from a scratch script): the 14 detail pages at 375 px and 1280 px in three locales (84 views) with the expected `lang`, no page overflow, no message keys, and no console errors or warnings. Not checked: candidate cards in the browser, real devices.
 - Checks: `npm run validate:content` (117 foods, 130 recipes), `npm run check` (703 tests), `npm run test:e2e` (107 passed, 1 skipped), `npm run report:composition` (130 recipes: exact 933, approximation 196, hard to estimate 2, not counted 51, fried 5), `npm run eval:coverage`.
 
+### Spanish "casca" in three reviewed recipes (2026-10-31)
+- Owner decision (2026-10-31): before release 7, the three reviewed recipes that still said "casca los huevos" use "añade los huevos", as Phase 7 decided for new texts (G2, "Stage 7.2 batch 1: recipes"; "cascar" means to hit in some regions): `eggs_tomato_pepper_bake`, `poached_egg_spinach_toast`, `soft_egg_oatmeal_bowl`. Spanish step texts only; content version `2026-10-31.7`; no calculated value or snapshot changes.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in

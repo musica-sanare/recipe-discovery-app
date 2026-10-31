@@ -63,7 +63,7 @@ export const recipe: Recipe = {
       text: {
         ja: "鍋に湯を沸かして酢を加え、火を弱めて卵を1個ずつそっと割り入れ、白身が固まるまで3〜4分ゆでて取り出します。",
         en: "Bring water to a simmer with the vinegar, gently crack in the eggs one at a time, and poach for 3 to 4 minutes until the whites are set.",
-        es: "Lleva agua con el vinagre a un hervor suave, casca los huevos de uno en uno con cuidado y escálfalos de 3 a 4 minutos hasta que cuajen las claras.",
+        es: "Lleva agua con el vinagre a un hervor suave, añade los huevos de uno en uno con cuidado y escálfalos de 3 a 4 minutos hasta que cuajen las claras.",
       },
     },
     {

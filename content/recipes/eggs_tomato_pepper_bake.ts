@@ -82,7 +82,7 @@ export const recipe: Recipe = {
       text: {
         ja: "耐熱皿に移し、溶いた卵白を回し入れて軽く混ぜます。くぼみを作って卵を割り入れ、オーブントースターで白身が白く固まるまで8〜10分焼きます。",
         en: "Transfer to an ovenproof dish, pour in the beaten egg whites, and stir lightly. Make hollows, crack in the eggs, and bake in a toaster oven for 8–10 minutes until all the whites are opaque and set.",
-        es: "Pásalo a una fuente apta para horno, vierte las claras batidas y mezcla un poco. Haz huecos, casca los huevos dentro y hornea en un horno tostador 8-10 minutos hasta que todas las claras estén opacas y cuajadas.",
+        es: "Pásalo a una fuente apta para horno, vierte las claras batidas y mezcla un poco. Haz huecos, añade los huevos dentro y hornea en un horno tostador 8-10 minutos hasta que todas las claras estén opacas y cuajadas.",
       },
     },
     {

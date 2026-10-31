@@ -1,4 +1,4 @@
-<!-- source: docs/en/DEVELOPMENT.md blob 4ad99fecd0ec675a6553653e5e4e972c5502d917 -->
+<!-- source: docs/en/DEVELOPMENT.md blob 27fc1ab70512c31846248f2717d96e558a261432 -->
 [English](../en/DEVELOPMENT.md) | 日本語 · [目次に戻る](README.md)
 
 > この文書は[英語版](../en/DEVELOPMENT.md)の翻訳。内容が異なる場合は英語版が優先する。
@@ -92,7 +92,7 @@ node --env-file=.env tools/evaluate-ai.ts --adapter workers-ai --model @cf/qwen/
 
 ## デプロイと CI
 
-デプロイのスクリプトは意図して置いていない。デプロイは、オーナーの承認を得てから [DEPLOYMENT.md](DEPLOYMENT.md) に従って行う。
+ローカルからデプロイするコマンドはない。`main` への push が本番のデプロイで、push するのはオーナーだけだ。Cloudflare Workers Builds がそのコミットをビルドし、`platform/cloudflare/deploy.ts` を実行する（[DEPLOYMENT.md](DEPLOYMENT.md) §3）。
 
 CI（`.github/workflows/ci.yml`、`ubuntu-24.04` 上の GitHub Actions）は、`dev` と `main` への push とプルリクエストで動く：
 - 1 つのジョブで `npm ci` と `npm run check` を実行する。

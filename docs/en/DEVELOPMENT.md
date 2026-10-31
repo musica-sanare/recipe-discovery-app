@@ -89,7 +89,7 @@ Timing numbers from a hidden or background tab are not reliable.
 
 ## Deployment and CI
 
-There is intentionally no deploy script. Deployment follows [DEPLOYMENT.md](DEPLOYMENT.md) after the owner's approval.
+There is no local deploy command. A push to `main`, which only the owner makes, is a production deploy: Cloudflare Workers Builds builds it and runs `platform/cloudflare/deploy.ts` ([DEPLOYMENT.md](DEPLOYMENT.md) §3).
 
 CI (`.github/workflows/ci.yml`, GitHub Actions on `ubuntu-24.04`) runs on pushes to `dev` and `main` and on pull requests:
 - One job runs `npm ci` and `npm run check`.

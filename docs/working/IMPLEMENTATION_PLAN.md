@@ -157,7 +157,7 @@ Acceptance: about 44 new recipes validated and reviewed in three locales with ap
 
 ## Phase 11 — French locale
 
-Status: **In progress (2026-10-31)**. Log: [DECISIONS.md](DECISIONS.md) "Phase 11 start: French locale" and ADR-033. The owner asked for French before AI assistance, which moves to Phase 12.
+Status: **Complete (2026-10-31)**: French in the UI and all content, release 8 deployed after the owner's approval. Logs: [DECISIONS.md](DECISIONS.md) "Phase 11 start: French locale" to "Phase 11 acceptance" and ADR-033. The owner asked for French before AI assistance, which moves to Phase 12.
 
 - Infrastructure: `fr` in the locale list, content schemas, bundles, formatting, search normalization, forbidden expressions, glossaries, and every locale-parameterized test; no runtime fallback.
 - Texts: the UI catalog, the food dictionary, and the recipe texts in three batches, each reviewed by the owner with back-translated safety texts.

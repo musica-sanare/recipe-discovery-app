@@ -2,7 +2,7 @@
 
 # Release Readiness — Recipe Discovery
 
-Status: **Release 8 prepared (2026-10-31)**: the French locale of Phase 11 (UI and all content in `fr`, content version `2026-10-31.8`) on top of release 7. The checks of §1 passed on `c2d56d0`; CI on the release commit and the deployment wait for the owner (§2, §5). Release 7 (`cb086c1`, Cloudflare Workers static assets, version `fa07a331-787d-4658-979a-01dabd1bd076`) is deployed at https://recipe-discovery.musica-sanare.workers.dev and is the rollback target. Update this document for every release; release 1 is recorded in [DECISIONS.md](DECISIONS.md) ("Stage 5.1 release plan" to "Manual checks"), release 2 in "Stage 6.6" and "Second production deployment", release 3 in "Stage 7.4" and "Third production deployment", release 4 in "Stage 8.4" and "Fourth production deployment", release 5 in "Stage 9.4" and "Fifth production deployment", release 6 in "Release 6 preparation" and "Sixth production deployment", release 7 in "Release 7 preparation" and "Seventh production deployment", release 8 in "Release 8 preparation".
+Status: **Release 8 deployed (2026-10-31)** at https://recipe-discovery.musica-sanare.workers.dev from commit `2aa0c7b` (Cloudflare Workers static assets, version `54ef9ecc-f862-4fa2-ad75-099b56d6a8fe`): the French locale of Phase 11 (UI and all content in `fr`, content version `2026-10-31.8`) on top of release 7. The post-deployment checks passed ([DECISIONS.md](DECISIONS.md) "Eighth production deployment"). Release 7 (`cb086c1`, version `fa07a331-787d-4658-979a-01dabd1bd076`) is the rollback target. Update this document for every release; release 1 is recorded in [DECISIONS.md](DECISIONS.md) ("Stage 5.1 release plan" to "Manual checks"), release 2 in "Stage 6.6" and "Second production deployment", release 3 in "Stage 7.4" and "Third production deployment", release 4 in "Stage 8.4" and "Fourth production deployment", release 5 in "Stage 9.4" and "Fifth production deployment", release 6 in "Release 6 preparation" and "Sixth production deployment", release 7 in "Release 7 preparation" and "Seventh production deployment", release 8 in "Release 8 preparation" and "Eighth production deployment".
 
 Commit hashes in this document are those after the history rewrite of 2026-10-25; older records in [DECISIONS.md](DECISIONS.md) use the earlier hashes ("History rewrite (2026-10-25)").
 
@@ -14,8 +14,8 @@ Commit hashes in this document are those after the history rewrite of 2026-10-25
 | 4 (Phase 8) | `2bcbb9b` | `2026-10-25.2` | Deployed 2026-10-25 09:02 UTC (version `5a4ae857…`); replaced by release 5 |
 | 5 (Phase 9) | `5709506` | `2026-10-25.2` | Deployed 2026-10-25 12:26 UTC (version `3f566ec5…`); replaced by release 6 |
 | 6 (Phase 9, dependencies) | `b113983` | `2026-10-25.2` | Deployed 2026-10-31 01:41 UTC (version `4607ad0c…`); replaced by release 7 |
-| 7 (Phase 10) | `cb086c1` | `2026-10-31.7` | Deployed 2026-10-31 06:09 UTC (version `fa07a331…`) |
-| 8 (Phase 11) | Release 8 preparation commit (after `c2d56d0`) | `2026-10-31.8` | Prepared; CI and deployment pending |
+| 7 (Phase 10) | `cb086c1` | `2026-10-31.7` | Deployed 2026-10-31 06:09 UTC (version `fa07a331…`); replaced by release 8 |
+| 8 (Phase 11) | `2aa0c7b` | `2026-10-31.8` | Deployed 2026-10-31 11:08 UTC (version `54ef9ecc…`) |
 
 ## 0. What changes in release 8
 
@@ -48,7 +48,7 @@ Checked on `c2d56d0` on 2026-10-31 (10:41–10:45 UTC): `npm ci`, `npm run check
 
 | Item | Status | What is needed |
 |---|---|---|
-| CI on the release commit | **Pending** | The owner pushes `dev` and reports both jobs (`check`, `e2e`) passing |
+| CI on the release commit | **Passed** | Both jobs passed on `2aa0c7b` after the owner pushed `dev` (owner's report, 2026-10-31) |
 | Secret scan of the release history | **Passed** on `c2d56d0` | gitleaks 8.30.1 (Homebrew): `gitleaks git --log-opts=--all --redact` (143 commits, 4.07 MB), `gitleaks dir --redact` on the tracked files (`git archive HEAD`, 3.10 MB scanned): no leaks (2026-10-31 10:41 UTC). No commit touches `data/raw`, `*.xlsx`, `*.pdf`, or `.env*`. Repeat if commits other than documentation follow |
 | `minimatch` advisory in the development dependencies (open question 22) | **Accepted** (owner, 2026-10-31) | Not a release condition: development only, not in the bundle |
 
@@ -88,11 +88,11 @@ Release 1 (owner, 2026-10-24, [DECISIONS.md](DECISIONS.md) "Manual checks"): iPh
 
 Releases 2 to 6 (optional, after deployment): on an iPhone, the cuisine choices on the targets view in Spanish (nine values), a search with the Southeast Asian cuisine preferred, the detail pages of a new recipe in each language (for example `beef_pho_rice_noodles`, `tofu_sasami_steamed`), for release 4 adding two recipes to the shopping list, checking items off, "Copy as text" (pasting into a notes app), and the print preview, for release 5 the time from tapping "Find recipes" to the candidates with the default targets, for release 6 the targets view, a search, and the language switch in the three languages, and for release 7 a search preferring Korean or Mediterranean dishes and the detail pages of a few new recipes in each language (for example `gyeran_jjim_egg_white_shrimp`, `pulpo_gallega_potatoes`, `tofu_soy_meat_napa_steam`), and for release 8 the targets view, a search, a detail page, and the shopping list in French.
 
-## 5. Deployment proposal (deployment approved in principle by the owner, 2026-10-31)
+## 5. Deployment proposal (approved and deployed on 2026-10-31)
 
 | Item | Proposal |
 |---|---|
-| What | The release 8 preparation commit (documentation only on top of `c2d56d0`, which passed §1), built with `npm ci && npm run build`; content version `2026-10-31.8`; `dist/` has 10 files and about 1.5 MB. `compatibility_date` is already 2026-10-31, so no further commit |
+| What | The release 8 preparation commit `2aa0c7b` (documentation only on top of `c2d56d0`, which passed §1), built with `npm ci && npm run build`; content version `2026-10-31.8`; `dist/` has 10 files and about 1.5 MB. `compatibility_date` is already 2026-10-31, so no further commit |
 | Where | The existing Cloudflare Workers project `recipe-discovery` on the owner's account (https://recipe-discovery.musica-sanare.workers.dev); nothing new is created |
 | How | [DEPLOYMENT.md](../en/DEPLOYMENT.md) §3 with Wrangler **4.156.0**, still the latest on 2026-10-31 (registry metadata), the version of releases 6 and 7. The release 7 installation in the session scratch directory is reused: its `package-lock.json` integrity (`sha512-kVLAShuL…fRuQ==`) matches the registry, its install scripts were never run, and `npm audit` there reports 0 vulnerabilities. Nothing is downloaded. `wrangler whoami` shown to the owner; dry run, then deploy with `WRANGLER_SEND_METRICS=false`; post-deployment checks of [DEPLOYMENT.md](../en/DEPLOYMENT.md) §3 plus the calculation bundle's content version, a French text bundle, and a search and a detail page at 375 px in `fr` |
 | Rollback | Redeploy release 7 (`cb086c1`) with the same steps; whether `wrangler rollback` applies to an assets-only Worker remains 要確認 |
@@ -142,4 +142,7 @@ Releases 2 to 6 (optional, after deployment): on an iPhone, the cuisine choices 
 | Production deployment approved | 7 | 2026-10-31 | Owner (account [account name] confirmed with `wrangler whoami`) |
 | Deployed and checked | 7 | 2026-10-31 | Claude: `cb086c1`, version `fa07a331…` ([DECISIONS.md](DECISIONS.md) "Seventh production deployment") |
 | Acceptance criteria checked | 8 | 2026-10-31 | Claude (§1) |
-| Deployment approved in principle | 8 | 2026-10-31 | Owner; CI and the account confirmation pending |
+| Release blockers resolved | 8 | 2026-10-31 | Owner (CI passed; `minimatch` accepted) and Claude (secret scan) |
+| Deployment proposal approved | 8 | 2026-10-31 | Owner (Wrangler reused, nothing downloaded; dry run passed) |
+| Production deployment approved | 8 | 2026-10-31 | Owner; Claude identified the account and project as those of release 7 (`wrangler whoami`, `wrangler deployments list`) |
+| Deployed and checked | 8 | 2026-10-31 | Claude: `2aa0c7b`, version `54ef9ecc…` ([DECISIONS.md](DECISIONS.md) "Eighth production deployment") |

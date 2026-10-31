@@ -1097,6 +1097,20 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - Wrangler (registry metadata, 2026-10-31): 4.156.0 is still the latest. The installation used for release 7 in the session scratch directory is reused; its lockfile integrity matches the registry and `npm audit` there reports 0 vulnerabilities. Nothing was downloaded.
 - [RELEASE_READINESS.md](RELEASE_READINESS.md) now prepares release 8. Open: CI on the release commit after the owner pushes, the account confirmation, the dry run, and the deployment.
 
+### Eighth production deployment (2026-10-31)
+- The owner approved proceeding to the deployment, pushed `dev` (`2aa0c7b`), and reported CI passing. `wrangler whoami` showed the OAuth login of the earlier deployments, and `wrangler deployments list` showed release 7 (`fa07a331…`) at 100 % on the same project, so the account is the one of releases 1–7.
+- Cloudflare documentation re-checked on 2026-10-31: static asset requests are free and unlimited and storing assets has no additional cost (https://developers.cloudflare.com/workers/static-assets/billing-and-limitations/, updated 2026-04-23).
+- Wrangler 4.156.0 from the release 7 installation (lockfile integrity matches the registry; `npm audit` there: 0 vulnerabilities). `compatibility_date` was already 2026-10-31, so `2aa0c7b` was deployed without a further commit.
+- Build: `npm ci && npm run build` on `2aa0c7b` (content version `2026-10-31.8`, 130 recipes, 117 foods; 10 files). Dry run: Wrangler read `dist/` (11 entries), 0.45 KiB of Worker upload, no bindings, nothing uploaded. Deployment (2026-10-31 11:08 UTC): 7 new or changed assets uploaded (`index.html`, the JavaScript bundle, the calculation bundle, and the four text bundles), 2 already present; version `54ef9ecc-f862-4fa2-ad75-099b56d6a8fe` at 100 %, same URL.
+- Post-deployment checks (`curl` and the built-in browser): `/`, `/recipes/beef_potato_tomato_stew`, `/recipes/tortilla_espanola`, `/about`, `/recipes/no_such_recipe`, an unknown path, and `/third-party-licenses.txt` return 200 with the CSP, `X-Content-Type-Options`, `Referrer-Policy`, and `Permissions-Policy`; the referenced assets (JavaScript, CSS, and the five content bundles) have `Cache-Control: public, max-age=31536000, immutable`, the documents `public, max-age=0, must-revalidate`; `/_headers` returns the app's HTML, not the file; the served calculation bundle has content version `2026-10-31.8`, 130 recipes, and 117 foods, and the French text bundle has locale `fr`. At 375 px in French, a cutting search lists five candidates (the same as on the local preview) and the `pulpo_gallega_potatoes` detail page shows its French name; `lang="fr"`; no page overflow; every request goes to the same origin; the locale preference is the only stored key; no cookies; no console messages.
+- Not checked: real devices (the optional check of [RELEASE_READINESS.md](RELEASE_READINESS.md) §4), dark mode on the deployed site, and Cloudflare's own rollback on an assets-only Worker.
+
+### Phase 11 acceptance (2026-10-31)
+- Every UI key and every published text exists in `fr` (content validation and the catalog type), and the owner reviewed the UI catalog, the foods, and the three recipe batches with back-translated safety notes ("Stage 11.1" and "Stage 11.2"); the `vous` register was confirmed.
+- Locale invariance tests pass in four locales, including identical calculation bundles and engine results, formatted values that parse back to the same numbers, and unchanged candidates and detail values through ja → fr → ja.
+- `npm run check`, `npm run test:e2e`, and CI pass; the app was checked in `fr` at desktop width and 375 px locally and, after release 8, at 375 px in production ("Eighth production deployment").
+- Open after Phase 11: the bundle-size warning (accepted; per-locale catalogs as a later option) and French review capacity (open question 23).
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in

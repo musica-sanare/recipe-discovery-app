@@ -145,7 +145,7 @@ Acceptance: ADR-016 re-checked and dependencies current or excepted; the approve
 
 ## Phase 10 — Library expansion
 
-Status: **In progress (2026-10-31)**: the expansion plan is approved ([DECISIONS.md](DECISIONS.md) "Phase 10 start", "Stage 10.1 expansion plan", ADR-023 revised); batch 1 is next. The owner chose more recipes first, then AI assistance (Phase 11 candidate), over opt-in storage and meal planning: Phase 9 left room under the ADR-030 D10 threshold for about 130 recipes (ADR-023 note).
+Status: **In progress (2026-10-31)**: the three batches are added (130 recipes; [DECISIONS.md](DECISIONS.md) "Stage 10.1 expansion plan" to "Stage 10.4 batch 3: recipes", ADR-023 revised); release 7 is in preparation ("Release 7 preparation"). The owner chose more recipes first, then AI assistance (Phase 11 candidate), over opt-in storage and meal planning: Phase 9 left room under the ADR-030 D10 threshold for about 130 recipes (ADR-023 note).
 
 - Expansion plan: about 44 original recipes in three batches (about 130 in total), aimed at the remaining gaps (cuisine balance, effort 3, grilling, steaming, very quick, batch cooking, breakfast, no-cook, microwave-only, bulk, and egg- and soy-based dishes that meet a preset), new foods, the revised ADR-023 size, and the synthetic library size for measurements.
 - Per batch: foods and cooking rates with checks, texts in three locales with the owner's review, content validation, approved snapshot diffs, coverage, and the speed measured against the previous batch in the same session.

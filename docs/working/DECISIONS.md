@@ -1040,6 +1040,15 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 ### Spanish "casca" in three reviewed recipes (2026-10-31)
 - Owner decision (2026-10-31): before release 7, the three reviewed recipes that still said "casca los huevos" use "añade los huevos", as Phase 7 decided for new texts (G2, "Stage 7.2 batch 1: recipes"; "cascar" means to hit in some regions): `eggs_tomato_pepper_bake`, `poached_egg_spinach_toast`, `soft_egg_oatmeal_bowl`. Spanish step texts only; content version `2026-10-31.7`; no calculated value or snapshot changes.
 
+### Release 7 preparation (2026-10-31)
+- Release 7 contains the Phase 10 changes after release 6 (`b113983`): Stages 10.1 to 10.4 and the Spanish fix of three steps, content version `2026-10-31.7` (130 recipes, 117 foods). The engines, headers, UI texts, and dependencies are unchanged.
+- Checks on `5671d66` (2026-10-31 05:35–05:46 UTC): `npm ci`, `npm run check` (703 tests), `npm run test:e2e` (107 passed, 1 skipped), `npm audit --omit=dev` (0); `npm audit` reports the accepted `minimatch` findings only. `npm outdated` lists only the recorded exceptions (`typescript` 6.0.3 against 7.0.2, ADR-017; `@types/node` 24.19.2, ADR-018). `dist/`: 9 files, about 1.3 MB (calculation bundle 280,701 bytes; JavaScript bundle unchanged at 496,756 bytes).
+- Open question 22 and ADR-017, re-checked: `minimatch` has no fixed 10.x (11.0.3 latest); `typescript-eslint` 8.72.1 and 8.72.2-alpha.4 still declare peer `typescript >=4.8.4 <6.1.0`.
+- Phone-class timing (`npm run test:e2e:timing`, alternating with release 6's code in three rounds): a full search takes 57.0–59.2 ms (cut) and 54.2–57.4 ms (bulk) median at 4× (p90 61.9–66.2 ms), against 49.7–55.0 and 49.5–51.0 ms for release 6. Numbers in [RELEASE_READINESS.md](RELEASE_READINESS.md) §3.
+- Secret scan: gitleaks 8.30.1 (Homebrew). `gitleaks git --log-opts=--all --redact`: 133 commits, 3.57 MB, no leaks; `gitleaks dir` on the tracked files of `5671d66` and on `dist/`: no leaks.
+- Wrangler (registry metadata only, 2026-10-31 05:36 UTC): 4.156.0 is still the latest, the version of release 6. Not downloaded yet.
+- [RELEASE_READINESS.md](RELEASE_READINESS.md) now prepares release 7 (status, release table, changes, acceptance, blockers, limitations, timing, manual checks, proposal, sign-off). Open: CI on the release commit, the Wrangler download, the `compatibility_date` commit, and the deployment, each after the owner's approval.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in

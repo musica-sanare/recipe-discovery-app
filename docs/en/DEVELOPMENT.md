@@ -71,6 +71,7 @@ npm ci
 | `npm run data:verify-cooking` | macOS only: check `data/composition/cooking.json` against the MEXT explanation PDF text ([DATA_SOURCES.md](DATA_SOURCES.md) "Cooking tables") |
 | `npm run report:composition` | Per recipe and ingredient, from the nutrition engine: exact, approximation (with the ADR-028 reasons), hard to estimate, not counted, fried; fails when a cooked state has no weight change rate |
 | `npm run eval:coverage` | How many validation recipes meet representative targets with default and adjusted amounts, computed by the recommendation engine ([DECISIONS.md](../working/DECISIONS.md) "Stage 0.6", "Stage 3.7") |
+| `npm run eval:ai` | On demand, never in CI: runs the 240 cases of `data/ai-evaluation/conditions.json` through the AI endpoint core and checks the ADR-034 D4 thresholds. Options: `--locale ja` (repeatable), `--json`. Only the fake adapter `expected` exists until Workers AI access is approved ([DECISIONS.md](../working/DECISIONS.md) "Stage 12.3 evaluation set and script") |
 
 ### Browser previews
 
@@ -107,6 +108,7 @@ platform/               Hosting-specific output: security headers (headers.ts), 
 tools/                  Build-time tools run directly by Node (TypeScript type stripping)
 generated/content/      Content bundles written by tools/build-content.ts (git-ignored)
 data/composition/       Extraction manifest and the tracked composition subset
+data/ai-evaluation/     Evaluation set of the AI free-text conditions (ADR-034 D4), read by tools/ai-evaluation/
 data/raw/               Original source files, such as the MEXT workbook (git-ignored)
 test/node/              Node-side tests
 test/ui/                jsdom tests of the app on the repository content (tsconfig.ui.json)

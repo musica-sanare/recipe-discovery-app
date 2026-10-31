@@ -25,6 +25,7 @@
     "data:extract": "node tools/extract-composition.ts",
     "data:verify-cooking": "node tools/verify-cooking-transcription.ts",
     "eval:coverage": "node tools/evaluate-coverage.ts",
+    "eval:ai": "node tools/evaluate-ai.ts",
     "bench:recommendation": "node tools/benchmark-recommendation.ts"
   },
   "dependencies": {

@@ -1,4 +1,4 @@
-<!-- source: docs/en/DEVELOPMENT.md blob e8e4e47d1772b432decfa28927b7d5911e4f6a42 -->
+<!-- source: docs/en/DEVELOPMENT.md blob dbc108aebae9f2591cd8597e2c3926c4d2b11810 -->
 [English](../en/DEVELOPMENT.md) | 日本語 · [目次に戻る](README.md)
 
 > この文書は[英語版](../en/DEVELOPMENT.md)の翻訳。内容が異なる場合は英語版が優先する。
@@ -74,6 +74,7 @@ npm ci
 | `npm run data:verify-cooking` | macOS のみ：`data/composition/cooking.json` を文部科学省の説明 PDF のテキストと照らし合わせる（[DATA_SOURCES.md](DATA_SOURCES.md)「調理の表」） |
 | `npm run report:composition` | 栄養エンジンによる、レシピと材料ごとの集計：完全一致、近似（ADR-028 の理由つき）、推定困難、数えない、揚げ物。調理後の状態に重量変化率がないと失敗する |
 | `npm run eval:coverage` | 検証用レシピのうち、代表的な目標を既定の分量と調整後の分量で満たすものの数を、推薦エンジンで数える（[DECISIONS.md](../working/DECISIONS.md)（英語のみ）"Stage 0.6"、"Stage 3.7"） |
+| `npm run eval:ai` | 必要なときだけ実行し、CI では動かさない。`data/ai-evaluation/conditions.json` の 240 件を AI エンドポイントの中核に通し、ADR-034 D4 のしきい値を確かめる。オプションは `--locale ja`（繰り返し指定できる）と `--json`。Workers AI の利用が承認されるまでは、fake アダプター `expected` だけがある（[DECISIONS.md](../working/DECISIONS.md)（英語のみ）"Stage 12.3 evaluation set and script"） |
 
 ### ブラウザでのプレビュー
 
@@ -112,6 +113,7 @@ platform/               Hosting-specific output: security headers (headers.ts), 
 tools/                  Build-time tools run directly by Node (TypeScript type stripping)
 generated/content/      Content bundles written by tools/build-content.ts (git-ignored)
 data/composition/       Extraction manifest and the tracked composition subset
+data/ai-evaluation/     Evaluation set of the AI free-text conditions (ADR-034 D4), read by tools/ai-evaluation/
 data/raw/               Original source files, such as the MEXT workbook (git-ignored)
 test/node/              Node-side tests
 test/ui/                jsdom tests of the app on the repository content (tsconfig.ui.json)

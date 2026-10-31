@@ -1111,12 +1111,34 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - `npm run check`, `npm run test:e2e`, and CI pass; the app was checked in `fr` at desktop width and 375 px locally and, after release 8, at 375 px in production ("Eighth production deployment").
 - Open after Phase 11: the bundle-size warning (accepted; per-locale catalogs as a later option) and French review capacity (open question 23).
 
+### Phase 12 start: AI assistance (2026-10-31)
+- Starting point: `dev` at `493b431` (release 8 recorded), followed by `04859dc`, which brings `prompts/12-ai-assistance.md` up to date after Phase 11 (four locales, stages 12.1–12.5, release 9). Release 7 (`cb086c1`) stays the rollback target until release 9.
+- Open question 22 re-checked: unchanged. `eslint` 10.14.0 (latest) requires `minimatch` ^10.2.6 and `@typescript-eslint/typescript-estree` 8.72.1 requires ^10.2.2; `minimatch` 11.0.3 is the latest and there is no fixed 10.x. `npm audit`: the same 12 moderate findings; `npm audit --omit=dev`: 0.
+- ADR-017 re-checked: unchanged. `typescript-eslint` 8.72.1 (latest) declares peer `typescript >=4.8.4 <6.1.0`; `typescript` latest is 7.0.2. `npm outdated` lists only the recorded exceptions (`typescript`, `@types/node`).
+- Wrangler is not installed in this session; nothing was downloaded.
+
+### Stage 12.1 provider and platform check (2026-10-31)
+- *Verified* (Anthropic pricing, https://platform.claude.com/docs/en/about-claude/pricing): per million tokens, Claude Haiku 5.5 $0.10 input and $0.50 output for prompts up to 100,000 tokens (cache hits $0.01), Claude Sonnet 5.5 $2 and $10 (cache hits $0.10), Claude Opus 5.5 $4 and $20; the Batch API halves token prices; US-only inference (`inference_geo: "us"`) costs 1.1×, global routing is the default. No free allowance is listed.
+- *Verified* (Anthropic rate limits, https://platform.claude.com/docs/en/api/rate-limits): monthly spend caps per tier (Start $500, Build $1,000, Scale $200,000); an organization can set its own lower spend limit in the Console billing page, and requests over it return HTTP 400; new organizations may start in an Evaluation tier with lower limits.
+- *Verified* (Anthropic structured outputs, https://platform.claude.com/docs/en/build-with-claude/structured-outputs): `output_config.format` with a JSON schema is supported by `claude-haiku-5-5` and `claude-sonnet-5-5`; constrained decoding, except on refusals and `max_tokens` stops; enum casing may differ; `minLength`, `maxLength`, `minimum`, and `maximum` are not supported in the schema, so the endpoint validates them itself.
+- *Verified* (Anthropic privacy center, "How long do you store my organization's data?", updated 2026-07-01, and "Is my data used for model training?", updated 2026-08-18): API inputs and outputs are deleted within 30 days by default, with exceptions for usage-policy enforcement and legal requirements; zero data retention needs an agreement; inputs and outputs of commercial products are not used for training by default.
+- *Verified* (Workers AI pricing, updated 2026-10-20, https://developers.cloudflare.com/workers-ai/platform/pricing/): 10,000 neurons per day free, then $0.011 per 1,000 neurons on Workers Paid; for example `@cf/meta/llama-3.3-70b-instruct-fp8-fast` $0.293 input and $2.253 output per million tokens.
+- *Verified* (Workers AI model catalog, updated 2026-08-12, https://developers.cloudflare.com/workers-ai/models/): no text-generation model names Japanese, Spanish, or French; some say "multilingual". JSON mode (updated 2026-09-14, https://developers.cloudflare.com/workers-ai/features/json-mode/) is listed for six models and does not guarantee schema conformance. Limits (updated 2026-09-17): 300 requests per minute for models that do not need Workers Paid. Privacy (updated 2026-10-16, https://developers.cloudflare.com/workers-ai/platform/privacy/): no training on customer content; inputs and outputs are not retained after the request unless a stateful feature such as AI Gateway logging is used.
+- *Verified* (Workers pricing, updated 2026-10-02, https://developers.cloudflare.com/workers/platform/pricing/): Free plan 100,000 requests per day and 10 ms CPU per invocation; Workers Paid from $5 per month with 10 million requests included.
+- *Verified* (Workers Rate Limiting binding, updated 2026-10-21, https://developers.cloudflare.com/workers/runtime-apis/bindings/rate-limit/): limits are approximate and counted per Cloudflare location. Whether the binding is available on the Free plan is not stated (要確認).
+
+### Stage 12.1 decisions (2026-10-31)
+- The owner accepted every recommendation of Stage 12.1 (2026-10-31): D1 free-text conditions, D2 the Claude API with Claude Haiku 5.5 as the candidate and Claude Sonnet 5.5 as the comparison, D3 a same-origin Worker endpoint that receives only the free text and the locale, D4 an evaluation of 60 cases per locale with fixed thresholds, D5 a spend limit set by the owner plus a switch that disables the feature, D6 a labelled suggestion that the user applies or discards. Recorded as ADR-034; ADR-001, ADR-004, and ADR-015 revised; [SPEC.md](../en/SPEC.md) §3 and §13 updated with the translation.
+- Nothing was built: no AI code, dependency, account, API key, Worker, or deployment. The Anthropic account, key, and billing need the owner's approval in Stage 12.3.
+- 要確認: the cost per request (estimated at about $0.0002–0.001 with Claude Haiku 5.5, measured in Stage 12.3); the retirement date of Claude Haiku 5.5; the Rate Limiting binding on the Free plan; whether the owner's organization starts in the Evaluation tier.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in
 - Status: **Accepted** (owner, 2026-10-18)
 - Decision: the MVP is a static SPA served from Cloudflare static assets. Platform-specific configuration lives only in `platform/cloudflare/` and generated header files; domain, content, and UI code use no Cloudflare APIs. The build output is a plain static `dist/` that any static host can serve. A Vite plugin specific to Workers is not used while no Worker exists.
 - Rationale: the owner intends to use Cloudflare but will switch providers if needed.
+- Revised (owner, 2026-10-31, Phase 12 Stage 12.1, ADR-034): one thin Worker may serve the optional AI endpoint at a same-origin path under `/api/`, next to the static assets. Its Cloudflare-specific code stays in `platform/cloudflare/`, the HTTP contract is in `shared/`, and the provider code is a thin adapter. The static `dist/` still works on any static host; without the endpoint the AI feature is hidden. Not built yet.
 - Versions and the exact assets configuration are verified in Phase 0.
 
 ## ADR-002: Repository-managed content, no database or admin UI in the MVP
@@ -1133,6 +1155,7 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - Status: **Accepted** (owner, 2026-10-18)
 - Decision: no AI calls. Reason texts come from deterministic data and message templates; ingredient input uses the dictionary with aliases.
 - Later candidates: free-text input structuring and explanation text, each requiring evaluation in three locales (fixed evaluation sets, ID precision/recall, cross-locale consistency, human review), a server endpoint, and approval.
+- Revised (owner, 2026-10-31, Phase 12 Stage 12.1): free-text input structuring is accepted as an optional feature (ADR-034); explanation text stays a later candidate. Evaluation covers every supported locale (four since ADR-033). Every core feature still works without AI.
 
 ## ADR-005: Japanese, English, and Spanish from the MVP
 - Status: **Accepted** (owner, 2026-10-18)
@@ -1181,6 +1204,7 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 ## ADR-015: No accounts and no server-side user data
 - Status: **Accepted** (owner, 2026-10-18)
 - Decision: no accounts; targets and conditions stay in the browser and are not put in URLs. Browser storage of targets or history: none in the MVP (ADR-030 D9).
+- Revised (owner, 2026-10-31, Phase 12 Stage 12.1, ADR-034): when the user asks for an AI suggestion, the free text they typed and the locale are sent to the same-origin endpoint and from there to the AI provider. Targets, form conditions, allergens, and history are never sent. The endpoint stores and logs no request body; the provider deletes API inputs and outputs within 30 days by default and does not train on them by default ("Stage 12.1 provider and platform check"). There are still no accounts and no server-side user data.
 
 ## ADR-016: Dependency version policy
 - Status: **Accepted** (owner, 2026-10-18)
@@ -1383,6 +1407,19 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - Formatting: `Intl` with `fr` (decimal comma, U+202F group separator, `25 %`); mixed fractions as "1 et 1/2"; household units as cuillère à soupe and cuillère à café. Search folds case, accents, and the ligatures œ and æ.
 - Rationale: multilingual support is part of the owner's product identity; adding a locale does not change food identity or calculation (ADR-006), and the locale invariance tests iterate over `SUPPORTED_LOCALES`.
 - Risk: French errors may go unnoticed without a native reviewer (open question 23).
+
+## ADR-034: Optional AI free-text conditions
+- Status: **Accepted** (owner, 2026-10-31, Phase 12 Stage 12.1); not built yet.
+- Decisions:
+  - **D1. Feature**: the user types a request in their own words (for example 「鶏むね肉で20分以内、辛くないもの」 or "something with chickpeas, no fish"), and the AI suggests structured conditions: required and excluded foods as food IDs, maximum minutes, equipment, and cuisines. The suggestion never contains targets, allergens, nutrition values, health statements, or cooking temperatures and times. Food IDs are restricted to the dictionary by an enum in the output schema and checked again at runtime. A request about allergies gets a localized pointer to the allergen field and nothing else. Explanation text is not part of this phase (ADR-004).
+  - **D2. Provider and model**: the Anthropic Claude API with structured outputs, called only from the endpoint. Claude Haiku 5.5 (`claude-haiku-5-5`) is the candidate and Claude Sonnet 5.5 (`claude-sonnet-5-5`) the comparison; Stage 12.3 measures both, and the owner chooses the cheaper model that meets the D4 thresholds. The contract in `shared/` is provider-neutral, so another provider (for example Workers AI) can replace the adapter.
+  - **D3. Endpoint and privacy**: a Worker at a same-origin path under `/api/` next to the static assets, so the CSP `connect-src 'self'` stays as it is (ADR-001 revised). The request holds only the free text (length-limited) and the locale (ADR-015 revised). The endpoint validates input and output at runtime, logs no request body, and uses no AI Gateway logging or caching. The input field asks users not to enter personal information; the about page states the provider's retention before release. Abuse handling: a rate limit, an input length limit, and an output token limit.
+  - **D4. Evaluation**: 60 cases per locale (240 in total), the same intents in `ja`, `en`, `es`, and `fr`, covering regional vocabulary, aliases, and out-of-scope requests (allergens, targets, recipe generation). Claude drafts the cases and the owner reviews them, `es` and `fr` with back-translations (open questions 9 and 23). Release thresholds: food-ID precision ≥ 0.95 and recall ≥ 0.90; forbidden fields in 0 % of outputs; out-of-scope requests declined in ≥ 95 %; the same structured result across locales in ≥ 90 % of intents. The evaluation is an on-demand script, never a CI job.
+  - **D5. Cost and limits**: the owner owns the Anthropic account, the key, and billing; the key is a Worker secret and never in the repository or the bundle. The owner sets a monthly spend limit in the Console (for example $5); when it is reached, the provider's error makes the app show the deterministic fallback. An environment switch disables the feature without a redeploy of the static assets.
+  - **D6. UX and failure states**: a collapsible "describe in your own words (AI)" field in the conditions area. The suggestion is shown as condition chips labelled as an AI suggestion, with "apply" and "discard"; nothing is applied without the user. Timeout (about 8 s), rate limit, spent budget, refusal, invalid output, and offline each show a localized message and leave the form unchanged. With the endpoint disabled or absent, the field is hidden and the app behaves as release 8.
+- Rationale: free-text conditions widen the entry to the deterministic search, which serves the product's discovery goal, and their output is structured, so every field can be validated. Explanation text adds little over the deterministic reason templates and risks numbers and health wording in every response. The Claude API was chosen for language quality in four locales and schema-constrained output; Workers AI names none of the four languages and does not guarantee JSON conformance ("Stage 12.1 provider and platform check").
+- Alternatives: explanation text; Workers AI (lower cost, no external account, no retention); returning food words for the dictionary search instead of IDs (no schema enum, but aliases may miss); an endpoint on another host (CSP change, cross-origin requests).
+- Risks: the provider retains inputs for up to 30 days; users may type personal information; `es` and `fr` cases have no native reviewer; the per-request cost is an estimate until Stage 12.3 (要確認).
 
 ---
 

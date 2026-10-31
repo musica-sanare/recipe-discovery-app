@@ -45,10 +45,11 @@ Out of target: people following medically prescribed diets (for example protein 
 
 ### Added after the MVP
 - Shopping list (Phase 8, ADR-032): section 18.
+- Optional AI free-text conditions (Phase 12, ADR-034; planned, not released): the user describes a request in their own words and gets a labelled suggestion of conditions to apply or discard. Targets, allergens, and every calculation stay deterministic, and the app works fully without it.
 
 ### Out of scope for MVP
 - User accounts, server-side storage, daily or weekly meal planning.
-- AI at runtime (recipe generation, free-text parsing, AI explanations, AI substitution suggestions).
+- AI at runtime other than the optional free-text conditions above (recipe generation, AI explanations, AI substitution suggestions).
 - Packaged-product nutrition (barcodes, Open Food Facts), prices, external service integrations, analytics.
 - Photos other than original photos owned by the project (none planned for the MVP).
 - Regional ingredient availability (only a note where an ingredient may be hard to find).
@@ -183,6 +184,7 @@ The rules are in [CONTENT_POLICY.md](CONTENT_POLICY.md). Summary:
 - No analytics or trackers by default.
 - Strict security headers (Content-Security-Policy and related headers) on all responses.
 - Any future server endpoint must validate inputs and outputs at runtime and must not log user targets or conditions.
+- Planned with ADR-034 (Phase 12): a same-origin endpoint receives only the typed free text and the locale when the user asks for an AI suggestion, and forwards them to the AI provider. It stores and logs no request body. The provider keeps API inputs and outputs for up to 30 days by default; the about page will say so before the feature is released.
 
 ## 14. Accessibility and UX
 

@@ -4,4 +4,4 @@
  * identifies the content for traceability; bundle compatibility is the separate
  * schema version.
  */
-export const CONTENT_VERSION = "2026-10-31.2";
+export const CONTENT_VERSION = "2026-10-31.3";

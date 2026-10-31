@@ -994,6 +994,12 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - Browser check (built preview, Playwright Chromium from a scratch script; the app's `frame-ancestors 'none'` rules out iframes): the 15 detail pages at 375 px and 1280 px in three locales (90 views) with the expected `lang`, no page overflow, no message keys in the text, and no console errors or warnings; a screenshot of `gyeran_jjim_egg_white_shrimp` in `ja` at 375 px. Not checked: candidate cards of the new recipes in the browser (covered by the scenario snapshot only), real devices.
 - Checks: `npm run validate:content` (105 foods, 101 recipes), `npm run check` (692 tests), `npm run test:e2e` (107 passed, 1 skipped), `npm run report:composition` (101 recipes: exact 712, approximation 144, hard to estimate 2, not counted 39, fried 5), `npm run eval:coverage`.
 
+### Stage 10.3 batch 2: foods (2026-10-31)
+- Composition subset: 12 codes added (01053, 01074, 06007, 06008, 06191, 06192, 06233, 06234, 06327, 06342, 10047, 10049); 185 foods extracted, the existing entries unchanged (compared value by value).
+- Cooking tables, read from rendered page images: weight change rates 06008 (boiled from 06007, 96 %) and 06327 (stir-fried, 90 %), PDF p. 43; 06192 (boiled from 06191, 100 %) and 06342 (stir-fried, 76 %), p. 47; 06234 (boiled from 06233, 72 %, post-cooking refuse 株元), p. 48; 10049 (grilled from 10047, 75 %, post-cooking refuse 頭部、骨、ひれ等, like horse mackerel), p. 53; Table 14 rows 06327 and 06342, p. 66. `npm run data:verify-cooking`: 98/98 entries verified.
+- Foods (111 in total): `sardine` (raw, grilled; weight without head, guts, and backbone), `napa_cabbage` (raw, boiled), `eggplant` (raw, boiled, stir-fried), `asparagus` (raw, boiled, stir-fried), `okinawa_soba_boiled` (as sold, boiled; wheat; noted as made without buckwheat, with Chinese wheat noodles as a substitute abroad), `gyoza_wrappers` (raw; wheat; steamed wrappers will use the raw value). Spanish names follow V1 (`Sardina`, `Col china`, `Berenjena`, `Espárragos verdes`, `Obleas para gyoza`). No recipe uses them yet, so no snapshot changes.
+- Checks: `npm run validate:content` (111 foods, 101 recipes, `2026-10-31.3`), `npm run check` (702 tests), `npm run test:e2e` (107 passed, 1 skipped).
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in

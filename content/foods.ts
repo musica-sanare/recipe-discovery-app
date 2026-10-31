@@ -152,6 +152,19 @@ export const foods: readonly Food[] = [
     proteinGroup: "fish",
   },
   {
+    id: "sardine",
+    names: { ja: "まいわし", en: "Japanese sardine", es: "Sardina" },
+    aliases: { ja: ["いわし", "イワシ", "鰯", "真鰯"], en: ["sardine", "pilchard"], es: ["sardinas"] },
+    composition: { raw: "10047", grill: "10049" },
+    allergens: [],
+    proteinGroup: "fish",
+    note: {
+      ja: "頭、内臓、中骨を除いた身の重さです。",
+      en: "The weight is of the flesh without the head, guts, and backbone.",
+      es: "El peso es el de la carne sin cabeza, tripas ni espina central.",
+    },
+  },
+  {
     id: "mackerel",
     names: { ja: "さば（まさば、切り身）", en: "Mackerel (chub mackerel, fillet)", es: "Caballa (filete)" },
     aliases: { ja: ["さば", "サバ", "鯖", "まさば", "さばの切り身"], en: ["mackerel", "chub mackerel", "saba"], es: ["caballa", "macarela", "verdel"] },
@@ -352,6 +365,18 @@ export const foods: readonly Food[] = [
     allergens: [{ allergen: "buckwheat", confidence: "contains" }, { allergen: "wheat", confidence: "may_contain" }],
   },
   {
+    id: "okinawa_soba_boiled",
+    names: { ja: "沖縄そば（ゆで）", en: "Okinawa soba noodles (boiled)", es: "Fideos soba de Okinawa (cocidos)" },
+    aliases: { ja: ["沖縄そば", "すば", "おきなわそば"], en: ["okinawa soba"], es: ["soba de Okinawa"] },
+    composition: { as_is: "01053" },
+    allergens: [{ allergen: "wheat", confidence: "contains" }],
+    note: {
+      ja: "小麦粉の麺で、そば粉は使いません。海外では手に入りにくく、中華めんで代用できますが、栄養値は変わります。",
+      en: "Wheat noodles made without buckwheat. Hard to find outside Japan; Chinese wheat noodles also work, but the nutrition values change.",
+      es: "Fideos de trigo sin alforfón. Son difíciles de encontrar fuera de Japón; también sirven fideos chinos de trigo, pero los valores nutricionales cambian.",
+    },
+  },
+  {
     id: "chinese_noodles",
     names: { ja: "中華めん（生）", en: "Fresh Chinese-style wheat noodles", es: "Fideos chinos frescos de trigo" },
     aliases: { ja: ["中華麺", "ラーメン", "ちゅうかめん"], en: ["ramen noodles", "wheat noodles"], es: ["fideos de ramen", "fideos de trigo"] },
@@ -417,6 +442,13 @@ export const foods: readonly Food[] = [
     names: { ja: "キャベツ", en: "Cabbage", es: "Repollo" },
     aliases: { ja: ["きゃべつ"], en: ["white cabbage"], es: ["col", "repollo blanco"] },
     composition: { raw: "06061", boil: "06062", stir_fry: "06333" },
+    allergens: [],
+  },
+  {
+    id: "napa_cabbage",
+    names: { ja: "白菜", en: "Napa cabbage", es: "Col china" },
+    aliases: { ja: ["はくさい", "ハクサイ"], en: ["Chinese cabbage", "nappa cabbage"], es: ["repollo chino", "col napa"] },
+    composition: { raw: "06233", boil: "06234" },
     allergens: [],
   },
   {
@@ -525,6 +557,20 @@ export const foods: readonly Food[] = [
     names: { ja: "ズッキーニ", en: "Zucchini", es: "Calabacín" },
     aliases: { ja: ["ずっきーに"], en: ["courgette"], es: ["calabacita"] },
     composition: { raw: "06116" },
+    allergens: [],
+  },
+  {
+    id: "eggplant",
+    names: { ja: "なす", en: "Eggplant", es: "Berenjena" },
+    aliases: { ja: ["ナス", "茄子"], en: ["aubergine"], es: [] },
+    composition: { raw: "06191", boil: "06192", stir_fry: "06342" },
+    allergens: [],
+  },
+  {
+    id: "asparagus",
+    names: { ja: "アスパラガス（グリーン）", en: "Green asparagus", es: "Espárragos verdes" },
+    aliases: { ja: ["アスパラ", "あすぱらがす"], en: ["asparagus"], es: ["espárragos", "espárrago"] },
+    composition: { raw: "06007", boil: "06008", stir_fry: "06327" },
     allergens: [],
   },
   {
@@ -856,6 +902,13 @@ export const foods: readonly Food[] = [
     aliases: { ja: ["パン粉", "ぱんこ"], en: ["breadcrumbs"], es: ["pan rallado"] },
     composition: { as_is: "01079" },
     allergens: [{ allergen: "wheat", confidence: "contains" }, { allergen: "milk", confidence: "may_contain" }, { allergen: "soybean", confidence: "may_contain" }],
+  },
+  {
+    id: "gyoza_wrappers",
+    names: { ja: "ぎょうざの皮", en: "Gyoza wrappers", es: "Obleas para gyoza" },
+    aliases: { ja: ["餃子の皮", "ギョーザの皮", "ぎょーざのかわ"], en: ["dumpling wrappers", "potsticker wrappers"], es: ["obleas de gyoza", "masa para dumplings"] },
+    composition: { raw: "01074" },
+    allergens: [{ allergen: "wheat", confidence: "contains" }],
   },
   {
     id: "mozzarella",

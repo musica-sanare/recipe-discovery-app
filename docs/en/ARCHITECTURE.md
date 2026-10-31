@@ -41,7 +41,6 @@ flowchart TD
 | `domain/recommendation` | Hard filters, fit evaluation, fit tiers, diversification, seeded re-suggestion, bounded adjustment solver, substitution suggestions, relaxation suggestions, contradiction checks | UI, i18n, locale, platform, network |
 | `domain/shopping` | Shopping list aggregation (ADR-032): items from recipe states with `resolveAmounts` of `domain/nutrition`, combination by food ID, sections, order, frying oil, household measure totals; no nutrition values | UI, i18n, locale, platform, network |
 | `shared` | Content schemas and types, IDs, units, constants used by build tools, domain, and UI; the contract and output validation of the free-text conditions (`shared/suggestion.ts`, §7); the deterministic free-text parser and its word lists (`shared/freeText/`, ADR-034 revised again) and the search normalization (`shared/search.ts`), used by the UI and by Node tools | UI, platform |
-| `server/ai` | Core of the free-text conditions pipeline as built in Stage 12.2 (ADR-034): request check, adapter call with a timeout, output validation, error responses; the adapter interface and a fake adapter for tests. Reshaped for the browser parser in Stage 12.4 | UI, domain, content, platform |
 | `content/` (data) | Recipes, food dictionary, allergen links, substitutions, localized texts, glossary | — |
 | `tools/` (build time) | Composition extraction, content validation, policy lint, nutrition snapshots, header generation | UI |
 | `src/` (UI) | React app, navigation, i18n, formatting, state, accessibility ([UI_DESIGN.md](UI_DESIGN.md)) | Platform-specific APIs |
@@ -107,45 +106,19 @@ Timing measured in the browser:
 - The static app needs no Worker. A future server feature defines its HTTP contract in `shared/` and keeps the provider-specific implementation in a thin adapter. The free-text conditions (ADR-034, revised again) need no server: they are parsed in the browser.
 - The deployment runbook ([DEPLOYMENT.md](DEPLOYMENT.md)) describes Cloudflare (`platform/cloudflare/wrangler.jsonc`) and how to serve the same `dist/` from other static hosts. Hashed files under `/assets/` get a one-year immutable cache rule in the generated `_headers`.
 
-### AI free-text conditions contract
+### Free-text conditions
 
-> [!NOTE]
-> ADR-034 was revised again on 2026-10-31: a deterministic parser in the browser reads the conditions, with no AI and no endpoint. This section describes the contract built in Stage 12.2, which the evaluation still uses. Stage 12.4 reshapes it for the parser.
+The user may describe the dish in their own words. A deterministic parser in the browser reads conditions from the text, the UI shows them, and only the conditions the user applies reach the engines (ADR-034, revised again). The text is sent nowhere and not stored, and no AI is involved.
 
-The endpoint turns the user's free text into suggested search conditions; the user applies or discards them, and only applied conditions reach the deterministic engines (ADR-034 D1, D6). Every output is validated at the endpoint and again in the browser, and any failure leaves the form unchanged.
+1. **Read**: `parseConditions(text, locale, foods)` (`shared/freeText/parse.ts`) with the word lists of `shared/freeText/lexicon.ts` and the dictionary from the bundles (`parserFoods`). The same text, locale, and dictionary always give the same result.
+2. **Validate**: `validateValue` (`shared/suggestion.ts`) checks the strict schema (allowed fields and enum values, length limits), that every food ID is in the dictionary, and that no food is both required and excluded. Duplicates are removed.
+3. **Show**: conditions as a labelled list with "apply" and "discard"; a declined topic as a message (for allergens, with a button that moves focus to the allergen choices); nothing recognized as "no conditions found". Any failure leaves the form unchanged.
+4. **Apply** (`src/views/targets/freeText.ts`): required items and excluded foods are added to the chosen ones (a whole protein group keeps its group chip), cuisines are added, and a stated time limit and equipment replace the current ones. Targets and allergens are never changed.
 
-```mermaid
-sequenceDiagram
-    participant B as Browser
-    participant E as Endpoint (server/ai)
-    participant A as Provider adapter
-    B->>E: POST /api/suggest-conditions {text, locale}
-    E->>E: Check the request
-    E->>A: Text and locale
-    A-->>E: Raw output text or adapter error
-    E->>E: Validate the output
-    E-->>B: Conditions, out of scope, or error
-    B->>B: Validate again, then suggestion or fallback
-```
+- **Output**: `{ "kind": "conditions", "conditions": … }` or `{ "kind": "out_of_scope", "topic": "allergens" | "targets" | "other" }`. Conditions have the shape of the engine's `Conditions`: `requiredFoods` (up to 5 any-of sets of up to 12 food IDs), `excludedFoods` (up to 20 food IDs), optional `maxMinutes` (a whole number from 5 to 240, the engine's input limits), optional `equipment` (the equipment the user has), and `cuisines`. There is no free-text field.
+- **Request**: the trimmed text has 1–200 Unicode code points (`suggestRequestSchema`).
+- **Evaluation**: `npm run eval:ai` runs the parser on the evaluation set through the same validation ([DEVELOPMENT.md](DEVELOPMENT.md) "Data and evaluation").
 
-- **Request**: `POST /api/suggest-conditions` with JSON `{ "text": string, "locale": "ja" | "en" | "es" | "fr" }`. The text has 1–200 Unicode code points after trimming. Any other field is rejected, so targets, form conditions, allergens, and history cannot be sent.
-- **Success (200)**: `{ "kind": "conditions", "conditions": … }` or `{ "kind": "out_of_scope", "topic": "allergens" | "targets" | "other" }`. Conditions have the shape of the engine's `Conditions`: `requiredFoods` (up to 5 any-of sets of up to 5 food IDs), `excludedFoods` (up to 10 food IDs), optional `maxMinutes` (a whole number from 5 to 240, the engine's input limits), optional `equipment` (the equipment the user has), and `cuisines`. There is no free-text field.
-- **Errors**: `{ "kind": "error", "error": code }`:
-
-| Code | Status | When |
-|---|---|---|
-| `invalid_request` | 400 | The request fails the request schema; the provider is not called |
-| `disabled` | 503 | The environment switch is off (ADR-034 D5); the browser treats a 404 the same way |
-| `rate_limited` | 429 | The endpoint's or the provider's rate limit |
-| `budget_spent` | 503 | The provider's usage allocation is used up |
-| `timeout` | 504 | No provider answer within 7 s |
-| `refused` | 502 | The provider refused the request |
-| `invalid_output` | 502 | The output fails validation |
-| `unavailable` | 502 | Any other provider failure |
-
-- **Output validation** (`validateProviderOutput`), in order: at most 4,000 characters; no forbidden expression of `content/glossary.ts` in any of the four locales, whatever the request locale; valid JSON; no key containing a forbidden stem (targets, nutrients, allergens, health, heat, cooking time, free text); the strict schema (allowed fields and enum values only, length limits); every food ID in the dictionary; no food both required and excluded. Duplicates are removed. The core returns the rejection reason for counts and the evaluation, never the text.
-- **Fallback** (`interpretResponse` in the browser): the response is validated again with the same rules. A suggestion is shown for confirmation; an out-of-scope request shows `ai.outOfScope.<topic>` (for allergens, a pointer to the allergen field); every failure shows `ai.error.<code>`, including the browser-only `offline`, a browser timeout after 8 s, and `empty` for a suggestion without any condition. The catalog strings are added with the UI (Stage 12.4).
-- **Adapter**: `SuggestionAdapter.suggest(request, signal)` returns the provider's raw output text or throws `AdapterError` with `rate_limited`, `budget_spent`, `timeout`, `refused`, or `unavailable`. The core races it against the timeout, so an adapter that ignores the abort signal still times out. Tests use `server/ai/fake.ts` and never the network.
 ## 8. Security and privacy
 
 - Strict Content-Security-Policy (`'self'` only), `X-Content-Type-Options: nosniff`, `Referrer-Policy`, restrictive `Permissions-Policy`, `frame-ancestors 'none'`.

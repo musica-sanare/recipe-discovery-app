@@ -61,6 +61,11 @@ Mobile (375 px):
 │                                 │
 │ Max. cooking time [20] min [-][+]│
 │                                 │
+│ > Describe in your own words    │
+│   [text…]  [Read conditions]    │
+│   Read: foods, time, … [Apply]  │
+│   [Discard]                     │
+│                                 │
 │ > More conditions (collapsible) │
 │   Energy [450]–[650] kcal       │
 │   Protein min. [35] g           │
@@ -85,6 +90,7 @@ Desktop (≥ 1024 px): the same form in two columns (targets left, conditions ri
 States:
 - Input errors (`InputError`) appear next to their field (`aria-describedby`) on blur and on submit; on submit, focus moves to an error summary that links to each field.
 - A blocking contradiction disables nothing but stops the search and shows an alert with the numbers (for example "protein 60 g alone is about 240 kcal…"); a warning appears above the button and the search runs.
+- Free-text conditions (ADR-034, revised again): a collapsible field below the time limit. "Read conditions" parses the text in the browser and shows what was read as a labelled list; nothing changes until "Apply", which adds foods and cuisines and replaces the time limit and equipment, then opens "More conditions" if it changed something there. A declined topic shows a message (allergens with a button that moves focus to the allergen choices); nothing recognized shows "no conditions found". Targets and allergens are never read. The result is announced in a polite live region.
 - Changing a preset overwrites the four target fields; editing a field afterwards keeps the chosen preset's label with "(edited)".
 - Content loading and the content error with retry appear in place of the form.
 

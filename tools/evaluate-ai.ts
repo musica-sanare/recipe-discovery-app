@@ -7,11 +7,10 @@
  *   node tools/evaluate-ai.ts [--adapter parser|expected] [--split all|dev|holdout] [--locale ja]... [--intent <id>]... [--cases] [--json]
  */
 import { parseArgs } from "node:util";
-import type { SuggestionAdapter } from "../server/ai/adapter.ts";
 import { isLocale, SUPPORTED_LOCALES, type Locale } from "../shared/locales.ts";
 import { loadEvaluationSet, splitIntents, SPLITS, type Split } from "./ai-evaluation/cases.ts";
 import { FIELDS, THRESHOLDS, canonicalOutput, outputOf, report, type Scores } from "./ai-evaluation/metrics.ts";
-import { expectedAnswers, parserAdapter, runEvaluation } from "./ai-evaluation/run.ts";
+import { expectedAnswers, parserAnswer, runEvaluation, type Answer } from "./ai-evaluation/run.ts";
 
 const { values } = parseArgs({
   options: {
@@ -37,14 +36,13 @@ const unknownIntents = (values.intent ?? []).filter((id) => !fullSet.intents.som
 if (unknownIntents.length > 0) throw new Error(`Unknown intents: ${unknownIntents.join(", ")}`);
 const set = values.intent === undefined ? fullSet : { ...fullSet, intents: fullSet.intents.filter((intent) => values.intent?.includes(intent.id)) };
 
-let adapter: SuggestionAdapter;
-if (values.adapter === "parser") adapter = parserAdapter();
-else if (values.adapter === "expected") adapter = expectedAnswers(set);
+let answer: Answer;
+if (values.adapter === "parser") answer = parserAnswer;
+else if (values.adapter === "expected") answer = expectedAnswers(set);
 else throw new Error(`Unknown adapter ${values.adapter}: use "parser" or "expected".`);
 
-const results = await runEvaluation(set, adapter, locales);
+const results = runEvaluation(set, answer, locales);
 const result = report(results, set.intents);
-const planned = set.intents.length * locales.length;
 
 const percent = (value: number) => `${(value * 100).toFixed(1)} %`;
 const line = (name: string, scores: Scores) =>
@@ -60,13 +58,12 @@ const line = (name: string, scores: Scores) =>
   ].join(" ");
 
 if (values.json) {
-  console.log(JSON.stringify({ adapter: values.adapter, version: set.version, review: set.review, planned, ...result }, null, 2));
+  console.log(JSON.stringify({ adapter: values.adapter, split: values.split, version: set.version, review: set.review, ...result }, null, 2));
 } else {
   console.log(`Adapter: ${values.adapter}; split ${values.split}; evaluation set version ${String(set.version)}; review ${JSON.stringify(set.review)}`);
   if (values.cases) {
     for (const { intent, locale, result: caseResult } of results) {
-      const output = canonicalOutput(outputOf(caseResult)) ?? `${caseResult.body.kind === "error" ? caseResult.body.error : ""}${caseResult.rejection === undefined ? "" : ` (${caseResult.rejection})`}`;
-      console.log(`${intent} ${locale} ${String(caseResult.status)} ${output}`);
+      console.log(`${intent} ${locale} ${caseResult.ok ? (canonicalOutput(outputOf(caseResult)) ?? "") : `rejected (${caseResult.reason})`}`);
     }
   }
   console.log(["locale  ", "case", "  prec.", " recall", ...FIELDS.map((field) => field.slice(0, 7).padStart(8)), "forbid.", "decline", "  topic"].join(" "));
@@ -76,9 +73,8 @@ if (values.json) {
     if (scores !== undefined) console.log(line(locale, scores));
   }
   console.log(`Cross-locale consistency: ${percent(result.crossLocaleConsistency)}`);
-  console.log(`Errors: ${JSON.stringify(result.overall.errors)}; rejections: ${JSON.stringify(result.overall.rejections)}`);
-  if (results.length < planned) console.log(`Stopped after ${String(results.length)} of ${String(planned)} cases.`);
+  console.log(`Rejections: ${JSON.stringify(result.overall.rejections)}`);
   console.log(`Thresholds: ${JSON.stringify(THRESHOLDS)}`);
   console.log(result.failedThresholds.length === 0 ? "All thresholds met." : `Failed thresholds: ${result.failedThresholds.join(", ")}`);
 }
-if (result.failedThresholds.length > 0 || results.length < planned) process.exitCode = 1;
+if (result.failedThresholds.length > 0) process.exitCode = 1;

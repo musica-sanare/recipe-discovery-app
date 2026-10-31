@@ -15,6 +15,8 @@ import { effortKey, PRESETS } from "../i18n/engineCodes";
 import { defaultDraft, draftToRequest, stepped, withNumber, withPreset, type EquipmentMode, type NumberField as Field, type TargetsDraft } from "./targets/draft";
 import { contradictionMessage, errorTarget, fieldId, inputErrorMessage, type FormTarget } from "./targets/errors";
 import { foodOptions } from "./targets/foodSearch";
+import { applySuggestion, touchesAdvanced } from "./targets/freeText";
+import { FreeTextConditions } from "./targets/FreeTextConditions";
 import { useTextContext } from "./useTextContext";
 
 /** The engine field whose name the stepper labels use; the others use their own label. */
@@ -197,7 +199,21 @@ export function TargetsView({ reloaded }: { readonly reloaded: boolean }) {
 
         {numberField("maxMinutes", t("targets.maxMinutes"), t("unit.minuteShort"), t("targets.noLimitHint"))}
 
+        <FreeTextConditions
+          locale={locale}
+          onApply={(suggestion) => {
+            update(applySuggestion(draft, suggestion, calc));
+            if (touchesAdvanced(suggestion)) setAdvancedOpen(true);
+          }}
+          onShowAllergens={() => {
+            setAdvancedOpen(true);
+            // Wait for the section to open before moving focus into it.
+            requestAnimationFrame(() => document.querySelector<HTMLInputElement>('input[name="allergen"]')?.focus());
+          }}
+        />
+
         <details
+          id="targets-advanced"
           open={advancedOpen}
           onToggle={(event) => {
             setAdvancedOpen(event.currentTarget.open);

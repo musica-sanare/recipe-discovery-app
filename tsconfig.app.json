@@ -16,7 +16,6 @@
     "src",
     "shared",
     "domain",
-    "content",
-    "server"
+    "content"
   ]
 }

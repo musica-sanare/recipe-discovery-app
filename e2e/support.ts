@@ -90,14 +90,14 @@ export async function openTargets(page: Page, locale: Locale): Promise<void> {
 }
 
 export async function openAdvanced(page: Page, locale: Locale): Promise<void> {
-  const summary = page.locator("summary", { hasText: t(locale, "targets.advanced") });
-  if ((await page.locator("details[open]").count()) === 0) await summary.click();
+  const summary = page.locator("#targets-advanced > summary", { hasText: t(locale, "targets.advanced") });
+  if ((await page.locator("#targets-advanced[open]").count()) === 0) await summary.click();
 }
 
 /** Fills a number field, opening the advanced section when the field is inside it. */
 export async function setNumber(page: Page, field: string, value: string): Promise<void> {
   const input = page.locator(`#targets-${field}`);
-  if (!(await input.isVisible())) await page.locator("details > summary").first().click();
+  if (!(await input.isVisible())) await page.locator("#targets-advanced > summary").click();
   await input.fill(value);
 }
 

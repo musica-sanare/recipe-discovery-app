@@ -86,6 +86,19 @@ export const foods: readonly Food[] = [
     proteinGroup: "fish",
   },
   {
+    id: "chum_salmon",
+    names: { ja: "白鮭（生鮭）", en: "Chum salmon (fresh)", es: "Salmón keta (fresco)" },
+    aliases: { ja: ["鮭", "さけ", "しゃけ", "生鮭", "秋鮭", "しろさけ"], en: ["salmon", "keta salmon"], es: ["salmón", "salmón chum"] },
+    composition: { raw: "10134" },
+    allergens: [{ allergen: "salmon", confidence: "contains" }],
+    proteinGroup: "fish",
+    note: {
+      ja: "塩をしていない生の切り身です。塩鮭は塩分が多く、栄養値も変わります。海外ではほかの太平洋サケでも作れますが、栄養値は変わります。",
+      en: "Use unsalted fresh fillets; salted salmon has much more salt and different values. Outside Japan, other Pacific salmon also works, but the nutrition values change.",
+      es: "Usa filetes frescos sin salar; el salmón salado tiene mucha más sal y otros valores. Fuera de Japón también sirve otro salmón del Pacífico, pero los valores nutricionales cambian.",
+    },
+  },
+  {
     id: "cod",
     names: { ja: "たら（まだら）", en: "Pacific cod", es: "Bacalao del Pacífico" },
     aliases: { ja: ["たら", "鱈", "まだら"], en: ["cod"], es: ["bacalao"] },
@@ -116,6 +129,19 @@ export const foods: readonly Food[] = [
     composition: { raw: "10345", grill: "10347" },
     allergens: [{ allergen: "squid", confidence: "contains" }],
     proteinGroup: "fish",
+  },
+  {
+    id: "octopus_boiled",
+    names: { ja: "ゆでだこ（まだこ）", en: "Boiled octopus", es: "Pulpo cocido" },
+    aliases: { ja: ["たこ", "タコ", "蛸", "ゆでダコ"], en: ["octopus", "cooked octopus"], es: ["pulpo"] },
+    composition: { as_is: "10362" },
+    allergens: [],
+    proteinGroup: "fish",
+    note: {
+      ja: "ゆでた状態で売られているものを使います。",
+      en: "Use octopus sold already boiled.",
+      es: "Usa pulpo que se vende ya cocido.",
+    },
   },
   {
     id: "horse_mackerel",
@@ -237,6 +263,19 @@ export const foods: readonly Food[] = [
     proteinGroup: "soy",
   },
   {
+    id: "soy_meat",
+    names: { ja: "大豆ミート（乾燥、ミンチ）", en: "Textured soy protein (dry, mince)", es: "Soja texturizada (seca, picada)" },
+    aliases: { ja: ["大豆ミート", "ソイミート", "粒状大豆たんぱく", "だいずみーと"], en: ["TVP", "soy mince", "soy meat"], es: ["soya texturizada", "proteína de soja", "carne de soja"] },
+    composition: { raw: "04055" },
+    allergens: [{ allergen: "soybean", confidence: "contains" }],
+    proteinGroup: "soy",
+    note: {
+      ja: "乾燥した状態の重さです。ミンチタイプを使います。栄養値は製品によって異なります。",
+      en: "The weight is the dry weight. Use the mince type; the nutrition values vary by product.",
+      es: "El peso es en seco. Usa la de tipo picado; los valores nutricionales varían según el producto.",
+    },
+  },
+  {
     id: "kidney_beans",
     names: { ja: "赤いんげん豆（ゆで）", en: "Red kidney beans (boiled)", es: "Alubias rojas (cocidas)" },
     aliases: { ja: ["いんげん豆", "金時豆", "キドニービーンズ", "レッドキドニー", "いんげんまめ"], en: ["kidney beans", "red beans", "beans"], es: ["frijoles", "frijoles rojos", "porotos", "judías rojas", "alubias"] },
@@ -258,6 +297,18 @@ export const foods: readonly Food[] = [
       ja: "水煮の缶詰やパウチは、汁を切った重さです。成分表の値は塩を加えずにゆでた豆なので、缶詰の塩は含みません。",
       en: "For canned or pouched beans, use the drained weight. The table value is for beans boiled without salt, so salt in canned beans is not counted.",
       es: "Si son de conserva, usa el peso escurrido. El valor de la tabla es para legumbres cocidas sin sal, así que no cuenta la sal de las conservas.",
+    },
+  },
+  {
+    id: "lentils",
+    names: { ja: "レンズ豆（ゆで）", en: "Lentils (boiled)", es: "Lentejas (cocidas)" },
+    aliases: { ja: ["レンズまめ", "レンティル", "れんずまめ"], en: ["brown lentils"], es: ["lenteja"] },
+    composition: { as_is: "04094" },
+    allergens: [],
+    note: {
+      ja: "水煮の缶詰やパウチは、汁を切った重さです。成分表の値は塩を加えずにゆでた豆なので、缶詰の塩は含みません。",
+      en: "For canned or pouched lentils, use the drained weight. The table value is for lentils boiled without salt, so salt in canned lentils is not counted.",
+      es: "Si son de conserva, usa el peso escurrido. El valor de la tabla es para lentejas cocidas sin sal, así que no cuenta la sal de las conservas.",
     },
   },
   {
@@ -395,6 +446,13 @@ export const foods: readonly Food[] = [
     allergens: [],
   },
   {
+    id: "eringi",
+    names: { ja: "エリンギ", en: "King oyster mushrooms (eringi)", es: "Setas de cardo (eringi)" },
+    aliases: { ja: ["えりんぎ"], en: ["eringi", "king trumpet mushrooms", "mushrooms"], es: ["eringi", "seta de cardo", "setas", "hongos"] },
+    composition: { raw: "08025" },
+    allergens: [],
+  },
+  {
     id: "tomato",
     names: { ja: "トマト", en: "Tomato", es: "Tomate" },
     aliases: { ja: ["とまと"], en: ["tomatoes"], es: ["jitomate", "tomates"] },
@@ -500,6 +558,18 @@ export const foods: readonly Food[] = [
     names: { ja: "にら", en: "Garlic chives (nira)", es: "Cebollino chino (nira)" },
     aliases: { ja: ["ニラ", "韮"], en: ["chinese chives", "nira"], es: ["nira", "cebollín chino", "ajo chino"] },
     composition: { raw: "06207", stir_fry: "06344" },
+    allergens: [],
+    note: {
+      ja: "海外ではアジア食材店で手に入ります。",
+      en: "Sold at Asian grocery stores outside Japan.",
+      es: "Fuera de Japón se vende en tiendas de alimentación asiática.",
+    },
+  },
+  {
+    id: "bitter_melon",
+    names: { ja: "にがうり（ゴーヤ）", en: "Bitter melon (goya)", es: "Melón amargo (goya)" },
+    aliases: { ja: ["ゴーヤ", "ゴーヤー", "苦瓜", "ごーや"], en: ["bitter gourd", "goya"], es: ["goya", "cundeamor", "balsamina"] },
+    composition: { raw: "06205", stir_fry: "06206" },
     allergens: [],
     note: {
       ja: "海外ではアジア食材店で手に入ります。",
@@ -667,6 +737,18 @@ export const foods: readonly Food[] = [
     allergens: [],
   },
   {
+    id: "chili_pepper_powder",
+    names: { ja: "一味唐辛子", en: "Ground red chili pepper", es: "Guindilla molida" },
+    aliases: { ja: ["一味", "粉唐辛子", "とうがらし", "コチュカル", "いちみ"], en: ["cayenne", "gochugaru", "red pepper flakes"], es: ["cayena molida", "ají molido", "chile molido", "gochugaru"] },
+    composition: { as_is: "17073" },
+    allergens: [],
+    note: {
+      ja: "韓国の粉唐辛子（コチュカル）も使えます。辛さは製品によって大きく異なります。",
+      en: "Korean chili flakes (gochugaru) also work; the heat varies widely by product.",
+      es: "También sirve la guindilla coreana (gochugaru); el picante varía mucho según el producto.",
+    },
+  },
+  {
     id: "rice_vinegar",
     names: { ja: "米酢", en: "Rice vinegar", es: "Vinagre de arroz" },
     aliases: { ja: ["酢", "お酢", "こめず"], en: ["vinegar"], es: ["vinagre"] },
@@ -708,6 +790,31 @@ export const foods: readonly Food[] = [
     aliases: { ja: ["ココナツミルク", "ここなっつみるく"], en: [], es: [] },
     composition: { as_is: "07158" },
     allergens: [],
+  },
+  {
+    id: "oyster_sauce",
+    names: { ja: "オイスターソース", en: "Oyster sauce", es: "Salsa de ostras" },
+    aliases: { ja: ["かき油", "牡蠣油", "おいすたーそーす"], en: [], es: ["salsa de ostión"] },
+    composition: { as_is: "17031" },
+    allergens: [
+      { allergen: "wheat", confidence: "may_contain" },
+      { allergen: "soybean", confidence: "may_contain" },
+    ],
+  },
+  {
+    id: "kimchi",
+    names: { ja: "白菜キムチ", en: "Napa cabbage kimchi", es: "Kimchi de col china" },
+    aliases: { ja: ["キムチ", "きむち"], en: ["kimchi", "kimchee"], es: ["kimchi"] },
+    composition: { as_is: "06236" },
+    allergens: [
+      { allergen: "shrimp", confidence: "may_contain" },
+      { allergen: "apple", confidence: "may_contain" },
+    ],
+    note: {
+      ja: "原材料と塩分は製品によって異なります。",
+      en: "Ingredients and salt vary by product.",
+      es: "Los ingredientes y la sal varían según el producto.",
+    },
   },
   {
     id: "miso",
@@ -762,6 +869,20 @@ export const foods: readonly Food[] = [
     names: { ja: "プレーンヨーグルト（無糖）", en: "Plain yogurt (unsweetened)", es: "Yogur natural (sin azúcar)" },
     aliases: { ja: ["ヨーグルト", "無糖ヨーグルト", "よーぐると"], en: ["yogurt", "plain yoghurt"], es: ["yogur", "yogur natural"] },
     composition: { as_is: "13025" },
+    allergens: [{ allergen: "milk", confidence: "contains" }],
+  },
+  {
+    id: "cottage_cheese",
+    names: { ja: "カッテージチーズ", en: "Cottage cheese", es: "Queso cottage" },
+    aliases: { ja: ["カテージチーズ", "チーズ", "かってーじちーず"], en: ["cheese"], es: ["cottage", "queso"] },
+    composition: { as_is: "13033" },
+    allergens: [{ allergen: "milk", confidence: "contains" }],
+  },
+  {
+    id: "yogurt_nonfat",
+    names: { ja: "無脂肪ヨーグルト（無糖）", en: "Nonfat plain yogurt (unsweetened)", es: "Yogur natural desnatado (sin azúcar)" },
+    aliases: { ja: ["ヨーグルト", "無脂肪ヨーグルト", "よーぐると"], en: ["yogurt", "fat-free yogurt", "skim yogurt"], es: ["yogur", "yogur desnatado", "yogur descremado"] },
+    composition: { as_is: "13054" },
     allergens: [{ allergen: "milk", confidence: "contains" }],
   },
 ];

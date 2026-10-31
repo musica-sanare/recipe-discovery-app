@@ -2,10 +2,10 @@
   "version": 1,
   "source": "Drafted by Claude on 2026-10-31 for ADR-034 D4 (Stage 12.3); original texts, not copied from any source.",
   "review": {
-    "ja": "pending",
-    "en": "pending",
-    "es": "pending",
-    "fr": "pending"
+    "ja": "reviewed",
+    "en": "reviewed",
+    "es": "reviewed",
+    "fr": "reviewed"
   },
   "rules": [
     "A food word maps to every dictionary food it names, as one any-of item; \"or\" also makes one item, and \"and\" makes separate items.",

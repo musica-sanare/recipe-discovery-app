@@ -2,7 +2,7 @@
  * Recommendation timing in Node (Phase 6 Stage 6.2, Phase 9 Stage 9.2, ADR-030 D10):
  * a full search (`evaluatePool` and `selectCandidates`, as the UI's `search`) on the
  * repository recipes and on the synthetic library of `tools/synthetic-library.ts`
- * (130 recipes, in memory only, never published).
+ * (180 recipes, in memory only, never published).
  *
  *   node tools/benchmark-recommendation.ts
  */

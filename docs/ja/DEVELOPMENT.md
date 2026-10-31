@@ -1,4 +1,4 @@
-<!-- source: docs/en/DEVELOPMENT.md blob e507454ee25819dee7aca715752b2ddddb8fde2f -->
+<!-- source: docs/en/DEVELOPMENT.md blob 609835f92993fb7c00556c3ed4aa507bda4bbdd3 -->
 [English](../en/DEVELOPMENT.md) | 日本語 · [目次に戻る](README.md)
 
 > この文書は[英語版](../en/DEVELOPMENT.md)の翻訳です。内容が異なる場合は英語版が優先されます。
@@ -38,7 +38,7 @@ npm ci
 | `npm run test:e2e:timing` | CPU を絞ったスマートフォン相当の速度の測定（プロジェクト `timing`、Chromium）。`test-results/timing.json` に書き出す。`TIMING_LIBRARY=synthetic` を付けると、ネットワークのスタブがコンテンツバンドルの代わりに `tools/synthetic-library.ts` の合成ライブラリを返し、結果は `test-results/timing-synthetic.json` に書き出される |
 | `npm run data:extract` | `data/raw/` にある文部科学省のワークブックから `data/composition/foods.json` を作り直す（[DATA_SOURCES.md](DATA_SOURCES.md)「抽出」） |
 | `npm run eval:coverage` | 検証用レシピのうち、代表的な目標を既定の分量と調整後の分量で満たすものの数を、推薦エンジンで計算する（[DECISIONS.md](../working/DECISIONS.md)（英語のみ）"Stage 0.6"、"Stage 3.7"） |
-| `npm run bench:recommendation` | リポジトリのレシピと、メモリ上に作った 130 件の合成ライブラリ（`tools/synthetic-library.ts`：ライブラリ全体から均等な間隔で選んだレシピを別の ID で追加したもの。公開しない）に対する、検索全体の Node での所要時間（[DECISIONS.md](../working/DECISIONS.md)（英語のみ）"Stage 6.2"、"Stage 9.2"） |
+| `npm run bench:recommendation` | リポジトリのレシピと、メモリ上に作った 180 件の合成ライブラリ（`tools/synthetic-library.ts`：ライブラリ全体から均等な間隔で選んだレシピを別の ID で追加したもの。公開しない）に対する、検索全体の Node での所要時間（[DECISIONS.md](../working/DECISIONS.md)（英語のみ）"Stage 6.2"、"Stage 9.2"、"Stage 10.1 expansion plan"） |
 | `npm run data:verify-cooking` | macOS のみ：`data/composition/cooking.json` を文部科学省の説明 PDF のテキストと照合する（[DATA_SOURCES.md](DATA_SOURCES.md)「調理の表」） |
 
 ブラウザでのプレビュー：`.claude/launch.json` には `preview`（ヘッダー付きの本番ビルド、ポート 4173）と `dev`（Vite の開発サーバー、ポート 5173。測定のためにページの中でエンジンのモジュールを import できる）があります。隠れたタブやバックグラウンドのタブで測った時間は当てになりません。

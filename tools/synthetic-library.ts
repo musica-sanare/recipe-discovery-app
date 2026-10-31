@@ -7,7 +7,7 @@
 import type { CalcBundle, TextBundle } from "../shared/bundle.ts";
 
 /** The library size used for the measurements. */
-export const SYNTHETIC_TOTAL = 130;
+export const SYNTHETIC_TOTAL = 180;
 
 const copyId = (id: string) => `${id}_copy`;
 

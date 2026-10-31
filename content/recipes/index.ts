@@ -25,23 +25,34 @@ import { recipe as chickenCoconutCurry } from "./chicken_coconut_curry.ts";
 import { recipe as chickenLemonHerbGrill } from "./chicken_lemon_herb_grill.ts";
 import { recipe as chickenMapoTofu } from "./chicken_mapo_tofu.ts";
 import { recipe as chickenOyakodon } from "./chicken_oyakodon.ts";
+import { recipe as chickenSouvlakiYogurt } from "./chicken_souvlaki_yogurt.ts";
 import { recipe as chickenSteamedChinese } from "./chicken_steamed_chinese.ts";
 import { recipe as chickenThighKaraage } from "./chicken_thigh_karaage.ts";
 import { recipe as chickenThighTeriyaki } from "./chicken_thigh_teriyaki.ts";
+import { recipe as chumSalmonFoilMushroom } from "./chum_salmon_foil_mushroom.ts";
+import { recipe as codGingerFishSauceSteam } from "./cod_ginger_fish_sauce_steam.ts";
 import { recipe as codHerbCrust } from "./cod_herb_crust.ts";
 import { recipe as codVegetableHotPot } from "./cod_vegetable_hot_pot.ts";
+import { recipe as cottageEggWhiteScrambleToast } from "./cottage_egg_white_scramble_toast.ts";
+import { recipe as dakgalbiChickenSweetPotato } from "./dakgalbi_chicken_sweet_potato.ts";
 import { recipe as edamameTofuFriedRice } from "./edamame_tofu_fried_rice.ts";
 import { recipe as eggDropChineseNoodles } from "./egg_drop_chinese_noodles.ts";
 import { recipe as eggTomatoStirFry } from "./egg_tomato_stir_fry.ts";
 import { recipe as eggWhiteBeansRanchero } from "./egg_white_beans_ranchero.ts";
 import { recipe as eggsTomatoPepperBake } from "./eggs_tomato_pepper_bake.ts";
+import { recipe as gapaoChickenRice } from "./gapao_chicken_rice.ts";
+import { recipe as goyaChampuruPork } from "./goya_champuru_pork.ts";
+import { recipe as gyeranJjimEggWhiteShrimp } from "./gyeran_jjim_egg_white_shrimp.ts";
 import { recipe as horseMackerelSaltGrill } from "./horse_mackerel_salt_grill.ts";
+import { recipe as huevosPericosEggWhites } from "./huevos_pericos_egg_whites.ts";
 import { recipe as koyaTofuSimmerRice } from "./koya_tofu_simmer_rice.ts";
+import { recipe as lentilSasamiSoup } from "./lentil_sasami_soup.ts";
 import { recipe as mackerelCanTomatoSalad } from "./mackerel_can_tomato_salad.ts";
 import { recipe as mackerelSaltGrillDaikon } from "./mackerel_salt_grill_daikon.ts";
 import { recipe as nattoColdSoba } from "./natto_cold_soba.ts";
 import { recipe as nattoEggWhiteOmelette } from "./natto_egg_white_omelette.ts";
 import { recipe as nattoTofuRiceBowl } from "./natto_tofu_rice_bowl.ts";
+import { recipe as octopusChickpeaSalad } from "./octopus_chickpea_salad.ts";
 import { recipe as piperradaEggWhites } from "./piperrada_egg_whites.ts";
 import { recipe as poachedEggSpinachToast } from "./poached_egg_spinach_toast.ts";
 import { recipe as porkFilletAvocadoSalsa } from "./pork_fillet_avocado_salsa.ts";
@@ -51,6 +62,7 @@ import { recipe as porkFilletPaprikaGrill } from "./pork_fillet_paprika_grill.ts
 import { recipe as porkFilletSweetPotato } from "./pork_fillet_sweet_potato.ts";
 import { recipe as porkFilletTomatoZucchini } from "./pork_fillet_tomato_zucchini.ts";
 import { recipe as porkFilletTonkatsu } from "./pork_fillet_tonkatsu.ts";
+import { recipe as porkKimchiTofu } from "./pork_kimchi_tofu.ts";
 import { recipe as porkLarb } from "./pork_larb.ts";
 import { recipe as porkLegSproutGarlic } from "./pork_leg_sprout_garlic.ts";
 import { recipe as porkLegTonjiruRice } from "./pork_leg_tonjiru_rice.ts";
@@ -69,6 +81,9 @@ import { recipe as shrimpCornLimeRice } from "./shrimp_corn_lime_rice.ts";
 import { recipe as shrimpEggWhiteStirFry } from "./shrimp_egg_white_stir_fry.ts";
 import { recipe as shrimpGarlicBroccoli } from "./shrimp_garlic_broccoli.ts";
 import { recipe as softEggOatmealBowl } from "./soft_egg_oatmeal_bowl.ts";
+import { recipe as soyMeatBolognesePasta } from "./soy_meat_bolognese_pasta.ts";
+import { recipe as soyMeatSoboroBowl } from "./soy_meat_soboro_bowl.ts";
+import { recipe as soyMeatTofuLettuceWraps } from "./soy_meat_tofu_lettuce_wraps.ts";
 import { recipe as soyMilkUdonTofu } from "./soy_milk_udon_tofu.ts";
 import { recipe as squidRedPepperStirFry } from "./squid_red_pepper_stir_fry.ts";
 import { recipe as sundubuTofuSoup } from "./sundubu_tofu_soup.ts";
@@ -177,4 +192,19 @@ export const recipes: readonly Recipe[] = [
   beefKabochaSimmer,
   porkFilletSweetPotato,
   shrimpEggWhiteStirFry,
+  soyMeatTofuLettuceWraps,
+  soyMeatBolognesePasta,
+  gyeranJjimEggWhiteShrimp,
+  dakgalbiChickenSweetPotato,
+  porkKimchiTofu,
+  chickenSouvlakiYogurt,
+  lentilSasamiSoup,
+  octopusChickpeaSalad,
+  gapaoChickenRice,
+  codGingerFishSauceSteam,
+  huevosPericosEggWhites,
+  goyaChampuruPork,
+  chumSalmonFoilMushroom,
+  soyMeatSoboroBowl,
+  cottageEggWhiteScrambleToast,
 ];

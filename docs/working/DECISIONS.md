@@ -1075,7 +1075,7 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 
 ### Stage 11.1 infrastructure, UI catalog, foods, and recipe batch 1 (2026-10-31)
 - Infrastructure: `fr` in `shared/locales.ts`, the content schemas, forbidden-expression matching (as Spanish), the glossaries, search normalization (case, accents, œ and æ), the entry point, fixtures, and E2E locales; the validator and the UI glossary test now loop over every locale.
-- Texts: the UI catalog (`src/i18n/messages/fr.ts`), 117 foods (257 texts), and recipe batch 1 (the first 44 recipe files in alphabetical order, 457 texts). Register: `vous`, not the `tu` of the Spanish texts, because `vous` is the usual register of French apps and recipes (要確認, owner). The 37 distinct safety notes of batch 1 were back-translated for the owner's review.
+- Texts: the UI catalog (`src/i18n/messages/fr.ts`), 117 foods (257 texts), and recipe batch 1 (the first 44 recipe files in alphabetical order, 457 texts). Register: `vous`, not the `tu` of the Spanish texts, because `vous` is the usual register of French apps and recipes. The owner confirmed `vous` on 2026-10-31: it matches the polite です・ます of the Japanese UI and recipe texts. The 37 distinct safety notes of batch 1 were back-translated for the owner's review.
 - Checks: content validation reports only the 860 missing texts of batches 2 and 3; the i18n, search, validator, and error-message tests pass. Full checks wait for batches 2 and 3, because the schemas require `fr` everywhere.
 
 ### Stage 11.2 recipe batches 2 and 3, tests, and docs (2026-10-31)

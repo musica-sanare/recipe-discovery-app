@@ -1,4 +1,4 @@
-<!-- source: docs/en/DEPLOYMENT.md blob 80677af58b401534008341b111855365285d5887 -->
+<!-- source: docs/en/DEPLOYMENT.md blob a2594e6ebb9bac475cbbcb78eb851c2a97cf98b7 -->
 [English](../en/DEPLOYMENT.md) | 日本語 · [目次に戻る](README.md)
 
 > この文書は[英語版](../en/DEPLOYMENT.md)の翻訳。内容が異なる場合は英語版が優先する。
@@ -10,7 +10,7 @@ Recipe Discovery をデプロイする手順だ。ビルドの中身、リリー
 > [!IMPORTANT]
 > `main` への push はすべて本番のデプロイになる。`main` に push するのはオーナーだけだ。ビルドとデプロイは Cloudflare Workers Builds が行い、ローカルのマシンからはデプロイしない（ADR-035）。
 
-状態：**運用中（2026-10-24）**。最初のデプロイ先は https://recipe-discovery.musica-sanare.workers.dev だ（[DECISIONS.md](../working/DECISIONS.md)（英語のみ）"Production deployment"）。ADR-035 の移行後は Workers Builds がデプロイする（最初のビルドまでは要確認）。リリースごとの記録は [RELEASE_READINESS.md](../working/RELEASE_READINESS.md)（英語のみ）にある。
+状態：**運用中（2026-10-24）**。最初のデプロイ先は https://recipe-discovery.musica-sanare.workers.dev だ（[DECISIONS.md](../working/DECISIONS.md)（英語のみ）"Production deployment"）。ADR-035 の移行後は Workers Builds がデプロイする（最初のビルドは 2026-10-31）。リリースごとの記録は [RELEASE_READINESS.md](../working/RELEASE_READINESS.md)（英語のみ）にある。
 
 MVP は静的なシングルページアプリケーションだ。`npm run build` がすべてを `dist/` に書き出し、サーバーのコードは動かない（ADR-001）。最初のホストは Cloudflare だ。レスポンスヘッダーを送れて、未知のパスに `index.html` を返せるなら、ほかの静的ホストでも動く。
 

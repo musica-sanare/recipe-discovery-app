@@ -7,7 +7,7 @@ This runbook explains how to deploy Recipe Discovery: what the build contains, t
 > [!IMPORTANT]
 > Every push to `main` is a production deploy. Only the owner pushes `main`. Cloudflare Workers Builds builds and deploys it; nobody deploys from a local machine (ADR-035).
 
-Status: **In use (2026-10-24)**. First deployment: https://recipe-discovery.musica-sanare.workers.dev ([DECISIONS.md](../working/DECISIONS.md) "Production deployment"). Deployed by Workers Builds since the migration of ADR-035 (要確認 until the first build). The record of each release is in [RELEASE_READINESS.md](../working/RELEASE_READINESS.md).
+Status: **In use (2026-10-24)**. First deployment: https://recipe-discovery.musica-sanare.workers.dev ([DECISIONS.md](../working/DECISIONS.md) "Production deployment"). Deployed by Workers Builds since the migration of ADR-035 (first build 2026-10-31). The record of each release is in [RELEASE_READINESS.md](../working/RELEASE_READINESS.md).
 
 The MVP is a static single-page application. `npm run build` writes everything to `dist/`, and no server code runs (ADR-001). Cloudflare is the first host. Other static hosts work if they can send response headers and serve `index.html` for unknown paths.
 

@@ -168,7 +168,7 @@ Acceptance: every UI key and every published text exists in `fr` and was reviewe
 
 ## Phase 12 — AI assistance
 
-Status: **In progress (2026-10-31)**, from release 8 (`2aa0c7b`); the prompt was brought up to date after Phase 11 (four locales, release 9). The owner chose AI assistance after the library expansion and moved it after the French locale.
+Status: **Complete (2026-11-01)**: the free-text conditions, read by a deterministic parser without AI (ADR-034, revised twice), and release 9 deployed by Workers Builds after the owner's approval. Logs: [DECISIONS.md](DECISIONS.md) "Phase 12 start: AI assistance" to "Phase 12 acceptance". The owner chose AI assistance after the library expansion and moved it after the French locale.
 
 - Decisions before any implementation: the feature (free-text conditions or explanation text), the provider and model, the server endpoint and its privacy, the evaluation in four locales, the cost and limits, and the UX and failure states, recorded as ADRs with the SPEC scope change.
 - A contract in `shared/` with runtime validation, a thin provider adapter, and a deterministic fallback; tests without network.

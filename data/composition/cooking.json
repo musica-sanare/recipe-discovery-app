@@ -15,6 +15,7 @@
     { "code": "02066", "rawCode": "02017", "method": "microwave", "ratePercent": 93, "postCookingRefuse": "表皮", "page": 41 },
     { "code": "02067", "rawCode": "02017", "method": "deep_fry", "ratePercent": 71, "page": 41 },
     { "code": "04087", "rawCode": "04042", "method": "simmer", "ratePercent": 430, "page": 43 },
+    { "code": "06033", "rawCode": "06032", "method": "boil", "ratePercent": 97, "postCookingRefuse": "へた", "page": 44 },
     { "code": "06049", "rawCode": "06048", "method": "boil", "ratePercent": 98, "page": 44 },
     { "code": "06008", "rawCode": "06007", "method": "boil", "ratePercent": 96, "page": 43 },
     { "code": "06327", "rawCode": "06007", "method": "stir_fry", "ratePercent": 90, "page": 43 },

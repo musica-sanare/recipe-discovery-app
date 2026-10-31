@@ -89,7 +89,7 @@ export const foods: readonly Food[] = [
     id: "chum_salmon",
     names: { ja: "白鮭（生鮭）", en: "Chum salmon (fresh)", es: "Salmón keta (fresco)" },
     aliases: { ja: ["鮭", "さけ", "しゃけ", "生鮭", "秋鮭", "しろさけ"], en: ["salmon", "keta salmon"], es: ["salmón", "salmón chum"] },
-    composition: { raw: "10134" },
+    composition: { raw: "10134", simmer: "10135", grill: "10136" },
     allergens: [{ allergen: "salmon", confidence: "contains" }],
     proteinGroup: "fish",
     note: {
@@ -221,6 +221,19 @@ export const foods: readonly Food[] = [
     proteinGroup: "soy",
   },
   {
+    id: "grilled_tofu",
+    names: { ja: "焼き豆腐", en: "Grilled tofu (yaki-dofu)", es: "Tofu asado (yaki-dofu)" },
+    aliases: { ja: ["やきどうふ", "焼豆腐"], en: ["yaki tofu", "seared tofu"], es: ["yaki-dofu", "tofu a la plancha"] },
+    composition: { raw: "04038" },
+    allergens: [{ allergen: "soybean", confidence: "contains" }],
+    proteinGroup: "soy",
+    note: {
+      ja: "海外では、水気を切った木綿豆腐の表面を焼いて代用できますが、栄養値は変わります。",
+      en: "Outside Japan, firm tofu drained and seared on the surface also works, but the nutrition values change.",
+      es: "Fuera de Japón también sirve tofu firme escurrido y dorado por fuera, pero los valores nutricionales cambian.",
+    },
+  },
+  {
     id: "koya_tofu",
     names: { ja: "高野豆腐（乾）", en: "Freeze-dried tofu (koya-dofu)", es: "Tofu deshidratado (koya-dofu)" },
     aliases: { ja: ["凍り豆腐", "こうやどうふ", "しみ豆腐"], en: ["koya tofu", "dried tofu"], es: ["koya tofu", "tofu seco"] },
@@ -332,6 +345,13 @@ export const foods: readonly Food[] = [
     allergens: [],
   },
   {
+    id: "brown_rice_cooked",
+    names: { ja: "ご飯（玄米）", en: "Cooked brown rice", es: "Arroz integral cocido" },
+    aliases: { ja: ["玄米", "玄米ご飯", "げんまい"], en: ["brown rice"], es: ["arroz integral"] },
+    composition: { as_is: "01085" },
+    allergens: [],
+  },
+  {
     id: "pasta",
     names: { ja: "スパゲッティ（乾）", en: "Spaghetti (dry)", es: "Espaguetis (secos)" },
     aliases: { ja: ["パスタ", "スパゲティ"], en: ["pasta"], es: ["pasta", "espagueti"] },
@@ -363,6 +383,18 @@ export const foods: readonly Food[] = [
     aliases: { ja: ["そば", "日本そば", "蕎麦"], en: ["soba", "buckwheat noodles"], es: ["soba", "fideos de alforfón"] },
     composition: { as_is: "01128" },
     allergens: [{ allergen: "buckwheat", confidence: "contains" }, { allergen: "wheat", confidence: "may_contain" }],
+  },
+  {
+    id: "somen_boiled",
+    names: { ja: "そうめん（ゆで）", en: "Somen noodles (boiled)", es: "Fideos somen (cocidos)" },
+    aliases: { ja: ["素麺", "ひやむぎ", "そうめん"], en: ["somen"], es: ["somen"] },
+    composition: { as_is: "01044" },
+    allergens: [{ allergen: "wheat", confidence: "contains" }],
+    note: {
+      ja: "ゆでた後の重さです。",
+      en: "The weight is after boiling.",
+      es: "El peso es después de cocerlos.",
+    },
   },
   {
     id: "okinawa_soba_boiled",
@@ -558,6 +590,25 @@ export const foods: readonly Food[] = [
     aliases: { ja: ["ずっきーに"], en: ["courgette"], es: ["calabacita"] },
     composition: { raw: "06116" },
     allergens: [],
+  },
+  {
+    id: "okra",
+    names: { ja: "オクラ", en: "Okra", es: "Quimbombó (okra)" },
+    aliases: { ja: ["おくら"], en: ["lady's fingers"], es: ["okra", "gombo"] },
+    composition: { raw: "06032", boil: "06033" },
+    allergens: [],
+  },
+  {
+    id: "shirataki",
+    names: { ja: "しらたき", en: "Shirataki (konjac noodles)", es: "Shirataki (fideos de konjac)" },
+    aliases: { ja: ["糸こんにゃく", "こんにゃく"], en: ["konjac noodles", "konnyaku noodles"], es: ["fideos de konjac", "konjac"] },
+    composition: { as_is: "02005" },
+    allergens: [],
+    note: {
+      ja: "海外ではアジア食材店で手に入ります。",
+      en: "Sold at Asian grocery stores outside Japan.",
+      es: "Fuera de Japón se vende en tiendas de alimentación asiática.",
+    },
   },
   {
     id: "eggplant",
@@ -929,6 +980,13 @@ export const foods: readonly Food[] = [
     names: { ja: "カッテージチーズ", en: "Cottage cheese", es: "Queso cottage" },
     aliases: { ja: ["カテージチーズ", "チーズ", "かってーじちーず"], en: ["cheese"], es: ["cottage", "queso"] },
     composition: { as_is: "13033" },
+    allergens: [{ allergen: "milk", confidence: "contains" }],
+  },
+  {
+    id: "milk",
+    names: { ja: "牛乳", en: "Milk (whole)", es: "Leche entera" },
+    aliases: { ja: ["ぎゅうにゅう", "ミルク"], en: ["whole milk", "milk"], es: ["leche"] },
+    composition: { as_is: "13003" },
     allergens: [{ allergen: "milk", confidence: "contains" }],
   },
   {

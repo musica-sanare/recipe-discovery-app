@@ -39,7 +39,7 @@ async function renderForm(locale: Locale = "ja") {
 }
 
 const input = (name: RegExp | string) => screen.getByRole("textbox", { name });
-const advanced = () => document.querySelector("details");
+const advanced = () => document.querySelector<HTMLDetailsElement>("#targets-advanced");
 const openAdvanced = () => {
   const details = advanced();
   if (details) details.open = true;

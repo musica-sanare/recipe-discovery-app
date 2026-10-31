@@ -4,19 +4,10 @@ import { forbiddenExpressions } from "../../content/glossary.ts";
 import { INPUT_LIMITS } from "../../domain/recommendation/validate.ts";
 import { CUISINES, EQUIPMENT } from "../../shared/content.ts";
 import { SUPPORTED_LOCALES } from "../../shared/locales.ts";
-import {
-  ERROR_STATUS,
-  SUGGEST_ERRORS,
-  SUGGEST_LIMITS,
-  fallback,
-  interpretResponse,
-  suggestRequestSchema,
-  validateProviderOutput,
-  type ValidationContext,
-} from "../../shared/suggestion.ts";
+import { SUGGEST_LIMITS, isEmptySuggestion, suggestRequestSchema, validateProviderOutput, type ValidationContext } from "../../shared/suggestion.ts";
 import * as z from "zod/mini";
 
-// Contract, output validation, and fallback of the AI free-text conditions (ADR-034).
+// Contract and output validation of the free-text conditions (ADR-034).
 const context: ValidationContext = { foodIds: new Set(foods.map((food) => food.id)), forbiddenExpressions };
 const conditions = { requiredFoods: [["chicken_breast"]], excludedFoods: ["cod"], maxMinutes: 20, cuisines: ["japanese"] };
 const output = (value: unknown) => validateProviderOutput(JSON.stringify(value), context);
@@ -133,35 +124,10 @@ describe("provider output validation", () => {
   });
 });
 
-describe("response interpretation and fallback", () => {
-  it("returns a valid suggestion for confirmation", () => {
-    expect(interpretResponse(200, { kind: "conditions", conditions }, context)).toEqual({ kind: "suggestion", suggestion: conditions });
-  });
-
-  it("points out-of-scope requests to a localized message", () => {
-    expect(interpretResponse(200, { kind: "out_of_scope", topic: "allergens" }, context)).toEqual({ kind: "out_of_scope", topic: "allergens", messageKey: "ai.outOfScope.allergens" });
-  });
-
-  it.each(SUGGEST_ERRORS)("falls back on the endpoint error %s", (error) => {
-    expect(interpretResponse(ERROR_STATUS[error], { kind: "error", error }, context)).toEqual({ kind: "fallback", failure: error, messageKey: `ai.error.${error}` });
-  });
-
-  it("falls back when the response fails validation in the browser", () => {
-    const invalid = fallback("invalid_output");
-    expect(interpretResponse(200, { kind: "conditions", conditions: { ...conditions, excludedFoods: ["whale"] } }, context)).toEqual(invalid);
-    expect(interpretResponse(200, { kind: "conditions", conditions: { ...conditions, kcal: 500 } }, context)).toEqual(invalid);
-    expect(interpretResponse(200, "<!doctype html>", context)).toEqual(invalid);
-    expect(interpretResponse(200, undefined, context)).toEqual(invalid);
-    expect(interpretResponse(500, { kind: "conditions", conditions }, context)).toEqual(invalid);
-  });
-
-  it("treats a missing endpoint as disabled and an empty suggestion as nothing found", () => {
-    expect(interpretResponse(404, "Not Found", context)).toEqual(fallback("disabled"));
-    expect(interpretResponse(200, { kind: "conditions", conditions: { requiredFoods: [], excludedFoods: [], cuisines: [] } }, context)).toEqual(fallback("empty"));
-  });
-
-  it("gives every failure a message key", () => {
-    expect(fallback("offline")).toEqual({ kind: "fallback", failure: "offline", messageKey: "ai.error.offline" });
-    expect(fallback("timeout").messageKey).toBe("ai.error.timeout");
+describe("empty suggestion", () => {
+  it("is a suggestion without any condition", () => {
+    expect(isEmptySuggestion({ requiredFoods: [], excludedFoods: [], cuisines: [] })).toBe(true);
+    expect(isEmptySuggestion({ requiredFoods: [], excludedFoods: [], equipment: ["microwave"], cuisines: [] })).toBe(false);
+    expect(isEmptySuggestion({ ...conditions, cuisines: ["japanese"] })).toBe(false);
   });
 });

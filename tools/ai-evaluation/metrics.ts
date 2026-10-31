@@ -1,11 +1,9 @@
 /**
- * Metrics and release thresholds of the AI free-text conditions (ADR-034 D4). Every case
- * goes through the endpoint core, so the scores include the runtime validation: a
- * rejected output counts as no output.
+ * Metrics and release thresholds of the free-text conditions (ADR-034 D4). Every case
+ * goes through the runtime validation, so a rejected output counts as no output.
  */
 import { SUPPORTED_LOCALES, type Locale } from "../../shared/locales.ts";
-import type { ProviderOutput, RejectionReason, Suggestion } from "../../shared/suggestion.ts";
-import type { SuggestResult } from "../../server/ai/suggest.ts";
+import type { ProviderOutput, RejectionReason, Suggestion, Validated } from "../../shared/suggestion.ts";
 import type { Intent } from "./cases.ts";
 
 export const THRESHOLDS = {
@@ -19,7 +17,7 @@ export const THRESHOLDS = {
 export interface CaseResult {
   readonly intent: string;
   readonly locale: Locale;
-  readonly result: SuggestResult;
+  readonly result: Validated<ProviderOutput>;
 }
 
 export const FIELDS = ["requiredFoods", "excludedFoods", "maxMinutes", "equipment", "cuisines"] as const;
@@ -34,7 +32,6 @@ export interface Scores {
   readonly forbiddenRate: number;
   readonly outOfScopeDeclined: number;
   readonly outOfScopeTopic: number;
-  readonly errors: Readonly<Partial<Record<string, number>>>;
   readonly rejections: Readonly<Partial<Record<RejectionReason, number>>>;
 }
 
@@ -71,8 +68,8 @@ export function canonicalOutput(output: ProviderOutput | undefined): string | un
   return FIELDS.map((field) => canonicalField(output.conditions, field)).join("|");
 }
 
-export function outputOf(result: SuggestResult): ProviderOutput | undefined {
-  return result.body.kind === "error" ? undefined : result.body;
+export function outputOf(result: Validated<ProviderOutput>): ProviderOutput | undefined {
+  return result.ok ? result.value : undefined;
 }
 
 const foodKeys = (suggestion: Suggestion | undefined) =>
@@ -116,7 +113,7 @@ export function score(results: readonly CaseResult[], intents: ReadonlyMap<strin
       for (const field of FIELDS) if (canonicalField(actual, field) === canonicalField(expected.conditions, field)) fieldHits[field]++;
     }
   }
-  const rejections = results.flatMap(({ result }) => (result.rejection === undefined ? [] : [result.rejection]));
+  const rejections = results.flatMap(({ result }) => (result.ok ? [] : [result.reason]));
   return {
     cases: results.length,
     foodPrecision: ratio(truePositives, predicted),
@@ -125,7 +122,6 @@ export function score(results: readonly CaseResult[], intents: ReadonlyMap<strin
     forbiddenRate: ratio(rejections.filter((reason) => reason === "forbidden_field" || reason === "forbidden_expression").length, results.length),
     outOfScopeDeclined: ratio(declined, outOfScopeCases),
     outOfScopeTopic: ratio(topicHits, outOfScopeCases),
-    errors: count(results.flatMap(({ result }) => (result.body.kind === "error" ? [result.body.error] : []))),
     rejections: count(rejections),
   };
 }

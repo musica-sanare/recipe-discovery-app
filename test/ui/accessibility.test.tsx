@@ -39,7 +39,7 @@ async function form(locale: Locale) {
     </I18nextProvider>,
   );
   await screen.findByRole("heading", { level: 1 });
-  const details = document.querySelector("details");
+  const details = document.querySelector<HTMLDetailsElement>("#targets-advanced");
   if (details) details.open = true;
 }
 

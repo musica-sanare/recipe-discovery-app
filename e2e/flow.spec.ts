@@ -82,8 +82,35 @@ for (const locale of LOCALES) {
       await page.reload();
       await heading1(page, t(locale, "nav.views.about"));
     });
+
+    test("free-text conditions are read in the browser and applied before a search (ADR-034)", async ({ page }) => {
+      const requests: string[] = [];
+      page.on("request", (request) => requests.push(request.url()));
+      await openTargets(page, locale);
+      await page.getByText(t(locale, "freeText.summary")).click();
+      await page.getByLabel(t(locale, "freeText.label")).fill(FREE_TEXT[locale]);
+      const before = requests.length;
+      await page.getByRole("button", { name: t(locale, "freeText.read") }).click();
+      await expect(page.getByText(t(locale, "freeText.resultHeading"))).toBeVisible();
+      expect(requests.slice(before)).toEqual([]);
+      await expectNoHorizontalOverflow(page);
+
+      await page.getByRole("button", { name: t(locale, "freeText.apply") }).click();
+      await expect(page.locator("#targets-maxMinutes")).toHaveValue("40");
+      await search(page, locale);
+      await heading1(page, t(locale, "nav.views.candidates"));
+      expect(await cardNames(page)).not.toEqual([]);
+    });
   });
 }
+
+/** Written for this test, not taken from the evaluation set. */
+const FREE_TEXT: Readonly<Record<Locale, string>> = {
+  ja: "鶏肉を使って40分以内",
+  en: "Chicken, 40 minutes or less",
+  es: "Pollo, 40 minutos como máximo",
+  fr: "Du poulet, 40 minutes maximum",
+};
 
 test.describe("locale switching", () => {
   test.use({ locale: BROWSER_LOCALE.ja });

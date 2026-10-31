@@ -1,4 +1,4 @@
-<!-- source: docs/en/DEVELOPMENT.md blob 2559ea086de30bdbd829c6eb8f4f93607ba58e7d -->
+<!-- source: docs/en/DEVELOPMENT.md blob aa3e9dea7dd56d97f0a2c9596f8a6f91ce0b865f -->
 [English](../en/DEVELOPMENT.md) | 日本語 · [目次に戻る](README.md)
 
 > この文書は[英語版](../en/DEVELOPMENT.md)の翻訳。内容が異なる場合は英語版が優先する。
@@ -104,8 +104,6 @@ index.html, src/        UI (React, Tailwind CSS; docs/en/UI_DESIGN.md): i18n/ ty
 shared/                 Schemas (Zod), constants, and types shared by UI, domain, content, and tools; the free-text
                         conditions contract (suggestion.ts, ADR-034), parser and word lists (freeText/), search
                         normalization (search.ts)
-server/ai/              Core of the free-text conditions pipeline, adapter interface, fake adapter (reshaped in
-                        Stage 12.4)
 domain/nutrition/       Pure, locale-free nutrition engine (ADR-028); tests next to the code
 domain/recommendation/  Pure, locale-free recommendation engine (ADR-029); tests next to the code
 domain/shopping/        Pure, locale-free shopping list aggregation (ADR-032); tests next to the code

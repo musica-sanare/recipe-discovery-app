@@ -1,13 +1,12 @@
 import { describe, expect, it } from "vitest";
 import * as z from "zod/mini";
-import { fakeAdapter } from "../../server/ai/fake.ts";
 import { SUPPORTED_LOCALES } from "../../shared/locales.ts";
 import { providerOutputSchema, suggestRequestSchema, validateValue, type ProviderOutput } from "../../shared/suggestion.ts";
 import { CATEGORIES, loadEvaluationSet } from "../../tools/ai-evaluation/cases.ts";
 import { report, type CaseResult } from "../../tools/ai-evaluation/metrics.ts";
 import { expectedAnswers, repositoryContext, runEvaluation } from "../../tools/ai-evaluation/run.ts";
 
-// Evaluation set and metrics of the AI free-text conditions (ADR-034 D4); fake adapters only.
+// Evaluation set and metrics of the free-text conditions (ADR-034 D4); fixed answers only.
 const set = loadEvaluationSet();
 
 describe("evaluation set", () => {
@@ -42,47 +41,44 @@ describe("evaluation set", () => {
 describe("evaluation metrics", () => {
   const conditions = (value: ProviderOutput) => JSON.stringify(value);
 
-  it("meets every threshold when each answer is the expected output", async () => {
-    const result = report(await runEvaluation(set, expectedAnswers(set), SUPPORTED_LOCALES), set.intents);
+  it("meets every threshold when each answer is the expected output", () => {
+    const result = report(runEvaluation(set, expectedAnswers(set), SUPPORTED_LOCALES), set.intents);
     expect(result.overall.cases).toBe(240);
     expect(result.overall).toMatchObject({ foodPrecision: 1, foodRecall: 1, forbiddenRate: 0, outOfScopeDeclined: 1, outOfScopeTopic: 1 });
     expect(result.crossLocaleConsistency).toBe(1);
     expect(result.failedThresholds).toEqual([]);
   });
 
-  it("counts extra and missing food IDs against precision and recall", async () => {
+  it("counts extra and missing food IDs against precision and recall", () => {
     const intent = { ...set, intents: set.intents.filter((item) => item.id === "chicken_broccoli") };
     const answer: ProviderOutput = { kind: "conditions", conditions: { requiredFoods: [["chicken_breast"], ["broccoli"]], excludedFoods: ["cod"], cuisines: [] } };
-    const result = report(await runEvaluation(intent, fakeAdapter(() => ({ output: conditions(answer) })), ["en"]), intent.intents);
+    const result = report(runEvaluation(intent, () => conditions(answer), ["en"]), intent.intents);
     // Expected: 4 chicken foods and broccoli; got chicken_breast, broccoli, and an extra excluded cod.
     expect(result.overall.foodPrecision).toBeCloseTo(2 / 3);
     expect(result.overall.foodRecall).toBeCloseTo(2 / 5);
     expect(result.overall.fieldAccuracy).toEqual({ requiredFoods: 0, excludedFoods: 0, maxMinutes: 1, equipment: 1, cuisines: 1 });
   });
 
-  it("treats rejected outputs and errors as no output and reports forbidden fields", async () => {
+  it("treats rejected outputs as no output and reports forbidden fields", () => {
     const intents = { ...set, intents: set.intents.filter((item) => ["chickpeas", "kcal_500"].includes(item.id)) };
-    const adapter = fakeAdapter((request) =>
-      request.text.includes("500") ? { output: JSON.stringify({ kind: "conditions", conditions: { requiredFoods: [], excludedFoods: [], cuisines: [], kcalMax: 500 } }) } : { error: "timeout" },
-    );
-    const result = report(await runEvaluation(intents, adapter, SUPPORTED_LOCALES), intents.intents);
+    const answer = (text: string) => (text.includes("500") ? JSON.stringify({ kind: "conditions", conditions: { requiredFoods: [], excludedFoods: [], cuisines: [], kcalMax: 500 } }) : "not JSON");
+    const result = report(runEvaluation(intents, answer, SUPPORTED_LOCALES), intents.intents);
     expect(result.overall.foodRecall).toBe(0);
     expect(result.overall.forbiddenRate).toBe(0.5);
     expect(result.overall.outOfScopeDeclined).toBe(0);
-    expect(result.overall.errors).toEqual({ timeout: 4, invalid_output: 4 });
-    expect(result.overall.rejections).toEqual({ forbidden_field: 4 });
+    expect(result.overall.rejections).toEqual({ forbidden_field: 4, not_json: 4 });
     expect(result.crossLocaleConsistency).toBe(0);
     expect(result.failedThresholds).toEqual(["foodRecall", "forbiddenRate", "outOfScopeDeclined", "crossLocaleConsistency"]);
   });
 
-  it("counts a decline with another topic as declined but not as the right topic", async () => {
+  it("counts a decline with another topic as declined but not as the right topic", () => {
     const intents = { ...set, intents: set.intents.filter((item) => item.id === "allergy_egg") };
-    const result = report(await runEvaluation(intents, fakeAdapter(() => ({ output: JSON.stringify({ kind: "out_of_scope", topic: "other" }) })), ["ja"]), intents.intents);
+    const result = report(runEvaluation(intents, () => JSON.stringify({ kind: "out_of_scope", topic: "other" }), ["ja"]), intents.intents);
     expect(result.overall).toMatchObject({ outOfScopeDeclined: 1, outOfScopeTopic: 0 });
   });
 
   it("measures cross-locale consistency per intent, ignoring the order of sets", () => {
-    const ok = (output: ProviderOutput) => ({ status: 200, body: output });
+    const ok = (output: ProviderOutput) => ({ ok: true as const, value: output });
     const a: ProviderOutput = { kind: "conditions", conditions: { requiredFoods: [["chicken_thigh", "chicken_breast"]], excludedFoods: [], cuisines: [] } };
     const b: ProviderOutput = { kind: "conditions", conditions: { requiredFoods: [["chicken_breast", "chicken_thigh"]], excludedFoods: [], cuisines: [] } };
     const results: CaseResult[] = [

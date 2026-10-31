@@ -11,6 +11,7 @@ import { recipe as beefKomatsunaUdon } from "./beef_komatsuna_udon.ts";
 import { recipe as beefLemonSauteSalad } from "./beef_lemon_saute_salad.ts";
 import { recipe as beefMeatballsTomato } from "./beef_meatballs_tomato.ts";
 import { recipe as beefMinceBibimbap } from "./beef_mince_bibimbap.ts";
+import { recipe as beefMushroomYogurtStroganoff } from "./beef_mushroom_yogurt_stroganoff.ts";
 import { recipe as beefNapaSpicySoup } from "./beef_napa_spicy_soup.ts";
 import { recipe as beefPepperStirFry } from "./beef_pepper_stir_fry.ts";
 import { recipe as beefPhoRiceNoodles } from "./beef_pho_rice_noodles.ts";
@@ -18,6 +19,8 @@ import { recipe as beefPotatoTomatoStew } from "./beef_potato_tomato_stew.ts";
 import { recipe as beefShabuLemonSoy } from "./beef_shabu_lemon_soy.ts";
 import { recipe as beefShimejiBowl } from "./beef_shimeji_bowl.ts";
 import { recipe as beefSteakPotatoes } from "./beef_steak_potatoes.ts";
+import { recipe as beefStuffedPeppersRice } from "./beef_stuffed_peppers_rice.ts";
+import { recipe as beefSukiyakiGrilledTofu } from "./beef_sukiyaki_grilled_tofu.ts";
 import { recipe as boiledChickenNegiSalt } from "./boiled_chicken_negi_salt.ts";
 import { recipe as boiledEggPotatoSalad } from "./boiled_egg_potato_salad.ts";
 import { recipe as carneAsadaCornSalsa } from "./carne_asada_corn_salsa.ts";
@@ -34,6 +37,8 @@ import { recipe as chickenSteamedChinese } from "./chicken_steamed_chinese.ts";
 import { recipe as chickenThighKaraage } from "./chicken_thigh_karaage.ts";
 import { recipe as chickenThighTeriyaki } from "./chicken_thigh_teriyaki.ts";
 import { recipe as chickenTingaRice } from "./chicken_tinga_rice.ts";
+import { recipe as chickenTsukuneOkra } from "./chicken_tsukune_okra.ts";
+import { recipe as chumSalmonBreakfastBrownRice } from "./chum_salmon_breakfast_brown_rice.ts";
 import { recipe as chumSalmonFoilMushroom } from "./chum_salmon_foil_mushroom.ts";
 import { recipe as codGingerFishSauceSteam } from "./cod_ginger_fish_sauce_steam.ts";
 import { recipe as codHerbCrust } from "./cod_herb_crust.ts";
@@ -44,6 +49,7 @@ import { recipe as edamameTofuFriedRice } from "./edamame_tofu_fried_rice.ts";
 import { recipe as eggDropChineseNoodles } from "./egg_drop_chinese_noodles.ts";
 import { recipe as eggTomatoStirFry } from "./egg_tomato_stir_fry.ts";
 import { recipe as eggWhiteBeansRanchero } from "./egg_white_beans_ranchero.ts";
+import { recipe as eggWhiteSpinachTamagoyaki } from "./egg_white_spinach_tamagoyaki.ts";
 import { recipe as eggsTomatoPepperBake } from "./eggs_tomato_pepper_bake.ts";
 import { recipe as gapaoChickenRice } from "./gapao_chicken_rice.ts";
 import { recipe as goyaChampuruPork } from "./goya_champuru_pork.ts";
@@ -53,17 +59,21 @@ import { recipe as horseMackerelSaltGrill } from "./horse_mackerel_salt_grill.ts
 import { recipe as huevosPericosEggWhites } from "./huevos_pericos_egg_whites.ts";
 import { recipe as khaoPadEggShrimp } from "./khao_pad_egg_shrimp.ts";
 import { recipe as koyaTofuSimmerRice } from "./koya_tofu_simmer_rice.ts";
+import { recipe as lentejasPorkStew } from "./lentejas_pork_stew.ts";
 import { recipe as lentilSasamiSoup } from "./lentil_sasami_soup.ts";
 import { recipe as mackerelCanTomatoSalad } from "./mackerel_can_tomato_salad.ts";
 import { recipe as mackerelSaltGrillDaikon } from "./mackerel_salt_grill_daikon.ts";
+import { recipe as mapoEggplantSoyMeat } from "./mapo_eggplant_soy_meat.ts";
 import { recipe as nattoColdSoba } from "./natto_cold_soba.ts";
 import { recipe as nattoEggWhiteOmelette } from "./natto_egg_white_omelette.ts";
 import { recipe as nattoTofuRiceBowl } from "./natto_tofu_rice_bowl.ts";
 import { recipe as octopusChickpeaSalad } from "./octopus_chickpea_salad.ts";
 import { recipe as okinawaSobaLeanPork } from "./okinawa_soba_lean_pork.ts";
 import { recipe as piperradaEggWhites } from "./piperrada_egg_whites.ts";
+import { recipe as pistoSoftEgg } from "./pisto_soft_egg.ts";
 import { recipe as poachedEggSpinachToast } from "./poached_egg_spinach_toast.ts";
 import { recipe as polloAlAjilloBreast } from "./pollo_al_ajillo_breast.ts";
+import { recipe as porkFilletAsparagusMustardToaster } from "./pork_fillet_asparagus_mustard_toaster.ts";
 import { recipe as porkFilletAvocadoSalsa } from "./pork_fillet_avocado_salsa.ts";
 import { recipe as porkFilletCurryRice } from "./pork_fillet_curry_rice.ts";
 import { recipe as porkFilletMustardSaute } from "./pork_fillet_mustard_saute.ts";
@@ -77,10 +87,13 @@ import { recipe as porkLegSproutGarlic } from "./pork_leg_sprout_garlic.ts";
 import { recipe as porkLegTonjiruRice } from "./pork_leg_tonjiru_rice.ts";
 import { recipe as porkLegVegetablesMicrowave } from "./pork_leg_vegetables_microwave.ts";
 import { recipe as porkLoinGinger } from "./pork_loin_ginger.ts";
+import { recipe as porkNapaMillefeuilleMicrowave } from "./pork_napa_millefeuille_microwave.ts";
 import { recipe as porkNoodleSaladBun } from "./pork_noodle_salad_bun.ts";
 import { recipe as porkShabuSalad } from "./pork_shabu_salad.ts";
+import { recipe as pulpoGallegaPotatoes } from "./pulpo_gallega_potatoes.ts";
 import { recipe as saladChickenMicrowave } from "./salad_chicken_microwave.ts";
 import { recipe as salmonCabbageMicrowave } from "./salmon_cabbage_microwave.ts";
+import { recipe as salmonMilkPotatoChowder } from "./salmon_milk_potato_chowder.ts";
 import { recipe as salmonMisoGrill } from "./salmon_miso_grill.ts";
 import { recipe as salmonTempura } from "./salmon_tempura.ts";
 import { recipe as salmonTomatoPasta } from "./salmon_tomato_pasta.ts";
@@ -92,6 +105,7 @@ import { recipe as shrimpCornLimeRice } from "./shrimp_corn_lime_rice.ts";
 import { recipe as shrimpEggWhiteStirFry } from "./shrimp_egg_white_stir_fry.ts";
 import { recipe as shrimpGarlicBroccoli } from "./shrimp_garlic_broccoli.ts";
 import { recipe as softEggOatmealBowl } from "./soft_egg_oatmeal_bowl.ts";
+import { recipe as somenChampuruTuna } from "./somen_champuru_tuna.ts";
 import { recipe as soyMeatBolognesePasta } from "./soy_meat_bolognese_pasta.ts";
 import { recipe as soyMeatChiliSinCarne } from "./soy_meat_chili_sin_carne.ts";
 import { recipe as soyMeatSoboroBowl } from "./soy_meat_soboro_bowl.ts";
@@ -237,4 +251,18 @@ export const recipes: readonly Recipe[] = [
   steamedChickenCabbageGyoza,
   tofuSoyMeatNapaSteam,
   polloAlAjilloBreast,
+  pulpoGallegaPotatoes,
+  somenChampuruTuna,
+  chumSalmonBreakfastBrownRice,
+  eggWhiteSpinachTamagoyaki,
+  beefSukiyakiGrilledTofu,
+  chickenTsukuneOkra,
+  porkNapaMillefeuilleMicrowave,
+  mapoEggplantSoyMeat,
+  porkFilletAsparagusMustardToaster,
+  beefStuffedPeppersRice,
+  beefMushroomYogurtStroganoff,
+  salmonMilkPotatoChowder,
+  lentejasPorkStew,
+  pistoSoftEgg,
 ];

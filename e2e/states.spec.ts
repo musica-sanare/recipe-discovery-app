@@ -63,7 +63,7 @@ for (const locale of LOCALES) {
       await choosePresetCut(page);
       await openAdvanced(page, locale);
       await page.locator("input[name=equipment-mode]").nth(1).check();
-      for (const food of [{ ja: "卵", en: "egg", es: "huevo" }, { ja: "ご飯", en: "rice", es: "arroz" }, { ja: "パン", en: "bread", es: "pan" }]) {
+      for (const food of [{ ja: "卵", en: "egg", es: "huevo" }, { ja: "ご飯", en: "rice", es: "arroz" }, { ja: "パン", en: "bread", es: "pan" }, { ja: "じゃがいも", en: "potato", es: "patata" }]) {
         const box = page.locator("#targets-excluded");
         await box.fill(food[locale]);
         await box.press("Enter");

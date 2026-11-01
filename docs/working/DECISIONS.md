@@ -1088,6 +1088,7 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 ### Bundle-size warning accepted (2026-10-31)
 - The owner accepted the recommendation: the Vite warning about the 522 kB JavaScript bundle is recorded, not fixed, in release 8. Loading UI catalogs per locale on demand (for example a dynamic import per locale before the first render) is a later option, to be planned as its own change.
 - Reason: the bundle is 155 kB gzip, the warning is advisory, the phone-class timing is unchanged ("Release 8 preparation"), and splitting the catalogs changes the startup path and its tests.
+- Closed by ADR-039 (owner, 2026-11-01, Stage 16.1): UI catalogs and free-text word lists load per locale.
 
 ### Release 8 preparation (2026-10-31)
 - Release 8 contains Phase 11 (the French locale) after release 7 (`cb086c1`): content version `2026-10-31.8` (130 recipes, 117 foods). The engines, calculated values, headers, and dependencies are unchanged. The owner approved proceeding to the deployment (2026-10-31).
@@ -1466,6 +1467,26 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - The owner chose Phase 16 (polish and bundle size: per-locale loading of UI catalogs and free-text word lists, a header logo, and nutrition tiles in the detail view; `prompts/16-polish-and-bundle.md`) and then Phase 17 (custom domain and repository publication). A one-day meal plan, viewing history, and further library expansion stay candidates for later ([IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) "Later").
 - Phase 17: registering or renewing a domain is a paid action that the owner decides and performs; Claude prepares the owner steps, checks, and doc updates only (shared `paid-services.md`, `deployment.md`).
 
+### Phase 16 start: polish and bundle size (2026-11-01)
+- Starting point: `dev` at `50c19ff` (Phase 16 prompt `prompts/16-polish-and-bundle.md`). Release 12 (`cc1bf80`, merged as `4a265dd`) is in production; `dc0f099` stays the rollback target.
+- Open question 22 re-checked: unchanged (`eslint` 10.14.0 requires `minimatch` ^10.2.6, `@typescript-eslint/typescript-estree` 8.72.1 requires ^10.2.2, `@eslint/config-array` requires ^10.2.4; `minimatch` 11.0.3 is the latest). `npm audit`: the same 12 moderate findings; `npm audit --omit=dev`: 0.
+- ADR-017 re-checked: unchanged (`typescript-eslint` 8.72.1, the latest, declares peer `typescript >=4.8.4 <6.1.0`; `typescript` latest is 7.0.2).
+- `npm outdated`: the recorded exceptions (`typescript`, `@types/node`) and `react-i18next` 17.1.9 → 17.1.10 (published 2026-11-01 07:50 UTC, a single release, no install script). The owner approved updating it in its own commit at the start of Stage 16.2 (ADR-016).
+
+### Stage 16.1 decisions (2026-11-01)
+- Documentation checked on 2026-11-01:
+  - Vite "Dynamic Import" (https://vite.dev/guide/features#dynamic-import): variable paths match one directory level; code-split dynamic imports get a preload step for their shared chunks; `import.meta.glob` is lazy by default.
+  - Vite `build.chunkSizeWarningLimit` (https://vite.dev/config/build-options#build-chunksizewarninglimit): 500 kB by default, compared against the uncompressed chunk size.
+  - i18next "Add or Load Translations" (https://www.i18next.com/how-to/add-or-load-translations) and API (https://www.i18next.com/overview/api): inline resources, `addResourceBundle`, backends such as `i18next-resources-to-backend`; `changeLanguage` returns a promise that settles after loading.
+  - react-i18next `useTranslation` (https://react.i18next.com/latest/usetranslation-hook): Suspense by default; with `useSuspense: false` the hook returns a `ready` flag.
+- Prototype (a copy outside the repository, Vite 8.3.5, UI catalogs only behind `import()`): the main bundle drops from 568,294 bytes (gzip 168.8 kB at level 9) to 461,868 bytes (gzip 139.8 kB); the catalog chunks are 24,662 (`en`), 27,078 (`es`), 28,126 (`ja`), and 28,354 (`fr`) bytes, gzip 8.6–9.8 kB. The free-text word lists add about 2.1–2.7 kB of source per locale, so the main bundle is expected at about 453–455 kB. The icon and illustration data (about 9.5 kB of source) is used by the first view and stays in the main bundle.
+- The owner approved the recommendations:
+  1. Per-locale loading with a dynamic `import()` per locale before the first render (ADR-039).
+  2. Logo direction A "discovery bowl": a bowl with a sprout and a rising sun, matching the targets illustration; 32 px grid, strokes in `currentColor`, token fills, no text inside, drawn with the existing `Shapes` data format. Directions B (lens and leaf; too close to the search icon) and C (a plate of four tiles; crowded at 28 px, and the colors could read as nutrients) were not chosen.
+  3. Detail nutrition tiles: energy spans the full width; protein, fat, carbohydrate, and salt equivalent form a 2 × 2 grid, with salt on `surface-muted` and no target; the same layout at 375 px and in the desktop right column. Each tile holds the value, the range, the status marker and text (one decimal with "just below" or "just above"), and the target or "no target"; an unknown value shows "unknown" with the foods that lack data. The change summary, the range explanation, and the estimates note stay below the tiles with today's texts; approximation reasons stay in "How this is calculated". Tiles and the change summary keep a visible edge in forced colors.
+- Mockups: local HTML rendered with Playwright in light, dark, and forced colors (`forcedColors: "active"`), at 375 px and desktop width, in `ja` and `fr`; not stored in the repository. The app itself is checked in Stage 16.3.
+- 要確認: whether browsers retry a dynamic `import()` that failed once; Stage 16.2 tests it in Chromium, Firefox, and WebKit and falls back to a page reload.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in
@@ -1716,6 +1737,7 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
   - **D12. Card reason line**: at most two reasons besides the fit status, in this order: `highest_among_candidates` / `lowest_among_candidates`, `uses_required_foods`, `new_attribute`, `matches_cuisine`, `quick`, `within_effort`; when none applies, `meets_all_targets` or `meets_with_adjustment`. Close alternatives show all their gap reasons (`near_target`, `misses_target`, `unknown_value`, `range_straddles`).
   - **D13. Seed**: 0 for every new search, +1 for each "show a different type" (ADR-029 D6).
 - Dependencies (verification log "Stage 4.1 UI design"): `tailwindcss` 4.3.3 and `@tailwindcss/vite` 4.3.3 (dev), `axe-core` 4.14.0 (dev). No new install script; no router.
+- Revised (owner, 2026-11-01, Phase 16 Stage 16.1): the UI catalogs and free-text word lists load per locale before the first render and before a language switch (ADR-039).
 - Alternatives: React Router or wouter (more than two views with URLs are not needed, and targets must stay out of URLs); plain CSS (the owner's other apps use Tailwind); opt-in local storage (privacy review not needed for the MVP flow); a worker from the start (Node timings are far below a frame budget); combined equipment relaxation in the engine (needs an ADR-029 change for one rare case); differences of full-precision values (shown numbers would not add up).
 
 ## ADR-031: Repository license
@@ -1825,6 +1847,19 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - Effects: diversification and the cuisine preference (ADR-029 D5) use the values unchanged; the cuisine attribute has 12 values instead of 9, so a recipe of a new value counts as a new attribute until one is shown. A user who prefers `western`, including saved conditions (ADR-036), does not get the new French dishes through that preference. The bundle stays compatible (enum values added only).
 - Rationale: French-speaking users can find dishes of their own food cultures with the cuisine filter; West African dishes fit no current value.
 - Alternatives: keep the current values (French dishes as `western`, Maghreb dishes as `mediterranean`; West African dishes would have no value and be dropped); one value per country or region (five or six values with two to four recipes each, 15 filter choices, a finer diversification attribute).
+
+## ADR-039: Per-locale UI catalogs and free-text word lists
+- Status: **Accepted** (owner, 2026-11-01, Phase 16 Stage 16.1); revises ADR-030 (startup path) and closes "Bundle-size warning accepted". Applied in Stage 16.2.
+- Decisions:
+  - **D1. Split**: each locale's UI catalog (`src/i18n/messages/<locale>.ts`) and free-text word list (moved to `shared/freeText/lexicon/<locale>.ts`) form one dynamically imported chunk. Node tools and tests keep a static index of all four locales. Icon and illustration data stay in the main bundle.
+  - **D2. First render**: `main.tsx` resolves the locale (stored, then browser, then `ja`), imports that locale's chunk, and renders only after it has loaded; no other language and no message key is shown.
+  - **D3. Switching**: the switcher loads the chunk and the text bundle in parallel, adds the catalog with `addResourceBundle`, then calls `changeLanguage`; the view, its values, and `lang` behave as today. While loading, a status next to the switcher says so (one new catalog key in four locales) and the switcher has `aria-busy`.
+  - **D4. Failures**: a failed first load shows a small built-in error message with a retry in the four locales (checked against the catalogs by a test); the retry reloads the page. A failed switch keeps the current language and shows the existing retry state.
+  - **D5. Unchanged**: no runtime fallback to another locale (catalogs stay complete by type); the CSP and headers stay as they are; chunks are same-origin hashed assets under `/assets/` with the immutable cache rule. No new dependency.
+- Expected sizes (prototype, "Stage 16.1 decisions"): main bundle about 455 kB instead of 568 kB; one locale chunk about 27–31 kB (gzip about 10 kB); startup JavaScript about 485 kB in total, every chunk below Vite's 500 kB warning.
+- Rationale: only one locale is used at a time, the catalogs are the largest part of the bundle that grows with each locale, and loading before the first render keeps the synchronous i18next instance and today's tests.
+- Alternatives: `i18next-resources-to-backend` with Suspense or the `ready` flag (a new dependency, an asynchronous init for a single namespace, and a risk of showing keys); vendor chunks or a higher `chunkSizeWarningLimit` (the warning goes away, but startup bytes do not drop).
+- Limits: the first render waits for one more small request; Stage 16.2 measures startup and switching. Whether a failed `import()` is retried by browsers is 要確認 ("Stage 16.1 decisions").
 
 ---
 

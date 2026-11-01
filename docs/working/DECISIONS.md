@@ -1487,6 +1487,11 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - Mockups: local HTML rendered with Playwright in light, dark, and forced colors (`forcedColors: "active"`), at 375 px and desktop width, in `ja` and `fr`; not stored in the repository. The app itself is checked in Stage 16.3.
 - 要確認: whether browsers retry a dynamic `import()` that failed once; Stage 16.2 tests it in Chromium, Firefox, and WebKit and falls back to a page reload.
 
+### Dependency update: react-i18next 17.1.10 (2026-11-01)
+- `react-i18next` 17.1.9 → 17.1.10 (published 2026-11-01 07:50 UTC, a single release, so ADR-016 exception 2 does not apply); dependencies and peer ranges unchanged. `package.json` now requires `^17.1.10`.
+- Impact checked before the update (`npm diff` of the two published packages and their changelog, 2026-11-01): only `Trans`, `IcuTrans`, and their helpers change (values are escaped before the markup is parsed). The app does not use `Trans` or `IcuTrans`. No install script (ADR-018).
+- Checks: `npm run check` (1,003 tests; the built `index-ClIaeCmA.js` keeps the same content hash as release 12, so the runtime bundle is unchanged), `npm run test:e2e` (164 passed, 1 skipped), `npm audit --omit=dev` (0); `npm audit` reports the accepted `minimatch` findings only; `npm outdated` lists only the recorded exceptions (`typescript`, `@types/node`).
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in

@@ -73,7 +73,7 @@ The schema is `shared/content.ts` (ADR-026). Calculation rules are in [NUTRITION
   - Aliases cover regional terms (for example `patata` / `papa`).
 - Household units are display labels per locale (大さじ / tbsp / cucharada). Amounts are stored in grams; a tablespoon is defined as 15 mL.
 - Formatting uses `Intl` APIs. Values are formatted only at the presentation layer.
-- Locale detection and persistence (same pattern as the owner's other apps, `src/i18n/localePreference.ts`): the stored locale preference if valid, otherwise the first supported language in `navigator.languages`, otherwise `ja`. Only the locale preference is stored.
+- Locale detection and persistence (same pattern as the owner's other apps, `src/i18n/localePreference.ts`): the stored locale preference if valid, otherwise the first supported language in `navigator.languages`, otherwise `ja`. Besides the locale preference, only the saved conditions are stored, after the user opts in (ADR-036).
 
 ## 5. Build-time pipeline
 
@@ -91,7 +91,7 @@ The schema is `shared/content.ts` (ADR-026). Calculation rules are in [NUTRITION
 3. Hard filters → fit evaluation (default amounts, then bounded adjustment) → fit tiers → diversification → stable ordering, on the main thread (ADR-030 D10). The solver results that do not depend on the targets are computed once per calculation bundle, after the first view is shown (`src/state/providers.tsx`, `withPrecomputed` in `domain/recommendation/data.ts`). A search gives the same result with or without them.
 4. Render candidates and deterministic reason texts from the typed catalogs (`src/views/candidates/`).
 5. Recalculate on every adjustment in the detail view (`src/views/DetailView.tsx`). Timing is in the next list.
-6. State stays in memory (`src/state/`, ADR-015, ADR-030 D9). Only the recipe detail and the about page have their own URLs (`src/navigation/`, ADR-030 D2).
+6. State stays in memory (`src/state/`, ADR-015, ADR-030 D9). When the user turns on saving, `src/state/savedConditions.ts` keeps the targets form in one versioned `localStorage` record and restores it once after the content loads, checked against the current content (ADR-036). Only the recipe detail and the about page have their own URLs (`src/navigation/`, ADR-030 D2).
 7. The shopping list (ADR-032) keeps the recipe states the user added in memory. `domain/shopping` aggregates them only when the list changes or is shown, never during a recommendation.
 
 Timing measured in the browser:

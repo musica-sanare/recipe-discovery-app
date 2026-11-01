@@ -11,12 +11,14 @@ import { formatNumber, formatNutrientRange } from "../format/format";
 import { useNavigation } from "../navigation/context";
 import { useAppState, useLoadedContent } from "../state/context";
 import { search } from "../state/recommendation";
+import { deleteSavedConditions, saveDraft } from "../state/savedConditions";
 import { effortKey, PRESETS } from "../i18n/engineCodes";
 import { defaultDraft, draftToRequest, stepped, withNumber, withPreset, type EquipmentMode, type NumberField as Field, type TargetsDraft } from "./targets/draft";
 import { contradictionMessage, errorTarget, fieldId, inputErrorMessage, type FormTarget } from "./targets/errors";
 import { foodOptions } from "./targets/foodSearch";
 import { applySuggestion, touchesAdvanced } from "./targets/freeText";
 import { FreeTextConditions } from "./targets/FreeTextConditions";
+import { SaveConditions } from "./targets/SaveConditions";
 import { useTextContext } from "./useTextContext";
 
 /** The engine field whose name the stepper labels use; the others use their own label. */
@@ -89,6 +91,10 @@ export function TargetsView({ reloaded }: { readonly reloaded: boolean }) {
 
   const onSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
+    // Saved as typed, before validation, so a reload shows the same form (ADR-036 D4, D5).
+    if (state.saved.on && !saveDraft(draft, state.saved.allergens)) {
+      dispatch({ type: "savedChanged", on: true, allergens: state.saved.allergens, notice: "writeFailed" });
+    }
     const result = search(request, data);
     if (!result.ok) {
       setErrors(result.errors);
@@ -149,8 +155,24 @@ export function TargetsView({ reloaded }: { readonly reloaded: boolean }) {
       <p className="m-0">{t("app.tagline")}</p>
       {reloaded && (
         <p role="status" className="m-0 rounded border border-border bg-surface-muted p-3">
-          {t("nav.reloadNotice")}
+          {t(state.saved.on ? "nav.reloadNoticeSaved" : "nav.reloadNotice")}
         </p>
+      )}
+      {state.saved.notice === "restored" && (
+        <div role="status" className="flex flex-col items-start gap-2 rounded border border-border bg-surface-muted p-3">
+          <p className="m-0">{t("saved.restored")}</p>
+          {state.saved.dropped > 0 && <p className="m-0">{t("saved.dropped", { count: state.saved.dropped })}</p>}
+          <button
+            type="button"
+            onClick={() => {
+              deleteSavedConditions();
+              dispatch({ type: "savedChanged", on: false, allergens: false, notice: "deleted" });
+            }}
+            className="rounded border border-border bg-surface px-4 py-2"
+          >
+            {t("saved.delete")}
+          </button>
+        </div>
       )}
       <p className="m-0 rounded border-l-4 border-warning bg-warning-surface p-3">{t("disclaimer.medicalGuidance")}</p>
 
@@ -400,6 +422,8 @@ export function TargetsView({ reloaded }: { readonly reloaded: boolean }) {
             <p className="m-0 text-sm text-muted">{t("contradiction.minimum_energy_exceeds_kcal_max.basis")}</p>
           </div>
         )}
+
+        <SaveConditions draft={draft} />
 
         <button type="submit" className="self-start rounded bg-accent px-6 py-3 font-medium text-on-accent">
           {t("targets.search")}

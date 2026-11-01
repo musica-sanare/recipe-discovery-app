@@ -2,7 +2,7 @@
 
 Read `CLAUDE.md` and all documents under `docs/en/` (`SPEC.md`, `ARCHITECTURE.md`, `NUTRITION_CALCULATION.md`, `CONTENT_POLICY.md`, `DATA_SOURCES.md`, `UI_DESIGN.md`, `DEVELOPMENT.md`, `DEPLOYMENT.md`) and `docs/working/` (`IMPLEMENTATION_PLAN.md`, `DECISIONS.md`, `RELEASE_READINESS.md`).
 
-We are building Recipe Discovery: a static web app in Japanese, English, and Spanish (`ja`, `en`, `es`) that helps nutrition-conscious users discover and compare curated recipes that fit their nutrition targets and conditions.
+We are building Recipe Discovery: a static web app in Japanese, English, Spanish, and French (`ja`, `en`, `es`, `fr`) that helps nutrition-conscious users discover and compare curated recipes that fit their nutrition targets and conditions.
 
 Language policy: communicate with the owner in Japanese at all times; write all repository files in English.
 

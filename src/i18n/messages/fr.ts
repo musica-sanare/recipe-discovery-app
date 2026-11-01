@@ -43,6 +43,7 @@ export const fr: Messages = {
     toTargets: "Aller aux objectifs et conditions",
     backToCandidates: "Retour aux suggestions",
     reloadNotice: "Vos objectifs, vos conditions et votre liste de courses ne sont pas conservés quand la page est rechargée. Saisissez-les à nouveau.",
+    reloadNoticeSaved: "Les résultats de recherche et la liste de courses ne sont pas conservés quand la page est rechargée.",
     notFound: "Cette recette est introuvable.",
   },
   targets: {
@@ -125,6 +126,18 @@ export const fr: Messages = {
       other: "Les questions de santé, la création de recettes et les autres demandes ne sont pas prises en charge. Décrivez des ingrédients, un temps de cuisson, un équipement ou un type de cuisine.",
     },
     goToAllergens: "Aller au choix des allergènes",
+  },
+  saved: {
+    legend: "Enregistrer sur cet appareil",
+    save: "Enregistrer ces objectifs et ces conditions sur cet appareil",
+    allergens: "Enregistrer aussi les allergènes choisis",
+    note: "Les conditions enregistrées restent dans ce navigateur et ne sont envoyées nulle part. Toute personne qui utilise ce navigateur peut les voir.",
+    delete: "Supprimer les conditions enregistrées",
+    restored: "Vos objectifs et vos conditions enregistrés sur cet appareil ont été restaurés.",
+    dropped_one: "{{count}} élément enregistré n'est plus disponible et a été retiré.",
+    dropped_other: "{{count}} éléments enregistrés ne sont plus disponibles et ont été retirés.",
+    deleted: "Les conditions enregistrées ont été supprimées de cet appareil.",
+    writeFailed: "Les conditions n'ont pas pu être enregistrées sur cet appareil. Elles restent sur cette page jusqu'à sa fermeture.",
   },
   candidates: {
     count_one: "{{count}} recette",
@@ -615,8 +628,8 @@ export const fr: Messages = {
     privacy: {
       title: "Confidentialité",
       noTracking: "Aucun outil d'analyse, cookie ni publicité n'est utilisé, et l'app n'envoie aucune requête à des services externes.",
-      storage: "La seule chose enregistrée dans votre navigateur est la langue choisie.",
-      memory: "Les objectifs et les conditions que vous saisissez restent dans la mémoire du navigateur tant que la page est ouverte et ne sont jamais placés dans l'URL.",
+      storage: "Votre navigateur conserve la langue choisie. Si vous activez l'enregistrement, il conserve aussi vos objectifs et vos conditions sur cet appareil, et vos allergènes seulement si vous le choisissez ; toute personne qui utilise ce navigateur peut les voir.",
+      memory: "Sinon, les objectifs et les conditions que vous saisissez restent dans la mémoire du navigateur tant que la page est ouverte. Ils ne sont jamais envoyés ni placés dans l'URL.",
       shoppingList: "La liste de courses reste elle aussi en mémoire tant que la page est ouverte. Elle n'est ni enregistrée ni envoyée.",
     },
     licenses: {

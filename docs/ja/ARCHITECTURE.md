@@ -1,4 +1,4 @@
-<!-- source: docs/en/ARCHITECTURE.md blob a28e7fe33201c03baa348b180b71196eeb354e3e -->
+<!-- source: docs/en/ARCHITECTURE.md blob bfc0bd6f73f0f7061f63784ff972a24280edfec7 -->
 [English](../en/ARCHITECTURE.md) | 日本語 · [目次に戻る](README.md)
 
 > この文書は[英語版](../en/ARCHITECTURE.md)の翻訳。内容が異なる場合は英語版が優先する。
@@ -76,7 +76,7 @@ flowchart TD
   - 別名で地域ごとの言い方を補う（`patata` / `papa` など）。
 - 家庭での計量の単位は、ロケールごとの表示ラベルだ（大さじ / tbsp / cucharada）。分量はグラムで保存し、大さじ 1 は 15 mL と定める。
 - 書式には `Intl` の API を使い、値の書式化は表示の層でだけ行う。
-- ロケールの判定と保存（オーナーのほかのアプリと同じ方式、`src/i18n/localePreference.ts`）：保存したロケールの設定が有効ならそれを使う。なければ `navigator.languages` のうち最初に対応している言語、それもなければ `ja` にする。保存するのはロケールの設定だけだ。
+- ロケールの判定と保存（オーナーのほかのアプリと同じ方式、`src/i18n/localePreference.ts`）：保存したロケールの設定が有効ならそれを使う。なければ `navigator.languages` のうち最初に対応している言語、それもなければ `ja` にする。ロケールの設定のほかに保存するのは、利用者がオンにしたときの保存した条件だけだ（ADR-036）。
 
 ## 5. ビルド時の処理
 
@@ -94,7 +94,7 @@ flowchart TD
 3. ハードな絞り込み → 適合の評価（既定の分量、次に範囲内での調整）→ 適合の段階 → 多様化 → 安定した並べ替え、をメインスレッドで行う（ADR-030 D10）。目標によらないソルバーの結果は、最初の画面を出したあとに計算用のバンドルごとに 1 回だけ求める（`src/state/providers.tsx`、`domain/recommendation/data.ts` の `withPrecomputed`）。その結果があってもなくても、検索の結果は同じだ。
 4. 候補と決定論的な理由のテキストを、型つきのカタログから描く（`src/views/candidates/`）。
 5. 詳細画面では調整のたびに再計算する（`src/views/DetailView.tsx`）。時間は次の一覧にまとめた。
-6. 状態はメモリに保つ（`src/state/`、ADR-015、ADR-030 D9）。専用の URL を持つのはレシピの詳細と「このアプリについて」のページだけだ（`src/navigation/`、ADR-030 D2）。
+6. 状態はメモリに保つ（`src/state/`、ADR-015、ADR-030 D9）。利用者が保存をオンにすると、`src/state/savedConditions.ts` が目標のフォームをバージョンつきの `localStorage` のレコード 1 件に残す。コンテンツを読み込んだ後に一度だけ、今のコンテンツと照らして復元する（ADR-036）。専用の URL を持つのはレシピの詳細と「このアプリについて」のページだけだ（`src/navigation/`、ADR-030 D2）。
 7. 買い物リスト（ADR-032）は、利用者が追加したレシピの状態をメモリに保つ。`domain/shopping` が集計するのはリストが変わったときと表示するときだけで、推薦の最中には集計しない。
 
 ブラウザで測った時間：

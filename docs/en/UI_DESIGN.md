@@ -10,7 +10,7 @@ Status: **Accepted (owner, 2026-10-19, Stage 4.1)** for the MVP user interface (
 
 - The UI turns engine codes and numbers into localized texts and locale-formatted values. It never computes, adjusts, or re-rounds a nutrition value or a fit status.
 - Numbers are formatted with `Intl` from the values of `roundForDisplay`; statuses come from the engine's full-precision fit ([NUTRITION_CALCULATION.md](NUTRITION_CALCULATION.md) §8).
-- Targets, conditions, and session state stay in memory. They never appear in URLs or in `history.state`, and nothing except the locale preference is stored (ADR-015, ADR-030 D9).
+- Targets, conditions, and session state stay in memory. They never appear in URLs or in `history.state`. Nothing except the locale preference is stored unless the user turns on saved conditions, which keeps the targets form on the device (ADR-015, ADR-030 D9, ADR-036).
 - Every status has a text and a marker shape in addition to its color.
 - Mobile first: one column below 768 px; wider layouts add columns but keep the same order of content for screen readers.
 
@@ -30,8 +30,8 @@ flowchart LR
 
 | View | URL | Content after reload |
 |---|---|---|
-| Targets and conditions | `/` | Preset defaults (nothing is restored) |
-| Candidates | `/` (history entry with the view name only) | Targets view with the notice "Your conditions are not kept after reloading" |
+| Targets and conditions | `/` | Preset defaults, or the saved conditions with a notice when saving is on (ADR-036) |
+| Candidates | `/` (history entry with the view name only) | Targets view with the notice "Your conditions are not kept after reloading"; with saving on, the notice says only that search results and the shopping list are not kept |
 | Comparison | `/` (history entry with the view name only) | Same as candidates |
 | Recipe detail | `/recipes/<id>` | The recipe at its default amounts with no fit status; a link to the targets view |
 | About | `/about` | The same page (it needs no search); reached from the footer |
@@ -82,6 +82,11 @@ Mobile (375 px):
 │   (!) Allergen info is best …   │
 │                                 │
 │ [(!) warning / (x) cannot search]│
+│ Save on this device             │
+│ [ ] Save these targets and …    │
+│   [ ] Also save the allergens … │
+│ "Stays in this browser; anyone… │
+│ [Delete saved conditions]       │
 │ [        Find recipes         ] │
 └─────────────────────────────────┘
 ```
@@ -91,6 +96,7 @@ States:
 - Input errors (`InputError`) appear next to their field (`aria-describedby`) on blur and on submit; on submit, focus moves to an error summary that links to each field.
 - A blocking contradiction disables nothing but stops the search and shows an alert with the numbers (for example "protein 60 g alone is about 240 kcal…"); a warning appears above the button and the search runs.
 - Free-text conditions (ADR-034, revised again): a collapsible field below the time limit. "Read conditions" parses the text in the browser and shows what was read as a labelled list; nothing changes until "Apply", which adds foods and cuisines and replaces the time limit and equipment, then opens "More conditions" if it changed something there. A declined topic shows a message (allergens with a button that moves focus to the allergen choices); nothing recognized shows "no conditions found". Targets and allergens are never read. The result is announced in a polite live region.
+- Saved conditions (ADR-036): a fieldset "Save on this device" above the search button. Its checkbox saves the form at once when turned on and deletes the record when turned off. While it is on, a second checkbox adds the allergen choices, and a "delete saved conditions" button deletes the record. A note says that the conditions stay in this browser, are sent nowhere, and can be seen by anyone who uses the browser. "Find recipes" saves the form as typed, before validation. After a reload, a restored record fills the form without searching, and a status at the top says so, with the number of items left out because the content no longer has them and its own delete button. "Deleted" and "could not be saved on this device" appear in a status inside the fieldset.
 - Changing a preset overwrites the four target fields; editing a field afterwards keeps the chosen preset's label with "(edited)".
 - Content loading and the content error with retry appear in place of the form.
 
@@ -241,7 +247,7 @@ States:
   - allergens: the allergen disclaimer, unknown treated as "may contain";
   - health: not medical advice, presets as examples, medical guidance;
   - what the app does not do;
-  - privacy: no analytics, cookies, ads, or external requests; only the language choice is stored; targets and conditions stay in memory and never enter the URL;
+  - privacy: no analytics, cookies, ads, or external requests; the language choice is stored, and the targets and conditions only when the user turns on saving (allergens only with their own checkbox); otherwise they stay in memory; they never enter the URL;
   - open-source licenses, with a link to `/third-party-licenses.txt`, generated by `build.license` (Vite).
 - No contact address ([DECISIONS.md](../working/DECISIONS.md) "Stage 5.1 release plan" P7).
 
@@ -314,7 +320,8 @@ Japanese and Spanish use the same structure, for example `買い物リスト（2
 - Application state lives in one `useReducer` behind a context (`src/state/`). No store library. The state holds:
   - the request, the evaluated pool, the session, the seed, the displayed set, and the comparison selection;
   - per-recipe adjustment states;
-  - the shopping list: recipe IDs with their copied states in the order added, and the checked items.
+  - the shopping list: recipe IDs with their copied states in the order added, and the checked items;
+  - the saved-conditions status: whether the stored record was read, saving on or off, allergens included or not, and the current notice. The record is read once after the content loads (`src/state/useRestoreSavedConditions.ts`); the targets view writes and deletes it (`src/state/savedConditions.ts`).
 - A new search resets everything except the targets draft and the shopping list.
 - The pool is recomputed only when the request changes. "Show a different type", "exclude this one", and comparison use `selectCandidates` on the same pool.
 - The seed starts at 0 for every new search and increases by 1 for each "show a different type" (ADR-029 D6).
@@ -338,6 +345,7 @@ Japanese and Spanish use the same structure, for example `買い物リスト（2
 | Namespace | Keys |
 |---|---|
 | `nav` | View names, back links, reload notice, not-found |
+| `saved` | The save switch, the allergen checkbox, the shared-browser note, the delete button, and the restored, dropped, deleted, and write-failed notices |
 | `targets` | Preset names and "example" labels, fields, units, help, the medical guidance notice, the search button, error summary |
 | `conditions` | Time, effort levels, cuisines (`CUISINES`), equipment (`EQUIPMENT`) and equipment modes, required and excluded foods, food groups, autocomplete states (no match = "not supported") |
 | `inputError` | One key per `InputError` code, with the field names and limits as values |

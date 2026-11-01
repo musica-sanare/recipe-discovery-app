@@ -90,7 +90,7 @@ If any path does not exist, report it rather than silently inventing its content
 
 ## Deployment
 - A push to `main` deploys to production: Cloudflare Workers Builds builds the pushed commit and runs `platform/cloudflare/deploy.ts` (ADR-035, `docs/en/DEPLOYMENT.md` §3). When asking the owner about a push to `main`, say that it deploys.
-- Pushes to `dev` do not deploy; CI checks them. `main` only receives commits that passed CI on `dev`, by fast-forward.
+- Pushes to `dev` do not deploy; CI checks them. `main` only receives `dev` commits that passed CI there: the owner merges `dev` into `main` by hand, locally with a push or through a pull request, with a merge commit (no squash or rebase).
 - Claude never deploys, never runs Wrangler with a login, and never changes the Workers Builds settings or the Cloudflare account (shared `deployment.md` and `paid-services.md`). A local `node platform/cloudflare/deploy.ts --dry-run` needs no login but downloads Wrangler, so it needs the owner's approval.
 - The account stays on Workers Free. Changes to `WRANGLER_VERSION` in `platform/cloudflare/deploy.ts` and to `compatibility_date` go through a reviewed commit.
 

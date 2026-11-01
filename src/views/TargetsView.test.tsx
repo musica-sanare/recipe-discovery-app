@@ -183,7 +183,7 @@ describe("ingredient autocomplete (ADR-030 D6)", () => {
     await renderForm("es");
     const box = screen.getByRole("combobox", { name: "Ingredientes que quieres evitar" });
     fireEvent.change(box, { target: { value: "langosta" } });
-    expect(screen.getByRole("status").textContent).toBe("Ningún ingrediente coincide con «langosta». Este ingrediente no está disponible.");
+    expect(screen.getByText("Ningún ingrediente coincide con «langosta». Este ingrediente no está disponible.").getAttribute("role")).toBe("status");
     fireEvent.change(box, { target: { value: "papá" } });
     expect(suggestions().map((option) => option.textContent)).toEqual(["Patata"]);
     fireEvent.keyDown(box, { key: "Escape" });

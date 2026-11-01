@@ -45,7 +45,8 @@ Out of target: people following medically prescribed diets (for example protein 
 
 ### Added after the MVP
 - Shopping list (Phase 8, ADR-032): section 18.
-- Optional free-text conditions (Phase 12, ADR-034; planned, not released): the user describes a request in their own words, and the app reads conditions from the text with deterministic rules and shows them to apply or discard. No AI is used. Targets, allergens, and every calculation stay deterministic, and the app works fully without it.
+- Optional free-text conditions (Phase 12, ADR-034; released in release 9): the user describes a request in their own words, and the app reads conditions from the text with deterministic rules and shows them to apply or discard. No AI is used. Targets, allergens, and every calculation stay deterministic, and the app works fully without it.
+- Saved targets and conditions (Phase 13, ADR-036; planned, not released): the user can turn on saving in the targets view. The form is then kept in this browser on this device and restored into the form on the next visit, without starting a search. Allergen choices are saved only with a separate checkbox. Saving is off by default, and turning it off or the delete action removes what was saved.
 
 ### Out of scope for MVP
 - User accounts, server-side storage, daily or weekly meal planning.
@@ -180,6 +181,7 @@ The rules are in [CONTENT_POLICY.md](CONTENT_POLICY.md). Summary:
 
 - No accounts and no server-side storage in the MVP; the MVP has no application server.
 - Targets and conditions stay in the browser and are not put in URLs.
+- Saved conditions (ADR-036) are stored only after the user turns saving on, in one `localStorage` record on the device. They are never sent or put in a cookie, and anyone using the same browser can see them, which the UI says. Allergen choices need a separate checkbox. Without saving, only the locale preference is stored.
 - The shopping list stays in memory. Copying and printing it are browser features started by the user and send nothing (section 18).
 - No analytics or trackers by default.
 - Strict security headers (Content-Security-Policy and related headers) on all responses.

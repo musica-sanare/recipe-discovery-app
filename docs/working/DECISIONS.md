@@ -1294,6 +1294,13 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - `test/node/styles.test.ts` checks 52 pairs per mode, including `bg`, `primary`, `on-sun`, and every text and status color on each pastel; all pass.
 - Checks: `npm run check` (61 test files, 952 tests), `npm run test:e2e` (164 passed, 1 skipped; axe-core with color contrast in real browsers in four locales and both modes). CSS 19.3 kB (gzip 5.0 kB) against 17.2 kB; JavaScript 556,440 bytes (smaller by about 1 kB because the class lists are shorter). Screenshots of the targets and candidates views at 375 px and 1280 px in light and dark mode showed no overflow.
 
+### Stage 14.3 icons and illustrations (2026-11-01)
+- 31 original icons and 6 illustrations, drawn by Claude for this app, in `src/components/icons/`. Shapes are path data with a fill token each (`iconData.ts`, `illustrationData.ts`), so tests and a showcase read them without rendering; `Icon` and `Illustration` (`Icon.tsx`) draw them with strokes in `currentColor` and fills from the tokens (Tailwind `fill-*` classes; dashes as an SVG attribute, so the CSP needs no change).
+- Icons: protein groups (chicken, pork, beef, fish, egg, soy), the six `EQUIPMENT` items, time, effort, servings, actions (search, save, delete, compare, shopping, copy, print, back, language, close), notices (warning, information), and the status markers `status_met` (filled circle with a check), `status_near` (half-filled circle), `status_not_met` (circle with a cross), and `status_unknown` (dashed circle with a question mark drawn as a path). Illustrations: `hero`, `no_results`, `empty_list`, `not_found`, `content_error`, `about`. No icons for cuisines, nutrients, or allergens (ADR-037 D3).
+- An icon without a label is `aria-hidden`; with a label it has `role="img"` and that name. Illustrations are always `aria-hidden`.
+- `test/ui/icons.test.tsx` (40 tests): every shape is plain path data, every icon renders on the 24 px grid with no `text`, `foreignObject`, or `image`, the label rule, axe-core on a labelled icon, distinct status marker shapes, and decorative illustrations.
+- A showcase page in the git-ignored `generated/showcase/`, served by the dev server and captured with Playwright in light and dark mode, showed every icon and illustration with no console error. The views do not use them yet (Stage 14.4).
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in

@@ -21,7 +21,16 @@ Commit hashes in this document are those after the history rewrite of 2026-10-25
 | 11 (Phase 14) | `04134e0` (merged as `dc0f099`) | `2026-10-31.8` | Deployed by Workers Builds 2026-11-01 after the merge at 04:55 UTC; replaced by release 12 |
 | 12 (Phase 15) | `cc1bf80` (merged as `4a265dd`) | `2026-11-01.2` | Deployed by Workers Builds 2026-11-01 after the merge at 08:03 UTC |
 
-## 0. What changes in release 12
+## 0. What changes in release 13
+
+| Stage | Change | Visible to users |
+|---|---|---|
+| 16.2 | UI catalogs and free-text word lists load per locale, one chunk each (ADR-039); the startup chunk drops from 568,294 to 457,369 bytes ([DECISIONS.md](DECISIONS.md) "Stage 16.2 per-locale loading") | A short loading status on a language switch; an error with a retry if a chunk cannot be loaded |
+| 16.3 | The original "discovery bowl" logo in the header; the detail view's nutrition as tiles, with the ingredients that lack data for an unknown value ("Stage 16.3 logo and detail nutrition tiles") | The new header and detail nutrition in four locales |
+
+Unchanged: the engines, formulas, rounding, ranking, and every calculated value; the content and its version (`2026-11-01.2`); recipe and food IDs; the saved-conditions record; the security headers (`platform/`); the dependencies except `react-i18next` 17.1.10 ("Dependency update: react-i18next 17.1.10").
+
+## 0a. What changed in release 12
 
 | Stage | Change | Visible to users |
 |---|---|---|
@@ -29,17 +38,9 @@ Commit hashes in this document are those after the history rewrite of 2026-10-25
 | 15.2–15.3 | 20 original recipes from France, Belgium, Switzerland, Québec, the Maghreb, and West Africa, and 22 foods; content version `2026-11-01.2` ([DECISIONS.md](DECISIONS.md) "Stage 15.2 batch 1: recipes", "Stage 15.3 batch 2: recipes") | New candidates and detail pages; 150 recipes in total |
 | 15.2 | CONTENT_POLICY §3 rules for marinades and for wine and beer | Notes on the recipes concerned |
 
-## 0a. What changed in release 11
-
-| Stage | Change | Visible to users |
-|---|---|---|
-| 14.2 | The ADR-037 color tokens for light and dark mode, a softer radius, and shared button, panel, notice, and chip styles; the blue accent became green ([DECISIONS.md](DECISIONS.md) "Stage 14.2 tokens and base components") | New colors and shapes everywhere |
-| 14.3 | 31 original two-tone SVG icons and 6 illustrations, kept as path data ("Stage 14.3 icons and illustrations") | Through 14.4 |
-| 14.4 | Every view restyled: panels, icons, SVG status markers, colored nutrient tiles on candidate cards, illustrations in empty and error states; "More conditions" grouped under four headings and opened when restored values are inside; the search button fixed to the bottom on phones ("Stage 14.4 views") | The new look in four locales |
-
-Unchanged: the engines, formulas, rounding, ranking, and every calculated value; the content and its version; recipe and food IDs; the saved-conditions record; the security headers (`platform/`); the dependencies except `i18next` 26.6.0 (type definitions only, "Dependency update: i18next 26.6.0"). The JavaScript bundle grows from 557,616 to 566,971 bytes (gzip 170 kB) and the CSS from 17.2 to 22.0 kB (gzip 5.5 kB).
-
 ## 1. Acceptance criteria ([SPEC.md](../en/SPEC.md) §15 and §18)
+
+Release 13 was checked on `95f0c44` on 2026-11-01 (10:40–10:55 UTC): `npm ci`, `npm run check` (64 test files with 1,023 tests, content validation of 139 foods and 150 recipes, production build without the chunk-size warning), `npm run test:e2e` (194 passed, 1 skipped by design; first render and language switch per locale, chunk failures and retries, axe-core with color contrast in real browsers), and `npm audit --omit=dev` (0 vulnerabilities); `npm audit` reports the same 12 moderate findings of the accepted `minimatch` advisory; `npm outdated` lists only the recorded exceptions (`typescript`, `@types/node`). The phone-class timing against release 12 shows the search unchanged (69.6–70.3 ms median for cut at 4×, p90 at most 78.4 ms) and a language switch about 10–25 ms slower for the extra chunk ([DECISIONS.md](DECISIONS.md) "Release 13 preparation").
 
 Release 12 was checked on `974d037` on 2026-11-01 (07:39–07:46 UTC): `npm ci`, `npm run check` (62 test files with 1,003 tests, content validation of 139 foods and 150 recipes, production build), `npm run test:e2e` (164 passed, 1 skipped by design), and `npm audit --omit=dev` (0 vulnerabilities); `npm audit` reports the same 12 moderate findings of the accepted `minimatch` advisory; `npm outdated` lists only the recorded exceptions (`typescript`, `@types/node`). Phase 15 adds 20 recipes and 22 foods and does not change the engines; the phone-class timing against release 11 shows about 1–3 ms more for a search at 4× (62.7–64.3 ms median for cut), within the ADR-030 D10 threshold ([DECISIONS.md](DECISIONS.md) "Release 12 preparation"). New rows: the cuisine values `french`, `north_african`, and `west_african` in the UI catalogs and the free-text parser (`test/node/free-text-parser.test.ts`).
 
@@ -69,6 +70,8 @@ Release 8 was checked on `c2d56d0` on 2026-10-31 (10:41–10:45 UTC): `npm ci`, 
 
 | Item | Status | What is needed |
 |---|---|---|
+| CI on the release commit (release 13) | **Open** | Both jobs must pass on the commit the owner pushes to `dev` |
+| Secret scan of the release history (release 13) | **Passed** on `95f0c44` | gitleaks 8.30.1: `gitleaks git --log-opts=--all --redact` (187 commits, 5.01 MB) and `gitleaks dir --redact` on the tracked files (`git archive HEAD`, 3.79 MB): no leaks (2026-11-01 10:40 UTC). The only `.env*` path in the history is the removed `.env.example` of Phase 12 with placeholders |
 | CI on the release commit (release 12) | **Passed** | Both jobs passed on `cc1bf80` (owner's report, 2026-11-01) |
 | Secret scan of the release history (release 12) | **Passed** on `974d037` | gitleaks 8.30.1: `gitleaks git --log-opts=--all --redact` (180 commits, 4.91 MB) and `gitleaks dir --redact` on the tracked files (`git archive HEAD`, 3.72 MB): no leaks (2026-11-01 07:46 UTC). The only `.env*` path in the history is the removed `.env.example` of Phase 12 with placeholders |
 | CI on the release commit (release 11) | **Passed** | Both jobs passed on `04134e0` (owner's report, 2026-11-01) |
@@ -95,7 +98,7 @@ Release 8 was checked on `c2d56d0` on 2026-10-31 (10:41–10:45 UTC): `npm ci`, 
 | 18 recipes meet no preset with the default conditions, most of them near on fat because a shown range touches the bound (list and counts: [DECISIONS.md](DECISIONS.md) "Phase 10 start"; Phase 15 adds `galette_complete` and `croque_monsieur`, near for maintain; earlier records named only `tortilla_espanola` and `mackerel_salt_grill_daikon`); several cooked foods use raw values as approximations | [DECISIONS.md](DECISIONS.md) "Stage 6.4", "Stage 7.3", "Phase 10 start", "Stage 15.3 batch 2: recipes" | Goal labels follow the best-fitting preset; the approximation and its band are shown |
 | Egg- and soy-based dishes meet the cut preset less often than other groups: in release 7, 6 of 20 egg and 3 of 20 soy recipes meet it (release 6: 2 of 13 and 0 of 13); after Phase 15, 6 of 22 and 3 of 20 | [DECISIONS.md](DECISIONS.md) "Stage 5.2 batch 1", "Stage 10.4 batch 3: recipes" | Goal labels follow the best-fitting preset; fit status and reasons are shown |
 | A full recommendation takes about 52–55 ms at a 4× CPU slowdown (p90 about 56–64 ms) and about 78–83 ms at 6× on the measuring machine (2026-10-25 and 2026-10-31); with the 130 recipes of release 7, about 54–59 ms median and 62–66 ms p90 at 4× and 81–90 ms median at 6× (2026-10-31); release 8: 57.6 ms (cut) and 55.1 ms (bulk) median at 4×; no real phone measured | ADR-030 D10 (revised, updated in Stage 9.3), ADR-023 (revised before Phase 10 batch 3), below | Release 4's code measured alternately on the same machine takes 79–86 ms at 4×; a synthetic library of 130 recipes stays at about 62–70 ms ([DECISIONS.md](DECISIONS.md) "Stage 9.3 browser timing") |
-| The JavaScript bundle (566,971 bytes, gzip 170 kB, release 11) holds all four UI catalogs, the free-text word lists, and the icon and illustration data, and exceeds Vite's 500 kB warning | [DECISIONS.md](DECISIONS.md) "Bundle-size warning accepted" | Loading catalogs per locale is a later option |
+| Since release 13 the UI catalog and the free-text word list of each locale are a separate chunk loaded before the first render and before a language switch; a failed load shows an error with a retry. The retry of a failed `import()` was checked in Chromium and WebKit, not in Firefox | ADR-039, [DECISIONS.md](DECISIONS.md) "Stage 16.2 per-locale loading" | At startup the retry reloads the page; on a switch the current language stays |
 | Free text: elliptical alternatives ("Chicken thigh or breast") read only the full name; words outside the word lists are not read; the `es` and `fr` word lists have no native reviewer | [DECISIONS.md](DECISIONS.md) "Stage 12.4 deterministic parser", open questions 9 and 23 | The conditions found are shown before anything is applied; the user can discard them or edit the form |
 | After the first view, the precomputation of the solver results occupies the main thread once (about 40–70 ms at 4×); an input in that time waits for it | [DECISIONS.md](DECISIONS.md) "Stage 9.3 precomputation after the first view" | The form appears as fast as in release 4; a search before the precomputation ends gives the same result without the speed-up |
 | Shopping list: memory only, lost on reload; amounts are edible portions or weights as sold, not purchase amounts; frying oil follows the recipe amount and depends on the pan; household measure totals only for one unit; copying falls back to a text area where the Clipboard API is missing or refused | [SPEC.md](../en/SPEC.md) §18, ADR-032 | Notes in the list (basis, frying oil) and the reload notice; no data leaves the browser |

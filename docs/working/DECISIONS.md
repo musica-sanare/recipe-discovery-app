@@ -1250,6 +1250,13 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - Checks: `npm run check` (61 test files, 884 tests; content validation; production build) and `npm run test:e2e` (164 passed, 1 skipped by design).
 - Browser checks (dev server, built-in browser): at 375 px in Japanese, turning saving on wrote one record without allergens, and a reload restored it with the notice; at desktop width in French, the fieldset and its texts; no page overflow and no console errors in either.
 
+### Release 10 preparation (2026-11-01)
+- Release 10 contains Phase 13 (opt-in saved conditions, ADR-036) after release 9. Content version `2026-10-31.8`; the engines, calculated values, headers, and dependencies are unchanged.
+- Checks on `a5e9230` (2026-11-01 01:42–01:45 UTC): `npm ci`, `npm run check` (884 tests), `npm run test:e2e` (164 passed, 1 skipped), `npm audit --omit=dev` (0); `npm audit` reports the accepted `minimatch` findings only. `dist/`: 10 files, about 1.5 MB (JavaScript bundle 557,616 bytes; calculation bundle 280,701 bytes, unchanged).
+- Secret scan: gitleaks 8.30.1, `gitleaks git --log-opts=--all --redact` (163 commits, 4.46 MB) and `gitleaks dir --redact` on the tracked files: no leaks.
+- Storage after each flow on the production build: only the locale key with saving off; one record with saving on (allergens only with their checkbox); the locale key alone after turning saving off. Details in [RELEASE_READINESS.md](RELEASE_READINESS.md) §1.
+- Open: CI on the release commit after the owner pushes, the owner's merge into `main` (a deploy), and the post-deployment checks.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in

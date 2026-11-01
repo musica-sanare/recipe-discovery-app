@@ -2,7 +2,7 @@
 
 # Release Readiness — Recipe Discovery
 
-Status: **Release 9 deployed (2026-11-01)** at https://recipe-discovery.musica-sanare.workers.dev from commit `9a5120c`, merged into `main` as `f296aaf` (version `9f5b65ef-b9f8-44d7-8f19-b55c79b2893d`) and deployed by Cloudflare Workers Builds (ADR-035): the free-text conditions of Phase 12, read by a deterministic parser in the browser (ADR-034, revised twice), on top of release 8. The post-deployment checks passed ([DECISIONS.md](DECISIONS.md) "Release 9 and ninth production deployment"). `36e5e3e` (version `4f323282…`, the first Workers Builds deployment, the same app as release 8) is the rollback target. Update this document for every release; release 1 is recorded in [DECISIONS.md](DECISIONS.md) ("Stage 5.1 release plan" to "Manual checks"), release 2 in "Stage 6.6" and "Second production deployment", release 3 in "Stage 7.4" and "Third production deployment", release 4 in "Stage 8.4" and "Fourth production deployment", release 5 in "Stage 9.4" and "Fifth production deployment", release 6 in "Release 6 preparation" and "Sixth production deployment", release 7 in "Release 7 preparation" and "Seventh production deployment", release 8 in "Release 8 preparation" and "Eighth production deployment", release 9 in "First Workers Builds deployment" and "Release 9 and ninth production deployment".
+Status: **Release 10 prepared (2026-11-01)**: the opt-in saved conditions of Phase 13 (ADR-036) on top of release 9, checked on `a5e9230` (§1, §2); CI and the owner's merge into `main` are open. Release 9 is in production at https://recipe-discovery.musica-sanare.workers.dev from commit `9a5120c`, merged into `main` as `f296aaf` (version `9f5b65ef-b9f8-44d7-8f19-b55c79b2893d`) and deployed by Cloudflare Workers Builds (ADR-035): the free-text conditions of Phase 12, read by a deterministic parser in the browser (ADR-034, revised twice), on top of release 8. The post-deployment checks passed ([DECISIONS.md](DECISIONS.md) "Release 9 and ninth production deployment"). `36e5e3e` (version `4f323282…`, the first Workers Builds deployment, the same app as release 8) is the rollback target. Update this document for every release; release 1 is recorded in [DECISIONS.md](DECISIONS.md) ("Stage 5.1 release plan" to "Manual checks"), release 2 in "Stage 6.6" and "Second production deployment", release 3 in "Stage 7.4" and "Third production deployment", release 4 in "Stage 8.4" and "Fourth production deployment", release 5 in "Stage 9.4" and "Fifth production deployment", release 6 in "Release 6 preparation" and "Sixth production deployment", release 7 in "Release 7 preparation" and "Seventh production deployment", release 8 in "Release 8 preparation" and "Eighth production deployment", release 9 in "First Workers Builds deployment" and "Release 9 and ninth production deployment".
 
 Commit hashes in this document are those after the history rewrite of 2026-10-25; older records in [DECISIONS.md](DECISIONS.md) use the earlier hashes ("History rewrite (2026-10-25)").
 
@@ -17,17 +17,20 @@ Commit hashes in this document are those after the history rewrite of 2026-10-25
 | 7 (Phase 10) | `cb086c1` | `2026-10-31.7` | Deployed 2026-10-31 06:09 UTC (version `fa07a331…`); replaced by release 8 |
 | 8 (Phase 11) | `2aa0c7b` | `2026-10-31.8` | Deployed 2026-10-31 11:08 UTC (version `54ef9ecc…`); replaced by `36e5e3e` (same app, first Workers Builds deployment, version `4f323282…`) |
 | 9 (Phase 12) | `9a5120c` (merged as `f296aaf`) | `2026-10-31.8` | Deployed by Workers Builds 2026-10-31 about 23:32 UTC (version `9f5b65ef…`) |
+| 10 (Phase 13) | the release 10 preparation commit (checked on `a5e9230`) | `2026-10-31.8` | Prepared; waiting for CI and the owner's merge |
 
-## 0. What changes in release 9
+## 0. What changes in release 10
 
 | Stage | Change | Visible to users |
 |---|---|---|
-| 12.4 | Deterministic free-text parser with word lists in `ja`, `en`, `es`, and `fr` (`shared/freeText/`), reviewed by the owner ([DECISIONS.md](DECISIONS.md) "Stage 12.4 deterministic parser") | None by itself |
-| 12.5 | A collapsible free-text field on the targets view: "read" shows the conditions found (foods to include or avoid, time limit, equipment, cuisines), "apply" adds them to the form, "discard" leaves the form unchanged; requests about allergens point to the allergen field ("Stage 12.5 free-text conditions UI") | The field in four locales; the text is read in the browser and sent nowhere |
+| 13.2 | Storage module for one versioned `localStorage` record with a runtime schema; every storage failure is ignored (`src/state/savedConditions.ts`, [DECISIONS.md](DECISIONS.md) "Stage 13.2 storage module") | None by itself |
+| 13.3 | An opt-in "save on this device" fieldset on the targets view, a separate checkbox for allergens, a delete action, a shared-browser note, and restore after a reload without searching; the reload notice and the about page's privacy text are updated ("Stage 13.3 saved-conditions UI", ADR-036) | The fieldset and notices in four locales; with saving off, nothing new is stored |
 
-Unchanged: the engines, formulas, rounding, and every calculated value; the content and its version; recipe and food IDs; the security headers (`platform/`); the dependencies. No AI, endpoint, or key exists. The JavaScript bundle grows from 522,291 to 547,833 bytes (gzip 164 kB) with the parser and the word lists (Vite warning accepted, [DECISIONS.md](DECISIONS.md) "Bundle-size warning accepted"). The deployment path changed: Workers Builds deploys a merge into `main` (ADR-035).
+Unchanged: the engines, formulas, rounding, and every calculated value; the content and its version; recipe and food IDs; the security headers (`platform/`); the dependencies. The JavaScript bundle grows from 547,833 to 557,616 bytes (gzip 166 kB) (Vite warning accepted, [DECISIONS.md](DECISIONS.md) "Bundle-size warning accepted").
 
 ## 1. Acceptance criteria ([SPEC.md](../en/SPEC.md) §15 and §18)
+
+Release 10 was checked on `a5e9230` on 2026-11-01 (01:42–01:45 UTC): `npm ci`, `npm run check` (61 test files with 884 tests, content validation of 117 foods and 130 recipes, production build), `npm run test:e2e` (164 passed, 1 skipped by design), and `npm audit --omit=dev` (0 vulnerabilities); `npm audit` reports the same 12 moderate findings of the accepted `minimatch` advisory; `npm outdated` lists the recorded exceptions and `i18next` 26.6.0 ("Phase 13 start: saved conditions"). The phone-class timing was not repeated: Phase 13 does not change the engines and adds one `localStorage` read after the content loads. Stored keys after each flow on the production build (`vite preview`, built-in browser): with saving off, after a search, a detail page, and adding to the shopping list, only `recipe-discovery.locale`; with saving on and the allergen checkbox, one `recipe-discovery.conditions` record holding the form as typed and `allergens: ["wheat"]`; after turning saving off, only the locale key again; no cookies, no session storage, no requests to another origin, no console errors. New rows: saved conditions per locale in `e2e/savedConditions.spec.ts` and `test/ui/savedConditions.test.tsx`.
 
 Release 9 was checked on `9a5120c` on 2026-10-31 (23:15–23:25 UTC): `npm ci`, `npm run check` (59 test files with 838 tests, content validation of 117 foods and 130 recipes, production build), `npm run test:e2e` (152 passed, 1 skipped by design), and `npm audit --omit=dev` (0 vulnerabilities); `npm audit` reports the same 12 moderate findings of the accepted `minimatch` advisory. The phone-class timing was not repeated: Phase 12 does not change the engines, and the free-text field runs only when the user presses "read". The rows below were written for release 8 and still hold; rows that release 9 changes say so.
 
@@ -51,6 +54,8 @@ Release 8 was checked on `c2d56d0` on 2026-10-31 (10:41–10:45 UTC): `npm ci`, 
 
 | Item | Status | What is needed |
 |---|---|---|
+| CI on the release commit (release 10) | **Open** | The owner pushes `dev`; both jobs must pass on the release 10 preparation commit |
+| Secret scan of the release history (release 10) | **Passed** on `a5e9230` | gitleaks 8.30.1: `gitleaks git --log-opts=--all --redact` (163 commits, 4.46 MB) and `gitleaks dir --redact` on the tracked files (`git archive HEAD`, 3.37 MB): no leaks (2026-11-01 01:45 UTC). The only `.env*` path in the history is the removed `.env.example` of Phase 12 with placeholders |
 | CI on the release commit (release 9) | **Passed** | Both jobs passed on `9a5120c` (owner's report, 2026-11-01) |
 | Secret scan of the release history (release 9) | **Passed** on `9a5120c` | gitleaks 8.30.1: `gitleaks git --log-opts=--all --redact` (157 commits, 4.38 MB) and `gitleaks dir --redact` on the tracked files (`git archive HEAD`, 3.30 MB): no leaks (2026-10-31 23:15 UTC) |
 | CI on the release commit | **Passed** | Both jobs passed on `2aa0c7b` after the owner pushed `dev` (owner's report, 2026-10-31) |
@@ -96,7 +101,11 @@ Releases 2 to 6 (optional, after deployment): on an iPhone, the cuisine choices 
 
 Release 9 (optional, after deployment): on an iPhone, the free-text field in each language: type a request, read, apply, and search; a request about allergies and its pointer to the allergen field.
 
-## 5. Deployment (release 9, deployed on 2026-11-01)
+Release 10 (optional, after deployment): on an iPhone with Safari, turn saving on, search, close and reopen the tab, and see the form restored; then turn saving off. Safari may delete the record after seven days without a visit (ADR-036, limits).
+
+## 5. Deployment (release 10, prepared on 2026-11-01)
+
+Release 10: after CI passes on the release 10 preparation commit, the owner merges `dev` into `main` with a merge commit; the push of `main` deploys. Claude then runs the post-deployment checks of [DEPLOYMENT.md](../en/DEPLOYMENT.md) §3 and the saved-conditions flow in production. Rollback: revert on `dev` and merge again, or for urgency the dashboard rollback to `f296aaf` (release 9, version `9f5b65ef…`). Data and privacy: saved conditions stay in the browser by the user's choice (ADR-036); nothing is sent.
 
 Since ADR-035, a release is the owner's merge into `main`; Workers Builds builds and deploys it ([DEPLOYMENT.md](../en/DEPLOYMENT.md) §3). Nobody runs Wrangler locally. Release 9: the owner approved the release after the checks of §1 and §2 and merged `dev` (`9a5120c`) into `main` (`f296aaf`). Rollback: revert on `dev` and merge again, or for urgency the dashboard rollback to `36e5e3e` (version `4f323282…`); whether the dashboard rollback restores static assets remains 要確認. Cost: static assets are free and unlimited; one build of a few minutes on Workers Free. Data and privacy: unchanged; the free text stays in the browser and is not stored.
 
@@ -162,3 +171,4 @@ Since ADR-035, a release is the owner's merge into `main`; Workers Builds builds
 | Release blockers resolved | 9 | 2026-11-01 | Owner (CI passed) and Claude (secret scan; `minimatch` unchanged) |
 | Production deployment approved | 9 | 2026-11-01 | Owner (merged `dev` into `main`, `f296aaf`) |
 | Deployed and checked | 9 | 2026-11-01 | Workers Builds; checked by Claude ([DECISIONS.md](DECISIONS.md) "Release 9 and ninth production deployment") |
+| Acceptance criteria checked | 10 | 2026-11-01 | Claude (§1) |

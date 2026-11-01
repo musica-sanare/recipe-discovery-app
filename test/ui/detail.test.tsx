@@ -4,6 +4,7 @@ import { I18nextProvider } from "react-i18next";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { defaultState, type RecipeState } from "../../domain/nutrition/amounts.ts";
 import { calculateNutrition, type RecipeNutrition } from "../../domain/nutrition/engine.ts";
+import type { CalcBundle } from "../../shared/bundle.ts";
 import type { Locale } from "../../shared/locales.ts";
 import { App } from "../../src/App.tsx";
 import { formatDifference, formatNutrient } from "../../src/format/format.ts";
@@ -83,6 +84,32 @@ describe("recipe detail without a search", () => {
     expect(screen.getByRole("heading", { level: 2, name: "安全のための注意" })).toBeDefined();
     expect(screen.getAllByText("日本食品標準成分表（八訂）増補2023年から引用").length).toBeGreaterThan(0);
     expect(screen.getByText(/エネルギーは成分表の値を使っているため/)).toBeDefined();
+  });
+
+  it("shows the nutrients as tiles, with energy across the row (Stage 16.1 decisions)", async () => {
+    await openDetail("chicken_lemon_herb_grill");
+    const tiles = within(screen.getByRole("region", { name: "1人分の栄養（推定値）" }))
+      .getAllByRole("term")
+      .map((term) => term.parentElement?.className ?? "");
+    expect(tiles).toHaveLength(5);
+    expect(tiles[0]).toContain("col-span-2");
+    // Forced colors keep an edge on every tile.
+    for (const tile of tiles) expect(tile).toContain("border-transparent");
+  });
+
+  it("shows an unknown value with the ingredients that lack data, never zero", async () => {
+    const calc = (await (await repositoryFetch("/calc.json")).json()) as CalcBundle;
+    const codes = Object.values(calc.foods.find((food) => food.id === "salt")?.composition ?? {});
+    const patched: CalcBundle = {
+      ...calc,
+      compositionFoods: calc.compositionFoods.map((food) => (codes.includes(food.code) ? { ...food, nutrients: { ...food.nutrients, NACL_EQ: { value: null, notation: "unmeasured" } } } : food)),
+    };
+    vi.stubGlobal("fetch", vi.fn((url: string) => (url === "/calc.json" ? Promise.resolve(Response.json(patched)) : repositoryFetch(url))));
+    await openDetail("chicken_lemon_herb_grill");
+
+    expect(shownValues()["食塩相当量"]).toBe("不明");
+    expect(screen.getByText(/^値のない食材：/)).toBeDefined();
+    expect(await axeViolations()).toEqual([]);
   });
 
   it("recalculates with the engine on every change and shows the differences of the displayed values", async () => {

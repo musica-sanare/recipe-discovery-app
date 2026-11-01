@@ -260,6 +260,7 @@ export const fr: Messages = {
     reasonsHeading: "Pourquoi certaines valeurs sont approximatives",
     assumptionsHeading: "Hypothèses",
     incompleteHeading: "Valeurs inconnues",
+    missingFoods: "Pas de données pour : {{list}}",
     dataVersion: "Données de composition mises à jour le {{date}} (SHA-256 {{sha}}…) · Version du contenu {{content}}",
     sideStepHidden_one: "{{count}} étape est omise, car l'accompagnement a été retiré.",
     sideStepHidden_other: "{{count}} étapes sont omises, car l'accompagnement a été retiré.",

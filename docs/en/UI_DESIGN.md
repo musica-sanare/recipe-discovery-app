@@ -178,9 +178,9 @@ Mobile:
 │ (!) Allergens: egg (contains) … │
 ├─────────────────────────────────┤
 │ Per serving (estimates)         │
-│ Energy 520 kcal ✓ (500–540)     │
-│ Protein 43 g ✓                  │
-│ Fat 8 g ✓ · Carbohydrate 52 g   │
+│ [Energy 520 kcal ✓ (500–540)  ] │
+│ [Protein 43 g ✓][Fat 8 g ✓    ] │
+│ [Carbs 52 g    ][Salt 1.8 g   ] │
 │ Since last change: protein +8 g │
 │ Status: fat near → met          │
 ├─────────────────────────────────┤
@@ -223,7 +223,8 @@ Desktop: two columns; the nutrition summary and adjustment controls stay in a st
 States:
 - Without a search (direct link or reload): default amounts, no fit statuses, no "fit to my targets".
 - An invalid adjustment state cannot be reached through the controls (steppers follow the authored grid and bounds); engine errors are still mapped to messages.
-- Unknown values show "unknown" with the ingredients that lack data, never zero.
+- Nutrition tiles (Stage 16.3, [DECISIONS.md](../working/DECISIONS.md) "Stage 16.1 decisions"): one tile per nutrient in the pastel of the candidate cards (energy butter, protein mint, fat peach, carbohydrate sky, salt equivalent `surface-muted`). Energy spans the row; the other four follow two to a row on phones and four from `md`. Each tile holds the value (28 px, weight 800), the range, the status marker and text, and the target or "no target"; the label, not the color, names the nutrient. Tiles and the change summary keep a transparent border, so forced colors draw their edges.
+- Unknown values show "unknown" with the ingredients that lack data in their tile, never zero.
 - When a rounded value looks like it meets a bound that the full value misses, the value is shown to one decimal with "just below the target" (or "just above").
 - Shopping list (ADR-032): a section of its own after the adjustment section, available with and without a search.
   - "Add to shopping list" copies the current state (servings, amounts, sides, substitutions) into the list.
@@ -233,7 +234,7 @@ States:
 
 ### 3.5 Shared elements
 
-- Header: app name, a link to the shopping list with its recipe count, and the language switcher. The link appears only while the list has a recipe and may use a shorter label at narrow widths.
+- Header: the logo and the app name (one link to the targets view; the logo is decorative), a link to the shopping list with its recipe count, and the language switcher. The link appears only while the list has a recipe and may use a shorter label at narrow widths.
 - Footer: attribution, content and composition versions, and a link to the about page.
 - Comparison table (§3.3) and the ingredient table of the detail view (§3.4): the visible caption sits above the scrolling region and labels it. The table keeps a visually hidden `caption`, so the caption no longer scrolls with the table.
 - The estimates disclaimer appears on candidates, comparison, and detail views. The allergen disclaimer appears wherever allergen features appear.
@@ -364,6 +365,7 @@ The "soft pop" direction (ADR-037): the calm, warm base of a fresh market with p
 - Type: system fonts (no web font). Body 16 px with line height 1.6; hints 13–14 px; `h1` 32 px weight 900 with a short three-color bar below it; `h2` 22 px and `h3` 18 px weight 800; nutrition numbers 28 px weight 800 with `tabular-nums`.
 - Shape: inputs and small tiles 14–16 px radius; panels and cards 24 px; buttons and chips fully rounded. Panels and cards have a soft shadow in light mode; the main action has a solid 5 px shadow in the text color that shrinks when pressed.
 - Icons: original two-tone SVG on a 24 px grid, 1.8 px round strokes in `currentColor` with pastel fills; decorative ones are `aria-hidden`, meaningful ones have a label from the catalogs; no text inside. Set: protein groups (chicken, pork, beef, fish, egg, soy), equipment (`EQUIPMENT`), time, effort, servings, actions (search, save, delete, compare, shopping list, copy, print, back, language, close), notices (warning, information), and the four status markers redrawn with their current shapes. No icons for cuisines, nutrients, or allergens.
+- Logo (Stage 16.3): the original "discovery bowl", a bowl with a sprout under a rising sun, drawn like the icons on a 32 px grid with 2.2 px strokes (`LOGO` in `iconData.ts`, `Logo` in `Icon.tsx`). 28 px in the header, decorative, no text inside; the product name stays HTML text. In forced colors the outlines take the link color.
 - Illustrations: next to the targets heading (smaller or hidden on phones), in the empty and exceptional states (no candidates, empty shopping list, recipe not found, content error), and next to the about heading. Decorative, without text.
 - Motion: a small press on buttons and a short fade when cards appear; none with `prefers-reduced-motion`.
 - Layout changes: "More conditions" opens when restored saved values are inside it; the targets form is grouped under the headings targets, time and effort, foods, and allergens; on phones, "Find recipes" stays at the bottom of the screen. The flow of views does not change.

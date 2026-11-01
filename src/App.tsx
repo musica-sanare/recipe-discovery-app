@@ -6,6 +6,7 @@ import { ContentVersions } from "./components/ContentVersions";
 import { DocumentMetadata } from "./components/DocumentMetadata";
 import { LanguageSwitcher } from "./components/LanguageSwitcher";
 import { LoadError } from "./components/LoadError";
+import { Logo } from "./components/icons/Icon";
 import { useContent, type ContentUrls } from "./content/useContent";
 import { loadLocaleData, type LoadLocaleData } from "./i18n/localeData";
 import { useLocaleSwitch } from "./i18n/useLocaleSwitch";
@@ -59,7 +60,8 @@ function Shell({ contentUrls, loadLocale }: { readonly contentUrls: ContentUrls;
       </a>
       <header className="border-b border-border print:hidden">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-3">
-          <ViewLink to={{ name: "targets" }} className="font-bold text-text no-underline">
+          <ViewLink to={{ name: "targets" }} className="inline-flex items-center gap-2 font-bold text-text no-underline">
+            <Logo />
             {t("app.name")}
           </ViewLink>
           <div className="flex flex-wrap items-center gap-3">

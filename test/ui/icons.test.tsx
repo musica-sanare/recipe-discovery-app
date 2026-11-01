@@ -1,8 +1,8 @@
 // @vitest-environment jsdom
 import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
-import { Icon, Illustration } from "../../src/components/icons/Icon.tsx";
-import { ICON_NAMES, ICONS } from "../../src/components/icons/iconData.ts";
+import { Icon, Illustration, Logo } from "../../src/components/icons/Icon.tsx";
+import { ICON_NAMES, ICONS, LOGO } from "../../src/components/icons/iconData.ts";
 import { ILLUSTRATION_NAMES, ILLUSTRATIONS } from "../../src/components/icons/illustrationData.ts";
 import { axeViolations } from "../../src/testing/axe.ts";
 
@@ -56,5 +56,22 @@ describe("illustrations", () => {
     const svg = container.querySelector("svg");
     expect(svg?.getAttribute("aria-hidden")).toBe("true");
     expect(svg?.querySelector("text, foreignObject, image")).toBeNull();
+  });
+});
+
+describe("logo", () => {
+  it("is decorative path data on the 32 px grid, two-tone, without text", () => {
+    for (const shape of LOGO) {
+      expect(shape.d).toMatch(PATH_DATA);
+    }
+    const { container } = render(<Logo />);
+    const svg = container.querySelector("svg");
+    expect(svg?.getAttribute("viewBox")).toBe("0 0 32 32");
+    expect(svg?.getAttribute("aria-hidden")).toBe("true");
+    expect(svg?.getAttribute("stroke")).toBe("currentColor");
+    expect(svg?.querySelectorAll("path").length).toBe(LOGO.length);
+    expect(svg?.querySelector("text, foreignObject, image")).toBeNull();
+    // Outlines in the text color, fills from the tokens (ADR-037 D3).
+    expect(LOGO.every((shape) => shape.fill !== undefined)).toBe(true);
   });
 });

@@ -34,6 +34,18 @@ import { Icon, Illustration } from "../components/icons/Icon";
 
 const SHOWN_NUTRIENTS: readonly Nutrient[] = ["ENERC_KCAL", "PROT-", "FAT-", "CHOCDF-", "NACL_EQ"];
 const TABLE_NUTRIENTS: readonly Nutrient[] = ["ENERC_KCAL", "PROT-", "FAT-", "CHOCDF-"];
+/**
+ * Nutrient tiles keep the pastels of the candidate cards; the label, not the color, tells
+ * them apart (ADR-037 D1). Energy spans the row, the other four follow two (phones) or
+ * four (from `md`) to a row. Salt equivalent has no target.
+ */
+const TILE: Readonly<Partial<Record<Nutrient, string>>> = {
+  ENERC_KCAL: "col-span-2 bg-butter md:col-span-4",
+  "PROT-": "bg-mint",
+  "FAT-": "bg-peach",
+  "CHOCDF-": "bg-sky",
+  NACL_EQ: "bg-surface-muted",
+};
 
 function Section({ id, title, children }: { readonly id: string; readonly title: string; readonly children: ReactNode }) {
   return (
@@ -245,7 +257,7 @@ function DetailBody({ recipe, recipeState, nutrition, fit, previous, onChange, o
       )}
 
       <Section id="nutrition-heading" title={t("detail.perServing")}>
-        <dl className="m-0 grid grid-cols-[auto_1fr] gap-x-4 gap-y-2">
+        <dl className="m-0 grid grid-cols-2 gap-2 md:grid-cols-4">
           {SHOWN_NUTRIENTS.map((nutrient) => {
             const value = nutrition.perServing[nutrient];
             const range = nutrition.ranges[nutrient];
@@ -253,16 +265,19 @@ function DetailBody({ recipe, recipeState, nutrition, fit, previous, onChange, o
             const bound = line === undefined || targets === undefined ? undefined : missedBound(targets, line);
             const note = bound === undefined || value === null ? undefined : boundaryNote(nutrient, value, bound);
             return (
-              <div key={nutrient} className="contents">
-                <dt className="font-medium">{t(`nutrient.${nutrient}`)}</dt>
-                <dd className="m-0 flex flex-wrap items-baseline gap-x-2">
-                  <span>{note === undefined || value === null ? nutrientText(t, locale, nutrient, value) : preciseNutrientText(t, locale, nutrient, value)}</span>
-                  {range?.shown === true && <span className="text-sm text-muted">{rangeText(t, locale, nutrient, range.low, range.high)}</span>}
-                  {fit !== undefined && line === undefined && nutrient !== "NACL_EQ" && <span className="text-sm text-muted">{t("status.noTarget")}</span>}
+              <div key={nutrient} className={`flex flex-col gap-0.5 rounded-2xl border border-transparent p-3 ${TILE[nutrient] ?? ""}`}>
+                <dt className="text-sm text-muted">{t(`nutrient.${nutrient}`)}</dt>
+                <dd className="m-0 flex flex-col items-start gap-0.5 text-sm">
+                  <span className="text-[1.75rem] font-extrabold tabular-nums leading-tight">{note === undefined || value === null ? nutrientText(t, locale, nutrient, value) : preciseNutrientText(t, locale, nutrient, value)}</span>
+                  {range?.shown === true && <span className="text-xs text-muted">{rangeText(t, locale, nutrient, range.low, range.high)}</span>}
+                  {value === null && nutrition.incomplete[nutrient].length > 0 && (
+                    <span className="text-xs text-muted">{t("detail.missingFoods", { list: listText(t, nutrition.incomplete[nutrient].map(ingredientName)) })}</span>
+                  )}
+                  {fit !== undefined && line === undefined && nutrient !== "NACL_EQ" && <span className="text-xs text-muted">{t("status.noTarget")}</span>}
                   {line !== undefined && targets !== undefined && (
                     <>
                       <StatusMarker status={line.status} label={note === undefined ? undefined : t(`status.${note}`)} />
-                      <span className="text-sm text-muted">{boundText(t, locale, targets, line)}</span>
+                      <span className="text-xs text-muted">{boundText(t, locale, targets, line)}</span>
                     </>
                   )}
                 </dd>
@@ -272,7 +287,7 @@ function DetailBody({ recipe, recipeState, nutrition, fit, previous, onChange, o
         </dl>
         {fit === undefined && <p className="m-0 text-sm text-muted">{t("detail.noSearch")}</p>}
         {previous !== undefined && (
-          <div className="rounded bg-surface-muted p-3 text-sm">
+          <div className="rounded-2xl border border-transparent bg-surface-muted p-3 text-sm">
             <p className="m-0">{changes.length > 0 ? t("detail.changes", { list: listText(t, changes) }) : t("detail.noChange")}</p>
             {statusChanges.length > 0 && <p className="m-0">{t("detail.statusChanges", { list: listText(t, statusChanges) })}</p>}
           </div>

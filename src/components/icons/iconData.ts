@@ -165,3 +165,15 @@ export const ICONS = {
 
 export type IconName = keyof typeof ICONS;
 export const ICON_NAMES = Object.keys(ICONS) as IconName[];
+
+/**
+ * The header logo "discovery bowl" (docs/working/DECISIONS.md "Stage 16.1 decisions",
+ * direction A): a bowl with a sprout under a rising sun, on a 32 px grid. Decorative; the
+ * product name stays text.
+ */
+export const LOGO: readonly Shape[] = [
+  { d: circle(20.5, 9, 4.2), fill: "sun", stroke: false },
+  { d: "M3.5 15.5h25c-.5 7-5.8 12-12.5 12S4 22.5 3.5 15.5z", fill: "mint" },
+  { d: "M9 15.5c.6-3.6 3.6-5.6 6.6-4.4", fill: "peach" },
+  { d: "M14 15.5c0-4 1.6-7.6 4.5-9.6M14.2 10.5c-2.4-.5-4.2-2.2-4.6-4.6 2.5.1 4.3 1.8 4.6 4.6z", fill: "primary" },
+];

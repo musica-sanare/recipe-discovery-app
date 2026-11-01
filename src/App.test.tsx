@@ -97,6 +97,14 @@ describe("effects visible in the same commit as the view", () => {
 
 describe("App shell", () => {
 
+  it("shows the logo beside the product name, which stays the link's text", async () => {
+    renderApp();
+    await screen.findByRole("heading", { level: 1 });
+    const home = screen.getByRole("link", { name: "Recipe Discovery" });
+    expect(home.textContent).toBe("Recipe Discovery");
+    expect(home.querySelector("svg")?.getAttribute("aria-hidden")).toBe("true");
+  });
+
   it("renders Japanese by default and sets document metadata", async () => {
     renderApp();
 

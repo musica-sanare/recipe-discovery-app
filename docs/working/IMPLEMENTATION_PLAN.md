@@ -207,7 +207,7 @@ Status: **Complete (2026-11-01)**: 20 recipes from France and French-speaking re
 
 ## Phase 16 — Polish and bundle size
 
-Status: **In progress (2026-11-01)**: Stage 16.1 decided (ADR-039; [DECISIONS.md](DECISIONS.md) "Stage 16.1 decisions"); Stage 16.2 per-locale loading done ("Stage 16.2 per-locale loading"). Prompt: `prompts/16-polish-and-bundle.md` (written after Phase 15, 2026-11-01). The owner chose this phase next, before Phase 17.
+Status: **In progress (2026-11-01)**: Stage 16.1 decided (ADR-039; [DECISIONS.md](DECISIONS.md) "Stage 16.1 decisions"); Stage 16.2 per-locale loading done ("Stage 16.2 per-locale loading"); Stage 16.3 logo and detail nutrition tiles done ("Stage 16.3 logo and detail nutrition tiles"). Prompt: `prompts/16-polish-and-bundle.md` (written after Phase 15, 2026-11-01). The owner chose this phase next, before Phase 17.
 
 - Load the UI catalog and free-text word list of the active locale only, so the startup bundle drops below Vite's 500 kB warning ("Bundle-size warning accepted").
 - An original logo in the header and nutrition tiles in the detail view (open after Phase 14).

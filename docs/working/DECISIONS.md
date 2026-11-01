@@ -1462,6 +1462,10 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - `npm run check` and `npm run test:e2e` pass; CI passed on the release commit; release 12 was deployed by the owner's merge into `main`.
 - Open after Phase 15: `galette_complete` and `croque_monsieur` reach only near for maintain; `es` and `fr` texts without a native reviewer (open questions 9 and 23).
 
+### Next phases after Phase 15 (2026-11-01)
+- The owner chose Phase 16 (polish and bundle size: per-locale loading of UI catalogs and free-text word lists, a header logo, and nutrition tiles in the detail view; `prompts/16-polish-and-bundle.md`) and then Phase 17 (custom domain and repository publication). A one-day meal plan, viewing history, and further library expansion stay candidates for later ([IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) "Later").
+- Phase 17: registering or renewing a domain is a paid action that the owner decides and performs; Claude prepares the owner steps, checks, and doc updates only (shared `paid-services.md`, `deployment.md`).
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in

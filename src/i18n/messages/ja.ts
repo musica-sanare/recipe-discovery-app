@@ -18,6 +18,7 @@ export const ja = {
       es: "Español",
       fr: "Français",
     },
+    loading: "言語を切り替えています…",
   },
   common: {
     skipToContent: "本文へ移動",

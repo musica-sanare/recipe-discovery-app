@@ -63,6 +63,9 @@ The schema is `shared/content.ts` (ADR-026). Calculation rules are in [NUTRITION
 
 - Library: i18next with typed TypeScript message catalogs, the owner's established approach (ADR-005).
 - UI catalogs: `ja` defines the message type; `en`, `es`, and `fr` must match it at compile time.
+- Per-locale loading (ADR-039): each locale's UI catalog and free-text word list form one chunk (`src/i18n/locales/<locale>.ts`, loaded by `src/i18n/localeData.ts`).
+  - First render: `src/main.tsx` resolves the locale and renders only after its chunk has loaded, so no other language or message key appears. If the chunk cannot be loaded, a short error with a retry in the four locales (`src/i18n/bootMessages.ts`) is shown; the retry reloads the page.
+  - The indexes of all locales (`src/i18n/resources.ts`, `shared/freeText/lexicon/index.ts`) are for tests and tools only. An ESLint rule keeps them out of app code.
 - Content: every recipe and food carries `ja`, `en`, `es`, and `fr` texts; the build fails on missing or blank entries.
 - **Food identity is separate from translation** (ADR-006). Ingredients reference locale-neutral food IDs; names and aliases are display and search data only. Nutrition functions do not accept a locale parameter, and their types enforce this.
 - Search normalization per locale:
@@ -86,7 +89,7 @@ The schema is `shared/content.ts` (ADR-026). Calculation rules are in [NUTRITION
 
 ## 6. Recommendation flow (browser)
 
-1. Load the calculation bundle and the text bundle of the active locale (static, content-hashed) (`src/content/`). Validate them with `zod/mini` and against each other. When a bundle is unreachable or invalid, show the error state with a retry action. Switching the locale loads only its text bundle, before the language changes, so the views stay mounted.
+1. Load the calculation bundle and the text bundle of the active locale (static, content-hashed) (`src/content/`). Validate them with `zod/mini` and against each other. When a bundle is unreachable or invalid, show the error state with a retry action. Switching the locale loads its UI chunk (if not yet loaded) and its text bundle in parallel, before the language changes, so the views stay mounted; the switcher shows a loading status meanwhile. If the UI chunk cannot be loaded, the current language stays and an error with a retry appears above the view (`src/i18n/useLocaleSwitch.ts`).
 2. Validate user inputs and detect contradictory targets (`src/views/TargetsView.tsx` with `domain/recommendation`).
 3. Hard filters → fit evaluation (default amounts, then bounded adjustment) → fit tiers → diversification → stable ordering, on the main thread (ADR-030 D10). The solver results that do not depend on the targets are computed once per calculation bundle, after the first view is shown (`src/state/providers.tsx`, `withPrecomputed` in `domain/recommendation/data.ts`). A search gives the same result with or without them.
 4. Render candidates and deterministic reason texts from the typed catalogs (`src/views/candidates/`).
@@ -110,7 +113,7 @@ Timing measured in the browser:
 
 The user may describe the dish in their own words. A deterministic parser in the browser reads conditions from the text, the UI shows them, and only the conditions the user applies reach the engines (ADR-034, revised again). The text is sent nowhere and not stored, and no AI is involved.
 
-1. **Read**: `parseConditions(text, locale, foods)` (`shared/freeText/parse.ts`) with the word lists of `shared/freeText/lexicon.ts` and the dictionary from the bundles (`parserFoods`). The same text, locale, and dictionary always give the same result.
+1. **Read**: `parseConditions(text, lexicon, foods)` (`shared/freeText/parse.ts`) with the active locale's word list (`shared/freeText/lexicon/<locale>.ts`) and the dictionary from the bundles (`parserFoods`). The same text, word list, and dictionary always give the same result.
 2. **Validate**: `validateValue` (`shared/suggestion.ts`) checks the strict schema (allowed fields and enum values, length limits), that every food ID is in the dictionary, and that no food is both required and excluded. Duplicates are removed.
 3. **Show**: conditions as a labelled list with "apply" and "discard"; a declined topic as a message (for allergens, with a button that moves focus to the allergen choices); nothing recognized as "no conditions found". Any failure leaves the form unchanged.
 4. **Apply** (`src/views/targets/freeText.ts`): required items and excluded foods are added to the chosen ones (a whole protein group keeps its group chip), cuisines are added, and a stated time limit and equipment replace the current ones. Targets and allergens are never changed.
@@ -138,7 +141,7 @@ The user may describe the dish in their own words. A deterministic parser in the
 - Accessibility checks (axe-core, without the contrast rule) in every locale for every view and exceptional state. A contrast test covers the color tokens, including every text and status color on each pastel (`test/node/styles.test.ts`); icon tests check that icons and illustrations are plain path data without text and follow the label rule (`test/ui/icons.test.tsx`).
 - E2E tests (`e2e/`, Playwright) on the production build with its headers:
   - browsers: desktop Chromium, and Chromium and WebKit at 375 px, in every locale;
-  - coverage: the full flow, exceptional states, locale switching, deep links, the about page, keyboard operation, axe-core with color contrast in light and dark, security headers, no request to another origin, and no CSP violation.
+  - coverage: the full flow, exceptional states, locale switching, per-locale loading (only the active locale's chunk at the first render; a failed chunk and its retry at the first render and on a switch), deep links, the about page, keyboard operation, axe-core with color contrast in light and dark, security headers, no request to another origin, and no CSP violation.
 - Phone-class timing runs on demand (`npm run test:e2e:timing`).
 
 ## 10. Not in the MVP

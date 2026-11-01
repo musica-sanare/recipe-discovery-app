@@ -10,7 +10,7 @@ import { CUISINES, EQUIPMENT, type Equipment, type ProteinGroup } from "../conte
 import type { Locale } from "../locales.ts";
 import { normalizeForSearch } from "../search.ts";
 import { SUGGEST_LIMITS, type OutOfScopeTopic, type ProviderOutput } from "../suggestion.ts";
-import { FOOD_GROUP_WORDS, FOOD_GROUPS, LEXICONS, type Lexicon } from "./lexicon.ts";
+import { FOOD_GROUP_WORDS, FOOD_GROUPS, type Lexicon } from "./lexicon.ts";
 
 /** A dictionary food with its names and aliases in the request locale. */
 export interface ParserFood {
@@ -47,10 +47,10 @@ interface FoodMatch extends Span {
 const isWordChar = (char: string | undefined) => char !== undefined && /[\p{L}\p{N}]/u.test(char);
 const isHiragana = (text: string) => /^[ぁ-ゖー]+$/u.test(text);
 
-function normalize(locale: Locale, text: string): string {
+function normalize(lexicon: Lexicon, text: string): string {
   let kept = text.normalize("NFC").replace(/[’‘`´]/g, "'");
-  for (const [word, spelling] of LEXICONS[locale].keepApart) kept = kept.replace(new RegExp(word, "giu"), spelling);
-  return normalizeForSearch(locale, kept).replace(/\s+/g, " ");
+  for (const [word, spelling] of lexicon.keepApart) kept = kept.replace(new RegExp(word, "giu"), spelling);
+  return normalizeForSearch(lexicon.locale, kept).replace(/\s+/g, " ");
 }
 
 /** A name without its qualifier in parentheses: "Lentils (boiled)" is also "lentils". */
@@ -92,7 +92,7 @@ function buildTerms(locale: Locale, foods: readonly ParserFood[], lexicon: Lexic
   const byText = new Map<string, Set<string>>();
   for (const food of foods) {
     for (const raw of food.terms.flatMap((term) => [term, withoutQualifier(term)])) {
-      const text = normalize(locale, raw);
+      const text = normalize(lexicon, raw);
       if (text !== "") byText.set(text, (byText.get(text) ?? new Set()).add(food.id));
     }
   }
@@ -107,7 +107,7 @@ function buildTerms(locale: Locale, foods: readonly ParserFood[], lexicon: Lexic
   const terms: Term[] = [...byText].map(([text, ids]) => ({ text, foods: [...ids], group: false }));
   // Other words of the lexicon are read whole, so a food name inside them is not a food (東南アジア is not アジ).
   const otherWords = [...lexicon.notFoods, ...Object.values(lexicon.cuisines).flat(), ...Object.values(lexicon.equipment).flat()];
-  for (const phrase of otherWords) terms.push({ text: normalize(locale, phrase), foods: [], group: false });
+  for (const phrase of otherWords) terms.push({ text: normalize(lexicon, phrase), foods: [], group: false });
   for (const word of FOOD_GROUP_WORDS) {
     const definition = FOOD_GROUPS[word];
     const ids =
@@ -115,7 +115,7 @@ function buildTerms(locale: Locale, foods: readonly ParserFood[], lexicon: Lexic
         ? definition.foods.filter((id) => known.has(id))
         : foods.filter((food) => food.proteinGroup === definition.proteinGroup && !(definition.except ?? []).includes(food.id)).map((food) => food.id);
     if (ids.length === 0) continue;
-    for (const raw of lexicon.groups[word]) terms.push({ text: normalize(locale, raw), foods: ids, group: true });
+    for (const raw of lexicon.groups[word]) terms.push({ text: normalize(lexicon, raw), foods: ids, group: true });
   }
   return terms;
 }
@@ -184,7 +184,7 @@ function readMinutes(locale: Locale, text: string, lexicon: Lexicon): number | u
     }
   }
   for (const [phrase, minutes] of lexicon.durations) {
-    for (const span of findAll(locale, text, [normalize(locale, phrase)])) candidates.push({ start: span.start, minutes });
+    for (const span of findAll(locale, text, [normalize(lexicon, phrase)])) candidates.push({ start: span.start, minutes });
   }
   const first = candidates.sort((a, b) => a.start - b.start)[0];
   if (first === undefined) return undefined;
@@ -195,10 +195,11 @@ function readMinutes(locale: Locale, text: string, lexicon: Lexicon): number | u
 /** Allergies first; then health, recipe generation, and instructions, which outrank a nutrition word in the same request. */
 const TOPIC_ORDER: readonly OutOfScopeTopic[] = ["allergens", "other", "targets"];
 
-export function parseConditions(input: string, locale: Locale, foods: readonly ParserFood[]): ProviderOutput {
-  const lexicon = LEXICONS[locale];
-  const text = normalize(locale, input);
-  const cues = (words: readonly string[], prefix = false) => findAll(locale, text, words.map((word) => normalize(locale, word)), prefix);
+/** Reads `input` with the word list of its locale (`lexicon.locale`). */
+export function parseConditions(input: string, lexicon: Lexicon, foods: readonly ParserFood[]): ProviderOutput {
+  const { locale } = lexicon;
+  const text = normalize(lexicon, input);
+  const cues = (words: readonly string[], prefix = false) => findAll(locale, text, words.map((word) => normalize(lexicon, word)), prefix);
 
   for (const topic of TOPIC_ORDER) {
     if (cues(lexicon.outOfScope[topic], true).length > 0) return { kind: "out_of_scope", topic };
@@ -207,8 +208,8 @@ export function parseConditions(input: string, locale: Locale, foods: readonly P
   const foodMatches = matchFoods(locale, text, buildTerms(locale, foods, lexicon));
   const rest = mask(text, foodMatches);
   const breaks = clauseBreaks(locale, rest, lexicon);
-  const negations = findAll(locale, rest, lexicon.negation.map((word) => normalize(locale, word)));
-  const orWords = lexicon.or.map((word) => normalize(locale, word));
+  const negations = findAll(locale, rest, lexicon.negation.map((word) => normalize(lexicon, word)));
+  const orWords = lexicon.or.map((word) => normalize(lexicon, word));
 
   const excluded: string[] = [];
   const required: string[][] = [];
@@ -235,14 +236,14 @@ export function parseConditions(input: string, locale: Locale, foods: readonly P
 
   const equipment = new Set<Equipment>();
   for (const item of EQUIPMENT) {
-    for (const span of findAll(locale, rest, lexicon.equipment[item].map((word) => normalize(locale, word)))) {
+    for (const span of findAll(locale, rest, lexicon.equipment[item].map((word) => normalize(lexicon, word)))) {
       if (isNegated(span, negations, breaks, lexicon)) continue;
       equipment.add(item);
       // A pan or a pot is used on the stove (rule of the evaluation set).
       if (item === "pot" || item === "frying_pan" || item === "deep_pan") equipment.add("stove");
     }
   }
-  const cuisineSpans = CUISINES.map((cuisine) => findAll(locale, rest, lexicon.cuisines[cuisine].map((word) => normalize(locale, word)), true));
+  const cuisineSpans = CUISINES.map((cuisine) => findAll(locale, rest, lexicon.cuisines[cuisine].map((word) => normalize(lexicon, word)), true));
   // A cuisine word inside a longer one of another cuisine is part of it ("occidental" in "África occidental").
   const insideLonger = (span: Span) => cuisineSpans.flat().some((other) => other.start <= span.start && other.end >= span.end && other.end - other.start > span.end - span.start);
   const cuisines = CUISINES.filter((_, index) => cuisineSpans[index]?.some((span) => !insideLonger(span)));

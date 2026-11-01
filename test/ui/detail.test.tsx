@@ -7,7 +7,7 @@ import { calculateNutrition, type RecipeNutrition } from "../../domain/nutrition
 import type { Locale } from "../../shared/locales.ts";
 import { App } from "../../src/App.tsx";
 import { formatDifference, formatNutrient } from "../../src/format/format.ts";
-import { createI18n } from "../../src/i18n/createI18n.ts";
+import { createTestI18n } from "../../src/testing/i18n.ts";
 import { axeViolations } from "../../src/testing/axe.ts";
 import { repositoryEngine, validationBundleInput } from "../../tools/content/repository.ts";
 import { repositoryFetch, repositoryUrls } from "./repositoryContent.ts";
@@ -46,7 +46,7 @@ function nutritionOf(id: string, state: RecipeState): RecipeNutrition {
 async function openDetail(id: string, locale: Locale = "ja") {
   window.history.replaceState(null, "", `/recipes/${id}`);
   render(
-    <I18nextProvider i18n={createI18n(locale)}>
+    <I18nextProvider i18n={createTestI18n(locale)}>
       <App contentUrls={repositoryUrls} />
     </I18nextProvider>,
   );
@@ -149,7 +149,7 @@ describe("recipe detail without a search", () => {
 describe("recipe detail after a search", () => {
   it("starts from the candidate's state, compares with the targets, and fits to them again", async () => {
     render(
-      <I18nextProvider i18n={createI18n("ja")}>
+      <I18nextProvider i18n={createTestI18n("ja")}>
         <App contentUrls={repositoryUrls} />
       </I18nextProvider>,
     );

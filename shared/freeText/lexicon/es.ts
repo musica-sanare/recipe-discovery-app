@@ -1,0 +1,55 @@
+/** Spanish word list of the free-text conditions parser (`../lexicon.ts`, ADR-039 D1). */
+import type { Lexicon } from "../lexicon.ts";
+
+export const es: Lexicon = {
+  locale: "es",
+  outOfScope: {
+    allergens: ["alergi", "alergic", "intoleran", "gluten", "lactosa", "celiac"],
+    targets: ["protein", "calori", "kcal", "carbohidrat", "macros", "deficit", "volumen", "dieta", "adelgaz", "perder peso", "grasa"],
+    other: ["diabet", "presion arterial", "tension arterial", "colesterol", "salud", "enfermedad", "embaraz", "invent", "receta nueva", "nueva receta", "crea una receta", "ignora", "instruccion", "reglas"],
+  },
+  negationPosition: "before",
+  negation: ["sin", "menos", "excepto", "salvo", "no", "ni", "nada de", "evitar", "evita", "quitar", "quita", "odio", "detesto"],
+  or: ["o", "u"],
+  clauseBreaks: [],
+  minuteUnits: ["minutos", "minuto", "min"],
+  hourUnits: ["horas", "hora", "h"],
+  durations: [
+    ["media hora", 30],
+    ["hora y media", 90],
+    ["una hora", 60],
+    ["un cuarto de hora", 15],
+  ],
+  equipment: {
+    stove: ["fogon", "hornalla", "estufa", "vitroceramica", "cocina de gas"],
+    microwave: ["microondas"],
+    oven_toaster: ["horno tostador", "horno electrico pequeno", "tostadora de horno"],
+    pot: ["olla", "cacerola", "cazo"],
+    frying_pan: ["sarten"],
+    deep_pan: ["olla honda", "freidora", "wok"],
+  },
+  cuisines: {
+    japanese: ["japon"],
+    chinese: ["chino", "china"],
+    korean: ["corean"],
+    western: ["occidental"],
+    spanish: ["espanol", "espanola", "espana"],
+    okinawan: ["okinaw"],
+    latin_american: ["latinoameric", "mexican", "peruan"],
+    mediterranean: ["mediterran"],
+    southeast_asian: ["sudeste asiatic", "tailandes", "vietnamit"],
+    french: ["frances", "francia"],
+    north_african: ["norteafrican", "norte de africa", "magreb", "marroqu", "tunecin", "argelin"],
+    west_african: ["africa occidental", "africa del oeste", "senegales", "marfileñ", "costa de marfil"],
+  },
+  groups: {
+    chicken: ["pollo", "pollos"],
+    pork: ["cerdo", "puerco", "chancho"],
+    beef: ["ternera", "res", "carne de res", "vacuno", "carne de vaca"],
+    fish: ["pescado", "pescados"],
+    eggs: ["huevo", "huevos"],
+    mushrooms: ["setas", "hongos", "champinones", "champinon"],
+  },
+  notFoods: [],
+  keepApart: [],
+};

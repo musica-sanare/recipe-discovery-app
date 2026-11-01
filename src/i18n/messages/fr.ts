@@ -18,6 +18,7 @@ export const fr: Messages = {
       es: "Español",
       fr: "Français",
     },
+    loading: "Changement de langue…",
   },
   common: {
     skipToContent: "Aller au contenu principal",

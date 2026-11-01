@@ -1,26 +1,25 @@
 import { useId } from "react";
 import { useTranslation } from "react-i18next";
 import { isLocale, SUPPORTED_LOCALES, type Locale } from "../../shared/locales";
-import { storeLocale } from "../i18n/localePreference";
+import type { LocaleSwitch } from "../i18n/useLocaleSwitch";
 
-/** `prepare` loads the new locale's content before the switch (`useContent`). */
-export function LanguageSwitcher({ prepare }: { readonly prepare?: (locale: Locale) => Promise<void> }) {
+/** The language choice; `useLocaleSwitch` loads the new locale before the UI switches to it. */
+export function LanguageSwitcher({ state, onSelect }: { readonly state: LocaleSwitch; readonly onSelect: (locale: Locale) => void }) {
   const { t, i18n } = useTranslation();
   const id = useId();
+  const loading = state.status === "loading";
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex flex-wrap items-center gap-2">
       <label htmlFor={id}>{t("language.label")}</label>
       <select
         id={id}
         className="rounded border border-border bg-surface px-2 py-1 text-text"
-        value={i18n.resolvedLanguage}
+        value={loading ? state.locale : i18n.resolvedLanguage}
+        aria-busy={loading}
         onChange={(event) => {
           const locale = event.target.value;
-          if (isLocale(locale)) {
-            storeLocale(locale);
-            void (prepare?.(locale) ?? Promise.resolve()).then(() => i18n.changeLanguage(locale));
-          }
+          if (isLocale(locale)) onSelect(locale);
         }}
       >
         {SUPPORTED_LOCALES.map((locale) => (
@@ -30,6 +29,11 @@ export function LanguageSwitcher({ prepare }: { readonly prepare?: (locale: Loca
           </option>
         ))}
       </select>
+      {loading && (
+        <span role="status" className="text-sm text-muted">
+          {t("language.loading")}
+        </span>
+      )}
     </div>
   );
 }

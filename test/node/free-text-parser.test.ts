@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { foods } from "../../content/foods.ts";
-import { FOOD_GROUP_WORDS, FOOD_GROUPS, LEXICONS } from "../../shared/freeText/lexicon.ts";
+import { FOOD_GROUP_WORDS, FOOD_GROUPS } from "../../shared/freeText/lexicon.ts";
+import { LEXICONS } from "../../shared/freeText/lexicon/index.ts";
 import { parseConditions, parserFoods } from "../../shared/freeText/parse.ts";
 import { CUISINES, EQUIPMENT } from "../../shared/content.ts";
 import { SUPPORTED_LOCALES, type Locale } from "../../shared/locales.ts";
@@ -11,7 +12,7 @@ import { repositoryBundleInput, repositoryEngine } from "../../tools/content/rep
 
 // Deterministic free-text conditions parser (ADR-034, revised again). The texts here are
 // written for these tests and are not evaluation intents.
-const parse = (locale: Locale, text: string) => parseConditions(text, locale, parserFoodsOf(locale));
+const parse = (locale: Locale, text: string) => parseConditions(text, LEXICONS[locale], parserFoodsOf(locale));
 const conditionsOf = (output: ProviderOutput) => {
   if (output.kind !== "conditions") throw new Error(`Expected conditions, got ${output.topic}`);
   return output.conditions;

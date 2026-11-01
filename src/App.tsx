@@ -5,7 +5,10 @@ import { Attribution } from "./components/Attribution";
 import { ContentVersions } from "./components/ContentVersions";
 import { DocumentMetadata } from "./components/DocumentMetadata";
 import { LanguageSwitcher } from "./components/LanguageSwitcher";
+import { LoadError } from "./components/LoadError";
 import { useContent, type ContentUrls } from "./content/useContent";
+import { loadLocaleData, type LoadLocaleData } from "./i18n/localeData";
+import { useLocaleSwitch } from "./i18n/useLocaleSwitch";
 import { useNavigation } from "./navigation/context";
 import { NavigationProvider } from "./navigation/Navigation";
 import { ViewLink } from "./navigation/ViewLink";
@@ -18,22 +21,28 @@ import { ComparisonView } from "./views/ComparisonView";
 import { DetailView } from "./views/DetailView";
 import { ShoppingListView } from "./views/ShoppingListView";
 import { TargetsView } from "./views/TargetsView";
-import { Illustration } from "./components/icons/Icon";
 
-export function App({ contentUrls }: { readonly contentUrls: ContentUrls }) {
+export interface AppProps {
+  readonly contentUrls: ContentUrls;
+  /** Loads another locale's UI data before a switch (ADR-039); tests replace it. */
+  readonly loadLocale?: LoadLocaleData;
+}
+
+export function App({ contentUrls, loadLocale = loadLocaleData }: AppProps) {
   return (
     <NavigationProvider>
       <AppStateProvider>
-        <Shell contentUrls={contentUrls} />
+        <Shell contentUrls={contentUrls} loadLocale={loadLocale} />
       </AppStateProvider>
     </NavigationProvider>
   );
 }
 
-function Shell({ contentUrls }: { readonly contentUrls: ContentUrls }) {
+function Shell({ contentUrls, loadLocale }: { readonly contentUrls: ContentUrls; readonly loadLocale: LoadLocaleData }) {
   const { t, i18n } = useTranslation();
   const locale = isLocale(i18n.resolvedLanguage) ? i18n.resolvedLanguage : DEFAULT_LOCALE;
   const { state, retry, prepare } = useContent(contentUrls, locale);
+  const localeSwitch = useLocaleSwitch(prepare, loadLocale);
   const appTitle = t("meta.title");
   const ready = state.status === "ready";
 
@@ -55,21 +64,24 @@ function Shell({ contentUrls }: { readonly contentUrls: ContentUrls }) {
           </ViewLink>
           <div className="flex flex-wrap items-center gap-3">
             <ShoppingListLink />
-            <LanguageSwitcher prepare={prepare} />
+            <LanguageSwitcher
+              state={localeSwitch.state}
+              onSelect={(next) => {
+                void localeSwitch.switchTo(next);
+              }}
+            />
           </div>
         </div>
       </header>
       <main id="main" tabIndex={-1} className="mx-auto w-full max-w-5xl flex-1 px-4 py-6">
-        {state.status === "loading" && <p role="status">{t("content.loading")}</p>}
-        {state.status === "error" && (
-          <div role="alert" className="flex flex-col items-start gap-3">
-            <Illustration name="content_error" className="w-48" />
-            <p>{t("content.error")}</p>
-            <button type="button" onClick={retry} className="btn-primary">
-              {t("content.retry")}
-            </button>
+        {/* A failed language switch keeps the current view and language below the retry. */}
+        {localeSwitch.state.status === "error" && (
+          <div className="mb-6">
+            <LoadError message={t("content.error")} retryLabel={t("content.retry")} onRetry={localeSwitch.retry} />
           </div>
         )}
+        {state.status === "loading" && <p role="status">{t("content.loading")}</p>}
+        {state.status === "error" && <LoadError message={t("content.error")} retryLabel={t("content.retry")} onRetry={retry} />}
         {state.status === "ready" && (
           <ContentProvider calc={state.calc} text={state.text}>
             <CurrentView />

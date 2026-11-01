@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { Contradiction, InputError } from "../../../domain/recommendation/types";
 import { SUPPORTED_LOCALES } from "../../../shared/locales";
-import { createI18n } from "../../i18n/createI18n";
+import { createTestI18n } from "../../testing/i18n";
 import { contradictionMessage, errorTarget, inputErrorMessage } from "./errors";
 
 const ERRORS: readonly InputError[] = [
@@ -22,7 +22,7 @@ const CONTRADICTIONS: readonly Contradiction[] = [
 ];
 
 describe.each(SUPPORTED_LOCALES)("messages in %s", (locale) => {
-  const { t } = createI18n(locale);
+  const { t } = createTestI18n(locale);
 
   it.each(ERRORS)("input error $code has a complete message", (error) => {
     const message = inputErrorMessage(error, t, locale);

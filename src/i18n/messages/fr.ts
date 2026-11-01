@@ -70,6 +70,12 @@ export const fr: Messages = {
     errorSummary_other: "Vérifiez votre saisie ({{count}} problèmes)",
     blocked: "Les objectifs se contredisent.",
     searching: "Recherche en cours…",
+    groups: {
+      targets: "Objectifs par repas",
+      cooking: "Cuisine",
+      foods: "Ingrédients",
+      allergens: "Allergènes",
+    },
   },
   conditions: {
     effortLegend: "Effort (préférence)",

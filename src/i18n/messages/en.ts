@@ -69,6 +69,12 @@ export const en: Messages = {
     errorSummary_other: "Please check your input ({{count}} problems)",
     blocked: "The targets contradict each other.",
     searching: "Searching…",
+    groups: {
+      targets: "Targets per meal",
+      cooking: "Cooking",
+      foods: "Foods",
+      allergens: "Allergens",
+    },
   },
   conditions: {
     effortLegend: "Effort (preferred)",

@@ -1,5 +1,6 @@
 import { useId } from "react";
 import { useTranslation } from "react-i18next";
+import { Icon } from "./icons/Icon";
 
 export interface NumberFieldProps {
   readonly id?: string;
@@ -77,7 +78,7 @@ export function NumberField({ id, label, spokenName, value, unit, hint, errors, 
         <div id={errorId} className="text-sm text-not-met">
           {errors.map((error) => (
             <p key={error} className="m-0">
-              <span aria-hidden="true">✕ </span>
+              <Icon name="status_not_met" size={16} className="mr-1 inline align-[-3px]" />
               {error}
             </p>
           ))}

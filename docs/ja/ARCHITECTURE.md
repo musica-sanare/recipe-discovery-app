@@ -1,4 +1,4 @@
-<!-- source: docs/en/ARCHITECTURE.md blob bfc0bd6f73f0f7061f63784ff972a24280edfec7 -->
+<!-- source: docs/en/ARCHITECTURE.md blob 1758da756d1de9de527735cd851f25d632286154 -->
 [English](../en/ARCHITECTURE.md) | 日本語 · [目次に戻る](README.md)
 
 > この文書は[英語版](../en/ARCHITECTURE.md)の翻訳。内容が異なる場合は英語版が優先する。
@@ -46,7 +46,7 @@ flowchart TD
 | `shared` | ビルドツール、ドメイン、UI が使うコンテンツのスキーマと型、ID、単位、定数。自由文の条件化の契約と出力の検証（`shared/suggestion.ts`、§7）。決定論的な自由文のパーサーと言葉の一覧（`shared/freeText/`、ADR-034 再改訂）と、検索の正規化（`shared/search.ts`）。UI と Node のツールの両方が使う | UI、プラットフォーム |
 | `content/`（データ） | レシピ、食品辞書、アレルゲンの結び付け、置き換え、多言語のテキスト、用語集 | — |
 | `tools/`（ビルド時） | 成分の抽出、コンテンツ検証、ポリシーの lint、栄養のスナップショット、ヘッダーの生成 | UI |
-| `src/`（UI） | React アプリ、ナビゲーション、i18n、書式、状態、アクセシビリティ（[UI_DESIGN.md](UI_DESIGN.md)） | プラットフォーム固有の API |
+| `src/`（UI） | React アプリ、ナビゲーション、i18n、書式、状態、アクセシビリティ、デザイントークンと基本のスタイル（`src/styles.css`）、パスのデータで持つオリジナルの SVG アイコンとイラスト（`src/components/icons/`、ADR-037）（[UI_DESIGN.md](UI_DESIGN.md)） | プラットフォーム固有の API |
 | `platform/` | ホスティングの設定（Cloudflare）と生成するセキュリティヘッダー | ドメインのロジック |
 
 この境界は、オーナーのほかのプロジェクトと同じく、lint の import 制限と境界のテストで守る。ディレクトリ構成は [DEVELOPMENT.md](DEVELOPMENT.md)「構成（現在）」にある。
@@ -138,7 +138,7 @@ flowchart TD
 - コンテンツ検証とポリシーの lint は、CI とビルドで動く。
 - 栄養のスナップショットのテスト。
 - jsdom による UI テスト：フィクスチャを使う `src/**/*.test.tsx` と、リポジトリのコンテンツを使う `test/ui/`。
-- アクセシビリティの確認（axe-core、コントラストのルールは除く）を、すべての画面と例外的な状態について、すべてのロケールで行う。コントラストは色のトークンに対するテストで確かめる（`test/node/styles.test.ts`）。
+- アクセシビリティの確認（axe-core、コントラストのルールは除く）を、すべての画面と例外的な状態について、すべてのロケールで行う。コントラストは色のトークンに対するテストで確かめる。どのパステルの上の本文と判定の色も含める（`test/node/styles.test.ts`）。アイコンのテストでは、アイコンとイラストが文字を含まないパスのデータであることと、ラベルの決まりを守ることを確かめる（`test/ui/icons.test.tsx`）。
 - 本番ビルドとそのヘッダーに対する E2E テスト（`e2e/`、Playwright）：
   - ブラウザ：デスクトップの Chromium と、375 px の Chromium と WebKit。すべてのロケールで動かす。
   - 範囲：フロー全体、例外的な状態、ロケールの切り替え、ディープリンク、「このアプリについて」のページ、キーボード操作、ライトとダークでの色のコントラストを含む axe-core、セキュリティヘッダー、ほかのオリジンへのリクエストがないこと、CSP 違反がないこと。

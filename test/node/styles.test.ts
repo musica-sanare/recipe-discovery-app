@@ -4,7 +4,8 @@ import { describe, expect, it } from "vitest";
 
 /*
  * jsdom cannot compute contrast, so the axe checks skip it; this test checks the
- * token pairs of src/styles.css instead (WCAG 2.2 AA: 4.5:1 for text, 3:1 for borders and focus rings).
+ * token pairs of src/styles.css instead (WCAG 2.2 AA: 4.5:1 for text, 3:1 for borders and focus rings),
+ * including every status and text color on each pastel (ADR-037).
  */
 const css = readFileSync(path.join(import.meta.dirname, "..", "..", "src", "styles.css"), "utf8");
 
@@ -31,13 +32,19 @@ function contrast(a: string, b: string): number {
 
 const TEXT = 4.5;
 const NON_TEXT = 3;
+const PASTELS = ["mint", "butter", "sky", "peach"] as const;
 const PAIRS: readonly (readonly [string, string, number])[] = [
+  ["text", "bg", TEXT],
   ["text", "surface", TEXT],
   ["text", "surface-muted", TEXT],
+  ["muted", "bg", TEXT],
   ["muted", "surface", TEXT],
   ["muted", "surface-muted", TEXT],
+  ["primary", "surface", TEXT],
+  ["primary", "bg", TEXT],
+  ["on-primary", "primary", TEXT],
   ["accent", "surface", TEXT],
-  ["on-accent", "accent", TEXT],
+  ["on-sun", "sun", TEXT],
   ["met", "surface", TEXT],
   ["near", "surface", TEXT],
   ["not-met", "surface", TEXT],
@@ -45,10 +52,16 @@ const PAIRS: readonly (readonly [string, string, number])[] = [
   ["met", "surface-muted", TEXT],
   ["near", "surface-muted", TEXT],
   ["not-met", "surface-muted", TEXT],
+  ["met", "bg", TEXT],
+  ["near", "bg", TEXT],
+  ["not-met", "bg", TEXT],
   ["warning", "warning-surface", TEXT],
   ["text", "warning-surface", TEXT],
+  ...PASTELS.flatMap((pastel) => (["text", "muted", "met", "near", "not-met", "unknown"] as const).map((foreground) => [foreground, pastel, TEXT] as const)),
   ["border", "surface", NON_TEXT],
+  ["border", "bg", NON_TEXT],
   ["focus", "surface", NON_TEXT],
+  ["focus", "bg", NON_TEXT],
   ["focus", "surface-muted", NON_TEXT],
 ];
 

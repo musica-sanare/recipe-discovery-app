@@ -70,6 +70,12 @@ export const ja = {
     errorSummary_other: "入力内容を確認してください（{{count}}件）",
     blocked: "目標の組み合わせに矛盾があります。",
     searching: "検索しています…",
+    groups: {
+      targets: "1 食あたりの目標",
+      cooking: "調理の条件",
+      foods: "食材",
+      allergens: "アレルゲン",
+    },
   },
   conditions: {
     effortLegend: "手間（希望）",

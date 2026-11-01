@@ -18,6 +18,7 @@ import { ComparisonView } from "./views/ComparisonView";
 import { DetailView } from "./views/DetailView";
 import { ShoppingListView } from "./views/ShoppingListView";
 import { TargetsView } from "./views/TargetsView";
+import { Illustration } from "./components/icons/Icon";
 
 export function App({ contentUrls }: { readonly contentUrls: ContentUrls }) {
   return (
@@ -62,8 +63,9 @@ function Shell({ contentUrls }: { readonly contentUrls: ContentUrls }) {
         {state.status === "loading" && <p role="status">{t("content.loading")}</p>}
         {state.status === "error" && (
           <div role="alert" className="flex flex-col items-start gap-3">
+            <Illustration name="content_error" className="w-48" />
             <p>{t("content.error")}</p>
-            <button type="button" onClick={retry} className="rounded bg-accent px-4 py-2 text-on-accent">
+            <button type="button" onClick={retry} className="btn-primary">
               {t("content.retry")}
             </button>
           </div>
@@ -80,7 +82,7 @@ function Shell({ contentUrls }: { readonly contentUrls: ContentUrls }) {
             <Attribution />
             <ContentVersions versions={state.calc} />
             <p className="m-0">
-              <ViewLink to={{ name: "about" }} className="text-accent underline">
+              <ViewLink to={{ name: "about" }} className="text-primary underline">
                 {t("nav.views.about")}
               </ViewLink>
             </p>
@@ -98,7 +100,7 @@ function ShoppingListLink() {
   const count = state.shoppingList.entries.length;
   if (count === 0) return null;
   return (
-    <ViewLink to={{ name: "shoppingList" }} className="text-accent underline">
+    <ViewLink to={{ name: "shoppingList" }} className="text-primary underline">
       {t("shopping.headerLink", { count })}
     </ViewLink>
   );

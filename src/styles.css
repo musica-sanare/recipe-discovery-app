@@ -1,25 +1,36 @@
 @import "tailwindcss";
 
 /*
- * Design tokens (docs/en/UI_DESIGN.md §5). Only these colors exist; the default palette is
- * removed so that every color passes the contrast test in src/styles.test.ts.
+ * Design tokens of the "soft pop" identity (docs/en/UI_DESIGN.md §5, ADR-037). Only these
+ * colors exist; the default palette is removed so that every color passes the contrast
+ * test in test/node/styles.test.ts. Pastels and `sun` carry no meaning by themselves.
  */
 @theme {
   --color-*: initial;
+  --color-bg: #fbf6ee;
   --color-surface: #ffffff;
-  --color-surface-muted: #f5f5f4;
-  --color-text: #1c1917;
-  --color-muted: #57534e;
-  --color-border: #78716c;
-  --color-focus: #0b57d0;
-  --color-accent: #1d4ed8;
-  --color-on-accent: #ffffff;
-  --color-met: #15803d;
-  --color-near: #b45309;
-  --color-not-met: #b91c1c;
-  --color-unknown: #57534e;
-  --color-warning: #92400e;
-  --color-warning-surface: #fffbeb;
+  --color-surface-muted: #f1eadf;
+  --color-text: #2a2722;
+  --color-muted: #5f584d;
+  --color-border: #8a8174;
+  --color-focus: #1e5fcc;
+  --color-primary: #2e6b3a;
+  --color-on-primary: #ffffff;
+  --color-accent: #c2452e;
+  --color-mint: #e2f0df;
+  --color-butter: #ffedb8;
+  --color-sky: #dcebfb;
+  --color-peach: #fce3da;
+  --color-sun: #f2b33d;
+  --color-on-sun: #2a2722;
+  --color-met: #23692e;
+  --color-near: #9a5300;
+  --color-not-met: #b3261e;
+  --color-unknown: #5f584d;
+  --color-warning: #9a5300;
+  --color-warning-surface: #fce3da;
+
+  --radius: 0.875rem;
 
   --font-*: initial;
   --font-sans: system-ui, -apple-system, "Segoe UI", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic UI", sans-serif;
@@ -28,29 +39,43 @@
 @layer base {
   :root {
     color-scheme: light dark;
+    --shadow-soft: 0 8px 28px rgb(60 40 10 / 0.09);
   }
 
   @media (prefers-color-scheme: dark) {
     :root {
-      --color-surface: #121212;
-      --color-surface-muted: #1f1f1f;
-      --color-text: #ececec;
-      --color-muted: #b0b0b0;
-      --color-border: #8a8a8a;
+      --color-bg: #191815;
+      --color-surface: #23211d;
+      --color-surface-muted: #2d2a25;
+      --color-text: #f2ede4;
+      --color-muted: #c4bbad;
+      --color-border: #8f8678;
       --color-focus: #8ab4f8;
-      --color-accent: #8ab4f8;
-      --color-on-accent: #0b1220;
-      --color-met: #4ade80;
-      --color-near: #fbbf24;
-      --color-not-met: #f87171;
-      --color-unknown: #b0b0b0;
-      --color-warning: #fcd34d;
-      --color-warning-surface: #2a2111;
+      --color-primary: #93d19a;
+      --color-on-primary: #13240f;
+      --color-accent: #ff9478;
+      --color-mint: #1f3320;
+      --color-butter: #3a3120;
+      --color-sky: #1c2b3b;
+      --color-peach: #3e2620;
+      --color-sun: #f2b33d;
+      --color-on-sun: #2a2722;
+      --color-met: #7fd48a;
+      --color-near: #f2b45c;
+      --color-not-met: #ff8f87;
+      --color-unknown: #c4bbad;
+      --color-warning: #f2b45c;
+      --color-warning-surface: #3e2620;
+      --shadow-soft: none;
     }
   }
 
   body {
-    @apply bg-surface text-text font-sans leading-relaxed;
+    @apply bg-bg text-text font-sans leading-relaxed;
+  }
+
+  h1 {
+    @apply text-3xl font-black;
   }
 
   :focus-visible {
@@ -67,4 +92,98 @@
       scroll-behavior: auto !important;
     }
   }
+}
+
+/* Base components (ADR-037 D1, D5). Each keeps a visible edge in forced-colors mode. */
+
+@utility btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+  font-weight: 700;
+  padding: 0.5rem 1.25rem;
+  box-shadow: 0 4px 0 var(--color-text);
+  transition: transform 80ms ease-out, box-shadow 80ms ease-out;
+
+  &:active:not(:disabled) {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 var(--color-text);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+@utility btn-lg {
+  padding: 0.75rem 1.75rem;
+  font-size: 1.0625rem;
+}
+
+@utility btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  border: 1.5px solid var(--color-border);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  font-weight: 600;
+  padding: 0.5rem 1.125rem;
+  transition: transform 80ms ease-out;
+
+  &:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+@utility btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  border: 1.5px solid var(--color-primary);
+  color: var(--color-primary);
+  font-weight: 600;
+  padding: 0.5rem 1.125rem;
+}
+
+@utility panel {
+  border-radius: 1.5rem;
+  background-color: var(--color-surface);
+  box-shadow: var(--shadow-soft);
+  border: 1px solid transparent;
+
+  @media print {
+    box-shadow: none;
+  }
+}
+
+@utility notice-warning {
+  border-radius: 1rem;
+  border-left: 4px solid var(--color-warning);
+  background-color: var(--color-warning-surface);
+  padding: 0.75rem 1rem;
+}
+
+@utility chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  border-radius: 9999px;
+  background-color: var(--color-surface-muted);
+  padding: 0.125rem 0.75rem;
 }

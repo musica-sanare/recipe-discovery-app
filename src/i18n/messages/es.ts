@@ -69,6 +69,12 @@ export const es: Messages = {
     errorSummary_other: "Revisa los datos ({{count}} problemas)",
     blocked: "Los objetivos se contradicen.",
     searching: "Buscando…",
+    groups: {
+      targets: "Objetivos por comida",
+      cooking: "Cocina",
+      foods: "Ingredientes",
+      allergens: "Alérgenos",
+    },
   },
   conditions: {
     effortLegend: "Esfuerzo (preferencia)",

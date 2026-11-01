@@ -180,7 +180,7 @@ Acceptance: the decisions recorded; the feature optional and confirmed by the us
 
 ## Phase 13 — Saved targets and conditions
 
-Status: **In progress (2026-11-01)**: Stage 13.1 decisions recorded in ADR-036. Prompt: `prompts/13-saved-conditions.md`. The owner chose opt-in saving of targets and conditions in the browser as the next phase, followed by Phases 14 and 15.
+Status: **Complete (2026-11-01)**: opt-in saved targets and conditions (ADR-036), released in release 10 by the owner's merge into `main`. Logs: [DECISIONS.md](DECISIONS.md) "Phase 13 start: saved conditions" to "Phase 13 acceptance". Prompt: `prompts/13-saved-conditions.md`. The owner chose opt-in saving of targets and conditions in the browser as the next phase, followed by Phases 14 and 15.
 
 - Decisions before implementation: what is saved (including whether allergens are), the mechanism (`localStorage` recommended), the opt-in switch and delete action, when to save and restore, validation and versioning of the record, and the privacy docs (revisions of ADR-030 D9 and ADR-015, [SPEC.md](../en/SPEC.md) §3 and §13).
 - A storage module with a runtime schema, failure handling, and tests; the UI in four locales with E2E; release 10.
@@ -189,11 +189,12 @@ Acceptance: with saving off, nothing new is stored and the app behaves as releas
 
 ## Phase 14 — UI/UX redesign
 
-Status: **Planned (2026-11-01)**; prompt to be written after Phase 13. The current look is a minimal proof of concept. The owner wants a modern design that makes people want to cook and eat, with a healthy feel: cool but pop and playful, and suited to the app's purpose.
+Status: **In progress (2026-11-01)**: Stage 14.1 decisions recorded in ADR-037; prompt: `prompts/14-ui-redesign.md` (written after Phase 13, 2026-11-01). The owner chose Phase 14 as the next phase, before Phase 15. The current look is a minimal proof of concept. The owner wants a modern design that makes people want to cook and eat, with a healthy feel: cool but pop and playful, and suited to the app's purpose.
 
 - Several design directions proposed by Claude for the owner to choose from, then design tokens (color, type, spacing) applied view by view with screenshots.
 - Icons and illustrations are drawn by Claude as original SVG; no third-party images or recipe photos (principle 11). Fonts only if self-hosted with a compatible license (the CSP allows `'self'` only).
 - Contrast and the accessibility checks in four locales stay as they are; dark mode; no health or efficacy claims in visual wording (principle 15).
+- Stages: 14.1 three directions as local mockups and the owner's decisions (direction, fonts, icon list, illustrations, motion, UX scope); 14.2 tokens and base components; 14.3 icons and illustrations; 14.4 views; 14.5 quality; 14.6 release 11. Presentation only: no engine, content, or stored-data change.
 
 ## Phase 15 — French and French-speaking cuisines
 

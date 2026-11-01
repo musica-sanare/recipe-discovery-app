@@ -20,6 +20,8 @@ import { applySuggestion, touchesAdvanced } from "./targets/freeText";
 import { FreeTextConditions } from "./targets/FreeTextConditions";
 import { SaveConditions } from "./targets/SaveConditions";
 import { useTextContext } from "./useTextContext";
+import { Icon, Illustration } from "../components/icons/Icon";
+import type { IconName } from "../components/icons/iconData";
 
 /** The engine field whose name the stepper labels use; the others use their own label. */
 const SPOKEN_NAME: Readonly<Partial<Record<Field, InputField>>> = {
@@ -39,22 +41,66 @@ function toggled<T>(list: readonly T[], item: T): T[] {
   return list.includes(item) ? list.filter((entry) => entry !== item) : [...list, item];
 }
 
-function Fieldset({ legend, hint, children }: { readonly legend: string; readonly hint?: string; readonly children: ReactNode }) {
+function Fieldset({ legend, hint, panel = false, children }: { readonly legend: string; readonly hint?: string; readonly panel?: boolean; readonly children: ReactNode }) {
   return (
-    <fieldset className="flex flex-col gap-2 rounded border border-border p-3">
-      <legend className="px-1 font-medium">{legend}</legend>
+    <fieldset className={panel ? "panel flex flex-col gap-2 p-4" : "flex flex-col gap-2 rounded-2xl border-2 border-surface-muted p-3"}>
+      <legend className={panel ? "float-left mb-1 w-full font-bold" : "px-1 font-bold"}>{legend}</legend>
       {hint !== undefined && <p className="m-0 text-sm text-muted">{hint}</p>}
       {children}
     </fieldset>
   );
 }
 
-function Choice({ type, name, checked, onChange, children }: { readonly type: "radio" | "checkbox"; readonly name: string; readonly checked: boolean; readonly onChange: () => void; readonly children: ReactNode }) {
+function Choice({
+  type,
+  name,
+  checked,
+  onChange,
+  card = false,
+  children,
+}: {
+  readonly type: "radio" | "checkbox";
+  readonly name: string;
+  readonly checked: boolean;
+  readonly onChange: () => void;
+  /** A larger choice with a tinted background when selected (presets). */
+  readonly card?: boolean;
+  readonly children: ReactNode;
+}) {
   return (
-    <label className="flex min-h-10 items-center gap-2">
-      <input type={type} name={name} checked={checked} onChange={onChange} className="size-5 shrink-0 accent-accent" />
+    <label className={card ? "flex min-h-10 cursor-pointer items-center gap-3 rounded-2xl border-2 border-transparent bg-surface-muted px-3 py-2 has-checked:border-primary has-checked:bg-mint" : "flex min-h-10 items-center gap-2"}>
+      <input type={type} name={name} checked={checked} onChange={onChange} className="size-5 shrink-0 accent-primary" />
       <span>{children}</span>
     </label>
+  );
+}
+
+/** A group of conditions under its own heading (ADR-037 D6). */
+function Group({ icon, title, children }: { readonly icon: IconName; readonly title: string; readonly children: ReactNode }) {
+  return (
+    <section className="flex flex-col gap-4">
+      <h2 className="m-0 flex items-center gap-2 text-lg font-extrabold">
+        <Icon name={icon} size={26} />
+        {title}
+      </h2>
+      {children}
+    </section>
+  );
+}
+
+/** Whether the form differs from its preset defaults inside "More conditions". */
+function touchesAdvancedDraft(draft: TargetsDraft): boolean {
+  const base = defaultDraft(draft.preset);
+  const numbers = (Object.keys(base.numbers) as Field[]).filter((field) => field !== "maxMinutes");
+  return (
+    draft.edited ||
+    numbers.some((field) => draft.numbers[field].trim() !== base.numbers[field]) ||
+    draft.effort !== undefined ||
+    draft.cuisines.length > 0 ||
+    draft.equipmentMode !== base.equipmentMode ||
+    draft.required.length > 0 ||
+    draft.excluded.length > 0 ||
+    draft.allergens.length > 0
   );
 }
 
@@ -71,6 +117,14 @@ export function TargetsView({ reloaded }: { readonly reloaded: boolean }) {
   const [advancedOpen, setAdvancedOpen] = useState(false);
   const summary = useRef<HTMLDivElement>(null);
   const blockedRef = useRef<HTMLDivElement>(null);
+
+  // Restored values inside "More conditions" are shown, not hidden (ADR-037 D6).
+  const restored = state.saved.notice === "restored" && state.draft !== undefined && touchesAdvancedDraft(state.draft);
+  const [openedForRestore, setOpenedForRestore] = useState(false);
+  if (restored && !openedForRestore) {
+    setOpenedForRestore(true);
+    setAdvancedOpen(true);
+  }
 
   const update = (next: TargetsDraft) => {
     dispatch({ type: "draftChanged", draft: next });
@@ -151,8 +205,13 @@ export function TargetsView({ reloaded }: { readonly reloaded: boolean }) {
 
   return (
     <div className="flex flex-col gap-4">
-      <ViewHeading title={t("nav.views.targets")} focusOnMount={navigated} />
-      <p className="m-0">{t("app.tagline")}</p>
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-col gap-2">
+          <ViewHeading title={t("nav.views.targets")} focusOnMount={navigated} />
+          <p className="m-0 text-muted">{t("app.tagline")}</p>
+        </div>
+        <Illustration name="hero" className="hidden w-44 shrink-0 sm:block md:w-56" />
+      </div>
       {reloaded && (
         <p role="status" className="m-0 rounded border border-border bg-surface-muted p-3">
           {t(state.saved.on ? "nav.reloadNoticeSaved" : "nav.reloadNotice")}
@@ -168,13 +227,13 @@ export function TargetsView({ reloaded }: { readonly reloaded: boolean }) {
               deleteSavedConditions();
               dispatch({ type: "savedChanged", on: false, allergens: false, notice: "deleted" });
             }}
-            className="rounded border border-border bg-surface px-4 py-2"
+            className="btn-secondary"
           >
             {t("saved.delete")}
           </button>
         </div>
       )}
-      <p className="m-0 rounded border-l-4 border-warning bg-warning-surface p-3">{t("disclaimer.medicalGuidance")}</p>
+      <p className="m-0 notice-warning">{t("disclaimer.medicalGuidance")}</p>
 
       {errors.length > 0 && (
         <div ref={summary} tabIndex={-1} role="alert" className="rounded border-2 border-not-met p-3">
@@ -191,7 +250,7 @@ export function TargetsView({ reloaded }: { readonly reloaded: boolean }) {
                     event.preventDefault();
                     field.focus();
                   }}
-                  className="text-accent underline"
+                  className="text-primary underline"
                 >
                   {errorText(error)}
                 </a>
@@ -202,12 +261,13 @@ export function TargetsView({ reloaded }: { readonly reloaded: boolean }) {
       )}
 
       <form noValidate onSubmit={onSubmit} className="flex flex-col gap-4">
-        <Fieldset legend={t("targets.presetLegend")} hint={t("disclaimer.presetsAreExamples")}>
+        <Fieldset panel legend={t("targets.presetLegend")} hint={t("disclaimer.presetsAreExamples")}>
           {PRESETS.map((preset) => (
             <Choice
               key={preset}
               type="radio"
               name="preset"
+              card
               checked={draft.preset === preset && !draft.edited}
               onChange={() => {
                 update(withPreset(draft, preset));
@@ -240,11 +300,11 @@ export function TargetsView({ reloaded }: { readonly reloaded: boolean }) {
           onToggle={(event) => {
             setAdvancedOpen(event.currentTarget.open);
           }}
-          className="rounded border border-border"
+          className="panel"
         >
-          <summary className="cursor-pointer p-3 font-medium">{t("targets.advanced")}</summary>
-          <div className="grid gap-4 p-3 md:grid-cols-2">
-            <div className="flex flex-col gap-4">
+          <summary className="cursor-pointer rounded-3xl p-4 font-bold">{t("targets.advanced")}</summary>
+          <div className="flex flex-col gap-6 p-3 pt-1">
+            <Group icon="servings" title={t("targets.groups.targets")}>
               <Fieldset legend={t("targets.nutritionLegend")} hint={t("targets.optionalHint")}>
                 <Fieldset legend={t("targets.kcalLegend")}>
                   <div className="flex flex-wrap gap-4">
@@ -262,10 +322,10 @@ export function TargetsView({ reloaded }: { readonly reloaded: boolean }) {
                 </Fieldset>
               </Fieldset>
               {contradictions.length > 0 && blocked.length === 0 && (
-                <div aria-live="polite" className="rounded border-l-4 border-warning bg-warning-surface p-3">
+                <div aria-live="polite" className="notice-warning">
                   {contradictions.map((contradiction) => (
                     <p key={contradiction.severity} className="m-0">
-                      <span aria-hidden="true">{contradiction.severity === "blocking" ? "⛔ " : "⚠ "}</span>
+                      <Icon name={contradiction.severity === "blocking" ? "status_not_met" : "warning"} size={18} className="mr-1 inline align-[-3px]" />
                       {contradictionText(contradiction)}
                     </p>
                   ))}
@@ -273,113 +333,119 @@ export function TargetsView({ reloaded }: { readonly reloaded: boolean }) {
                 </div>
               )}
               {numberField("servings", t("targets.servings"), "")}
-            </div>
+            </Group>
 
-            <div className="flex flex-col gap-4">
-              <Fieldset legend={t("conditions.effortLegend")} hint={t("conditions.preferenceHint")}>
-                {([undefined, 1, 2, 3] as const).map((effort) => (
-                  <Choice
-                    key={effort ?? "any"}
-                    type="radio"
-                    name="effort"
-                    checked={draft.effort === effort}
-                    onChange={() => {
-                      update({ ...draft, effort });
-                    }}
-                  >
-                    {effort === undefined ? t("conditions.effortAny") : t(`effort.${effortKey(effort)}`)}
-                  </Choice>
-                ))}
-              </Fieldset>
-              <Fieldset legend={t("conditions.cuisineLegend")}>
-                <div className="grid grid-cols-2 gap-x-4">
-                  {CUISINES.map((cuisine: Cuisine) => (
+            <Group icon="frying_pan" title={t("targets.groups.cooking")}>
+              <div className="grid gap-4 md:grid-cols-3">
+                <Fieldset legend={t("conditions.effortLegend")} hint={t("conditions.preferenceHint")}>
+                  {([undefined, 1, 2, 3] as const).map((effort) => (
                     <Choice
-                      key={cuisine}
-                      type="checkbox"
-                      name="cuisine"
-                      checked={draft.cuisines.includes(cuisine)}
+                      key={effort ?? "any"}
+                      type="radio"
+                      name="effort"
+                      checked={draft.effort === effort}
                       onChange={() => {
-                        update({ ...draft, cuisines: toggled(draft.cuisines, cuisine) });
+                        update({ ...draft, effort });
                       }}
                     >
-                      {t(`cuisine.${cuisine}`)}
+                      {effort === undefined ? t("conditions.effortAny") : t(`effort.${effortKey(effort)}`)}
                     </Choice>
                   ))}
-                </div>
-              </Fieldset>
-              <Fieldset legend={t("conditions.equipmentLegend")}>
-                {EQUIPMENT_MODES.map((mode) => (
-                  <Choice
-                    key={mode}
-                    type="radio"
-                    name="equipment-mode"
-                    checked={draft.equipmentMode === mode}
-                    onChange={() => {
-                      update({ ...draft, equipmentMode: mode });
-                    }}
-                  >
-                    {t(`conditions.equipmentMode.${mode}`)}
-                  </Choice>
-                ))}
-                {draft.equipmentMode === "choose" && (
-                  <div className="ml-7 flex flex-col">
-                    <p className="m-0 text-sm text-muted">{t("conditions.equipmentChooseHint")}</p>
-                    {EQUIPMENT.map((item: Equipment) => (
+                </Fieldset>
+                <Fieldset legend={t("conditions.cuisineLegend")}>
+                  <div className="grid grid-cols-2 gap-x-4">
+                    {CUISINES.map((cuisine: Cuisine) => (
                       <Choice
-                        key={item}
+                        key={cuisine}
                         type="checkbox"
-                        name="equipment"
-                        checked={draft.equipment.includes(item)}
+                        name="cuisine"
+                        checked={draft.cuisines.includes(cuisine)}
                         onChange={() => {
-                          update({ ...draft, equipment: toggled(draft.equipment, item) });
+                          update({ ...draft, cuisines: toggled(draft.cuisines, cuisine) });
                         }}
                       >
-                        {t(`equipment.${item}`)}
+                        {t(`cuisine.${cuisine}`)}
                       </Choice>
                     ))}
                   </div>
-                )}
-              </Fieldset>
-            </div>
+                </Fieldset>
+                <Fieldset legend={t("conditions.equipmentLegend")}>
+                  {EQUIPMENT_MODES.map((mode) => (
+                    <Choice
+                      key={mode}
+                      type="radio"
+                      name="equipment-mode"
+                      checked={draft.equipmentMode === mode}
+                      onChange={() => {
+                        update({ ...draft, equipmentMode: mode });
+                      }}
+                    >
+                      {t(`conditions.equipmentMode.${mode}`)}
+                    </Choice>
+                  ))}
+                  {draft.equipmentMode === "choose" && (
+                    <div className="ml-7 flex flex-col">
+                      <p className="m-0 text-sm text-muted">{t("conditions.equipmentChooseHint")}</p>
+                      {EQUIPMENT.map((item: Equipment) => (
+                        <Choice
+                          key={item}
+                          type="checkbox"
+                          name="equipment"
+                          checked={draft.equipment.includes(item)}
+                          onChange={() => {
+                            update({ ...draft, equipment: toggled(draft.equipment, item) });
+                          }}
+                        >
+                          {t(`equipment.${item}`)}
+                        </Choice>
+                      ))}
+                    </div>
+                  )}
+                </Fieldset>
+              </div>
+            </Group>
 
-            <FoodPicker
-              id={fieldId("required")}
-              label={t("conditions.required.label")}
-              hint={t("conditions.required.hint")}
-              locale={locale}
-              options={options}
-              chosen={draft.required}
-              errors={errorsFor("required")}
-              labelOf={labelOf}
-              onAdd={(option) => {
-                update({ ...draft, required: [...draft.required, { key: option.key, foods: option.foods }] });
-              }}
-              onRemove={(key) => {
-                update({ ...draft, required: draft.required.filter((choice) => choice.key !== key) });
-              }}
-            />
-            <FoodPicker
-              id={fieldId("excluded")}
-              label={t("conditions.excluded.label")}
-              hint={t("conditions.excluded.hint")}
-              locale={locale}
-              options={options}
-              chosen={draft.excluded}
-              errors={errorsFor("excluded")}
-              labelOf={labelOf}
-              onAdd={(option) => {
-                update({ ...draft, excluded: [...draft.excluded, { key: option.key, foods: option.foods }] });
-              }}
-              onRemove={(key) => {
-                update({ ...draft, excluded: draft.excluded.filter((choice) => choice.key !== key) });
-              }}
-            />
+            <Group icon="shopping" title={t("targets.groups.foods")}>
+              <div className="grid gap-4 md:grid-cols-2">
+              <FoodPicker
+                id={fieldId("required")}
+                label={t("conditions.required.label")}
+                hint={t("conditions.required.hint")}
+                locale={locale}
+                options={options}
+                chosen={draft.required}
+                errors={errorsFor("required")}
+                labelOf={labelOf}
+                onAdd={(option) => {
+                  update({ ...draft, required: [...draft.required, { key: option.key, foods: option.foods }] });
+                }}
+                onRemove={(key) => {
+                  update({ ...draft, required: draft.required.filter((choice) => choice.key !== key) });
+                }}
+              />
+              <FoodPicker
+                id={fieldId("excluded")}
+                label={t("conditions.excluded.label")}
+                hint={t("conditions.excluded.hint")}
+                locale={locale}
+                options={options}
+                chosen={draft.excluded}
+                errors={errorsFor("excluded")}
+                labelOf={labelOf}
+                onAdd={(option) => {
+                  update({ ...draft, excluded: [...draft.excluded, { key: option.key, foods: option.foods }] });
+                }}
+                onRemove={(key) => {
+                  update({ ...draft, excluded: draft.excluded.filter((choice) => choice.key !== key) });
+                }}
+              />
+              </div>
+            </Group>
 
-            <div className="md:col-span-2">
+            <Group icon="warning" title={t("targets.groups.allergens")}>
               <Fieldset legend={t("conditions.allergenLegend")}>
-                <p className="m-0 rounded border-l-4 border-warning bg-warning-surface p-3">
-                  <span aria-hidden="true">⚠ </span>
+                <p className="m-0 notice-warning">
+                  <Icon name="warning" size={18} className="mr-1 inline align-[-3px]" />
                   {t("disclaimer.allergens")}
                 </p>
                 {(
@@ -407,7 +473,7 @@ export function TargetsView({ reloaded }: { readonly reloaded: boolean }) {
                   </Fieldset>
                 ))}
               </Fieldset>
-            </div>
+            </Group>
           </div>
         </details>
 
@@ -425,9 +491,13 @@ export function TargetsView({ reloaded }: { readonly reloaded: boolean }) {
 
         <SaveConditions draft={draft} />
 
-        <button type="submit" className="self-start rounded bg-accent px-6 py-3 font-medium text-on-accent">
-          {t("targets.search")}
-        </button>
+        {/* On phones the search button stays at the bottom of the screen (ADR-037 D6). */}
+        <div className="sticky bottom-0 z-10 -mx-4 border-t border-surface-muted bg-bg px-4 py-3 md:static md:mx-0 md:border-0 md:bg-transparent md:p-0">
+          <button type="submit" className="btn-primary btn-lg w-full md:w-auto">
+            <Icon name="search" size={22} />
+            {t("targets.search")}
+          </button>
+        </div>
       </form>
     </div>
   );

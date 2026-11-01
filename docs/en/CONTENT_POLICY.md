@@ -33,6 +33,8 @@ Status: **In use** (drafted 2026-10-18). Legal applicability statements are mark
 - Frying: notes on oil temperature, fire risk, and never leaving hot oil unattended.
 - Batch cooking: general cooling and refrigeration guidance only; no specific storage durations are promised.
 - Microwave recipes: note on even heating and covering.
+- Marinades: raw meat, poultry, or fish marinates in the refrigerator. A marinade or vegetables that held them are cooked through before eating, or discarded (owner, 2026-11-01, [DECISIONS.md](../working/DECISIONS.md) "Stage 15.1 decisions" P4).
+- Wine and beer: allowed in cooked dishes. Such recipes carry a neutral note that some alcohol may remain after cooking, and never state that it evaporates. Recipes with cooking sake or mirin carry no such note (owner, 2026-11-01, "Stage 15.1 decisions" P1).
 
 ## 4. Health expressions
 

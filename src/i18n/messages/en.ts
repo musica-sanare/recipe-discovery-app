@@ -563,6 +563,9 @@ export const en: Messages = {
     latin_american: "Latin American",
     mediterranean: "Mediterranean",
     southeast_asian: "Southeast Asian",
+    french: "French",
+    north_african: "North African",
+    west_african: "West African",
   },
   equipment: {
     stove: "Stove",

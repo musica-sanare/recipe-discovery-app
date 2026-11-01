@@ -88,6 +88,9 @@ const ja: Lexicon = {
     latin_american: ["中南米", "ラテン", "メキシコ", "ペルー"],
     mediterranean: ["地中海"],
     southeast_asian: ["東南アジア", "タイ料理", "タイ風", "ベトナム", "エスニック"],
+    french: ["フランス"],
+    north_african: ["北アフリカ", "マグレブ", "モロッコ", "チュニジア", "アルジェリア"],
+    west_african: ["西アフリカ", "セネガル", "コートジボワール"],
   },
   groups: {
     chicken: ["鶏肉", "とりにく", "鶏", "チキン"],
@@ -139,6 +142,9 @@ const en: Lexicon = {
     latin_american: ["latin american", "latin-american", "latino", "mexican", "peruvian"],
     mediterranean: ["mediterranean"],
     southeast_asian: ["southeast asian", "south-east asian", "thai", "vietnamese"],
+    french: ["french", "france"],
+    north_african: ["north african", "north-african", "maghreb", "moroccan", "tunisian", "algerian"],
+    west_african: ["west african", "west-african", "senegalese", "ivorian"],
   },
   groups: {
     chicken: ["chicken", "poultry"],
@@ -188,6 +194,9 @@ const es: Lexicon = {
     latin_american: ["latinoameric", "mexican", "peruan"],
     mediterranean: ["mediterran"],
     southeast_asian: ["sudeste asiatic", "tailandes", "vietnamit"],
+    french: ["frances", "francia"],
+    north_african: ["norteafrican", "norte de africa", "magreb", "marroqu", "tunecin", "argelin"],
+    west_african: ["africa occidental", "africa del oeste", "senegales", "marfileñ", "costa de marfil"],
   },
   groups: {
     chicken: ["pollo", "pollos"],
@@ -238,6 +247,9 @@ const fr: Lexicon = {
     latin_american: ["latino-americ", "latinoameric", "mexicain", "peruvien"],
     mediterranean: ["mediterran"],
     southeast_asian: ["asie du sud-est", "thailandais", "thai", "vietnamien"],
+    french: ["francais", "france"],
+    north_african: ["nord-africain", "afrique du nord", "maghreb", "marocain", "tunisien", "algerien"],
+    west_african: ["ouest-africain", "afrique de l'ouest", "afrique occidentale", "senegalais", "ivoirien"],
   },
   groups: {
     chicken: ["poulet", "volaille"],

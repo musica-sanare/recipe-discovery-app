@@ -564,6 +564,9 @@ export const fr: Messages = {
     latin_american: "Latino-américaine",
     mediterranean: "Méditerranéenne",
     southeast_asian: "D'Asie du Sud-Est",
+    french: "Française",
+    north_african: "Nord-africaine",
+    west_african: "D'Afrique de l'Ouest",
   },
   equipment: {
     stove: "Plaque de cuisson",

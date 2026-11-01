@@ -565,6 +565,9 @@ export const ja = {
     latin_american: "中南米料理",
     mediterranean: "地中海料理",
     southeast_asian: "東南アジア料理",
+    french: "フランス料理",
+    north_african: "北アフリカ料理",
+    west_african: "西アフリカ料理",
   },
   equipment: {
     stove: "コンロ",

@@ -18,6 +18,7 @@
     { "code": "06033", "rawCode": "06032", "method": "boil", "ratePercent": 97, "postCookingRefuse": "へた", "page": 44 },
     { "code": "06049", "rawCode": "06048", "method": "boil", "ratePercent": 98, "page": 44 },
     { "code": "06008", "rawCode": "06007", "method": "boil", "ratePercent": 96, "page": 43 },
+    { "code": "06011", "rawCode": "06010", "method": "boil", "ratePercent": 94, "page": 43 },
     { "code": "06327", "rawCode": "06007", "method": "stir_fry", "ratePercent": 90, "page": 43 },
     { "code": "06062", "rawCode": "06061", "method": "boil", "ratePercent": 89, "page": 45 },
     { "code": "06333", "rawCode": "06061", "method": "stir_fry", "ratePercent": 80, "page": 45 },

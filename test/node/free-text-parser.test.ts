@@ -36,6 +36,19 @@ describe("free-text conditions parser", () => {
     }
   });
 
+  it("reads the French-speaking cuisines in every locale without the shorter words inside them", () => {
+    const texts: Record<Locale, string> = {
+      ja: "フランス料理か西アフリカ料理、モロッコ風でも",
+      en: "French or West African food, Moroccan is fine too",
+      es: "Comida francesa o de África occidental, también marroquí",
+      fr: "Cuisine française ou d'Afrique occidentale, marocaine aussi",
+    };
+    for (const locale of SUPPORTED_LOCALES) {
+      expect(conditionsOf(parse(locale, texts[locale])).cuisines, locale).toEqual(["french", "north_african", "west_african"]);
+    }
+    expect(conditionsOf(parse("es", "Algo occidental")).cuisines).toEqual(["western"]);
+  });
+
   it("gives the same output for the same input", () => {
     expect(parse("en", "Cod or sardines, no garlic")).toEqual(parse("en", "Cod or sardines, no garlic"));
   });

@@ -522,6 +522,46 @@ exports[`engine snapshot > records point values, ranges, classes, reasons, and i
       "potato": "post_cooking_refuse",
     },
   },
+  "cabillaud_ratatouille": {
+    "class": "approximation",
+    "incomplete": {},
+    "perServing": {
+      "CHOCDF-": 53.24,
+      "ENERC_KCAL": 418.49,
+      "FAT-": 10.71,
+      "NACL_EQ": 2.86,
+      "PROT-": 29.22,
+    },
+    "ranges": {
+      "CHOCDF-": "52.66–53.44",
+      "ENERC_KCAL": "415.69–419.05",
+      "FAT-": "10.68–10.71",
+      "NACL_EQ": "2.86–2.86",
+      "PROT-": "29.08–29.27",
+    },
+    "reasons": {
+      "zucchini": "raw_value_for_cooking",
+    },
+  },
+  "carbonnade_flamande": {
+    "class": "exact",
+    "incomplete": {},
+    "perServing": {
+      "CHOCDF-": 50.6,
+      "ENERC_KCAL": 499.56,
+      "FAT-": 17.78,
+      "NACL_EQ": 1.43,
+      "PROT-": 31.34,
+    },
+    "ranges": {
+      "CHOCDF-": "50.6–50.6",
+      "ENERC_KCAL": "499.56–499.56",
+      "FAT-": "17.78–17.78",
+      "NACL_EQ": "1.43–1.43",
+      "PROT-": "31.34–31.34",
+    },
+    "reasons": {},
+  },
   "carne_asada_corn_salsa": {
     "class": "approximation",
     "incomplete": {},
@@ -542,6 +582,27 @@ exports[`engine snapshot > records point values, ranges, classes, reasons, and i
     "reasons": {
       "beef": "raw_value_for_cooking",
       "corn": "related_cooked_value",
+    },
+  },
+  "chakchouka": {
+    "class": "approximation",
+    "incomplete": {},
+    "perServing": {
+      "CHOCDF-": 55.91,
+      "ENERC_KCAL": 505.83,
+      "FAT-": 19.41,
+      "NACL_EQ": 2.74,
+      "PROT-": 30.92,
+    },
+    "ranges": {
+      "CHOCDF-": "55.76–55.96",
+      "ENERC_KCAL": "494.83–508.03",
+      "FAT-": "19.41–19.41",
+      "NACL_EQ": "2.67–2.77",
+      "PROT-": "29.41–31.43 shown",
+    },
+    "reasons": {
+      "egg_white": "raw_value_for_cooking",
     },
   },
   "chicken_breast_soup_curry": {
@@ -1131,6 +1192,27 @@ exports[`engine snapshot > records point values, ranges, classes, reasons, and i
       "egg_white": "raw_value_for_cooking",
     },
   },
+  "galette_complete": {
+    "class": "approximation",
+    "incomplete": {},
+    "perServing": {
+      "CHOCDF-": 57.91,
+      "ENERC_KCAL": 500.71,
+      "FAT-": 20.03,
+      "NACL_EQ": 1.87,
+      "PROT-": 27.65,
+    },
+    "ranges": {
+      "CHOCDF-": "41.21–63.48 shown",
+      "ENERC_KCAL": "432.91–514.27 shown",
+      "FAT-": "19.16–20.15",
+      "NACL_EQ": "1.87–1.87",
+      "PROT-": "26.21–28.13",
+    },
+    "reasons": {
+      "flour": "raw_value_for_cooking",
+    },
+  },
   "gapao_chicken_rice": {
     "class": "approximation",
     "incomplete": {},
@@ -1217,6 +1299,25 @@ exports[`engine snapshot > records point values, ranges, classes, reasons, and i
       "egg_white": "raw_value_for_cooking",
       "shrimp": "raw_value_for_cooking",
     },
+  },
+  "hachis_parmentier": {
+    "class": "exact",
+    "incomplete": {},
+    "perServing": {
+      "CHOCDF-": 61.68,
+      "ENERC_KCAL": 589,
+      "FAT-": 22.12,
+      "NACL_EQ": 1.58,
+      "PROT-": 46.64,
+    },
+    "ranges": {
+      "CHOCDF-": "61.68–61.68",
+      "ENERC_KCAL": "589–589",
+      "FAT-": "22.12–22.12",
+      "NACL_EQ": "1.58–1.58",
+      "PROT-": "46.64–46.64",
+    },
+    "reasons": {},
   },
   "horse_mackerel_salt_grill": {
     "class": "approximation",
@@ -1383,6 +1484,27 @@ exports[`engine snapshot > records point values, ranges, classes, reasons, and i
       "PROT-": "25.39–25.39",
     },
     "reasons": {},
+  },
+  "mafe_boeuf": {
+    "class": "approximation",
+    "incomplete": {},
+    "perServing": {
+      "CHOCDF-": 103.07,
+      "ENERC_KCAL": 766.97,
+      "FAT-": 26.57,
+      "NACL_EQ": 1.28,
+      "PROT-": 38.21,
+    },
+    "ranges": {
+      "CHOCDF-": "100.26–105.89 shown",
+      "ENERC_KCAL": "751.56–782.37 shown",
+      "FAT-": "26.52–26.62",
+      "NACL_EQ": "1.28–1.28",
+      "PROT-": "38.1–38.32",
+    },
+    "reasons": {
+      "sweet_potato": "related_cooked_value, post_cooking_refuse",
+    },
   },
   "mapo_eggplant_soy_meat": {
     "class": "approximation",
@@ -1953,6 +2075,44 @@ exports[`engine snapshot > records point values, ranges, classes, reasons, and i
     },
     "reasons": {},
   },
+  "poulet_basquaise": {
+    "class": "exact",
+    "incomplete": {},
+    "perServing": {
+      "CHOCDF-": 76.5,
+      "ENERC_KCAL": 533.37,
+      "FAT-": 13.43,
+      "NACL_EQ": 1.6,
+      "PROT-": 33.66,
+    },
+    "ranges": {
+      "CHOCDF-": "76.5–76.5",
+      "ENERC_KCAL": "533.37–533.37",
+      "FAT-": "13.43–13.43",
+      "NACL_EQ": "1.6–1.6",
+      "PROT-": "33.66–33.66",
+    },
+    "reasons": {},
+  },
+  "poulet_yassa": {
+    "class": "exact",
+    "incomplete": {},
+    "perServing": {
+      "CHOCDF-": 76.48,
+      "ENERC_KCAL": 539.9,
+      "FAT-": 12.46,
+      "NACL_EQ": 1.59,
+      "PROT-": 35.16,
+    },
+    "ranges": {
+      "CHOCDF-": "76.48–76.48",
+      "ENERC_KCAL": "539.9–539.9",
+      "FAT-": "12.46–12.46",
+      "NACL_EQ": "1.59–1.59",
+      "PROT-": "35.16–35.16",
+    },
+    "reasons": {},
+  },
   "pulpo_gallega_potatoes": {
     "class": "approximation",
     "incomplete": {},
@@ -1993,6 +2153,27 @@ exports[`engine snapshot > records point values, ranges, classes, reasons, and i
     },
     "reasons": {
       "chicken": "raw_value_for_cooking",
+    },
+  },
+  "salade_nicoise": {
+    "class": "approximation",
+    "incomplete": {},
+    "perServing": {
+      "CHOCDF-": 48.77,
+      "ENERC_KCAL": 456.68,
+      "FAT-": 14.57,
+      "NACL_EQ": 2.24,
+      "PROT-": 36.11,
+    },
+    "ranges": {
+      "CHOCDF-": "48.76–48.77",
+      "ENERC_KCAL": "453.34–460.02",
+      "FAT-": "14.31–14.83",
+      "NACL_EQ": "2.23–2.24",
+      "PROT-": "35.8–36.42",
+    },
+    "reasons": {
+      "egg": "post_cooking_refuse",
     },
   },
   "salmon_cabbage_microwave": {
@@ -2524,6 +2705,25 @@ exports[`engine snapshot > records point values, ranges, classes, reasons, and i
     "reasons": {
       "pork": "raw_value_for_cooking",
     },
+  },
+  "tajine_poulet_citron": {
+    "class": "exact",
+    "incomplete": {},
+    "perServing": {
+      "CHOCDF-": 48,
+      "ENERC_KCAL": 444.61,
+      "FAT-": 14.54,
+      "NACL_EQ": 2.82,
+      "PROT-": 33.72,
+    },
+    "ranges": {
+      "CHOCDF-": "48–48",
+      "ENERC_KCAL": "444.61–444.61",
+      "FAT-": "14.54–14.54",
+      "NACL_EQ": "2.82–2.82",
+      "PROT-": "33.72–33.72",
+    },
+    "reasons": {},
   },
   "tofu_edamame_dry_curry": {
     "class": "approximation",

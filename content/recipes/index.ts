@@ -23,7 +23,10 @@ import { recipe as beefStuffedPeppersRice } from "./beef_stuffed_peppers_rice.ts
 import { recipe as beefSukiyakiGrilledTofu } from "./beef_sukiyaki_grilled_tofu.ts";
 import { recipe as boiledChickenNegiSalt } from "./boiled_chicken_negi_salt.ts";
 import { recipe as boiledEggPotatoSalad } from "./boiled_egg_potato_salad.ts";
+import { recipe as cabillaudRatatouille } from "./cabillaud_ratatouille.ts";
+import { recipe as carbonnadeFlamande } from "./carbonnade_flamande.ts";
 import { recipe as carneAsadaCornSalsa } from "./carne_asada_corn_salsa.ts";
+import { recipe as chakchouka } from "./chakchouka.ts";
 import { recipe as chickenBreastSoupCurry } from "./chicken_breast_soup_curry.ts";
 import { recipe as chickenBreastTomatoSimmer } from "./chicken_breast_tomato_simmer.ts";
 import { recipe as chickenBroccoliStirFry } from "./chicken_broccoli_stir_fry.ts";
@@ -51,10 +54,12 @@ import { recipe as eggTomatoStirFry } from "./egg_tomato_stir_fry.ts";
 import { recipe as eggWhiteBeansRanchero } from "./egg_white_beans_ranchero.ts";
 import { recipe as eggWhiteSpinachTamagoyaki } from "./egg_white_spinach_tamagoyaki.ts";
 import { recipe as eggsTomatoPepperBake } from "./eggs_tomato_pepper_bake.ts";
+import { recipe as galetteComplete } from "./galette_complete.ts";
 import { recipe as gapaoChickenRice } from "./gapao_chicken_rice.ts";
 import { recipe as goyaChampuruPork } from "./goya_champuru_pork.ts";
 import { recipe as greekEggWhiteSpinachOmelette } from "./greek_egg_white_spinach_omelette.ts";
 import { recipe as gyeranJjimEggWhiteShrimp } from "./gyeran_jjim_egg_white_shrimp.ts";
+import { recipe as hachisParmentier } from "./hachis_parmentier.ts";
 import { recipe as horseMackerelSaltGrill } from "./horse_mackerel_salt_grill.ts";
 import { recipe as huevosPericosEggWhites } from "./huevos_pericos_egg_whites.ts";
 import { recipe as khaoPadEggShrimp } from "./khao_pad_egg_shrimp.ts";
@@ -63,6 +68,7 @@ import { recipe as lentejasPorkStew } from "./lentejas_pork_stew.ts";
 import { recipe as lentilSasamiSoup } from "./lentil_sasami_soup.ts";
 import { recipe as mackerelCanTomatoSalad } from "./mackerel_can_tomato_salad.ts";
 import { recipe as mackerelSaltGrillDaikon } from "./mackerel_salt_grill_daikon.ts";
+import { recipe as mafeBoeuf } from "./mafe_boeuf.ts";
 import { recipe as mapoEggplantSoyMeat } from "./mapo_eggplant_soy_meat.ts";
 import { recipe as nattoColdSoba } from "./natto_cold_soba.ts";
 import { recipe as nattoEggWhiteOmelette } from "./natto_egg_white_omelette.ts";
@@ -90,8 +96,11 @@ import { recipe as porkLoinGinger } from "./pork_loin_ginger.ts";
 import { recipe as porkNapaMillefeuilleMicrowave } from "./pork_napa_millefeuille_microwave.ts";
 import { recipe as porkNoodleSaladBun } from "./pork_noodle_salad_bun.ts";
 import { recipe as porkShabuSalad } from "./pork_shabu_salad.ts";
+import { recipe as pouletBasquaise } from "./poulet_basquaise.ts";
+import { recipe as pouletYassa } from "./poulet_yassa.ts";
 import { recipe as pulpoGallegaPotatoes } from "./pulpo_gallega_potatoes.ts";
 import { recipe as saladChickenMicrowave } from "./salad_chicken_microwave.ts";
+import { recipe as saladeNicoise } from "./salade_nicoise.ts";
 import { recipe as salmonCabbageMicrowave } from "./salmon_cabbage_microwave.ts";
 import { recipe as salmonMilkPotatoChowder } from "./salmon_milk_potato_chowder.ts";
 import { recipe as salmonMisoGrill } from "./salmon_miso_grill.ts";
@@ -117,6 +126,7 @@ import { recipe as sundubuTofuSoup } from "./sundubu_tofu_soup.ts";
 import { recipe as swordfishLemonHerb } from "./swordfish_lemon_herb.ts";
 import { recipe as swordfishTeriyaki } from "./swordfish_teriyaki.ts";
 import { recipe as tacoRicePork } from "./taco_rice_pork.ts";
+import { recipe as tajinePouletCitron } from "./tajine_poulet_citron.ts";
 import { recipe as tofuEdamameDryCurry } from "./tofu_edamame_dry_curry.ts";
 import { recipe as tofuEggChampuru } from "./tofu_egg_champuru.ts";
 import { recipe as tofuGarlicChiveStirFry } from "./tofu_garlic_chive_stir_fry.ts";
@@ -265,4 +275,14 @@ export const recipes: readonly Recipe[] = [
   salmonMilkPotatoChowder,
   lentejasPorkStew,
   pistoSoftEgg,
+  pouletBasquaise,
+  cabillaudRatatouille,
+  saladeNicoise,
+  galetteComplete,
+  hachisParmentier,
+  carbonnadeFlamande,
+  tajinePouletCitron,
+  chakchouka,
+  pouletYassa,
+  mafeBoeuf,
 ];

@@ -1274,6 +1274,11 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - Owner's decisions after the deployment (2026-11-01): saving without a further consent step is accepted (ADR-036 D7); the new texts in `ja`, `en`, `es`, and `fr` are accepted as reviewed (open questions 9 and 23 remain for native review in general).
 - Open after Phase 13: no legal review of the consent assessment; restored values inside "More conditions" stay collapsed; `i18next` 26.6.0 waits for a dedicated update under ADR-016.
 
+### Dependency update: i18next 26.6.0 (2026-11-01)
+- `i18next` 26.5.12 → 26.6.0 (published 2026-10-31 23:19 UTC, a single release, so ADR-016 exception 2 does not apply); `react-i18next` 17.1.9 accepts `>= 26.2.0`. `package.json` now requires `^26.6.0`.
+- Impact checked before the update (`npm diff` of the two published packages, 2026-11-01; changelog in the `i18next` repository): only `package.json`, `dist/esm/package.json` (version), and the type definitions `typescript/options.d.ts` and `typescript/t.d.ts` change. The new `strictInterpolationChecks` type option defaults to `false`, and the selector-array overloads now require `count` for plural members. The app uses the string-key API with `CustomTypeOptions` limited to `defaultNS` and `resources` (`src/i18n/i18next.d.ts`), no selectors, no `strictKeyChecks`, and no `defaultValue`, so neither change applies. No install script (ADR-018).
+- Checks: `npm ci`, `npm run check` (884 tests; the built `index-CgzjGBWD.js` keeps the same content hash as release 10, so the runtime bundle is unchanged), `npm run test:e2e` (164 passed, 1 skipped; a first run had one WebKit accessibility case fail and pass on rerun, with an identical bundle), `npm audit --omit=dev` (0); `npm audit` reports the accepted `minimatch` findings only. `npm outdated` lists only the recorded exceptions (`typescript`, `@types/node`).
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in

@@ -1318,6 +1318,13 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - Phone-class timing (`npm run test:e2e:timing`, alternating with release 10's code `a93902d` extracted with `git archive` and run with the same `node_modules`, two rounds, 2026-11-01 04:30–04:34 UTC, 1-minute load average 2.5–3.2, 15 runs; median / p90, ms): search cut 63.6–66.5 / 69.7–71.5 and bulk 61.1–63.0 / 68.8–70.1 at 4× against 61.8–63.2 / 66.5–67.4 and 57.7–60.5 / 67.9–81.6 for release 10; re-suggestion 23.6–24.2 against 20.6–21.8; recalculation 9.3–10.0 against 8.9–9.8; search cut 95.0–104.0 at 6× against 90.3–94.3. The redesign adds about 2–4 ms to a search at 4× (rendering the tiles and icons), within the ADR-030 D10 threshold of about 100 ms.
 - [UI_DESIGN.md](../en/UI_DESIGN.md) §3.1 and §3.2 show the new layout; [ARCHITECTURE.md](../en/ARCHITECTURE.md) §2 and §9 name the tokens, the icon data, and their tests; both with their Japanese twins.
 
+### Release 11 preparation (2026-11-01)
+- Release 11 contains Phase 14 (the "soft pop" redesign, ADR-037) and the `i18next` 26.6.0 update after release 10. Content version `2026-10-31.8`; the engines, calculated values, stored data, and headers are unchanged.
+- Checks on `63bfab1` (2026-11-01 04:47–04:51 UTC): `npm ci`, `npm run check` (996 tests), `npm run test:e2e` (164 passed, 1 skipped), `npm audit --omit=dev` (0); `npm audit` reports the accepted `minimatch` findings only; `npm outdated` lists only the recorded exceptions. `dist/`: 10 files (JavaScript bundle 566,971 bytes; CSS 21,970 bytes; calculation bundle unchanged).
+- Secret scan: gitleaks 8.30.1, `gitleaks git --log-opts=--all --redact` (173 commits, 4.57 MB) and `gitleaks dir --redact` on the tracked files: no leaks.
+- Quality and timing: "Stage 14.5 quality".
+- Open: CI on the release commit after the owner pushes, the owner's merge into `main` (a deploy), and the post-deployment checks.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in

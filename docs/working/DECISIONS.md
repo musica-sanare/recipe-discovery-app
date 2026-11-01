@@ -1242,6 +1242,14 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - A group key is restored only while the ingredient search offers that group (more than one food), so restored choices match what the user can pick.
 - `npm run check`: 60 test files, 856 tests (18 new), content validation, and the production build pass.
 
+### Stage 13.3 saved-conditions UI (2026-11-01)
+- The targets view has a "Save on this device" fieldset above the search button: the save checkbox, the allergen checkbox while saving is on, the shared-browser note, the delete button, and a status for "deleted" and "could not be saved". A restored record shows a status at the top with the number of dropped items and its own delete button; the reload notice then says only that search results and the shopping list are not kept (`nav.reloadNoticeSaved`). The about page's privacy text is updated in four locales.
+- The record is read once in a layout effect of the current view after the content loads (`src/state/useRestoreSavedConditions.ts`), so the restored form appears before the first paint; `cleared` keeps the saved-conditions status. "Find recipes" writes the form as typed before validation (ADR-036 D4, D5). Applying a relaxation on the candidates view does not write; the next "Find recipes" does.
+- Observed limitation: restored values inside "More conditions" stay in the collapsed section; the restored notice says that the form was restored. Phase 14 may revisit this.
+- Tests: `test/ui/savedConditions.test.tsx` (7 cases in each of the four locales, axe-core on the restored, dropped, and write-failed states) and `e2e/savedConditions.spec.ts` (per locale and project: no new key with saving off; save, reload, restore, the same cards after a search, turn off, reload, defaults). One existing test queried the only `role="status"` element and now queries its text.
+- Checks: `npm run check` (61 test files, 884 tests; content validation; production build) and `npm run test:e2e` (164 passed, 1 skipped by design).
+- Browser checks (dev server, built-in browser): at 375 px in Japanese, turning saving on wrote one record without allergens, and a reload restored it with the notice; at desktop width in French, the fieldset and its texts; no page overflow and no console errors in either.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in

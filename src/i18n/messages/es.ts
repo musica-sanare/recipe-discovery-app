@@ -42,6 +42,7 @@ export const es: Messages = {
     toTargets: "Ir a objetivos y condiciones",
     backToCandidates: "Volver a las candidatas",
     reloadNotice: "Tus objetivos, condiciones y lista de la compra no se conservan al recargar la página. Vuelve a introducirlos.",
+    reloadNoticeSaved: "Los resultados de búsqueda y la lista de la compra no se conservan al recargar la página.",
     notFound: "No se encontró esta receta.",
   },
   targets: {
@@ -124,6 +125,18 @@ export const es: Messages = {
       other: "No se atienden consultas de salud, creación de recetas ni otras peticiones. Describe ingredientes, tiempo de cocción, utensilios o tipo de cocina.",
     },
     goToAllergens: "Ir a la elección de alérgenos",
+  },
+  saved: {
+    legend: "Guardar en este dispositivo",
+    save: "Guardar estos objetivos y condiciones en este dispositivo",
+    allergens: "Guardar también los alérgenos que elegí",
+    note: "Las condiciones guardadas se quedan en este navegador y no se envían a ningún sitio. Cualquiera que use este navegador puede verlas.",
+    delete: "Borrar las condiciones guardadas",
+    restored: "Se han recuperado los objetivos y las condiciones guardados en este dispositivo.",
+    dropped_one: "{{count}} elemento guardado ya no está disponible y se ha quitado.",
+    dropped_other: "{{count}} elementos guardados ya no están disponibles y se han quitado.",
+    deleted: "Se han borrado de este dispositivo las condiciones guardadas.",
+    writeFailed: "No se han podido guardar las condiciones en este dispositivo. Se mantienen en esta página hasta que la cierres.",
   },
   candidates: {
     count_one: "{{count}} receta",
@@ -614,8 +627,8 @@ export const es: Messages = {
     privacy: {
       title: "Privacidad",
       noTracking: "No se usan herramientas de análisis, cookies ni anuncios, y la app no hace solicitudes a servicios externos.",
-      storage: "Lo único que se guarda en tu navegador es el idioma elegido.",
-      memory: "Los objetivos y las condiciones que introduces se quedan en la memoria del navegador mientras la página está abierta y nunca se ponen en la URL.",
+      storage: "Tu navegador guarda el idioma elegido. Si activas el guardado, también guarda tus objetivos y condiciones en este dispositivo, y los alérgenos solo si lo eliges; cualquiera que use este navegador puede verlos.",
+      memory: "Si no, los objetivos y las condiciones que introduces se quedan en la memoria del navegador mientras la página está abierta. Nunca se envían ni se ponen en la URL.",
       shoppingList: "La lista de la compra también se queda en la memoria solo mientras la página está abierta. No se guarda ni se envía.",
     },
     licenses: {

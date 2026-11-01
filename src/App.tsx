@@ -12,6 +12,7 @@ import { ViewLink } from "./navigation/ViewLink";
 import { useAppState } from "./state/context";
 import { AboutView } from "./views/AboutView";
 import { AppStateProvider, ContentProvider } from "./state/providers";
+import { useRestoreSavedConditions } from "./state/useRestoreSavedConditions";
 import { CandidatesView } from "./views/CandidatesView";
 import { ComparisonView } from "./views/ComparisonView";
 import { DetailView } from "./views/DetailView";
@@ -111,6 +112,7 @@ function ShoppingListLink() {
 function CurrentView() {
   const { view, navigate, navigated } = useNavigation();
   const { state } = useAppState();
+  useRestoreSavedConditions();
   const lost =
     ((view.name === "candidates" || view.name === "comparison") && state.search === undefined) ||
     (view.name === "shoppingList" && !navigated && state.shoppingList.entries.length === 0);

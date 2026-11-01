@@ -119,6 +119,11 @@ export function recordFromDraft(draft: TargetsDraft, includeAllergens: boolean):
   };
 }
 
+/** Writes the form as typed; false when the browser refused the write. */
+export function saveDraft(draft: TargetsDraft, allergens: boolean, storage: ConditionsStorage | undefined = browserStorage()): boolean {
+  return writeSavedConditions(recordFromDraft(draft, allergens), storage);
+}
+
 function isOneOf<T extends string>(values: readonly T[], value: string): value is T {
   return (values as readonly string[]).includes(value);
 }

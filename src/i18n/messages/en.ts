@@ -42,6 +42,7 @@ export const en: Messages = {
     toTargets: "Go to targets and conditions",
     backToCandidates: "Back to candidates",
     reloadNotice: "Your targets, conditions, and shopping list are not kept when the page is reloaded. Please enter them again.",
+    reloadNoticeSaved: "Search results and the shopping list are not kept when the page is reloaded.",
     notFound: "This recipe could not be found.",
   },
   targets: {
@@ -124,6 +125,18 @@ export const en: Messages = {
       other: "Health questions, recipe writing, and other requests are not supported. Describe ingredients, cooking time, equipment, or cuisine.",
     },
     goToAllergens: "Go to the allergen choices",
+  },
+  saved: {
+    legend: "Save on this device",
+    save: "Save these targets and conditions on this device",
+    allergens: "Also save the allergens I chose",
+    note: "Saved conditions stay in this browser and are not sent anywhere. Anyone who uses this browser can see them.",
+    delete: "Delete saved conditions",
+    restored: "Your saved targets and conditions were restored from this device.",
+    dropped_one: "{{count}} saved item is no longer available and was removed.",
+    dropped_other: "{{count}} saved items are no longer available and were removed.",
+    deleted: "Saved conditions were deleted from this device.",
+    writeFailed: "The conditions could not be saved on this device. They stay on this page until it is closed.",
   },
   candidates: {
     count_one: "{{count}} recipe",
@@ -614,8 +627,8 @@ export const en: Messages = {
     privacy: {
       title: "Privacy",
       noTracking: "No analytics, cookies, or ads are used, and the app makes no requests to external services.",
-      storage: "The only thing saved in your browser is your language choice.",
-      memory: "The targets and conditions you enter stay in your browser's memory while the page is open and are never put in the URL.",
+      storage: "Your browser keeps your language choice. If you turn on saving, it also keeps your targets and conditions on this device, and your allergens only if you choose; anyone who uses this browser can see them.",
+      memory: "Otherwise, the targets and conditions you enter stay in your browser's memory while the page is open. They are never sent or put in the URL.",
       shoppingList: "The shopping list also stays in memory only while the page is open. It is neither saved nor sent.",
     },
     licenses: {

@@ -26,7 +26,7 @@ export function ComparisonView({ search }: { readonly search: SearchState }) {
   });
 
   const back = (
-    <ViewLink to={{ name: "candidates" }} className="text-accent underline">
+    <ViewLink to={{ name: "candidates" }} className="text-primary underline">
       {t("nav.backToCandidates")}
     </ViewLink>
   );
@@ -102,7 +102,7 @@ export function ComparisonView({ search }: { readonly search: SearchState }) {
               </th>
               {entries.map(({ entry, name }) => (
                 <th key={entry.recipe} scope="col" className={header}>
-                  <ViewLink to={{ name: "detail", recipe: entry.recipe }} className="text-accent underline">
+                  <ViewLink to={{ name: "detail", recipe: entry.recipe }} className="text-primary underline">
                     {name}
                   </ViewLink>
                 </th>

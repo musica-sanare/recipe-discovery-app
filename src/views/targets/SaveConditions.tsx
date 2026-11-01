@@ -32,7 +32,7 @@ export function SaveConditions({ draft }: { readonly draft: TargetsDraft }) {
             const ok = saveDraft(draft, false);
             dispatch({ type: "savedChanged", on: ok, allergens: false, notice: ok ? undefined : "writeFailed" });
           }}
-          className="size-5 shrink-0 accent-accent"
+          className="size-5 shrink-0 accent-primary"
         />
         <span>{t("saved.save")}</span>
       </label>
@@ -46,20 +46,20 @@ export function SaveConditions({ draft }: { readonly draft: TargetsDraft }) {
               const ok = saveDraft(draft, next);
               dispatch({ type: "savedChanged", on: true, allergens: ok ? next : allergens, notice: ok ? undefined : "writeFailed" });
             }}
-            className="size-5 shrink-0 accent-accent"
+            className="size-5 shrink-0 accent-primary"
           />
           <span>{t("saved.allergens")}</span>
         </label>
       )}
       <p className="m-0 text-sm text-muted">{t("saved.note")}</p>
       {on && (
-        <button type="button" onClick={remove} className="self-start rounded border border-border px-4 py-2">
+        <button type="button" onClick={remove} className="self-start btn-secondary">
           {t("saved.delete")}
         </button>
       )}
       <div role="status">
         {notice === "deleted" && <p className="m-0">{t("saved.deleted")}</p>}
-        {notice === "writeFailed" && <p className="m-0 rounded border-l-4 border-warning bg-warning-surface p-3">{t("saved.writeFailed")}</p>}
+        {notice === "writeFailed" && <p className="m-0 notice-warning">{t("saved.writeFailed")}</p>}
       </div>
     </fieldset>
   );

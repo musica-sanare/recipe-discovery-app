@@ -1,4 +1,4 @@
-<!-- source: docs/en/UI_DESIGN.md blob fa6b9341f183828580fe053c4c56289e9c782c49 -->
+<!-- source: docs/en/UI_DESIGN.md blob 16d562eba41318a7c62df44810ed44fe26a1d625 -->
 [English](../en/UI_DESIGN.md) | 日本語 · [目次に戻る](README.md)
 
 > この文書は[英語版](../en/UI_DESIGN.md)の翻訳。内容が異なる場合は英語版が優先する。
@@ -345,7 +345,7 @@ Amounts are the edible portion (without skin, bones, or shells) or the weight as
 
 ### ビジュアルアイデンティティ（フェーズ 14）
 
-方向性は「やわらかポップ」（ADR-037）。市場のような温かく落ち着いた土台に、パステルの差し色、2 色づかいのアイコン、栄養の数字を載せる色つきのタイルを足す。適用はステージ 14.2〜14.4 で行い、それまでは上のトークンのままにする。
+方向性は「やわらかポップ」（ADR-037）。市場のような温かく落ち着いた土台に、パステルの差し色、2 色づかいのアイコン、栄養の数字を載せる色つきのタイルを足す。ステージ 14.2 で、下のトークン、14 px の既定の角丸、`src/styles.css` の基本コンポーネント用ユーティリティ（`btn-primary`、`btn-lg`、`btn-secondary`、`btn-outline`、`panel`、`notice-warning`、`chip`）を適用した。`warning` と `warning-surface` は、`near` と `peach` と同じ値のトークンとして残す。アイコン、イラスト、レイアウトの変更はステージ 14.3 と 14.4 で行う。
 
 | トークン | ライト | ダーク | 用途 |
 |---|---|---|---|

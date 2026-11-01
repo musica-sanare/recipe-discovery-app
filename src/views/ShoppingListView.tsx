@@ -40,11 +40,11 @@ export function ShoppingListView() {
 
   const back =
     state.search === undefined ? (
-      <ViewLink to={{ name: "targets" }} className="text-accent underline print:hidden">
+      <ViewLink to={{ name: "targets" }} className="text-primary underline print:hidden">
         {t("nav.toTargets")}
       </ViewLink>
     ) : (
-      <ViewLink to={{ name: "candidates" }} className="text-accent underline print:hidden">
+      <ViewLink to={{ name: "candidates" }} className="text-primary underline print:hidden">
         {t("nav.backToCandidates")}
       </ViewLink>
     );
@@ -56,7 +56,7 @@ export function ShoppingListView() {
         <ViewHeading title={title} focusOnMount={navigated} />
         <p className="m-0">{t("shopping.empty")}</p>
         <p className="m-0">
-          <ViewLink to={{ name: "targets" }} className="text-accent underline">
+          <ViewLink to={{ name: "targets" }} className="text-primary underline">
             {t("nav.toTargets")}
           </ViewLink>
         </p>
@@ -107,7 +107,7 @@ export function ShoppingListView() {
                 <li key={entry.recipe} className="flex flex-col gap-1 rounded border border-border p-3">
                   <ViewLink
                     to={{ name: "detail", recipe: entry.recipe }}
-                    className="font-medium text-accent underline print:text-text print:no-underline"
+                    className="font-medium text-primary underline print:text-text print:no-underline"
                     onNavigate={() => {
                       dispatch({ type: "adjusted", recipe: entry.recipe, state: entry.state });
                     }}
@@ -134,7 +134,7 @@ export function ShoppingListView() {
             <div className="flex flex-wrap gap-3">
               <button
                 type="button"
-                className="rounded bg-accent px-4 py-2 text-on-accent disabled:cursor-not-allowed disabled:opacity-60"
+                className="btn-primary"
                 disabled={remaining === 0}
                 aria-describedby={remaining === 0 ? "shopping-all-checked" : undefined}
                 onClick={() => {
@@ -145,7 +145,7 @@ export function ShoppingListView() {
               </button>
               <button
                 type="button"
-                className="rounded border border-border px-4 py-2"
+                className="btn-secondary"
                 onClick={() => {
                   window.print();
                 }}
@@ -155,7 +155,7 @@ export function ShoppingListView() {
               {!confirming && (
                 <button
                   type="button"
-                  className="rounded border border-border px-4 py-2"
+                  className="btn-secondary"
                   onClick={() => {
                     setConfirming(true);
                     focusTarget.current = "shopping-clear-yes";
@@ -178,7 +178,7 @@ export function ShoppingListView() {
                 <button
                   id="shopping-clear-yes"
                   type="button"
-                  className="rounded bg-accent px-4 py-2 text-on-accent"
+                  className="btn-primary"
                   onClick={() => {
                     dispatch({ type: "shoppingCleared" });
                     setConfirming(false);
@@ -191,7 +191,7 @@ export function ShoppingListView() {
                 </button>
                 <button
                   type="button"
-                  className="rounded border border-border px-4 py-2"
+                  className="btn-secondary"
                   onClick={() => {
                     setConfirming(false);
                   }}
@@ -279,7 +279,7 @@ function ItemRow({ item, checked, name, amount, contributions, onChange }: ItemR
       {item.frying && <p className="m-0 ml-8 text-sm text-muted">{t("shopping.fryingNote")}</p>}
       {contributions.length > 1 && (
         <details className="ml-8 text-sm print:hidden">
-          <summary className="cursor-pointer text-accent">{t("shopping.perRecipe")}</summary>
+          <summary className="cursor-pointer text-primary">{t("shopping.perRecipe")}</summary>
           <ul className="m-0 mt-1 flex list-none flex-col gap-1 p-0">
             {contributions.map((contribution) => (
               <li key={contribution}>{contribution}</li>

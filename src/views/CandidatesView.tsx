@@ -133,7 +133,7 @@ export function CandidatesView({ search: current }: { readonly search: SearchSta
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <ViewHeading title={t("nav.views.candidates")} focusOnMount={navigated} />
-        <ViewLink to={{ name: "targets" }} className="text-accent underline">
+        <ViewLink to={{ name: "targets" }} className="text-primary underline">
           {t("candidates.editConditions")}
         </ViewLink>
       </div>
@@ -145,7 +145,7 @@ export function CandidatesView({ search: current }: { readonly search: SearchSta
       </p>
 
       {warnings.map((contradiction) => (
-        <p key={contradiction.severity} className="m-0 rounded border-l-4 border-warning bg-warning-surface p-3">
+        <p key={contradiction.severity} className="m-0 notice-warning">
           <span aria-hidden="true">⚠ </span>
           {contradictionMessage(contradiction, t, locale)}
         </p>
@@ -161,12 +161,12 @@ export function CandidatesView({ search: current }: { readonly search: SearchSta
               onClick={() => {
                 setShowHeld((shown) => !shown);
               }}
-              className="rounded border border-accent px-3 py-2 text-accent"
+              className="btn-outline"
             >
               {t("candidates.showAlternatives")}
             </button>
           )}
-          <ViewLink to={{ name: "targets" }} className="text-accent underline">
+          <ViewLink to={{ name: "targets" }} className="text-primary underline">
             {t("candidates.editConditions")}
           </ViewLink>
         </div>
@@ -187,7 +187,7 @@ export function CandidatesView({ search: current }: { readonly search: SearchSta
           <ol aria-labelledby="candidates-heading" className="m-0 grid list-none gap-4 p-0 md:grid-cols-2 xl:grid-cols-3">
             {candidates.map((entry) => card(entry, "candidate"))}
           </ol>
-          <button type="button" onClick={onDifferentType} className="self-start rounded border border-accent px-4 py-2 text-accent">
+          <button type="button" onClick={onDifferentType} className="self-start btn-outline">
             {t("candidates.differentType")}
           </button>
           <div className="sticky bottom-0 z-10 -mx-4 border-t border-border bg-surface">
@@ -198,7 +198,7 @@ export function CandidatesView({ search: current }: { readonly search: SearchSta
                 onClick={() => {
                   navigate({ name: "comparison" });
                 }}
-                className="rounded bg-accent px-4 py-2 text-on-accent disabled:opacity-60"
+                className="btn-primary"
               >
                 {t("candidates.compareButton", { count: state.compare.length })}
               </button>
@@ -243,7 +243,7 @@ export function CandidatesView({ search: current }: { readonly search: SearchSta
                     onClick={() => {
                       onRelax(relaxation);
                     }}
-                    className="rounded bg-accent px-3 py-2 text-on-accent"
+                    className="btn-primary"
                     aria-label={`${t("candidates.apply")}: ${texts.action}`}
                   >
                     {t("candidates.apply")}
@@ -256,9 +256,9 @@ export function CandidatesView({ search: current }: { readonly search: SearchSta
       )}
 
       {fewer && equipmentLimited && noEquipmentOption && (
-        <p className="m-0 rounded border-l-4 border-warning bg-warning-surface p-3">
+        <p className="m-0 notice-warning">
           {t("candidates.reviewEquipment")}{" "}
-          <ViewLink to={{ name: "targets" }} className="text-accent underline">
+          <ViewLink to={{ name: "targets" }} className="text-primary underline">
             {t("candidates.reviewConditions")}
           </ViewLink>
         </p>

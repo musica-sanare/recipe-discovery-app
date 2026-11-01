@@ -139,13 +139,13 @@ export function RecipeCard({ entry, recipe, calc, text, targets, context, mode, 
       </div>
 
       <div className="flex flex-wrap items-center gap-3">
-        <ViewLink to={{ name: "detail", recipe: entry.recipe }} className="rounded border border-accent px-3 py-2 text-accent">
+        <ViewLink to={{ name: "detail", recipe: entry.recipe }} className="btn-outline">
           <span aria-hidden="true">{t("candidates.detailsShort")}</span>
           <span className="sr-only">{t("candidates.details", { recipe: name })}</span>
         </ViewLink>
         {compare !== undefined && (
           <label className="flex min-h-10 items-center gap-2">
-            <input type="checkbox" checked={compare.checked} disabled={compare.disabled} onChange={compare.onToggle} className="size-5 accent-accent" />
+            <input type="checkbox" checked={compare.checked} disabled={compare.disabled} onChange={compare.onToggle} className="size-5 accent-primary" />
             <span aria-hidden="true">{t("candidates.compareSelect")}</span>
             <span className="sr-only">{t("candidates.compareSelectNamed", { recipe: name })}</span>
           </label>

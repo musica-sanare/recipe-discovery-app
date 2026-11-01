@@ -20,7 +20,7 @@ export function AboutView() {
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <ViewHeading title={t("nav.views.about")} focusOnMount={navigated} />
-        <ViewLink to={{ name: "targets" }} className="text-accent underline">
+        <ViewLink to={{ name: "targets" }} className="text-primary underline">
           {t("nav.toTargets")}
         </ViewLink>
       </div>
@@ -70,7 +70,7 @@ export function AboutView() {
       <Section id="about-licenses" title={t("about.licenses.title")}>
         <p className="m-0">{t("about.licenses.body")}</p>
         <p className="m-0">
-          <a href={LICENSES_PATH} className="text-accent underline">
+          <a href={LICENSES_PATH} className="text-primary underline">
             {t("about.licenses.link")}
           </a>
         </p>

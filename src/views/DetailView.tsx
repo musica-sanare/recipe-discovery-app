@@ -92,11 +92,11 @@ export function DetailView({ recipe: recipeId }: { readonly recipe: string }) {
 
   const back =
     search === undefined ? (
-      <ViewLink to={{ name: "targets" }} className="text-accent underline">
+      <ViewLink to={{ name: "targets" }} className="text-primary underline">
         {t("nav.toTargets")}
       </ViewLink>
     ) : (
-      <ViewLink to={{ name: "candidates" }} className="text-accent underline">
+      <ViewLink to={{ name: "candidates" }} className="text-primary underline">
         {t("nav.backToCandidates")}
       </ViewLink>
     );
@@ -225,7 +225,7 @@ function DetailBody({ recipe, recipeState, nutrition, fit, previous, onChange, o
   return (
     <>
       {(allergens.length > 0 || unknownFoods.length > 0) && (
-        <div className="flex flex-col gap-1 rounded border-l-4 border-warning bg-warning-surface p-3">
+        <div className="flex flex-col gap-1 notice-warning">
           {allergens.length > 0 && (
             <p className="m-0">
               <span aria-hidden="true">⚠ </span>
@@ -314,7 +314,7 @@ function DetailBody({ recipe, recipeState, nutrition, fit, previous, onChange, o
                 <label key={side.key} className="flex min-h-10 items-center gap-2">
                   <input
                     type="checkbox"
-                    className="size-5 accent-accent"
+                    className="size-5 accent-primary"
                     checked={!recipeState.sidesOff.includes(side.key)}
                     disabled={forced}
                     onChange={(event) => {
@@ -347,7 +347,7 @@ function DetailBody({ recipe, recipeState, nutrition, fit, previous, onChange, o
                   <input
                     type="radio"
                     name={`substitution-${ingredientKey}`}
-                    className="size-5 accent-accent"
+                    className="size-5 accent-primary"
                     checked={current === key}
                     disabled={isForced}
                     onChange={() => {
@@ -364,7 +364,7 @@ function DetailBody({ recipe, recipeState, nutrition, fit, previous, onChange, o
           {solverState !== undefined && (
             <button
               type="button"
-              className="rounded bg-accent px-4 py-2 text-on-accent"
+              className="btn-primary"
               onClick={() => {
                 change({ ...solverState, servings: recipeState.servings });
               }}
@@ -374,7 +374,7 @@ function DetailBody({ recipe, recipeState, nutrition, fit, previous, onChange, o
           )}
           <button
             type="button"
-            className="rounded border border-border px-4 py-2"
+            className="btn-secondary"
             onClick={() => {
               change({ ...onReset(), servings: recipeState.servings });
             }}
@@ -512,7 +512,7 @@ function DetailBody({ recipe, recipeState, nutrition, fit, previous, onChange, o
         <Section id="safety-heading" title={t("detail.safetyHeading")}>
           <ul className="m-0 flex list-none flex-col gap-2 p-0">
             {safety.map((item) => (
-              <li key={`${item.key}-${item.substitution ?? ""}`} className="rounded border-l-4 border-warning bg-warning-surface p-3">
+              <li key={`${item.key}-${item.substitution ?? ""}`} className="notice-warning">
                 <span aria-hidden="true">⚠ </span>
                 {item.substitution === undefined ? texts?.safetyNotes[item.key] : (texts?.substitutions[item.substitution]?.safetyNotes[item.key] ?? texts?.safetyNotes[item.key])}
               </li>

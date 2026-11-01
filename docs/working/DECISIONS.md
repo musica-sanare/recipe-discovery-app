@@ -1288,6 +1288,12 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - The owner preferred "fresh market" for readability, its calm palette, and how natural it looks in dark mode, and asked for more play. Two variants followed: "soft pop" (pastel fills, two-tone icons, colored nutrient tiles, soft shadows) and "bold pop" (the same with ink outlines and offset shadows). The owner chose "soft pop" and accepted the recommendations for the other decisions (ADR-037).
 - Contrast was computed with the WCAG 2.2 relative-luminance formula for every text, marker, border, and focus pair in both modes. The light `met` green `#2E7D3A` reached only 4.2–4.4:1 on the pastels and became `#23692E`.
 
+### Stage 14.2 tokens and base components (2026-11-01)
+- `src/styles.css` holds the ADR-037 tokens for light and dark mode, a page background `bg` separate from `surface`, a default radius of 14 px (`--radius`), a soft shadow in light mode only, and the utilities `btn-primary` (with a 4 px press shadow in the text color, pressed by 3 px), `btn-lg`, `btn-secondary`, `btn-outline`, `panel`, `notice-warning`, and `chip`. Buttons and panels keep a transparent border, so forced-colors mode draws their edges.
+- The blue `accent` became `primary` (green) in every class (`bg-`, `text-`, `border-`, and `accent-` for checkboxes and radios); `accent` is now the tomato coral of the illustrations. Repeated button and warning-notice class lists were replaced by the utilities; no markup, text, or behavior changed.
+- `test/node/styles.test.ts` checks 52 pairs per mode, including `bg`, `primary`, `on-sun`, and every text and status color on each pastel; all pass.
+- Checks: `npm run check` (61 test files, 952 tests), `npm run test:e2e` (164 passed, 1 skipped; axe-core with color contrast in real browsers in four locales and both modes). CSS 19.3 kB (gzip 5.0 kB) against 17.2 kB; JavaScript 556,440 bytes (smaller by about 1 kB because the class lists are shorter). Screenshots of the targets and candidates views at 375 px and 1280 px in light and dark mode showed no overflow.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in

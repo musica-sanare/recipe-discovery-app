@@ -52,7 +52,7 @@ function Fieldset({ legend, hint, children }: { readonly legend: string; readonl
 function Choice({ type, name, checked, onChange, children }: { readonly type: "radio" | "checkbox"; readonly name: string; readonly checked: boolean; readonly onChange: () => void; readonly children: ReactNode }) {
   return (
     <label className="flex min-h-10 items-center gap-2">
-      <input type={type} name={name} checked={checked} onChange={onChange} className="size-5 shrink-0 accent-accent" />
+      <input type={type} name={name} checked={checked} onChange={onChange} className="size-5 shrink-0 accent-primary" />
       <span>{children}</span>
     </label>
   );
@@ -168,13 +168,13 @@ export function TargetsView({ reloaded }: { readonly reloaded: boolean }) {
               deleteSavedConditions();
               dispatch({ type: "savedChanged", on: false, allergens: false, notice: "deleted" });
             }}
-            className="rounded border border-border bg-surface px-4 py-2"
+            className="btn-secondary"
           >
             {t("saved.delete")}
           </button>
         </div>
       )}
-      <p className="m-0 rounded border-l-4 border-warning bg-warning-surface p-3">{t("disclaimer.medicalGuidance")}</p>
+      <p className="m-0 notice-warning">{t("disclaimer.medicalGuidance")}</p>
 
       {errors.length > 0 && (
         <div ref={summary} tabIndex={-1} role="alert" className="rounded border-2 border-not-met p-3">
@@ -191,7 +191,7 @@ export function TargetsView({ reloaded }: { readonly reloaded: boolean }) {
                     event.preventDefault();
                     field.focus();
                   }}
-                  className="text-accent underline"
+                  className="text-primary underline"
                 >
                   {errorText(error)}
                 </a>
@@ -262,7 +262,7 @@ export function TargetsView({ reloaded }: { readonly reloaded: boolean }) {
                 </Fieldset>
               </Fieldset>
               {contradictions.length > 0 && blocked.length === 0 && (
-                <div aria-live="polite" className="rounded border-l-4 border-warning bg-warning-surface p-3">
+                <div aria-live="polite" className="notice-warning">
                   {contradictions.map((contradiction) => (
                     <p key={contradiction.severity} className="m-0">
                       <span aria-hidden="true">{contradiction.severity === "blocking" ? "⛔ " : "⚠ "}</span>
@@ -378,7 +378,7 @@ export function TargetsView({ reloaded }: { readonly reloaded: boolean }) {
 
             <div className="md:col-span-2">
               <Fieldset legend={t("conditions.allergenLegend")}>
-                <p className="m-0 rounded border-l-4 border-warning bg-warning-surface p-3">
+                <p className="m-0 notice-warning">
                   <span aria-hidden="true">⚠ </span>
                   {t("disclaimer.allergens")}
                 </p>
@@ -425,7 +425,7 @@ export function TargetsView({ reloaded }: { readonly reloaded: boolean }) {
 
         <SaveConditions draft={draft} />
 
-        <button type="submit" className="self-start rounded bg-accent px-6 py-3 font-medium text-on-accent">
+        <button type="submit" className="self-start btn-primary btn-lg">
           {t("targets.search")}
         </button>
       </form>

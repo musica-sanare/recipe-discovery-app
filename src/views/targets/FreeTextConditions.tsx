@@ -87,17 +87,17 @@ export function FreeTextConditions({ locale, onApply, onShowAllergens }: FreeTex
           onClick={() => {
             setResult(readResult());
           }}
-          className="self-start rounded border border-accent px-4 py-2 font-medium text-accent">
+          className="self-start btn-outline">
           {t("freeText.read")}
         </button>
 
         <div aria-live="polite" className="flex flex-col gap-2">
           {result?.kind === "message" && <p className="m-0">{t(`freeText.${result.key}`, { max: SUGGEST_LIMITS.textLength })}</p>}
           {result?.kind === "out_of_scope" && (
-            <div className="flex flex-col gap-2 rounded border-l-4 border-warning bg-warning-surface p-3">
+            <div className="flex flex-col gap-2 notice-warning">
               <p className="m-0">{t(`freeText.outOfScope.${result.topic}`)}</p>
               {result.topic === "allergens" && (
-                <button type="button" onClick={onShowAllergens} className="self-start text-accent underline">
+                <button type="button" onClick={onShowAllergens} className="self-start text-primary underline">
                   {t("freeText.goToAllergens")}
                 </button>
               )}
@@ -122,7 +122,7 @@ export function FreeTextConditions({ locale, onApply, onShowAllergens }: FreeTex
                     onApply(result.suggestion);
                     setResult({ kind: "message", key: "applied" });
                   }}
-                  className="rounded bg-accent px-4 py-2 font-medium text-on-accent"
+                  className="btn-primary"
                 >
                   {t("freeText.apply")}
                 </button>
@@ -131,7 +131,7 @@ export function FreeTextConditions({ locale, onApply, onShowAllergens }: FreeTex
                   onClick={() => {
                     setResult({ kind: "message", key: "discarded" });
                   }}
-                  className="rounded border border-border px-4 py-2"
+                  className="btn-secondary"
                 >
                   {t("freeText.discard")}
                 </button>

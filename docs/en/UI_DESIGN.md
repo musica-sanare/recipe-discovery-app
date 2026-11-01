@@ -340,7 +340,7 @@ Japanese and Spanish use the same structure, for example `買い物リスト（2
 
 ### Visual identity (Phase 14)
 
-The "soft pop" direction (ADR-037): the calm, warm base of a fresh market with pastel accents, two-tone icons, and colored tiles for the nutrition numbers. Stages 14.2 to 14.4 apply it; until then the app keeps the tokens above.
+The "soft pop" direction (ADR-037): the calm, warm base of a fresh market with pastel accents, two-tone icons, and colored tiles for the nutrition numbers. Stage 14.2 applied the tokens below, a 14 px default radius, and the base component utilities in `src/styles.css` (`btn-primary`, `btn-lg`, `btn-secondary`, `btn-outline`, `panel`, `notice-warning`, `chip`); `warning` and `warning-surface` remain as tokens equal to `near` and `peach`. Icons, illustrations, and the layout changes follow in Stages 14.3 and 14.4.
 
 | Token | Light | Dark | Use |
 |---|---|---|---|

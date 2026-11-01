@@ -54,6 +54,52 @@
       }
     },
     {
+      "code": "01015",
+      "nameJa": "こむぎ ［小麦粉］ 薄力粉 1等",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 349,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 8.3,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 7.7,
+          "notation": "measured"
+        },
+        "FAT-": {
+          "value": 1.5,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 1.3,
+          "notation": "measured"
+        },
+        "CHOAVLDF-": {
+          "value": 74.1,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 75.8,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 2.5,
+          "notation": "measured"
+        },
+        "NACL_EQ": {
+          "value": 0,
+          "notation": "zero"
+        }
+      }
+    },
+    {
       "code": "01025",
       "nameJa": "こむぎ ［小麦粉］ プレミックス粉 天ぷら用",
       "refuse": {
@@ -1434,6 +1480,52 @@
       }
     },
     {
+      "code": "03023",
+      "nameJa": "（その他） メープルシロップ",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 266,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 0.1,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": null,
+          "notation": "unmeasured"
+        },
+        "FAT-": {
+          "value": 0,
+          "notation": "zero"
+        },
+        "FATNLEA": {
+          "value": null,
+          "notation": "unmeasured"
+        },
+        "CHOAVLDF-": {
+          "value": 66.3,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 66.3,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 0,
+          "notation": "estimated_zero"
+        },
+        "NACL_EQ": {
+          "value": 0,
+          "notation": "zero"
+        }
+      }
+    },
+    {
       "code": "04008",
       "nameJa": "いんげんまめ 全粒 ゆで",
       "refuse": {
@@ -2764,6 +2856,52 @@
         "NACL_EQ": {
           "value": 0,
           "notation": "zero"
+        }
+      }
+    },
+    {
+      "code": "06119",
+      "nameJa": "セロリ 葉柄 生",
+      "refuse": {
+        "value": 35,
+        "notation": "measured"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 12,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 0.4,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 0.4,
+          "notation": "measured"
+        },
+        "FAT-": {
+          "value": 0.1,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 0.1,
+          "notation": "measured"
+        },
+        "CHOAVLDF-": {
+          "value": 1.1,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 3.6,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 1.5,
+          "notation": "measured"
+        },
+        "NACL_EQ": {
+          "value": 0.1,
+          "notation": "measured"
         }
       }
     },
@@ -4194,6 +4332,98 @@
       }
     },
     {
+      "code": "06308",
+      "nameJa": "リーキ りん茎葉 生",
+      "refuse": {
+        "value": 35,
+        "notation": "measured"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 30,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 1.6,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 1.2,
+          "notation": "estimated"
+        },
+        "FAT-": {
+          "value": 0.1,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 0.1,
+          "notation": "estimated"
+        },
+        "CHOAVLDF-": {
+          "value": 4.9,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 6.9,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 2.5,
+          "notation": "measured"
+        },
+        "NACL_EQ": {
+          "value": 0,
+          "notation": "zero"
+        }
+      }
+    },
+    {
+      "code": "06309",
+      "nameJa": "リーキ りん茎葉 ゆで",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 28,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 1.3,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 1,
+          "notation": "estimated"
+        },
+        "FAT-": {
+          "value": 0.1,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 0.1,
+          "notation": "estimated"
+        },
+        "CHOAVLDF-": {
+          "value": 4.6,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 6.8,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 2.6,
+          "notation": "measured"
+        },
+        "NACL_EQ": {
+          "value": 0,
+          "notation": "zero"
+        }
+      }
+    },
+    {
       "code": "06312",
       "nameJa": "（レタス類） レタス 土耕栽培 結球葉 生",
       "refuse": {
@@ -5252,6 +5482,98 @@
       }
     },
     {
+      "code": "08031",
+      "nameJa": "マッシュルーム 生",
+      "refuse": {
+        "value": 5,
+        "notation": "measured"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 15,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 2.9,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 1.7,
+          "notation": "measured"
+        },
+        "FAT-": {
+          "value": 0.3,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 0.1,
+          "notation": "measured"
+        },
+        "CHOAVLDF-": {
+          "value": 0.2,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 2.1,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 2,
+          "notation": "measured"
+        },
+        "NACL_EQ": {
+          "value": 0,
+          "notation": "zero"
+        }
+      }
+    },
+    {
+      "code": "08032",
+      "nameJa": "マッシュルーム ゆで",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 20,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 3.8,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 2.2,
+          "notation": "estimated"
+        },
+        "FAT-": {
+          "value": 0.2,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 0.1,
+          "notation": "estimated"
+        },
+        "CHOAVLDF-": {
+          "value": 0.3,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 3.7,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 3.3,
+          "notation": "measured"
+        },
+        "NACL_EQ": {
+          "value": 0,
+          "notation": "zero"
+        }
+      }
+    },
+    {
       "code": "08039",
       "nameJa": "しいたけ 生しいたけ 菌床栽培 生",
       "refuse": {
@@ -5427,6 +5749,52 @@
         },
         "FIB-": {
           "value": 3.7,
+          "notation": "measured"
+        },
+        "NACL_EQ": {
+          "value": 0,
+          "notation": "zero"
+        }
+      }
+    },
+    {
+      "code": "08052",
+      "nameJa": "マッシュルーム 油いため",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 57,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 3.6,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 2.1,
+          "notation": "estimated"
+        },
+        "FAT-": {
+          "value": 4.5,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 4.2,
+          "notation": "estimated"
+        },
+        "CHOAVLDF-": {
+          "value": 0.9,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 4.5,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 3.4,
           "notation": "measured"
         },
         "NACL_EQ": {
@@ -8196,6 +8564,52 @@
       }
     },
     {
+      "code": "13014",
+      "nameJa": "＜牛乳及び乳製品＞ （クリーム類） クリーム 乳脂肪",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 404,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 1.9,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": 1.6,
+          "notation": "measured"
+        },
+        "FAT-": {
+          "value": 43,
+          "notation": "measured"
+        },
+        "FATNLEA": {
+          "value": 39.6,
+          "notation": "measured"
+        },
+        "CHOAVLDF-": {
+          "value": 10.1,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 6.5,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": 0,
+          "notation": "zero"
+        },
+        "NACL_EQ": {
+          "value": 0.1,
+          "notation": "measured"
+        }
+      }
+    },
+    {
       "code": "13025",
       "nameJa": "＜牛乳及び乳製品＞ （発酵乳・乳酸菌飲料） ヨーグルト 全脂無糖",
       "refuse": {
@@ -8602,6 +9016,52 @@
         "FIB-": {
           "value": 0,
           "notation": "zero"
+        },
+        "NACL_EQ": {
+          "value": 0,
+          "notation": "zero"
+        }
+      }
+    },
+    {
+      "code": "16010",
+      "nameJa": "＜アルコール飲料類＞ （醸造酒類） ぶどう酒 白",
+      "refuse": {
+        "value": 0,
+        "notation": "zero"
+      },
+      "nutrients": {
+        "ENERC_KCAL": {
+          "value": 75,
+          "notation": "measured"
+        },
+        "PROT-": {
+          "value": 0.1,
+          "notation": "measured"
+        },
+        "PROTCAA": {
+          "value": null,
+          "notation": "unmeasured"
+        },
+        "FAT-": {
+          "value": 0,
+          "notation": "trace"
+        },
+        "FATNLEA": {
+          "value": null,
+          "notation": "unmeasured"
+        },
+        "CHOAVLDF-": {
+          "value": 1.4,
+          "notation": "measured"
+        },
+        "CHOCDF-": {
+          "value": 2,
+          "notation": "measured"
+        },
+        "FIB-": {
+          "value": null,
+          "notation": "unmeasured"
         },
         "NACL_EQ": {
           "value": 0,

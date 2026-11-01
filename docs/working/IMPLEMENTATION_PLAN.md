@@ -215,7 +215,7 @@ Status: **Complete (2026-11-01)**: per-locale UI catalogs and free-text word lis
 
 ## Phase 17 — Custom domain and repository publication
 
-Status: **Planned (2026-11-01)**; the prompt is written after Phase 16. The owner wants the production site on a custom domain and the repository made public.
+Status: **Planned (2026-11-01)**. Prompt: `prompts/17-custom-domain-and-publication.md` (written after Phase 16, 2026-11-01). The owner wants the production site on a custom domain and the repository made public.
 
 - Custom domain: the owner provides a domain they control (要確認: which domain, and whether it is already registered). Registration, renewal, and any plan change are paid actions the owner decides and performs (shared `paid-services.md`); Claude does not propose a registrar. Claude prepares the owner steps for attaching the domain to the Worker (current Cloudflare documentation checked at the start of the phase), the checks afterwards, and the doc updates (production URL in [DEPLOYMENT.md](../en/DEPLOYMENT.md), README, and RELEASE_READINESS, with translations); whether the `workers.dev` address stays reachable is decided then. No code change is expected (all URLs in the app are relative; the CSP uses `'self'`).
 - Repository publication: repeat the pre-publication check of 2026-10-25 on the full history ("Pre-publication check"): secret scan, authors and committers, personal data, local paths, account identifiers, Claude-only files; the owner decides on every doubtful item and changes the visibility on GitHub. `main` already holds the released history.

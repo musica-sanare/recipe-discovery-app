@@ -1340,6 +1340,55 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - `npm run check`, `npm run test:e2e`, and CI pass; release 11 was deployed by the owner's merge into `main`.
 - Open after Phase 14: no logo in the header (not in the ADR-037 icon list); the detail view's nutrition stays a list rather than tiles; the `es` and `fr` group headings without a native reviewer (open questions 9 and 23).
 
+### Phase 15 start: French and French-speaking cuisines (2026-11-01)
+- Starting point: `dev` at `9872543` (Phase 15 prompt `prompts/15-french-speaking-cuisines.md`). Release 11 (`04134e0`, merged as `dc0f099`) is in production; `a93902d` stays the rollback target.
+- Open question 22 re-checked: unchanged (`eslint` 10.14.0 requires `minimatch` ^10.2.6, `@typescript-eslint/typescript-estree` 8.72.1 requires ^10.2.2; the advisory covers `<11.0.1`; `minimatch` 11.0.3 is the latest). `npm audit`: the same 12 moderate findings; `npm audit --omit=dev`: 0.
+- ADR-017 re-checked: unchanged (`typescript-eslint` 8.72.1, the latest, declares peer `typescript >=4.8.4 <6.1.0`; `typescript` latest is 7.0.2). `npm outdated` lists only the recorded exceptions (`typescript`, `@types/node`).
+
+### Stage 15.1 decisions (2026-11-01)
+- Owner decisions (2026-11-01, the recommended options): D1 the cuisine values `french`, `north_african`, and `west_african` (ADR-038, ADR-026 revised); D2 20 new recipes in two batches of 10 for about 150 in total (ADR-023 revised); D3–D4 the recipe list below; D5 the foods below; D6 the food safety and policy points below.
+- Coverage check (`node tools/extract-composition.ts --search` against the workbook in `data/raw/mext/`, and `data/composition/`):
+  - The engine has no reason for "a similar food used" (`Reason` in `domain/nutrition/engine.ts` covers cooking only). A food mapped to another table food would be shown as exact, so a missing ingredient is either left out, stated in the recipe, or replaced by another ingredient named for what the table contains (as `chili_pepper_powder` for gochugaru, "Stage 10.1 expansion plan"). Dishes that cannot work that way are dropped.
+  - Not in the tables: couscous, cumin, turmeric, coriander seed, ras el hanout, harissa, saffron, preserved lemon, plantain, cassava (attiéké), fonio, bay leaf, shallot (エシャレット 06307 is young rakkyo), Espelette pepper, crème fraîche, gruyère, dried fish.
+  - In the tables but not used: lamb, duck, rabbit, and veal (raw values only, and no protein group in `PROTEIN_GROUPS`), mussels (10289, raw only; see D6), bouillon cubes (17027; broad allergen links).
+- Batch 1 (10; region, cuisine, goal, main protein, expected minutes, effort, notes; approximations are expected counts, recounted with `npm run report:composition` when authored):
+  - `poulet_basquaise` (Basque Country, french, maintain, chicken thigh, 40 min, effort 2, simmer, batch; 0 approximations; Espelette pepper replaced by paprika and chili pepper powder).
+  - `cabillaud_ratatouille` (Provence, french, cut, cod, 30 min, effort 2, grill; 1: zucchini).
+  - `salade_nicoise` (Nice, french, cut, canned tuna, 20 min, effort 1, `no_cook` family; 1: boiled egg shell; anchovy left out).
+  - `galette_complete` (Brittany, french, maintain, egg, 25 min, effort 2, breakfast; 1: buckwheat batter at the raw value).
+  - `hachis_parmentier` (France, french, bulk, beef mince, 45 min, effort 3, oven toaster, batch; 1: sautéed mince).
+  - `carbonnade_flamande` (Flanders, western, bulk, beef round, 100 min, effort 2, simmer, batch; 0; pain d'épices left out).
+  - `tajine_poulet_citron` (Morocco, north_african, maintain, chicken thigh, 50 min, effort 2, simmer; 0; preserved lemon, saffron, and turmeric left out, lemon juice and ginger used).
+  - `chakchouka` (Tunisia, north_african, maintain, egg, 20 min, effort 1, breakfast; 0; harissa and cumin left out).
+  - `poulet_yassa` (Senegal, west_african, maintain, chicken thigh, 40 min, effort 2, grill; 0).
+  - `mafe_boeuf` (Senegal and Mali, west_african, bulk, beef round, 60 min, effort 2, simmer, batch; 1: sweet potato; cassava left out).
+- Batch 2 (10):
+  - `blanquette_poulet` (France, french, maintain, chicken breast, 40 min, effort 2, simmer, batch; 1: chicken breast; no egg-yolk liaison, milk and flour instead).
+  - `papillote_saumon_poireaux` (France, french, cut, salmon, 20 min, effort 1, steam, microwave; 1: leek).
+  - `croque_monsieur` (Paris, french, maintain, ham, 15 min, effort 1, oven toaster, breakfast; 0; emmental, named as such, instead of gruyère).
+  - `emince_zurichois_porc` (Zurich, western, bulk, pork tenderloin, 20 min, effort 2, stir-fry; 1: pork tenderloin; veal replaced by pork, stated in the dish name).
+  - `saumon_erable` (Québec, western, maintain, salmon, 20 min, effort 1, grill; 0–1).
+  - `feves_au_lard` (Québec, western, bulk, lean pork leg, 90 min, effort 1, simmer, batch; 0; salt pork replaced by lean pork).
+  - `harira_boeuf` (Morocco, north_african, maintain, beef round, 50 min, effort 2, batch; 1: celery; lamb replaced by beef, turmeric left out).
+  - `kefta_tajine_oeufs` (Morocco, north_african, bulk, beef mince, 35 min, effort 2; 1: sautéed mince; cumin left out).
+  - `kedjenou_poulet` (Côte d'Ivoire, west_african, cut, chicken thigh, 50 min, effort 1, batch; 0; attiéké replaced by rice).
+  - `maquereau_braise` (Côte d'Ivoire, west_african, maintain, mackerel, 25 min, effort 1, grill; 0; attiéké replaced by rice).
+- Dropped: alloco, attiéké, fonio, and ndolé (no plantain, cassava, fonio, or bitter leaves); couscous dishes (no couscous); steak tartare and rare duck breast (raw or undercooked); navarin and rabbit with mustard (no protein group); fondue and raclette (cheese only); pastilla and brik (no pastry sheets, fried); moules marinières and moules-frites (D6); pâté chinois (close to `hachis_parmentier`).
+- Planned library (150): goal labels cut 50, maintain 65, bulk 39; chicken 28, pork 24, beef 26, fish 30, egg 22, soy 20; Japanese 44 (29 %), Western 23, Chinese 15, Spanish 12, Korean 10, Latin American 9, Mediterranean 8, Southeast Asian 8, French 8, Okinawan 5, North African 4, West African 4; 102 quick (68 %); 4 fried (2.7 %). Goal labels and families may move once each recipe is evaluated with the engine in its batch.
+- Grid and speed: about 20–60 states per new recipe (at most about 80), about 1,000 for the 20. At about 70 ms p90 at 4× on 130 recipes ("Stage 14.5 quality"), scaling by the library size gives about 80 ms for 150, within the ADR-030 D10 threshold of about 100 ms; measured after each batch. `SYNTHETIC_TOTAL` (180) stays above the library size.
+- Foods (about 27 new):
+  - Batch 1: ground thyme 17071; green beans 06010, 06011; black olives 07038 and green olives 07037 (salted); wine vinegar 17017; emmental 13032 (milk); buckwheat flour 01122 (buckwheat); ham 11176 and grilled 11304 (pork contains; milk, soybean, and egg may contain); beer 16006 (wheat may contain); prepared mustard 17059; baguette 01031 (wheat); cooked indica rice 01168; peanut butter 05037 (peanut); tomato paste 17035.
+  - Batch 2: button mushrooms 08031, 08032, 08052; soft wheat flour 01015 (wheat); leek 06308, 06309; white wine 16010; cream 13014 (milk); maple syrup 03023; celery 06119; white beans with 04008 (the table entry covers common beans, いんげんまめ; a food note says so, 要確認), next to the existing `kidney_beans`.
+  - Weight change rates to transcribe from Table 12 (and Table 14 for the stir-fried mushrooms where it has a row): 06011, 08032, 08052, 06309, 11304, with page numbers and `npm run data:verify-cooking`.
+  - Names and aliases in four locales, with regional French terms as aliases where they exist.
+- Food safety and policy (no policy change):
+  - P1 wine and beer (`carbonnade_flamande`, `emince_zurichois_porc`) are allowed. Each such recipe gets a neutral note that some alcohol may remain after simmering, and a substitution with water. No health statement. Recipes with cooking sake are unchanged.
+  - P2 `soft_yolk` for `chakchouka`, `galette_complete`, and `kefta_tajine_oeufs`.
+  - P3 doneness checks for chicken, minced beef, and pork; fish cooked through; the small-bone note for mackerel.
+  - P4 `poulet_yassa`: a new note that the raw chicken marinates in the refrigerator and that the onions from the marinade are cooked through.
+  - P5 mussels are not included: shell handling (discarding open or broken shells) would need new notes, and the Japanese allergen categories have no item for bivalves.
+  - P6 `mafe_boeuf`: peanut as contains. The existing batch cooling notes apply to the stews.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in
@@ -1475,7 +1524,7 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - Status: **Accepted** (owner accepted the Stage 0.6 recommendation, 2026-10-18)
 - Decision: about 60 recipes for the MVP, with composition rules: each goal (cut, maintain, bulk) has at least 15 recipes; each main protein group (chicken, pork, beef, fish, eggs, soy foods) appears in at least 8 recipes; at least 30 % quick (≤ 20 min); fried dishes at most 15 %; every recipe has at least one adjustable main protein or staple.
 - Evidence: Stage 0.6 log. About 60 recipes give ≥ 3 met candidates for the general scenarios with a wide margin (estimated need 8–20), and the per-ingredient rule targets the required-ingredient bottleneck.
-- Revised (owner, 2026-10-24, Phase 7 Stage 7.1): about 86 recipes. The composition rules stay (each goal at least 15 recipes, each main protein group at least 8, at least 30 % quick, fried at most 15 %, every recipe adjustable); new recipes keep their adjustment grid within about 400 states so that a full recommendation stays near the ADR-030 D10 threshold; no single cuisine exceeds half of the library. Note (Phase 9 Stage 9.3, 2026-10-25): the limit of about 400 states per new recipe stays; with it, a library of about 130 recipes stays within about 80 ms p90 at 4× (measured on a synthetic library whose 44 added recipes average 341 states, "Stage 9.3 browser timing"). Revised (owner, 2026-10-31, Phase 10 Stage 10.1): about 130 recipes. The composition rules and the limit of about 400 grid states per new recipe stay; Japanese dishes stay below about 35 % of the library; a full recommendation stays within about 80 ms p90 at 4×, measured after every batch ("Stage 10.1 expansion plan"). Revised (owner, 2026-10-31, before batch 3): the limit for the library is the ADR-030 D10 threshold of about 100 ms p90 at 4× instead of about 80 ms, measured again after batch 3; the expansion stops if it is exceeded ("Phase 10 speed decision before batch 3").
+- Revised (owner, 2026-10-24, Phase 7 Stage 7.1): about 86 recipes. The composition rules stay (each goal at least 15 recipes, each main protein group at least 8, at least 30 % quick, fried at most 15 %, every recipe adjustable); new recipes keep their adjustment grid within about 400 states so that a full recommendation stays near the ADR-030 D10 threshold; no single cuisine exceeds half of the library. Note (Phase 9 Stage 9.3, 2026-10-25): the limit of about 400 states per new recipe stays; with it, a library of about 130 recipes stays within about 80 ms p90 at 4× (measured on a synthetic library whose 44 added recipes average 341 states, "Stage 9.3 browser timing"). Revised (owner, 2026-10-31, Phase 10 Stage 10.1): about 130 recipes. The composition rules and the limit of about 400 grid states per new recipe stay; Japanese dishes stay below about 35 % of the library; a full recommendation stays within about 80 ms p90 at 4×, measured after every batch ("Stage 10.1 expansion plan"). Revised (owner, 2026-10-31, before batch 3): the limit for the library is the ADR-030 D10 threshold of about 100 ms p90 at 4× instead of about 80 ms, measured again after batch 3; the expansion stops if it is exceeded ("Phase 10 speed decision before batch 3"). Revised (owner, 2026-11-01, Phase 15 Stage 15.1): about 150 recipes. The composition rules, the limit of about 400 grid states per new recipe, Japanese dishes below about 35 %, and the library limit of about 100 ms p90 at 4× stay, measured after every batch ("Stage 15.1 decisions").
 
 ## ADR-024: Bounded adjustment in the MVP
 - Status: **Accepted** (owner accepted the Stage 0.6 recommendation, 2026-10-18)
@@ -1504,6 +1553,7 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
   - **ADR-023 adjustability**: every recipe has an adjustable ingredient or a side the solver may switch off.
   - **Versioning**: `content/version.ts` holds `CONTENT_VERSION` as `YYYY-MM-DD.n`, updated with every content change; bundle compatibility is a separate schema version (Stage 1.4).
 - Revised (owner, 2026-10-24, Phase 7 Stage 7.1): `CUISINES` adds `latin_american`, `mediterranean`, and `southeast_asian`. A cuisine value names the region a dish comes from (taco rice is Okinawan, piperrada Spanish). Diversification and the cuisine preference (ADR-029 D5) use the values unchanged; more values only give the cuisine attribute more distinct values.
+- Revised (owner, 2026-11-01, Phase 15 Stage 15.1): `CUISINES` adds `french`, `north_african`, and `west_african` (ADR-038).
 - Rationale: portion rules without unnatural amounts (Stage 0.6), traceable estimates for unrepresented cooking, and derived flags that cannot contradict the minutes or states.
 - Alternatives: a "staple" with a removable minimum portion (replaced by sides at the owner's request); semver for content (no meaningful major/minor distinction for content).
 
@@ -1688,6 +1738,17 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - Alternatives: "kitchen lab" (clear numbers, but less appetizing), "bento pop" (most playful, but loud on dense views such as the comparison), "bold pop" (outlines and offset shadows; louder in dark mode), a self-hosted Latin display font (mismatched with Japanese text, a license review and more bytes).
 - Limits: pastel tiles must never be the only way to tell nutrients or statuses apart; every new color pair joins the contrast test in Stage 14.2.
 
+## ADR-038: Cuisine values for French-speaking regions
+- Status: **Accepted** (owner, 2026-11-01, Phase 15 Stage 15.1); revises ADR-026.
+- Decision: `CUISINES` adds `french`, `north_african`, and `west_african`.
+  - `french` covers dishes from France. Dishes from Belgium, Switzerland, and Québec stay `western`, because a cuisine value names the region a dish comes from (ADR-026) and these are not French dishes.
+  - `north_african` covers the Maghreb (Morocco, Algeria, Tunisia); `west_african` covers West Africa (for example Senegal, Mali, Côte d'Ivoire).
+  - Existing recipes keep their values.
+  - UI labels: `french` フランス料理 / French / Francesa / Française; `north_african` 北アフリカ料理 / North African / Norteafricana / Nord-africaine; `west_african` 西アフリカ料理 / West African / De África occidental / D'Afrique de l'Ouest. The free-text lexicon (`shared/freeText/lexicon.ts`) gets keywords for each value in four locales.
+- Effects: diversification and the cuisine preference (ADR-029 D5) use the values unchanged; the cuisine attribute has 12 values instead of 9, so a recipe of a new value counts as a new attribute until one is shown. A user who prefers `western`, including saved conditions (ADR-036), does not get the new French dishes through that preference. The bundle stays compatible (enum values added only).
+- Rationale: French-speaking users can find dishes of their own food cultures with the cuisine filter; West African dishes fit no current value.
+- Alternatives: keep the current values (French dishes as `western`, Maghreb dishes as `mediterranean`; West African dishes would have no value and be dropped); one value per country or region (five or six values with two to four recipes each, 15 filter choices, a finer diversification attribute).
+
 ---
 
 ## Open questions (要確認)
@@ -1703,7 +1764,7 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 9. Spanish review capacity (ADR-007). No native Spanish reviewer is available; the owner reviews with Claude's findings and back-translations, and the regional vocabulary rule of [CONTENT_POLICY.md](../en/CONTENT_POLICY.md) §6 applies ("Stage 6.3 summary"). Remains a known limitation.
 10. Raw-egg dishes and other regionally sensitive food safety rules across the three locales. Eggs: decided (owner, 2026-10-23, Stage 5.1 P3) — soft or runny yolks are allowed with the `soft_yolk` note; raw-egg dishes stay excluded. Other regional rules are reviewed per batch in Stage 5.2.
 11. ~~Allergen item lists in `shared/content.ts`~~: match the CAA lists of April 2026 ("Stage 5.7 release readiness").
-12. Best-effort allergen lists for cooking sake, wholegrain mustard, Chinese-style stock granules, and karaage coating mix are based on typical ingredients, not product labels (Stage 0.6 log). Phase 7 adds chili powder (a spice blend; no allergen listed, like curry powder) and fish sauce (shrimp as may contain, because some products add it). Phase 10 adds kimchi (shrimp as may contain, for salted shrimp or fish sauce in some products, and apple, which many products add) and oyster sauce (wheat and soybean as may contain) ("Stage 10.1 expansion plan").
+12. Best-effort allergen lists for cooking sake, wholegrain mustard, Chinese-style stock granules, and karaage coating mix are based on typical ingredients, not product labels (Stage 0.6 log). Phase 7 adds chili powder (a spice blend; no allergen listed, like curry powder) and fish sauce (shrimp as may contain, because some products add it). Phase 10 adds kimchi (shrimp as may contain, for salted shrimp or fish sauce in some products, and apple, which many products add) and oyster sauce (wheat and soybean as may contain) ("Stage 10.1 expansion plan"). Phase 15 adds ham (milk, soybean, and egg as may contain, for binders some products add) and beer (wheat as may contain, because some beers are brewed with wheat) ("Stage 15.1 decisions").
 13. ~~Owner review of the English and Spanish texts added or rewritten in Phase 1~~: the owner accepted the remaining texts (validation recipes, Phase 0 foods, UI catalogs outside `about.*`) as they are for this release (2026-10-24, "Release blocker decisions"); batches 1–3 and the about page were reviewed with their commits. Reviewed in Phase 6 Stage 6.3 (rounds R1–R6, 2026-10-24, "Stage 6.3 summary"): every text that had not been reviewed is now reviewed.
 14. ~~Whether every food must have at least one search alias per locale~~: aliases stay optional (ADR-030 D6).
 15. ~~Phase 2 must distinguish raw values from related cooked values for the error bands~~: separate reasons `raw_value_for_cooking` and `related_cooked_value` (ADR-028).

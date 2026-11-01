@@ -242,7 +242,10 @@ export function parseConditions(input: string, locale: Locale, foods: readonly P
       if (item === "pot" || item === "frying_pan" || item === "deep_pan") equipment.add("stove");
     }
   }
-  const cuisines = CUISINES.filter((cuisine) => findAll(locale, rest, lexicon.cuisines[cuisine].map((word) => normalize(locale, word)), true).length > 0);
+  const cuisineSpans = CUISINES.map((cuisine) => findAll(locale, rest, lexicon.cuisines[cuisine].map((word) => normalize(locale, word)), true));
+  // A cuisine word inside a longer one of another cuisine is part of it ("occidental" in "África occidental").
+  const insideLonger = (span: Span) => cuisineSpans.flat().some((other) => other.start <= span.start && other.end >= span.end && other.end - other.start > span.end - span.start);
+  const cuisines = CUISINES.filter((_, index) => cuisineSpans[index]?.some((span) => !insideLonger(span)));
   const maxMinutes = readMinutes(locale, rest, lexicon);
 
   return {

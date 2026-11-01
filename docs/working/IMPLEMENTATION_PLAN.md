@@ -189,7 +189,7 @@ Acceptance: with saving off, nothing new is stored and the app behaves as releas
 
 ## Phase 14 — UI/UX redesign
 
-Status: **In progress (2026-11-01)**: Stage 14.1 decisions recorded in ADR-037; prompt: `prompts/14-ui-redesign.md` (written after Phase 13, 2026-11-01). The owner chose Phase 14 as the next phase, before Phase 15. The current look is a minimal proof of concept. The owner wants a modern design that makes people want to cook and eat, with a healthy feel: cool but pop and playful, and suited to the app's purpose.
+Status: **Complete (2026-11-01)**: the "soft pop" redesign (ADR-037), released in release 11 by the owner's merge into `main`. Logs: [DECISIONS.md](DECISIONS.md) "Phase 14 start: UI/UX redesign" to "Phase 14 acceptance". Prompt: `prompts/14-ui-redesign.md` (written after Phase 13, 2026-11-01). The owner chose Phase 14 as the next phase, before Phase 15. The current look is a minimal proof of concept. The owner wants a modern design that makes people want to cook and eat, with a healthy feel: cool but pop and playful, and suited to the app's purpose.
 
 - Several design directions proposed by Claude for the owner to choose from, then design tokens (color, type, spacing) applied view by view with screenshots.
 - Icons and illustrations are drawn by Claude as original SVG; no third-party images or recipe photos (principle 11). Fonts only if self-hosted with a compatible license (the CSP allows `'self'` only).
@@ -198,11 +198,12 @@ Status: **In progress (2026-11-01)**: Stage 14.1 decisions recorded in ADR-037; 
 
 ## Phase 15 — French and French-speaking cuisines
 
-Status: **Planned (2026-11-01)**; prompt to be written later. Recipes from France and from French-speaking regions such as West and North Africa, to match the French locale.
+Status: **In progress (2026-11-01)**: Stage 15.1 decided (20 recipes in two batches, the cuisine values of ADR-038); batches 1 and 2 added, for 150 recipes; release 12 prepared and waiting for the owner's merge into `main` ([DECISIONS.md](DECISIONS.md) "Phase 15 start" to "Release 12 preparation"). Prompt: `prompts/15-french-speaking-cuisines.md` (written after Phase 14, 2026-11-01). Recipes from France and from French-speaking regions such as West and North Africa, to match the French locale.
 
 - First check which ingredients the MEXT tables cover and how many approximations each dish would need; drop dishes that would need too many.
 - Decide whether to add cuisine codes (for example French or West African) or keep the current ones, with labels in four locales.
-- Original recipes reviewed in four locales as in Phases 10 and 11; can run in parallel with Phase 14, since they touch different files except the cuisine labels.
+- Original recipes reviewed in four locales as in Phases 10 and 11.
+- Stages: 15.1 plan (coverage check, cuisine values, size, recipe list, foods, food safety); 15.2 and 15.3 batches; 15.4 release 12.
 
 ## Later (not MVP)
 

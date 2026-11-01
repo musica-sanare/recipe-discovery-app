@@ -338,6 +338,34 @@ Japanese and Spanish use the same structure, for example `買い物リスト（2
 - Status markers: met ✓ (filled circle), near ◐ (half circle), not met ✕ (outlined), unknown ? (dashed); always with text.
 - Visible focus ring on every interactive element; `prefers-reduced-motion` disables transitions.
 
+### Visual identity (Phase 14)
+
+The "soft pop" direction (ADR-037): the calm, warm base of a fresh market with pastel accents, two-tone icons, and colored tiles for the nutrition numbers. Stages 14.2 to 14.4 apply it; until then the app keeps the tokens above.
+
+| Token | Light | Dark | Use |
+|---|---|---|---|
+| `bg` | `#FBF6EE` | `#191815` | Page background |
+| `surface` | `#FFFFFF` | `#23211D` | Panels, cards, inputs |
+| `surface-muted` | `#F1EADF` | `#2D2A25` | Unselected choices, collapsed sections |
+| `text` | `#2A2722` | `#F2EDE4` | Body text, outlines of icons and illustrations |
+| `muted` | `#5F584D` | `#C4BBAD` | Hints and secondary text |
+| `border` | `#8A8174` | `#8F8678` | Input and button borders |
+| `primary` | `#2E6B3A` | `#93D19A` | Main action, selected choice, brand |
+| `on-primary` | `#FFFFFF` | `#13240F` | Text on `primary` |
+| `accent` | `#C2452E` | `#FF9478` | Tomato coral: illustrations and small accents |
+| `mint`, `butter`, `sky`, `peach` | `#E2F0DF`, `#FFEDB8`, `#DCEBFB`, `#FCE3DA` | `#1F3320`, `#3A3120`, `#1C2B3B`, `#3E2620` | Pastel fills: nutrient tiles, icon fills, notices, sections |
+| `sun` | `#F2B33D` | `#F2B33D` | Decoration only; text on it uses `#2A2722` |
+| `met`, `near`, `not-met` | `#23692E`, `#9A5300`, `#B3261E` | `#7FD48A`, `#F2B45C`, `#FF8F87` | Status texts and markers |
+| `focus` | `#1E5FCC` | `#8AB4F8` | Focus ring |
+
+- Contrast (checked 2026-11-01): text on `bg` 13.8:1 (light) and 15.2:1 (dark); `muted` on `surface-muted` 5.9:1 and 7.5:1; `on-primary` on `primary` 6.4:1 and 9.2:1; every status color on `surface` and on each pastel at least 4.75:1 (`near` on `peach`, light); `border` on `surface` 3.8:1 and 4.5:1; `focus` on `bg` 5.5:1 and 8.4:1. Pastels carry no meaning by themselves: nutrient tiles are told apart by their labels, and statuses keep their texts and marker shapes.
+- Type: system fonts (no web font). Body 16 px with line height 1.6; hints 13–14 px; `h1` 32 px weight 900 with a short three-color bar below it; `h2` 22 px and `h3` 18 px weight 800; nutrition numbers 28 px weight 800 with `tabular-nums`.
+- Shape: inputs and small tiles 14–16 px radius; panels and cards 24 px; buttons and chips fully rounded. Panels and cards have a soft shadow in light mode; the main action has a solid 5 px shadow in the text color that shrinks when pressed.
+- Icons: original two-tone SVG on a 24 px grid, 1.8 px round strokes in `currentColor` with pastel fills; decorative ones are `aria-hidden`, meaningful ones have a label from the catalogs; no text inside. Set: protein groups (chicken, pork, beef, fish, egg, soy), equipment (`EQUIPMENT`), time, effort, servings, actions (search, save, delete, compare, shopping list, copy, print, back, language, close), notices (warning, information), and the four status markers redrawn with their current shapes. No icons for cuisines, nutrients, or allergens.
+- Illustrations: next to the targets heading (smaller or hidden on phones), in the empty and exceptional states (no candidates, empty shopping list, recipe not found, content error), and next to the about heading. Decorative, without text.
+- Motion: a small press on buttons and a short fade when cards appear; none with `prefers-reduced-motion`.
+- Layout changes: "More conditions" opens when restored saved values are inside it; the targets form is grouped under the headings targets, time and effort, foods, and allergens; on phones, "Find recipes" stays at the bottom of the screen. The flow of views does not change.
+
 ## 6. Catalog structure
 
 `ja` defines the type; `en`, `es`, and `fr` must match (`src/i18n/messages/`). New namespaces:

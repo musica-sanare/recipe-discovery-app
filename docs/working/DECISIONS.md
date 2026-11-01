@@ -1279,6 +1279,15 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - Impact checked before the update (`npm diff` of the two published packages, 2026-11-01; changelog in the `i18next` repository): only `package.json`, `dist/esm/package.json` (version), and the type definitions `typescript/options.d.ts` and `typescript/t.d.ts` change. The new `strictInterpolationChecks` type option defaults to `false`, and the selector-array overloads now require `count` for plural members. The app uses the string-key API with `CustomTypeOptions` limited to `defaultNS` and `resources` (`src/i18n/i18next.d.ts`), no selectors, no `strictKeyChecks`, and no `defaultValue`, so neither change applies. No install script (ADR-018).
 - Checks: `npm ci`, `npm run check` (884 tests; the built `index-CgzjGBWD.js` keeps the same content hash as release 10, so the runtime bundle is unchanged), `npm run test:e2e` (164 passed, 1 skipped; a first run had one WebKit accessibility case fail and pass on rerun, with an identical bundle), `npm audit --omit=dev` (0); `npm audit` reports the accepted `minimatch` findings only. `npm outdated` lists only the recorded exceptions (`typescript`, `@types/node`).
 
+### Phase 14 start: UI/UX redesign (2026-11-01)
+- Starting point: `dev` at `6351cd6` (`i18next` 26.6.0), after `b7581b6` (Phase 14 prompt). Release 10 (`a93902d`) is in production.
+- Open question 22 re-checked: unchanged (`eslint` 10.14.0 requires `minimatch` ^10.2.6, `@typescript-eslint/typescript-estree` 8.72.1 requires ^10.2.2; `minimatch` 11.0.3 is the latest). ADR-017 re-checked: unchanged (`typescript-eslint` 8.72.1 declares peer `typescript >=4.8.4 <6.1.0`).
+
+### Stage 14.1 decisions (2026-11-01)
+- Mockups: three directions ("fresh market", "kitchen lab", "bento pop") as static HTML pages of the targets view and a candidate card, with original SVG icons and illustrations, captured with Playwright at 375 px and 1280 px in light and dark mode. Files stayed in the session scratch directory and the git-ignored `generated/`; nothing was published.
+- The owner preferred "fresh market" for readability, its calm palette, and how natural it looks in dark mode, and asked for more play. Two variants followed: "soft pop" (pastel fills, two-tone icons, colored nutrient tiles, soft shadows) and "bold pop" (the same with ink outlines and offset shadows). The owner chose "soft pop" and accepted the recommendations for the other decisions (ADR-037).
+- Contrast was computed with the WCAG 2.2 relative-luminance formula for every text, marker, border, and focus pair in both modes. The light `met` green `#2E7D3A` reached only 4.2–4.4:1 on the pastels and became `#23692E`.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in
@@ -1516,7 +1525,7 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - Decisions:
   - **D1. Views**: targets and conditions (quick inputs and a collapsible advanced section), candidates (3–5 cards, up to 3 selected for comparison), comparison, and recipe detail with adjustment; every exceptional state of [SPEC.md](../en/SPEC.md) §12 is a state of these views.
   - **D2. Navigation**: no router library; a small History API wrapper in `src/navigation/`. Only the recipe detail has its own path (`/recipes/<id>`); the other views use `/` with the view name in `history.state`. Targets and conditions are never in the URL or in `history.state`. After a reload, candidates and comparison fall back to the targets view with a notice; the detail view shows the recipe at its default amounts without fit statuses. State lives in one `useReducer` behind a context; no store library. Revised (owner, 2026-10-23, Stage 5.1 P7): the about page also has its own path (`/about`).
-  - **D3. Styling**: Tailwind CSS v4 (`tailwindcss`, `@tailwindcss/vite`) with tokens in CSS, system fonts only, WCAG 2.2 AA contrast checked by a test over the token pairs, and status markers with distinct shapes and texts.
+  - **D3. Styling**: Tailwind CSS v4 (`tailwindcss`, `@tailwindcss/vite`) with tokens in CSS, system fonts only, WCAG 2.2 AA contrast checked by a test over the token pairs, and status markers with distinct shapes and texts. Revised (owner, 2026-11-01, Phase 14 Stage 14.1): the visual identity of ADR-037 replaces the proof-of-concept tokens; Tailwind, system fonts, the contrast test, and the marker shapes stay.
   - **D4. Input limits and contradiction thresholds** (open question 19): unchanged (`INPUT_LIMITS`, ADR-029 D9). Input errors appear at their fields and in a summary on submit; a blocking contradiction stops the search with an explanation; a warning is shown and the search runs.
   - **D5. "Show a different type" when no new recipe meets the targets** (Stage 3.7 observation): the current set stays on screen with a notice that every recipe meeting the targets has been shown, plus "show close alternatives" and "change conditions". A result with only alternatives does not replace the set.
   - **D6. Ingredient input** (open question 14): an ARIA combobox over the active locale's names and aliases, normalized per locale ([ARCHITECTURE.md](../en/ARCHITECTURE.md) §4); no match shows "not supported". Aliases stay optional because names are always searchable. Protein groups are offered as "any cut" items: a required group is one any-of item; an excluded group adds every food of the group.
@@ -1613,6 +1622,19 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - Rationale: saving only by the user's choice keeps the privacy model of the MVP for everyone else; `localStorage` is small, synchronous, and already used for the locale; saving on "Find recipes" keeps half-typed values out of the record; a separate allergen checkbox lets a user with allergies avoid re-entering them, which reduces the risk of forgetting them, while keeping health-related choices off a shared device unless asked.
 - Alternatives: IndexedDB (asynchronous, more code for one small record); `sessionStorage` (lost when the tab closes); saving on each change (writes half-typed values); not saving allergens (re-entry each visit, and forgetting them is the risky case); allergens under the same switch (health-related data saved without a choice of its own); several named profiles, history, or saved shopping lists (out of scope for Phase 13); a consent banner (adds friction to a feature the user turns on).
 - Limits: storage is best effort. Private browsing, the user clearing site data, storage pressure, or Safari's seven-day deletion under tracking prevention can remove the record; the app then starts from the defaults.
+
+## ADR-037: Visual identity "soft pop"
+- Status: **Accepted** (owner, 2026-11-01, Phase 14 Stage 14.1); revises ADR-030 D3. Applied in Stages 14.2 to 14.4.
+- Decisions:
+  - **D1. Direction**: "soft pop": the warm, calm base of the "fresh market" mockup with pastel accents (mint, butter, sky, peach), a sun yellow for decoration, two-tone icons, colored tiles for the nutrition numbers, and soft shadows. Tokens, contrast values, type, and shapes: [UI_DESIGN.md](../en/UI_DESIGN.md) §5 "Visual identity".
+  - **D2. Fonts**: system fonts only, as before; a type scale with weight 900 for `h1` and `tabular-nums` for numbers. No web font.
+  - **D3. Icons**: original two-tone SVG components (protein groups, equipment, time, effort, servings, actions, notices, and the four status markers with their current shapes). No icons for cuisines (to avoid regional stereotypes), nutrients (an energy "flame" suggests fat burning, principle 15), or allergens (a picture can suggest safety, principle 14).
+  - **D4. Illustrations**: the targets heading, the empty and exceptional states, and the about page; decorative, without text.
+  - **D5. Motion**: a small press on buttons and a short fade for cards; none with `prefers-reduced-motion`.
+  - **D6. UX scope**: presentation plus three small changes: open "More conditions" when restored values are inside it, group the targets form under headings, and keep "Find recipes" at the bottom of the screen on phones. No change to the flow of views, calculations, ranking, content, or stored data.
+- Rationale: the owner found "fresh market" the easiest to read and the most natural in dark mode; the pastel tiles and two-tone icons add the requested play without the noise of heavy outlines; system fonts avoid the weight of Japanese web fonts and a new dependency.
+- Alternatives: "kitchen lab" (clear numbers, but less appetizing), "bento pop" (most playful, but loud on dense views such as the comparison), "bold pop" (outlines and offset shadows; louder in dark mode), a self-hosted Latin display font (mismatched with Japanese text, a license review and more bytes).
+- Limits: pastel tiles must never be the only way to tell nutrients or statuses apart; every new color pair joins the contrast test in Stage 14.2.
 
 ---
 

@@ -54,7 +54,7 @@ Release 8 was checked on `c2d56d0` on 2026-10-31 (10:41–10:45 UTC): `npm ci`, 
 
 | Item | Status | What is needed |
 |---|---|---|
-| CI on the release commit (release 10) | **要確認** | The owner pushed `dev` and merged `6288bd7` into `main`; the CI result on `6288bd7` was not reported |
+| CI on the release commit (release 10) | **Passed** | Both jobs passed on `6288bd7` (owner's report, 2026-11-01) |
 | Secret scan of the release history (release 10) | **Passed** on `a5e9230` | gitleaks 8.30.1: `gitleaks git --log-opts=--all --redact` (163 commits, 4.46 MB) and `gitleaks dir --redact` on the tracked files (`git archive HEAD`, 3.37 MB): no leaks (2026-11-01 01:45 UTC). The only `.env*` path in the history is the removed `.env.example` of Phase 12 with placeholders |
 | CI on the release commit (release 9) | **Passed** | Both jobs passed on `9a5120c` (owner's report, 2026-11-01) |
 | Secret scan of the release history (release 9) | **Passed** on `9a5120c` | gitleaks 8.30.1: `gitleaks git --log-opts=--all --redact` (157 commits, 4.38 MB) and `gitleaks dir --redact` on the tracked files (`git archive HEAD`, 3.30 MB): no leaks (2026-10-31 23:15 UTC) |
@@ -172,6 +172,6 @@ Since ADR-035, a release is the owner's merge into `main`; Workers Builds builds
 | Production deployment approved | 9 | 2026-11-01 | Owner (merged `dev` into `main`, `f296aaf`) |
 | Deployed and checked | 9 | 2026-11-01 | Workers Builds; checked by Claude ([DECISIONS.md](DECISIONS.md) "Release 9 and ninth production deployment") |
 | Acceptance criteria checked | 10 | 2026-11-01 | Claude (§1) |
-| Release blockers resolved | 10 | 2026-11-01 | Claude (secret scan; `minimatch` unchanged); CI 要確認 |
+| Release blockers resolved | 10 | 2026-11-01 | Owner (CI passed; new texts accepted) and Claude (secret scan; `minimatch` unchanged) |
 | Production deployment approved | 10 | 2026-11-01 | Owner (merged `dev` into `main`, `a93902d`) |
 | Deployed and checked | 10 | 2026-11-01 | Workers Builds; checked by Claude ([DECISIONS.md](DECISIONS.md) "Release 10 and tenth production deployment") |

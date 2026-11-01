@@ -17,6 +17,7 @@ export const es: Messages = {
       es: "Español",
       fr: "Français",
     },
+    loading: "Cambiando de idioma…",
   },
   common: {
     skipToContent: "Ir al contenido principal",
@@ -258,6 +259,7 @@ export const es: Messages = {
     reasonsHeading: "Por qué algunos valores son aproximados",
     assumptionsHeading: "Supuestos",
     incompleteHeading: "Valores desconocidos",
+    missingFoods: "Sin datos de: {{list}}",
     dataVersion: "Datos de composición actualizados el {{date}} (SHA-256 {{sha}}…) · Versión del contenido {{content}}",
     sideStepHidden_one: "Se omite {{count}} paso porque se quitó el acompañamiento.",
     sideStepHidden_other: "Se omiten {{count}} pasos porque se quitó el acompañamiento.",

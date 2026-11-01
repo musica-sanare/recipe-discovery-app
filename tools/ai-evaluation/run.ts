@@ -5,6 +5,7 @@
  */
 import { foods } from "../../content/foods.ts";
 import { forbiddenExpressions } from "../../content/glossary.ts";
+import { LEXICONS } from "../../shared/freeText/lexicon/index.ts";
 import { parseConditions, type ParserFood } from "../../shared/freeText/parse.ts";
 import type { Locale } from "../../shared/locales.ts";
 import { validateProviderOutput, type ValidationContext } from "../../shared/suggestion.ts";
@@ -26,7 +27,7 @@ export function parserFoodsOf(locale: Locale): ParserFood[] {
 }
 
 /** The deterministic parser (ADR-034, revised again). */
-export const parserAnswer: Answer = (text, locale) => JSON.stringify(parseConditions(text, locale, parserFoodsOf(locale)));
+export const parserAnswer: Answer = (text, locale) => JSON.stringify(parseConditions(text, LEXICONS[locale], parserFoodsOf(locale)));
 
 /** Answers every case with its expected output: checks the pipeline, not the parser. An unknown text gets no output. */
 export function expectedAnswers(set: EvaluationSet): Answer {

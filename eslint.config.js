@@ -23,6 +23,11 @@ const CONTENT_FORBIDDEN_IMPORTS = [
   { group: UI_PACKAGES, message: "Content must not depend on UI or i18n packages." },
 ];
 const UI_FORBIDDEN_IMPORTS = [{ group: [...BUILD_AND_PLATFORM], message: "UI code must not import build-time or platform code." }];
+// The app loads one locale's catalog and word list at a time (ADR-039); the static indexes are for tests.
+const UI_APP_FORBIDDEN_IMPORTS = [
+  ...UI_FORBIDDEN_IMPORTS,
+  { group: ["**/i18n/resources", "**/freeText/lexicon/index", "**/freeText/lexicon/index.ts"], message: "App code loads locale data through src/i18n/localeData.ts." },
+];
 
 export default tseslint.config(
   { ignores: ["dist", "coverage", "node_modules"] },
@@ -41,6 +46,10 @@ export default tseslint.config(
     files: ["src/**/*.{ts,tsx}"],
     extends: [reactHooks.configs.flat["recommended-latest"], reactRefresh.configs.vite],
     languageOptions: { globals: globals.browser },
+    rules: { "no-restricted-imports": ["error", { patterns: UI_APP_FORBIDDEN_IMPORTS }] },
+  },
+  {
+    files: ["src/**/*.test.{ts,tsx}", "src/testing/**/*.ts"],
     rules: { "no-restricted-imports": ["error", { patterns: UI_FORBIDDEN_IMPORTS }] },
   },
   {

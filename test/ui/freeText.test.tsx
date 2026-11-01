@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { foods } from "../../content/foods.ts";
 import type { Locale } from "../../shared/locales.ts";
 import { App } from "../../src/App.tsx";
-import { createI18n } from "../../src/i18n/createI18n.ts";
+import { createTestI18n } from "../../src/testing/i18n.ts";
 import { axeViolations } from "../../src/testing/axe.ts";
 import { repositoryFetch, repositoryUrls } from "./repositoryContent.ts";
 
@@ -35,7 +35,7 @@ const REQUESTS: Readonly<Record<Locale, { readonly conditions: string; readonly 
 };
 
 async function openForm(locale: Locale) {
-  const i18n = createI18n(locale);
+  const i18n = createTestI18n(locale);
   render(
     <I18nextProvider i18n={i18n}>
       <App contentUrls={repositoryUrls} />

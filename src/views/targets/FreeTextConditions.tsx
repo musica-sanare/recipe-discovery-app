@@ -4,6 +4,7 @@ import { parseConditions, parserFoods } from "../../../shared/freeText/parse";
 import type { Locale } from "../../../shared/locales";
 import { isEmptySuggestion, providerOutputSchema, SUGGEST_LIMITS, validateValue, type OutOfScopeTopic, type Suggestion } from "../../../shared/suggestion";
 import { formatNumber } from "../../format/format";
+import { lexiconOf } from "../../i18n/localeData";
 import { useLoadedContent } from "../../state/context";
 import { useTextContext } from "../useTextContext";
 import { choiceOf } from "./freeText";
@@ -27,7 +28,7 @@ export interface FreeTextConditionsProps {
  * The text is sent nowhere and not stored.
  */
 export function FreeTextConditions({ locale, onApply, onShowAllergens }: FreeTextConditionsProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const id = useId();
   const { calc, text: textBundle } = useLoadedContent();
   const { choiceLabel, foodName } = useTextContext();
@@ -42,7 +43,7 @@ export function FreeTextConditions({ locale, onApply, onShowAllergens }: FreeTex
     const trimmed = text.trim();
     if (trimmed === "") return { kind: "message", key: "blank" };
     if (Array.from(trimmed).length > SUGGEST_LIMITS.textLength) return { kind: "message", key: "tooLong" };
-    const validated = validateValue(parseConditions(trimmed, locale, foods), context, providerOutputSchema);
+    const validated = validateValue(parseConditions(trimmed, lexiconOf(i18n, locale), foods), context, providerOutputSchema);
     if (!validated.ok) return { kind: "message", key: "invalid" };
     const output = validated.value;
     if (output.kind === "out_of_scope") return { kind: "out_of_scope", topic: output.topic };

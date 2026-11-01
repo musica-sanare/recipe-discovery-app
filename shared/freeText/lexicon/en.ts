@@ -1,0 +1,57 @@
+/** English word list of the free-text conditions parser (`../lexicon.ts`, ADR-039 D1). */
+import type { Lexicon } from "../lexicon.ts";
+
+export const en: Lexicon = {
+  locale: "en",
+  outOfScope: {
+    allergens: ["allerg", "intoleran", "gluten", "lactose", "celiac", "coeliac", "anaphyla"],
+    targets: ["protein", "calori", "kcal", "carb", "macro", "cutting", "bulking", "low-fat", "low fat", "diet", "weight loss", "lose weight"],
+    other: ["diabet", "blood pressure", "cholesterol", "health", "disease", "pregnan", "cure", "invent", "new recipe", "create a recipe", "make up a recipe", "ignore", "instruction", "rules", "system prompt"],
+  },
+  negationPosition: "before",
+  negation: ["no", "not", "without", "except", "excluding", "anything but", "everything but", "nothing with", "leave out", "skip", "avoid", "hold the", "don't", "do not", "can't", "cannot", "can not", "dislike", "hate", "none"],
+  or: ["or"],
+  clauseBreaks: [],
+  minuteUnits: ["minutes", "minute", "mins", "min"],
+  hourUnits: ["hours", "hour", "hrs", "hr", "h"],
+  durations: [
+    ["half an hour", 30],
+    ["half hour", 30],
+    ["an hour and a half", 90],
+    ["an hour", 60],
+    ["one hour", 60],
+    ["quarter of an hour", 15],
+  ],
+  equipment: {
+    stove: ["stove", "hob", "cooktop", "burner", "gas"],
+    microwave: ["microwave"],
+    oven_toaster: ["toaster oven", "oven toaster"],
+    pot: ["pot", "saucepan", "one-pot"],
+    frying_pan: ["frying pan", "skillet", "pan"],
+    deep_pan: ["deep pan", "wok", "deep fryer"],
+  },
+  cuisines: {
+    japanese: ["japanese"],
+    chinese: ["chinese"],
+    korean: ["korean"],
+    western: ["western"],
+    spanish: ["spanish"],
+    okinawan: ["okinawa"],
+    latin_american: ["latin american", "latin-american", "latino", "mexican", "peruvian"],
+    mediterranean: ["mediterranean"],
+    southeast_asian: ["southeast asian", "south-east asian", "thai", "vietnamese"],
+    french: ["french", "france"],
+    north_african: ["north african", "north-african", "maghreb", "moroccan", "tunisian", "algerian"],
+    west_african: ["west african", "west-african", "senegalese", "ivorian"],
+  },
+  groups: {
+    chicken: ["chicken", "poultry"],
+    pork: ["pork"],
+    beef: ["beef"],
+    fish: ["fish"],
+    eggs: ["egg", "eggs"],
+    mushrooms: ["mushroom", "mushrooms"],
+  },
+  notFoods: [],
+  keepApart: [],
+};

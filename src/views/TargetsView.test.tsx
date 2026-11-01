@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { Locale } from "../../shared/locales";
 import { App } from "../App";
 import { fixtureFetch, fixtureUrls } from "../content/bundleFixtures";
-import { createI18n } from "../i18n/createI18n";
+import { createTestI18n } from "../testing/i18n";
 import { search } from "../state/recommendation";
 import { axeViolations } from "../testing/axe";
 
@@ -31,7 +31,7 @@ afterEach(() => {
 
 async function renderForm(locale: Locale = "ja") {
   render(
-    <I18nextProvider i18n={createI18n(locale)}>
+    <I18nextProvider i18n={createTestI18n(locale)}>
       <App contentUrls={fixtureUrls} />
     </I18nextProvider>,
   );

@@ -50,7 +50,7 @@ npm ci
 | Command | Purpose |
 |---|---|
 | `npm run test:e2e` | Playwright on the production build with headers (details below) |
-| `npm run test:e2e:timing` | Phone-class timing with CPU throttling (project `timing`, Chromium); writes `test-results/timing.json` |
+| `npm run test:e2e:timing` | Phone-class timing with CPU throttling (project `timing`, Chromium); writes `test-results/timing.json`, and startup and language-switch times with the HTTP cache disabled to `test-results/timing-startup.json` |
 | `npm run bench:recommendation` | Node timing of a full search on the repository recipes and on an in-memory synthetic library of 180 recipes (details below) |
 
 - `npm run test:e2e` runs `npm run build && npm run preview` on port 4174. Its projects are `desktop-chromium`, `mobile-chromium`, and `mobile-webkit`, and every spec runs in every locale (`e2e/`).

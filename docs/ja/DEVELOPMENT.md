@@ -1,4 +1,4 @@
-<!-- source: docs/en/DEVELOPMENT.md blob aa3e9dea7dd56d97f0a2c9596f8a6f91ce0b865f -->
+<!-- source: docs/en/DEVELOPMENT.md blob d903118e5c099af43e6cb804917ca63797e4484e -->
 [English](../en/DEVELOPMENT.md) | 日本語 · [目次に戻る](README.md)
 
 > この文書は[英語版](../en/DEVELOPMENT.md)の翻訳。内容が異なる場合は英語版が優先する。
@@ -53,7 +53,7 @@ npm ci
 | コマンド | 用途 |
 |---|---|
 | `npm run test:e2e` | ヘッダー付きの本番ビルドに対する Playwright（詳しくは下） |
-| `npm run test:e2e:timing` | CPU を絞ったスマートフォン相当の時間の計測（プロジェクト `timing`、Chromium）。`test-results/timing.json` に書き出す |
+| `npm run test:e2e:timing` | CPU を絞ったスマートフォン相当の時間の計測（プロジェクト `timing`、Chromium）。`test-results/timing.json` に書き出す。HTTP キャッシュを切った起動と言語切り替えの時間は `test-results/timing-startup.json` に書き出す |
 | `npm run bench:recommendation` | リポジトリのレシピと、メモリ上の 180 件の合成ライブラリに対する、検索全体の Node での所要時間（詳しくは下） |
 
 - `npm run test:e2e` は、ポート 4174 で `npm run build && npm run preview` を動かす。プロジェクトは `desktop-chromium`、`mobile-chromium`、`mobile-webkit` で、すべての spec をすべてのロケールで実行する（`e2e/`）。

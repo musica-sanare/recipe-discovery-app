@@ -18,6 +18,7 @@ export const ja = {
       es: "Español",
       fr: "Français",
     },
+    loading: "言語を切り替えています…",
   },
   common: {
     skipToContent: "本文へ移動",
@@ -259,6 +260,7 @@ export const ja = {
     reasonsHeading: "概算・推定の理由",
     assumptionsHeading: "前提",
     incompleteHeading: "不明な値",
+    missingFoods: "値のない食材：{{list}}",
     dataVersion: "成分表データ {{date}} 更新（SHA-256 {{sha}}…）・コンテンツ版 {{content}}",
     sideStepHidden_one: "付け合わせなしのため、{{count}}つの手順を省いています。",
     sideStepHidden_other: "付け合わせなしのため、{{count}}つの手順を省いています。",

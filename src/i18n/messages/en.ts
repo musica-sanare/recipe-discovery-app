@@ -17,6 +17,7 @@ export const en: Messages = {
       es: "Español",
       fr: "Français",
     },
+    loading: "Switching language…",
   },
   common: {
     skipToContent: "Skip to main content",
@@ -258,6 +259,7 @@ export const en: Messages = {
     reasonsHeading: "Why some values are approximate",
     assumptionsHeading: "Assumptions",
     incompleteHeading: "Unknown values",
+    missingFoods: "No data for: {{list}}",
     dataVersion: "Composition data updated {{date}} (SHA-256 {{sha}}…) · Content version {{content}}",
     sideStepHidden_one: "{{count}} step is left out because the side is off.",
     sideStepHidden_other: "{{count}} steps are left out because the side is off.",

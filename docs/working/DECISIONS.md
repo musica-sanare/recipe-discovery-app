@@ -1088,6 +1088,7 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 ### Bundle-size warning accepted (2026-10-31)
 - The owner accepted the recommendation: the Vite warning about the 522 kB JavaScript bundle is recorded, not fixed, in release 8. Loading UI catalogs per locale on demand (for example a dynamic import per locale before the first render) is a later option, to be planned as its own change.
 - Reason: the bundle is 155 kB gzip, the warning is advisory, the phone-class timing is unchanged ("Release 8 preparation"), and splitting the catalogs changes the startup path and its tests.
+- Closed by ADR-039 (owner, 2026-11-01, Stage 16.1): UI catalogs and free-text word lists load per locale.
 
 ### Release 8 preparation (2026-10-31)
 - Release 8 contains Phase 11 (the French locale) after release 7 (`cb086c1`): content version `2026-10-31.8` (130 recipes, 117 foods). The engines, calculated values, headers, and dependencies are unchanged. The owner approved proceeding to the deployment (2026-10-31).
@@ -1446,6 +1447,89 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - Secret scan: gitleaks 8.30.1, `gitleaks git --log-opts=--all --redact` (180 commits, 4.91 MB) and `gitleaks dir --redact` on the tracked files (`git archive HEAD`, 3.72 MB): no leaks (07:46 UTC). The only `.env*` path in the history is the removed `.env.example` of Phase 12 with placeholders; no commit touches `data/raw`, `*.xlsx`, or `*.pdf`.
 - Open: CI on the release commit after the owner pushes, the owner's merge into `main` (a deploy), and the post-deployment checks.
 
+### Release 12 and twelfth production deployment (2026-11-01)
+- Release commit: `cc1bf80` on `dev` (documentation only on top of `974d037`, which passed the checks of "Release 12 preparation"). The owner pushed `dev` and merged it into `main` (`4a265dd`, 2026-11-01 08:03 UTC, a merge commit with the same tree as `cc1bf80`); Workers Builds deployed it. CI passed on `cc1bf80` (owner's report). The dashboard version was not reported.
+- Every served asset (`index-ClIaeCmA.js`, `index-DiFKrOrh.css`, the calculation bundle, and the four text bundles) is byte-identical to the local build of `974d037` (SHA-256).
+- Post-deployment checks (`curl` and the desktop app's browser pane, 2026-11-01): `/`, `/recipes/beef_potato_tomato_stew`, `/recipes/poulet_yassa`, `/recipes/harira_boeuf`, `/about`, `/recipes/no_such_recipe`, an unknown path, `/third-party-licenses.txt`, and `/_headers` (the app's HTML) return 200 with the CSP, `X-Content-Type-Options`, `Referrer-Policy`, and `Permissions-Policy`; assets have `Cache-Control: public, max-age=31536000, immutable`, documents `public, max-age=0, must-revalidate`.
+- In production at 375 px in French (light mode): `/recipes/poulet_basquaise` shows the dish with the `french` cuisine label and no overflow; a search with the default targets and the `french` preference lists `poulet_basquaise` first; the language switch from Spanish to French works; no request to another origin, no console messages, no cookies, and only `recipe-discovery.locale` stored.
+- Rollback target: `dc0f099` (release 11).
+- Not checked: real devices, the dashboard rollback (ADR-035 要確認).
+
+### Phase 15 acceptance (2026-11-01)
+- Decisions recorded: "Stage 15.1 decisions", ADR-038 (revising ADR-026), ADR-023 revised to about 150 recipes, open question 12 extended (ham, beer), [CONTENT_POLICY.md](../en/CONTENT_POLICY.md) §3 rules for marinades and alcohol with the translation.
+- 20 new recipes in two batches pass content validation (130 → 150 recipes, 117 → 139 foods); every dish's approximations were stated and approved (0–2 per dish); their `en`, `es`, and `fr` texts were reviewed by the owner with back-translated safety-relevant texts (no findings; fixes by Claude before the reviews N1 and O1); every snapshot diff was explained and approved.
+- ADR-023 as revised is met: cut 51, maintain 65, bulk 38; each protein group 20–30; 67 % quick; 2.7 % fried; Japanese 29 %; no cuisine above half.
+- A full recommendation stays within about 70 ms p90 at 4× ("Stage 15.3 batch 2: recipes", "Release 12 preparation").
+- `npm run check` and `npm run test:e2e` pass; CI passed on the release commit; release 12 was deployed by the owner's merge into `main`.
+- Open after Phase 15: `galette_complete` and `croque_monsieur` reach only near for maintain; `es` and `fr` texts without a native reviewer (open questions 9 and 23).
+
+### Next phases after Phase 15 (2026-11-01)
+- The owner chose Phase 16 (polish and bundle size: per-locale loading of UI catalogs and free-text word lists, a header logo, and nutrition tiles in the detail view; `prompts/16-polish-and-bundle.md`) and then Phase 17 (custom domain and repository publication). A one-day meal plan, viewing history, and further library expansion stay candidates for later ([IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) "Later").
+- Phase 17: registering or renewing a domain is a paid action that the owner decides and performs; Claude prepares the owner steps, checks, and doc updates only (shared `paid-services.md`, `deployment.md`).
+
+### Phase 16 start: polish and bundle size (2026-11-01)
+- Starting point: `dev` at `50c19ff` (Phase 16 prompt `prompts/16-polish-and-bundle.md`). Release 12 (`cc1bf80`, merged as `4a265dd`) is in production; `dc0f099` stays the rollback target.
+- Open question 22 re-checked: unchanged (`eslint` 10.14.0 requires `minimatch` ^10.2.6, `@typescript-eslint/typescript-estree` 8.72.1 requires ^10.2.2, `@eslint/config-array` requires ^10.2.4; `minimatch` 11.0.3 is the latest). `npm audit`: the same 12 moderate findings; `npm audit --omit=dev`: 0.
+- ADR-017 re-checked: unchanged (`typescript-eslint` 8.72.1, the latest, declares peer `typescript >=4.8.4 <6.1.0`; `typescript` latest is 7.0.2).
+- `npm outdated`: the recorded exceptions (`typescript`, `@types/node`) and `react-i18next` 17.1.9 → 17.1.10 (published 2026-11-01 07:50 UTC, a single release, no install script). The owner approved updating it in its own commit at the start of Stage 16.2 (ADR-016).
+
+### Stage 16.1 decisions (2026-11-01)
+- Documentation checked on 2026-11-01:
+  - Vite "Dynamic Import" (https://vite.dev/guide/features#dynamic-import): variable paths match one directory level; code-split dynamic imports get a preload step for their shared chunks; `import.meta.glob` is lazy by default.
+  - Vite `build.chunkSizeWarningLimit` (https://vite.dev/config/build-options#build-chunksizewarninglimit): 500 kB by default, compared against the uncompressed chunk size.
+  - i18next "Add or Load Translations" (https://www.i18next.com/how-to/add-or-load-translations) and API (https://www.i18next.com/overview/api): inline resources, `addResourceBundle`, backends such as `i18next-resources-to-backend`; `changeLanguage` returns a promise that settles after loading.
+  - react-i18next `useTranslation` (https://react.i18next.com/latest/usetranslation-hook): Suspense by default; with `useSuspense: false` the hook returns a `ready` flag.
+- Prototype (a copy outside the repository, Vite 8.3.5, UI catalogs only behind `import()`): the main bundle drops from 568,294 bytes (gzip 168.8 kB at level 9) to 461,868 bytes (gzip 139.8 kB); the catalog chunks are 24,662 (`en`), 27,078 (`es`), 28,126 (`ja`), and 28,354 (`fr`) bytes, gzip 8.6–9.8 kB. The free-text word lists add about 2.1–2.7 kB of source per locale, so the main bundle is expected at about 453–455 kB. The icon and illustration data (about 9.5 kB of source) is used by the first view and stays in the main bundle.
+- The owner approved the recommendations:
+  1. Per-locale loading with a dynamic `import()` per locale before the first render (ADR-039).
+  2. Logo direction A "discovery bowl": a bowl with a sprout and a rising sun, matching the targets illustration; 32 px grid, strokes in `currentColor`, token fills, no text inside, drawn with the existing `Shapes` data format. Directions B (lens and leaf; too close to the search icon) and C (a plate of four tiles; crowded at 28 px, and the colors could read as nutrients) were not chosen.
+  3. Detail nutrition tiles: energy spans the full width; protein, fat, carbohydrate, and salt equivalent form a 2 × 2 grid, with salt on `surface-muted` and no target; the same layout at 375 px and in the desktop right column. Each tile holds the value, the range, the status marker and text (one decimal with "just below" or "just above"), and the target or "no target"; an unknown value shows "unknown" with the foods that lack data. The change summary, the range explanation, and the estimates note stay below the tiles with today's texts; approximation reasons stay in "How this is calculated". Tiles and the change summary keep a visible edge in forced colors.
+- Mockups: local HTML rendered with Playwright in light, dark, and forced colors (`forcedColors: "active"`), at 375 px and desktop width, in `ja` and `fr`; not stored in the repository. The app itself is checked in Stage 16.3.
+- 要確認: whether browsers retry a dynamic `import()` that failed once; Stage 16.2 tests it in Chromium, Firefox, and WebKit and falls back to a page reload.
+
+### Dependency update: react-i18next 17.1.10 (2026-11-01)
+- `react-i18next` 17.1.9 → 17.1.10 (published 2026-11-01 07:50 UTC, a single release, so ADR-016 exception 2 does not apply); dependencies and peer ranges unchanged. `package.json` now requires `^17.1.10`.
+- Impact checked before the update (`npm diff` of the two published packages and their changelog, 2026-11-01): only `Trans`, `IcuTrans`, and their helpers change (values are escaped before the markup is parsed). The app does not use `Trans` or `IcuTrans`. No install script (ADR-018).
+- Checks: `npm run check` (1,003 tests; the built `index-ClIaeCmA.js` keeps the same content hash as release 12, so the runtime bundle is unchanged), `npm run test:e2e` (164 passed, 1 skipped), `npm audit --omit=dev` (0); `npm audit` reports the accepted `minimatch` findings only; `npm outdated` lists only the recorded exceptions (`typescript`, `@types/node`).
+
+### Stage 16.2 per-locale loading (2026-11-01)
+- ADR-039 applied:
+  - Word lists: `shared/freeText/lexicon/<locale>.ts`, each carrying its `locale`; `shared/freeText/lexicon.ts` keeps the types and group words; `shared/freeText/lexicon/index.ts` is the index for Node tools and tests. `parseConditions(text, lexicon, foods)` takes the word list instead of the locale, so the parser never reaches another locale's list.
+  - Chunks: `src/i18n/locales/<locale>.ts` re-exports the catalog and the word list; `src/i18n/localeData.ts` imports them with `import()` and adds them to the i18next instance. The word lists are kept per instance in a `WeakMap` keyed by `i18n.store`, because `useTranslation` returns a copy of the instance after each language change and every copy shares the store.
+  - Startup: `src/main.tsx` renders after the chunk has loaded; `src/BootError.tsx` with `src/i18n/bootMessages.ts` (equal to `content.error` and `content.retry`, tested) shows the first-load failure, and its retry reloads the page.
+  - Switching: `src/i18n/useLocaleSwitch.ts` loads the chunk and the text bundle in parallel, applies only the latest choice, and keeps the current language on failure. `LanguageSwitcher` shows `language.loading` (new key in four locales) with `aria-busy`; the retry state uses the new `LoadError` component shared with the content error.
+  - `src/i18n/resources.ts` holds the four catalogs for tests only; tests create instances with `createTestI18n` (`src/testing/i18n.ts`). An ESLint rule forbids app code to import `src/i18n/resources` and `shared/freeText/lexicon/index`.
+- The import retry (要確認 of "Stage 16.1 decisions") works in Chromium and WebKit: after an aborted chunk request, the retry loads it (`e2e/localeLoading.spec.ts`). Firefox is not in the E2E projects and stays 要確認.
+- Tests: unit tests for the chunks against the indexes, the word list through a copy of the instance, and the boot messages (`src/i18n/localeData.test.ts`); the boot error in four locales with axe-core (`src/BootError.test.tsx`); loading status, failure and retry, and the latest choice on a switch (`src/App.test.tsx`). E2E: first render per locale loads only its chunk and shows no other language or key; a failed chunk and its retry at the first render and on a switch (`e2e/localeLoading.spec.ts`). Startup and switch timing with the HTTP cache disabled (`e2e/startupTiming.spec.ts`, project `timing`).
+- Checks: `npm run check` (64 test files with 1,019 tests, production build without the chunk-size warning), `npm run test:e2e` (194 passed, 1 skipped by design; 30 new).
+- JavaScript chunks (raw / gzip at level 9, bytes): `index` 456,235 / 137,411 (release 12: 568,294 / 168,809); `en` 26,529 / 9,444; `es` 28,920 / 10,314; `fr` 30,198 / 10,566; `ja` 30,511 / 10,640. Startup loads `index` and one locale chunk: at most 486,746 bytes, every chunk below Vite's 500 kB warning.
+- Timing (`npx playwright test --project=timing`, alternating with release 12's code `cc1bf80` extracted with `git archive` and built with the same `node_modules`, each served by `vite preview` on the same port, three rounds, 2026-11-01 09:07–09:13 UTC, Chromium 156, 1-minute load average 6.7–13.8 at each start, so the numbers are noisy; median / p90, ms; release 12 in parentheses):
+  - Search cut at 4×: 76.7 / 81.9, 81.1 / 107.1, 78.4 / 86.1 (74.2 / 83.3, 70.5 / 79.7, 117.1 / 141.9). Bulk at 4×: 71.3–77.0 (65.5–142.0). Re-suggestion at 4× 25.2–30.6 (25.4–30.9); recalculation at 4× 9.7–11.2 (9.7–12.5). The search path is unchanged; the p90 of 107.1 ms came in the round with the highest load.
+  - Startup with the cache disabled, until the view heading at 4×: `ja` 275.9–280.0 (245.2–437.1), `fr` 250.0–283.9 (249.8–429.7); until the header at 4×: 100.6–118.0 (98.2–175.1). No consistent change: the smaller bundle and the extra chunk request roughly offset each other.
+  - Switch ja → fr with the cache disabled at 4×: 66.6–74.3 (51.5–74.6); the new chunk adds up to about 20 ms in the two quieter rounds.
+  - Release readiness (Stage 16.4) measures again on a quieter machine.
+- Browser check (built-in browser, `vite preview`, 2026-11-01): a stored `fr` preference loads only `index` and `fr` with `lang="fr"`; switching to `ja` at 375 px in dark mode loads `ja`, shows Japanese without overflow, stores only `recipe-discovery.locale`, and sets no cookie; the Japanese free-text parser reads conditions after the switch; desktop width in dark mode; no console messages. Not checked in the browser: the switcher's loading status (too short on localhost; covered by the UI tests), real devices, Firefox.
+
+### Stage 16.3 logo and detail nutrition tiles (2026-11-01)
+- Logo (direction A of "Stage 16.1 decisions"): `LOGO` in `src/components/icons/iconData.ts` (four shapes on a 32 px grid, fills `sun`, `mint`, `peach`, `primary`) drawn by `Logo` in `src/components/icons/Icon.tsx` with 2.2 px strokes in `currentColor`; 28 px in the header link before the product name, `aria-hidden`, no text inside. In forced colors the outlines take the link color (checked in Chromium with `forcedColors: "active"`).
+- Detail tiles (`src/views/DetailView.tsx`): the nutrition list becomes one tile per nutrient with the candidate cards' pastels; values, ranges, status markers, "just below/above" with one decimal, targets, and "no target" are unchanged. Layout change from the mockup: the desktop detail view is one column today (UI_DESIGN §3.4 describes a sticky right column that was not built), so from `md` the four tiles after energy share one row instead of keeping two columns; a five-in-a-row layout was tried and wrapped the values at 768 px.
+- New catalog key `detail.missingFoods` in four locales for the ingredients that lack data, shown in the tile of an unknown value: ja 「値のない食材：{{list}}」, en "No data for: {{list}}", es "Sin datos de: {{list}}", fr "Pas de données pour : {{list}}". No recipe of the library has an unknown shown value today; a UI test patches the salt composition to unmeasured.
+- Contrast: no new color pair. Tile texts use `text` and `muted` on the pastels and `surface-muted`, and the status colors on the pastels, all already in `test/node/styles.test.ts`; the logo is decorative, beside the product name in text.
+- Tests: the logo (path data, 32 px grid, decorative, no text) in `test/ui/icons.test.tsx`; the header link keeps the product name as its text (`src/App.test.tsx`); the tile layout with forced-colors edges and an unknown value with its ingredients and axe-core (`test/ui/detail.test.tsx`).
+- Checks: `npm run check` (64 test files with 1,023 tests), `npm run test:e2e` (194 passed, 1 skipped by design; axe-core with color contrast in real browsers covers the new detail tiles).
+- JavaScript chunks (raw / gzip at level 9, bytes): `index` 457,369 / 137,641 (+1,134 for the logo and the tiles); locale chunks 26,566–30,556.
+- Screenshots (Playwright on `vite preview`, Chromium): header at 375 px in light, dark, and forced colors and at 320 px; the detail nutrition at 320, 375, 768, and 1280 px in `fr` and `ja`, light and dark, and forced colors at 375 px; no horizontal overflow. Not checked: real devices, WebKit screenshots (covered by the E2E suite's axe-core and overflow checks).
+
+### Release 13 preparation (2026-11-01)
+- Release 13 contains Phase 16: per-locale UI catalogs and free-text word lists (ADR-039), the header logo, and the detail nutrition tiles, with `react-i18next` 17.1.10. Content version `2026-11-01.2` (139 foods, 150 recipes) is unchanged; so are the engines, formulas, tolerances, stored data, and headers.
+- Checks on `95f0c44` (2026-11-01 10:40–10:45 UTC): `npm ci`, `npm run check` (64 test files with 1,023 tests, content validation, production build without the chunk-size warning), `npm run test:e2e` (194 passed, 1 skipped by design), `npm audit --omit=dev` (0); `npm audit` reports the accepted `minimatch` findings only (12 moderate); `npm outdated` lists only the recorded exceptions (`typescript`, `@types/node`). Open question 22 and ADR-017 re-checked: unchanged (`eslint` 10.14.0 requires `minimatch` ^10.2.6; `typescript-eslint` 8.72.1 declares peer `typescript >=4.8.4 <6.1.0`; `minimatch` 11.0.3 is the latest). `dist/`: 14 files; JavaScript `index` 457,369 bytes and locale chunks 26,566 (`en`), 28,958 (`es`), 30,245 (`fr`), 30,556 (`ja`); CSS 22,062; calculation bundle 328,294; text bundles 193,488–225,510 (unchanged).
+- Phone-class timing (`npx playwright test --project=timing`, alternating with release 12's `cc1bf80` built with the same `node_modules` and served by `vite preview` on the same port, three rounds, 10:51–10:55 UTC, Chromium 156, 1-minute load average 3.7–9.9 at each start; median / p90, ms; release 12 in parentheses):
+  - Search cut at 4×: 69.6 / 75.4, 69.9 / 78.4, 70.3 / 75.5 (69.7 / 74.1, 72.9 / 80.5, 69.1 / 77.1). Bulk at 4×: 65.5–72.8 / 74.0–79.4 (66.0–71.1 / 74.5–78.1). Re-suggestion at 4× 24.2–27.1 (23.5–25.1); recalculation 9.3–10.8 (9.1–10.0). Search cut at 6×: 104.6–119.8 / 111.7–141.3 (104.3–105.6 / 115.4–118.5); the 141.3 ms came in the round with the highest load. The search path is unchanged and within the ADR-030 D10 threshold of about 100 ms p90 at 4×.
+  - Startup with the cache disabled, until the view heading at 4×: `ja` 229.9–300.8 (241.5–281.0), `fr` 237.4–274.3 (242.3–279.3); in the quietest round, release 13 was about 10 ms faster in both. Until the header at 4×: 90.3–119.1 (97.8–118.0). No consistent change.
+  - Switch ja → fr with the cache disabled: 62.3–75.9 / 69.7–88.5 at 4× (50.2–56.6 / 54.3–64.5) and 93.6–102.4 at 6× (70.8–73.3); the new chunk adds about 10–25 ms at 4×, as expected from ADR-039.
+- Secret scan: gitleaks 8.30.1, `gitleaks git --log-opts=--all --redact` (187 commits, 5.01 MB) and `gitleaks dir --redact` on the tracked files (`git archive HEAD`, 3.79 MB): no leaks (10:40 UTC). The only `.env*` path in the history is the removed `.env.example` of Phase 12 with placeholders; no commit touches `data/raw`, `*.xlsx`, or `*.pdf`.
+- Open: CI on the release commit after the owner pushes, the owner's merge into `main` (a deploy), and the post-deployment checks with a cold load in `fr` and a language switch in production.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in
@@ -1696,6 +1780,7 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
   - **D12. Card reason line**: at most two reasons besides the fit status, in this order: `highest_among_candidates` / `lowest_among_candidates`, `uses_required_foods`, `new_attribute`, `matches_cuisine`, `quick`, `within_effort`; when none applies, `meets_all_targets` or `meets_with_adjustment`. Close alternatives show all their gap reasons (`near_target`, `misses_target`, `unknown_value`, `range_straddles`).
   - **D13. Seed**: 0 for every new search, +1 for each "show a different type" (ADR-029 D6).
 - Dependencies (verification log "Stage 4.1 UI design"): `tailwindcss` 4.3.3 and `@tailwindcss/vite` 4.3.3 (dev), `axe-core` 4.14.0 (dev). No new install script; no router.
+- Revised (owner, 2026-11-01, Phase 16 Stage 16.1): the UI catalogs and free-text word lists load per locale before the first render and before a language switch (ADR-039).
 - Alternatives: React Router or wouter (more than two views with URLs are not needed, and targets must stay out of URLs); plain CSS (the owner's other apps use Tailwind); opt-in local storage (privacy review not needed for the MVP flow); a worker from the start (Node timings are far below a frame budget); combined equipment relaxation in the engine (needs an ADR-029 change for one rare case); differences of full-precision values (shown numbers would not add up).
 
 ## ADR-031: Repository license
@@ -1796,7 +1881,7 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - Limits: pastel tiles must never be the only way to tell nutrients or statuses apart; every new color pair joins the contrast test in Stage 14.2.
 
 ## ADR-038: Cuisine values for French-speaking regions
-- Status: **Accepted** (owner, 2026-11-01, Phase 15 Stage 15.1); revises ADR-026.
+- Status: **Accepted** (owner, 2026-11-01, Phase 15 Stage 15.1); revises ADR-026. Applied in Stages 15.2 and 15.3 and released in release 12 (2026-11-01, "Phase 15 acceptance").
 - Decision: `CUISINES` adds `french`, `north_african`, and `west_african`.
   - `french` covers dishes from France. Dishes from Belgium, Switzerland, and Québec stay `western`, because a cuisine value names the region a dish comes from (ADR-026) and these are not French dishes.
   - `north_african` covers the Maghreb (Morocco, Algeria, Tunisia); `west_african` covers West Africa (for example Senegal, Mali, Côte d'Ivoire).
@@ -1805,6 +1890,19 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - Effects: diversification and the cuisine preference (ADR-029 D5) use the values unchanged; the cuisine attribute has 12 values instead of 9, so a recipe of a new value counts as a new attribute until one is shown. A user who prefers `western`, including saved conditions (ADR-036), does not get the new French dishes through that preference. The bundle stays compatible (enum values added only).
 - Rationale: French-speaking users can find dishes of their own food cultures with the cuisine filter; West African dishes fit no current value.
 - Alternatives: keep the current values (French dishes as `western`, Maghreb dishes as `mediterranean`; West African dishes would have no value and be dropped); one value per country or region (five or six values with two to four recipes each, 15 filter choices, a finer diversification attribute).
+
+## ADR-039: Per-locale UI catalogs and free-text word lists
+- Status: **Accepted** (owner, 2026-11-01, Phase 16 Stage 16.1); revises ADR-030 (startup path) and closes "Bundle-size warning accepted". Applied in Stage 16.2.
+- Decisions:
+  - **D1. Split**: each locale's UI catalog (`src/i18n/messages/<locale>.ts`) and free-text word list (moved to `shared/freeText/lexicon/<locale>.ts`) form one dynamically imported chunk. Node tools and tests keep a static index of all four locales. Icon and illustration data stay in the main bundle.
+  - **D2. First render**: `main.tsx` resolves the locale (stored, then browser, then `ja`), imports that locale's chunk, and renders only after it has loaded; no other language and no message key is shown.
+  - **D3. Switching**: the switcher loads the chunk and the text bundle in parallel, adds the catalog with `addResourceBundle`, then calls `changeLanguage`; the view, its values, and `lang` behave as today. While loading, a status next to the switcher says so (one new catalog key in four locales) and the switcher has `aria-busy`.
+  - **D4. Failures**: a failed first load shows a small built-in error message with a retry in the four locales (checked against the catalogs by a test); the retry reloads the page. A failed switch keeps the current language and shows the existing retry state.
+  - **D5. Unchanged**: no runtime fallback to another locale (catalogs stay complete by type); the CSP and headers stay as they are; chunks are same-origin hashed assets under `/assets/` with the immutable cache rule. No new dependency.
+- Expected sizes (prototype, "Stage 16.1 decisions"): main bundle about 455 kB instead of 568 kB; one locale chunk about 27–31 kB (gzip about 10 kB); startup JavaScript about 485 kB in total, every chunk below Vite's 500 kB warning.
+- Rationale: only one locale is used at a time, the catalogs are the largest part of the bundle that grows with each locale, and loading before the first render keeps the synchronous i18next instance and today's tests.
+- Alternatives: `i18next-resources-to-backend` with Suspense or the `ready` flag (a new dependency, an asynchronous init for a single namespace, and a risk of showing keys); vendor chunks or a higher `chunkSizeWarningLimit` (the warning goes away, but startup bytes do not drop).
+- Limits: the first render waits for one more small request; Stage 16.2 measures startup and switching. Whether a failed `import()` is retried by browsers is 要確認 ("Stage 16.1 decisions").
 
 ---
 

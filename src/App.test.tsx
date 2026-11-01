@@ -5,7 +5,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { Locale } from "../shared/locales";
 import { App } from "./App";
 import { fixtureFetch, fixtureUrls } from "./content/bundleFixtures";
-import { createI18n } from "./i18n/createI18n";
+import type { LoadLocaleData, LocaleData } from "./i18n/localeData";
+import { createTestI18n, testLocaleData } from "./testing/i18n";
 import { LOCALE_STORAGE_KEY } from "./i18n/localePreference";
 import { resources } from "./i18n/resources";
 import { axeViolations } from "./testing/axe";
@@ -23,7 +24,7 @@ afterEach(() => {
 
 function renderApp(locale: Locale = "ja") {
   render(
-    <I18nextProvider i18n={createI18n(locale)}>
+    <I18nextProvider i18n={createTestI18n(locale)}>
       <App contentUrls={fixtureUrls} />
     </I18nextProvider>,
   );
@@ -96,6 +97,14 @@ describe("effects visible in the same commit as the view", () => {
 
 describe("App shell", () => {
 
+  it("shows the logo beside the product name, which stays the link's text", async () => {
+    renderApp();
+    await screen.findByRole("heading", { level: 1 });
+    const home = screen.getByRole("link", { name: "Recipe Discovery" });
+    expect(home.textContent).toBe("Recipe Discovery");
+    expect(home.querySelector("svg")?.getAttribute("aria-hidden")).toBe("true");
+  });
+
   it("renders Japanese by default and sets document metadata", async () => {
     renderApp();
 
@@ -138,6 +147,83 @@ describe("language switch", () => {
     await screen.findByRole("heading", { level: 1, name: "Objetivos y condiciones" });
     expect(document.querySelector("details")).toBe(details);
     expect(details.open).toBe(true);
+  });
+});
+
+describe("per-locale UI data (ADR-039)", () => {
+  function deferred() {
+    let resolve: (data: LocaleData) => void = () => undefined;
+    let reject: (reason: unknown) => void = () => undefined;
+    const promise = new Promise<LocaleData>((onResolve, onReject) => {
+      resolve = onResolve;
+      reject = onReject;
+    });
+    return { promise, resolve, reject };
+  }
+
+  /** Only Japanese is added at start, as after the first render in the browser. */
+  async function renderJapaneseOnly(loadLocale: LoadLocaleData) {
+    render(
+      <I18nextProvider i18n={createTestI18n("ja", { only: true })}>
+        <App contentUrls={fixtureUrls} loadLocale={loadLocale} />
+      </I18nextProvider>,
+    );
+    await screen.findByText(/2026-10-18\.1/);
+  }
+
+  it("loads a locale's data before switching, with a loading status meanwhile", async () => {
+    const french = deferred();
+    const loadLocale = vi.fn(() => french.promise);
+    await renderJapaneseOnly(loadLocale);
+
+    fireEvent.change(screen.getByLabelText("言語"), { target: { value: "fr" } });
+    expect(loadLocale).toHaveBeenCalledWith("fr");
+    expect(screen.getByText("言語を切り替えています…").getAttribute("role")).toBe("status");
+    expect(screen.getByLabelText("言語").getAttribute("aria-busy")).toBe("true");
+    expect(screen.getByRole("heading", { level: 1 }).textContent).toBe("目標と条件");
+    expect(await axeViolations()).toEqual([]);
+
+    await act(async () => {
+      french.resolve(testLocaleData("fr"));
+      await french.promise;
+    });
+    expect(await screen.findByRole("heading", { level: 1, name: resources.fr.translation.nav.views.targets })).toBeDefined();
+    expect(document.documentElement.lang).toBe("fr");
+    expect(screen.queryByText("Changement de langue…")).toBeNull();
+  });
+
+  it("keeps the current language when a locale's data fails to load, and switches on retry", async () => {
+    const loadLocale = vi.fn<LoadLocaleData>().mockRejectedValueOnce(new TypeError("Failed to fetch dynamically imported module")).mockResolvedValueOnce(testLocaleData("fr"));
+    await renderJapaneseOnly(loadLocale);
+
+    fireEvent.change(screen.getByLabelText("言語"), { target: { value: "fr" } });
+    expect((await screen.findByRole("alert")).textContent).toContain("コンテンツを読み込めませんでした。");
+    expect(screen.getByRole("heading", { level: 1 }).textContent).toBe("目標と条件");
+    expect(document.documentElement.lang).toBe("ja");
+    expect(screen.getByLabelText<HTMLSelectElement>("言語").value).toBe("ja");
+    expect(await axeViolations()).toEqual([]);
+
+    fireEvent.click(screen.getByRole("button", { name: "再読み込み" }));
+    expect(await screen.findByRole("heading", { level: 1, name: resources.fr.translation.nav.views.targets })).toBeDefined();
+    expect(screen.queryByRole("alert")).toBeNull();
+    expect(loadLocale).toHaveBeenCalledTimes(2);
+  });
+
+  it("applies only the latest choice when an earlier load finishes later", async () => {
+    const french = deferred();
+    const loadLocale = vi.fn((locale: Locale) => (locale === "fr" ? french.promise : Promise.resolve(testLocaleData(locale))));
+    await renderJapaneseOnly(loadLocale);
+
+    fireEvent.change(screen.getByLabelText("言語"), { target: { value: "fr" } });
+    fireEvent.change(screen.getByLabelText("言語"), { target: { value: "es" } });
+    expect(await screen.findByRole("heading", { level: 1, name: "Objetivos y condiciones" })).toBeDefined();
+
+    await act(async () => {
+      french.resolve(testLocaleData("fr"));
+      await french.promise;
+    });
+    expect(screen.getByRole("heading", { level: 1 }).textContent).toBe("Objetivos y condiciones");
+    expect(document.documentElement.lang).toBe("es");
   });
 });
 

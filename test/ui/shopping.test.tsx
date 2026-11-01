@@ -7,7 +7,7 @@ import { defaultState, type RecipeState } from "../../domain/nutrition/amounts.t
 import { SHOPPING_LIST_MAX_RECIPES, buildShoppingList, type ShoppingEntry } from "../../domain/shopping/list.ts";
 import type { Locale } from "../../shared/locales.ts";
 import { App } from "../../src/App.tsx";
-import { createI18n } from "../../src/i18n/createI18n.ts";
+import { createTestI18n } from "../../src/testing/i18n.ts";
 import { axeViolations } from "../../src/testing/axe.ts";
 import { amountText, itemName } from "../../src/views/shopping/text.ts";
 import { buildTextBundle } from "../../tools/content/bundle.ts";
@@ -41,7 +41,7 @@ afterEach(() => {
 async function openDetail(id: string, locale: Locale = "ja") {
   window.history.replaceState(null, "", `/recipes/${id}`);
   render(
-    <I18nextProvider i18n={createI18n(locale)}>
+    <I18nextProvider i18n={createTestI18n(locale)}>
       <App contentUrls={repositoryUrls} />
     </I18nextProvider>,
   );
@@ -67,7 +67,7 @@ function recipeOf(id: string) {
 function expectedLabels(entries: readonly ShoppingEntry[], locale: Locale): string[] {
   const result = buildShoppingList(entries, calc.recipes);
   if (!result.ok) throw new Error("list");
-  const { t } = createI18n(locale);
+  const { t } = createTestI18n(locale);
   const text = buildTextBundle(input, locale);
   const foodName = (food: string) => text.foods[food]?.name ?? food;
   return result.value.items.map((item) => `${itemName(t, foodName, item)} ${amountText(t, locale, item.grams, item.measure)}`);
@@ -206,7 +206,7 @@ describe("detail block and list view", () => {
   it("opens the targets view with the reload notice when a reload empties the list", async () => {
     window.history.replaceState({ view: "shoppingList" }, "", "/");
     render(
-      <I18nextProvider i18n={createI18n("ja")}>
+      <I18nextProvider i18n={createTestI18n("ja")}>
         <App contentUrls={repositoryUrls} />
       </I18nextProvider>,
     );
@@ -217,7 +217,7 @@ describe("detail block and list view", () => {
 
 describe.each(["ja", "en", "es", "fr"] as const)("axe-core in %s", (locale) => {
   it("detail block, list view, text area fallback, and empty list have no violations", async () => {
-    const { t } = createI18n(locale);
+    const { t } = createTestI18n(locale);
     await openDetail(RECIPE, locale);
     fireEvent.click(screen.getByRole("button", { name: t("shopping.add") }));
     expect(await axeViolations(document.body)).toEqual([]);

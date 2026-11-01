@@ -1,5 +1,5 @@
 import type { Fill, Shape } from "./iconData";
-import { ICONS, type IconName } from "./iconData";
+import { ICONS, LOGO, type IconName } from "./iconData";
 import { ILLUSTRATIONS, type IllustrationName } from "./illustrationData";
 
 /** Full class names, so that Tailwind generates every fill (docs/en/UI_DESIGN.md §5). */
@@ -66,6 +66,27 @@ export function Illustration({ name, className = "" }: { readonly name: Illustra
       className={`block h-auto max-w-full ${className}`.trim()}
     >
       <Shapes shapes={ILLUSTRATIONS[name]} />
+    </svg>
+  );
+}
+
+/** The header logo (docs/en/UI_DESIGN.md §5); decorative, next to the product name in text. */
+export function Logo({ size = 28, className = "" }: { readonly size?: number; readonly className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 32 32"
+      width={size}
+      height={size}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2.2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      focusable="false"
+      aria-hidden="true"
+      className={`inline-block shrink-0 ${className}`.trim()}
+    >
+      <Shapes shapes={LOGO} />
     </svg>
   );
 }

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { ShoppingEntry, ShoppingList } from "../../../domain/shopping/list";
 import type { Locale } from "../../../shared/locales";
-import { createI18n } from "../../i18n/createI18n";
+import { createTestI18n } from "../../testing/i18n";
 import { entrySummary, shoppingText } from "./text";
 
 const names: Record<string, string> = { chicken_breast: "Chicken", egg: "Egg", soy_sauce: "Soy", vegetable_oil: "Oil", salt: "Salt" };
@@ -22,7 +22,7 @@ const list: ShoppingList = {
   ],
 };
 
-const text = (locale: Locale, checked: readonly string[] = []) => shoppingText({ t: createI18n(locale).t, locale, foodName, recipeName, entries, list, checked });
+const text = (locale: Locale, checked: readonly string[] = []) => shoppingText({ t: createTestI18n(locale).t, locale, foodName, recipeName, entries, list, checked });
 
 describe("copied text (docs/en/UI_DESIGN.md §3.7)", () => {
   it("lists the recipes, the unchecked items by section, and the basis note in Japanese", () => {
@@ -65,7 +65,7 @@ describe("copied text (docs/en/UI_DESIGN.md §3.7)", () => {
 
 describe("recipe summary", () => {
   it("names the servings and the changes", () => {
-    const { t } = createI18n("en");
+    const { t } = createTestI18n("en");
     expect(entrySummary(t, entries[0] as ShoppingEntry)).toBe("2 servings");
     expect(entrySummary(t, entries[1] as ShoppingEntry)).toBe("1 serving, amounts adjusted, 1 side off, 1 substitution");
   });

@@ -198,12 +198,27 @@ Status: **Complete (2026-11-01)**: the "soft pop" redesign (ADR-037), released i
 
 ## Phase 15 — French and French-speaking cuisines
 
-Status: **In progress (2026-11-01)**: Stage 15.1 decided (20 recipes in two batches, the cuisine values of ADR-038); batches 1 and 2 added, for 150 recipes; release 12 prepared and waiting for the owner's merge into `main` ([DECISIONS.md](DECISIONS.md) "Phase 15 start" to "Release 12 preparation"). Prompt: `prompts/15-french-speaking-cuisines.md` (written after Phase 14, 2026-11-01). Recipes from France and from French-speaking regions such as West and North Africa, to match the French locale.
+Status: **Complete (2026-11-01)**: 20 recipes from France and French-speaking regions and the cuisine values of ADR-038, for 150 recipes, released in release 12 by the owner's merge into `main`. Logs: [DECISIONS.md](DECISIONS.md) "Phase 15 start" to "Phase 15 acceptance". Prompt: `prompts/15-french-speaking-cuisines.md` (written after Phase 14, 2026-11-01). Recipes from France and from French-speaking regions such as West and North Africa, to match the French locale.
 
 - First check which ingredients the MEXT tables cover and how many approximations each dish would need; drop dishes that would need too many.
 - Decide whether to add cuisine codes (for example French or West African) or keep the current ones, with labels in four locales.
 - Original recipes reviewed in four locales as in Phases 10 and 11.
 - Stages: 15.1 plan (coverage check, cuisine values, size, recipe list, foods, food safety); 15.2 and 15.3 batches; 15.4 release 12.
+
+## Phase 16 — Polish and bundle size
+
+Status: **In progress (2026-11-01)**: Stage 16.1 decided (ADR-039; [DECISIONS.md](DECISIONS.md) "Stage 16.1 decisions"); Stage 16.2 per-locale loading done ("Stage 16.2 per-locale loading"); Stage 16.3 logo and detail nutrition tiles done ("Stage 16.3 logo and detail nutrition tiles"); release 13 prepared and waiting for the owner's merge into `main` ("Release 13 preparation"). Prompt: `prompts/16-polish-and-bundle.md` (written after Phase 15, 2026-11-01). The owner chose this phase next, before Phase 17.
+
+- Load the UI catalog and free-text word list of the active locale only, so the startup bundle drops below Vite's 500 kB warning ("Bundle-size warning accepted").
+- An original logo in the header and nutrition tiles in the detail view (open after Phase 14).
+- Stages: 16.1 plan (loading design, logo directions, tile mockup); 16.2 per-locale loading; 16.3 logo and tiles; 16.4 release 13. No calculation, ranking, content, or stored-data change.
+
+## Phase 17 — Custom domain and repository publication
+
+Status: **Planned (2026-11-01)**; the prompt is written after Phase 16. The owner wants the production site on a custom domain and the repository made public.
+
+- Custom domain: the owner provides a domain they control (要確認: which domain, and whether it is already registered). Registration, renewal, and any plan change are paid actions the owner decides and performs (shared `paid-services.md`); Claude does not propose a registrar. Claude prepares the owner steps for attaching the domain to the Worker (current Cloudflare documentation checked at the start of the phase), the checks afterwards, and the doc updates (production URL in [DEPLOYMENT.md](../en/DEPLOYMENT.md), README, and RELEASE_READINESS, with translations); whether the `workers.dev` address stays reachable is decided then. No code change is expected (all URLs in the app are relative; the CSP uses `'self'`).
+- Repository publication: repeat the pre-publication check of 2026-10-25 on the full history ("Pre-publication check"): secret scan, authors and committers, personal data, local paths, account identifiers, Claude-only files; the owner decides on every doubtful item and changes the visibility on GitHub. `main` already holds the released history.
 
 ## Later (not MVP)
 

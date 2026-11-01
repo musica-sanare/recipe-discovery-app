@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { Locale } from "../../shared/locales.ts";
 import { App } from "../../src/App.tsx";
 import { fixtureFetch, fixtureUrls } from "../../src/content/bundleFixtures.ts";
-import { createI18n } from "../../src/i18n/createI18n.ts";
+import { createTestI18n } from "../../src/testing/i18n.ts";
 import { search } from "../../src/state/recommendation.ts";
 import { SAVED_CONDITIONS_STORAGE_KEY } from "../../src/state/savedConditions.ts";
 import { axeViolations } from "../../src/testing/axe.ts";
@@ -38,7 +38,7 @@ afterEach(() => {
 const LOCALES = ["ja", "en", "es", "fr"] as const;
 
 async function open(locale: Locale) {
-  const i18n = createI18n(locale);
+  const i18n = createTestI18n(locale);
   render(
     <I18nextProvider i18n={i18n}>
       <App contentUrls={fixtureUrls} />
@@ -172,7 +172,7 @@ describe.each(LOCALES)("saved conditions (%s)", (locale) => {
         ...extra,
       });
     // Rendered without the `open` helper, which opens the section itself.
-    const i18n = createI18n(locale);
+    const i18n = createTestI18n(locale);
     const show = async () => {
       render(
         <I18nextProvider i18n={i18n}>

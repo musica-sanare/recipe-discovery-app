@@ -1325,6 +1325,21 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - Quality and timing: "Stage 14.5 quality".
 - Open: CI on the release commit after the owner pushes, the owner's merge into `main` (a deploy), and the post-deployment checks.
 
+### Release 11 and eleventh production deployment (2026-11-01)
+- Release commit: `04134e0` on `dev` (documentation only on top of `63bfab1`, which passed the checks of "Release 11 preparation"). CI passed on it (owner's report). The owner merged `dev` into `main` locally (`dc0f099`, 2026-11-01 04:55 UTC, a merge commit with the same tree as `04134e0`) and Workers Builds deployed it. The dashboard version was not reported.
+- Every served asset (`index-BPzwNy3w.js`, `index-DiFKrOrh.css`, the calculation bundle, and the four text bundles) is byte-identical to the local build of `63bfab1` (SHA-256).
+- Post-deployment checks (`curl` and Playwright, 2026-11-01): `/`, `/recipes/beef_potato_tomato_stew`, `/recipes/tortilla_espanola`, `/about`, `/recipes/no_such_recipe`, an unknown path, `/third-party-licenses.txt`, and `/_headers` (the app's HTML) return 200 with the CSP, `X-Content-Type-Options`, `Referrer-Policy`, and `Permissions-Policy`; assets have `Cache-Control: public, max-age=31536000, immutable`, documents `public, max-age=0, must-revalidate`.
+- The new design in production, in Spanish at 375 px in dark mode and in Japanese at 1280 px in light mode: the targets view and a search with the default targets show cards with four nutrient tiles and icons, and `/recipes/no_such_recipe` shows its illustration; no horizontal overflow, no request to another origin, no console messages, no CSP violation, no cookies, and nothing stored.
+- Rollback target: `a93902d` (release 10, version `d0574e40…`).
+- Not checked: real devices, Windows high contrast mode on a real machine, and the dashboard rollback (ADR-035 要確認).
+
+### Phase 14 acceptance (2026-11-01)
+- Decisions recorded: ADR-037 (revising ADR-030 D3); UI_DESIGN §3 and §5 and ARCHITECTURE §2 and §9 updated with their translations.
+- Every view uses the new tokens, components, and original icons and illustrations; the owner reviewed screenshots at 375 px and desktop width in light and dark mode through Stages 14.1 to 14.4.
+- No calculated value, ranking, or stored data changed: the engine, determinism, locale invariance, and saved-conditions tests pass unchanged. Accessibility checks pass in four locales (axe-core in jsdom and in real browsers with color contrast), the contrast test covers every token pair, forced colors and reduced motion behave as designed, and no view overflows at 320 or 375 px.
+- `npm run check`, `npm run test:e2e`, and CI pass; release 11 was deployed by the owner's merge into `main`.
+- Open after Phase 14: no logo in the header (not in the ADR-037 icon list); the detail view's nutrition stays a list rather than tiles; the `es` and `fr` group headings without a native reviewer (open questions 9 and 23).
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in
@@ -1661,7 +1676,7 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - Limits: storage is best effort. Private browsing, the user clearing site data, storage pressure, or Safari's seven-day deletion under tracking prevention can remove the record; the app then starts from the defaults.
 
 ## ADR-037: Visual identity "soft pop"
-- Status: **Accepted** (owner, 2026-11-01, Phase 14 Stage 14.1); revises ADR-030 D3. Applied in Stages 14.2 to 14.4.
+- Status: **Accepted** (owner, 2026-11-01, Phase 14 Stage 14.1); revises ADR-030 D3. Applied in Stages 14.2 to 14.4 and released in release 11 (2026-11-01, "Phase 14 acceptance").
 - Decisions:
   - **D1. Direction**: "soft pop": the warm, calm base of the "fresh market" mockup with pastel accents (mint, butter, sky, peach), a sun yellow for decoration, two-tone icons, colored tiles for the nutrition numbers, and soft shadows. Tokens, contrast values, type, and shapes: [UI_DESIGN.md](../en/UI_DESIGN.md) §5 "Visual identity".
   - **D2. Fonts**: system fonts only, as before; a type scale with weight 900 for `h1` and `tabular-nums` for numbers. No web font.

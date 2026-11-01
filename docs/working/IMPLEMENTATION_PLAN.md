@@ -189,7 +189,7 @@ Acceptance: with saving off, nothing new is stored and the app behaves as releas
 
 ## Phase 14 — UI/UX redesign
 
-Status: **In progress (2026-11-01)**: Stage 14.1 decisions recorded in ADR-037; prompt: `prompts/14-ui-redesign.md` (written after Phase 13, 2026-11-01). The owner chose Phase 14 as the next phase, before Phase 15. The current look is a minimal proof of concept. The owner wants a modern design that makes people want to cook and eat, with a healthy feel: cool but pop and playful, and suited to the app's purpose.
+Status: **Complete (2026-11-01)**: the "soft pop" redesign (ADR-037), released in release 11 by the owner's merge into `main`. Logs: [DECISIONS.md](DECISIONS.md) "Phase 14 start: UI/UX redesign" to "Phase 14 acceptance". Prompt: `prompts/14-ui-redesign.md` (written after Phase 13, 2026-11-01). The owner chose Phase 14 as the next phase, before Phase 15. The current look is a minimal proof of concept. The owner wants a modern design that makes people want to cook and eat, with a healthy feel: cool but pop and playful, and suited to the app's purpose.
 
 - Several design directions proposed by Claude for the owner to choose from, then design tokens (color, type, spacing) applied view by view with screenshots.
 - Icons and illustrations are drawn by Claude as original SVG; no third-party images or recipe photos (principle 11). Fonts only if self-hosted with a compatible license (the CSP allows `'self'` only).

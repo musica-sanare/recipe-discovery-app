@@ -2,7 +2,7 @@
 
 # Release Readiness — Recipe Discovery
 
-Status: **Release 11 prepared (2026-11-01)**: the "soft pop" redesign of Phase 14 (ADR-037) on top of release 10, checked on `63bfab1` (§1, §2); CI and the owner's merge into `main` are open. Release 10 was deployed at https://recipe-discovery.musica-sanare.workers.dev from commit `6288bd7`, merged into `main` as `a93902d` (version `d0574e40…`) and deployed by Workers Builds: the opt-in saved conditions of Phase 13 (ADR-036) on top of release 9. The post-deployment checks passed ([DECISIONS.md](DECISIONS.md) "Release 10 and tenth production deployment"). `f296aaf` (release 9) is the rollback target. Release 9 was deployed at https://recipe-discovery.musica-sanare.workers.dev from commit `9a5120c`, merged into `main` as `f296aaf` (version `9f5b65ef-b9f8-44d7-8f19-b55c79b2893d`) and deployed by Cloudflare Workers Builds (ADR-035): the free-text conditions of Phase 12, read by a deterministic parser in the browser (ADR-034, revised twice), on top of release 8. The post-deployment checks passed ([DECISIONS.md](DECISIONS.md) "Release 9 and ninth production deployment"). `36e5e3e` (version `4f323282…`, the first Workers Builds deployment, the same app as release 8) is the rollback target. Update this document for every release; release 1 is recorded in [DECISIONS.md](DECISIONS.md) ("Stage 5.1 release plan" to "Manual checks"), release 2 in "Stage 6.6" and "Second production deployment", release 3 in "Stage 7.4" and "Third production deployment", release 4 in "Stage 8.4" and "Fourth production deployment", release 5 in "Stage 9.4" and "Fifth production deployment", release 6 in "Release 6 preparation" and "Sixth production deployment", release 7 in "Release 7 preparation" and "Seventh production deployment", release 8 in "Release 8 preparation" and "Eighth production deployment", release 9 in "First Workers Builds deployment" and "Release 9 and ninth production deployment".
+Status: **Release 11 deployed (2026-11-01)** at https://recipe-discovery.musica-sanare.workers.dev from commit `04134e0`, merged into `main` as `dc0f099` and deployed by Workers Builds: the "soft pop" redesign of Phase 14 (ADR-037) on top of release 10. The post-deployment checks passed ([DECISIONS.md](DECISIONS.md) "Release 11 and eleventh production deployment"). `a93902d` (release 10) is the rollback target. Release 10 was deployed at https://recipe-discovery.musica-sanare.workers.dev from commit `6288bd7`, merged into `main` as `a93902d` (version `d0574e40…`) and deployed by Workers Builds: the opt-in saved conditions of Phase 13 (ADR-036) on top of release 9. The post-deployment checks passed ([DECISIONS.md](DECISIONS.md) "Release 10 and tenth production deployment"). `f296aaf` (release 9) is the rollback target. Release 9 was deployed at https://recipe-discovery.musica-sanare.workers.dev from commit `9a5120c`, merged into `main` as `f296aaf` (version `9f5b65ef-b9f8-44d7-8f19-b55c79b2893d`) and deployed by Cloudflare Workers Builds (ADR-035): the free-text conditions of Phase 12, read by a deterministic parser in the browser (ADR-034, revised twice), on top of release 8. The post-deployment checks passed ([DECISIONS.md](DECISIONS.md) "Release 9 and ninth production deployment"). `36e5e3e` (version `4f323282…`, the first Workers Builds deployment, the same app as release 8) is the rollback target. Update this document for every release; release 1 is recorded in [DECISIONS.md](DECISIONS.md) ("Stage 5.1 release plan" to "Manual checks"), release 2 in "Stage 6.6" and "Second production deployment", release 3 in "Stage 7.4" and "Third production deployment", release 4 in "Stage 8.4" and "Fourth production deployment", release 5 in "Stage 9.4" and "Fifth production deployment", release 6 in "Release 6 preparation" and "Sixth production deployment", release 7 in "Release 7 preparation" and "Seventh production deployment", release 8 in "Release 8 preparation" and "Eighth production deployment", release 9 in "First Workers Builds deployment" and "Release 9 and ninth production deployment".
 
 Commit hashes in this document are those after the history rewrite of 2026-10-25; older records in [DECISIONS.md](DECISIONS.md) use the earlier hashes ("History rewrite (2026-10-25)").
 
@@ -17,8 +17,8 @@ Commit hashes in this document are those after the history rewrite of 2026-10-25
 | 7 (Phase 10) | `cb086c1` | `2026-10-31.7` | Deployed 2026-10-31 06:09 UTC (version `fa07a331…`); replaced by release 8 |
 | 8 (Phase 11) | `2aa0c7b` | `2026-10-31.8` | Deployed 2026-10-31 11:08 UTC (version `54ef9ecc…`); replaced by `36e5e3e` (same app, first Workers Builds deployment, version `4f323282…`) |
 | 9 (Phase 12) | `9a5120c` (merged as `f296aaf`) | `2026-10-31.8` | Deployed by Workers Builds 2026-10-31 about 23:32 UTC (version `9f5b65ef…`); replaced by release 10 |
-| 10 (Phase 13) | `6288bd7` (merged as `a93902d`) | `2026-10-31.8` | Deployed by Workers Builds 2026-11-01 (version `d0574e40…`) |
-| 11 (Phase 14) | the release 11 preparation commit (checked on `63bfab1`) | `2026-10-31.8` | Prepared; waiting for CI and the owner's merge |
+| 10 (Phase 13) | `6288bd7` (merged as `a93902d`) | `2026-10-31.8` | Deployed by Workers Builds 2026-11-01 (version `d0574e40…`); replaced by release 11 |
+| 11 (Phase 14) | `04134e0` (merged as `dc0f099`) | `2026-10-31.8` | Deployed by Workers Builds 2026-11-01 after the merge at 04:55 UTC |
 
 ## 0. What changes in release 11
 
@@ -58,7 +58,7 @@ Release 8 was checked on `c2d56d0` on 2026-10-31 (10:41–10:45 UTC): `npm ci`, 
 
 | Item | Status | What is needed |
 |---|---|---|
-| CI on the release commit (release 11) | **Open** | The owner pushes `dev`; both jobs must pass on the release 11 preparation commit |
+| CI on the release commit (release 11) | **Passed** | Both jobs passed on `04134e0` (owner's report, 2026-11-01) |
 | Secret scan of the release history (release 11) | **Passed** on `63bfab1` | gitleaks 8.30.1: `gitleaks git --log-opts=--all --redact` (173 commits, 4.57 MB) and `gitleaks dir --redact` on the tracked files (`git archive HEAD`, 3.44 MB): no leaks (2026-11-01 04:51 UTC). The only `.env*` path in the history is the removed `.env.example` of Phase 12 with placeholders |
 | CI on the release commit (release 10) | **Passed** | Both jobs passed on `6288bd7` (owner's report, 2026-11-01) |
 | Secret scan of the release history (release 10) | **Passed** on `a5e9230` | gitleaks 8.30.1: `gitleaks git --log-opts=--all --redact` (163 commits, 4.46 MB) and `gitleaks dir --redact` on the tracked files (`git archive HEAD`, 3.37 MB): no leaks (2026-11-01 01:45 UTC). The only `.env*` path in the history is the removed `.env.example` of Phase 12 with placeholders |
@@ -111,9 +111,9 @@ Release 10 (optional, after deployment): on an iPhone with Safari, turn saving o
 
 Release 11 (optional, after deployment): on an iPhone in light and dark mode, the targets view (the search bar at the bottom while scrolling), a candidate card's tiles, the detail page, and the shopping list; on Windows, high contrast mode if available.
 
-## 5. Deployment (release 11, prepared on 2026-11-01)
+## 5. Deployment (release 11, deployed on 2026-11-01)
 
-Release 11: after CI passes on the release 11 preparation commit, the owner merges `dev` into `main` with a merge commit; the push of `main` deploys. Claude then runs the post-deployment checks of [DEPLOYMENT.md](../en/DEPLOYMENT.md) §3 and looks at the new design in production. Rollback: revert on `dev` and merge again, or for urgency the dashboard rollback to `a93902d` (release 10, version `d0574e40…`). Data and privacy: unchanged.
+Release 11: the owner merged `dev` (`04134e0`) into `main` (`dc0f099`) after CI passed, and Workers Builds deployed it. Claude ran the post-deployment checks of [DEPLOYMENT.md](../en/DEPLOYMENT.md) §3 and looked at the new design in production. Rollback: revert on `dev` and merge again, or for urgency the dashboard rollback to `a93902d` (release 10, version `d0574e40…`). Data and privacy: unchanged.
 
 Release 10: the owner merged `dev` (`6288bd7`) into `main` (`a93902d`), and Workers Builds deployed it (version `d0574e40…`). Claude ran the post-deployment checks of [DEPLOYMENT.md](../en/DEPLOYMENT.md) §3 and the saved-conditions flow in production. Rollback: revert on `dev` and merge again, or for urgency the dashboard rollback to `f296aaf` (release 9, version `9f5b65ef…`). Data and privacy: saved conditions stay in the browser by the user's choice (ADR-036); nothing is sent.
 
@@ -186,3 +186,6 @@ Since ADR-035, a release is the owner's merge into `main`; Workers Builds builds
 | Production deployment approved | 10 | 2026-11-01 | Owner (merged `dev` into `main`, `a93902d`) |
 | Deployed and checked | 10 | 2026-11-01 | Workers Builds; checked by Claude ([DECISIONS.md](DECISIONS.md) "Release 10 and tenth production deployment") |
 | Acceptance criteria checked | 11 | 2026-11-01 | Claude (§1) |
+| Release blockers resolved | 11 | 2026-11-01 | Owner (CI passed) and Claude (secret scan; `minimatch` unchanged) |
+| Production deployment approved | 11 | 2026-11-01 | Owner (merged `dev` into `main`, `dc0f099`) |
+| Deployed and checked | 11 | 2026-11-01 | Workers Builds; checked by Claude ([DECISIONS.md](DECISIONS.md) "Release 11 and eleventh production deployment") |

@@ -1235,6 +1235,13 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - *Verified* (MDN, read 2026-11-01): "Storage quotas and eviction criteria" (last modified 2026-01-05): Web Storage allows up to 5 MiB of local storage per origin, and a write beyond the quota throws `QuotaExceededError`; data is best effort and is evicted with all of the origin's data under storage pressure; Safari with cross-site tracking prevention deletes script-written data of an origin without user interaction in the last seven days of browser use; private browsing usually deletes data when the mode ends. "Window: localStorage" (last modified 2026-10-12): data has no expiration time, is scoped to the origin and protocol, and stores strings only; accessing `localStorage` throws `SecurityError` when the user prevents the page from persisting data.
 - Consent (要確認): the EU ePrivacy Directive Article 5(3) exempts storage that is strictly necessary for a service the user explicitly requested, and summaries of the Article 29 Working Party Opinion 04/2012 (WP194) say user-interface customization storage is likely to be exempt (Future of Privacy Forum and Hunton summaries, read 2026-11-01; the full opinion was not read). The switch is the user's explicit request, the record has one purpose, and nothing is sent, so no consent banner is planned. Japan's external transmission rules of the Telecommunications Business Act concern sending user information to other parties; nothing is sent, so they are taken not to apply (not checked against the primary source). Neither point has had a legal review.
 
+### Stage 13.2 storage module (2026-11-01)
+- `src/state/savedConditions.ts` reads, writes, and deletes the ADR-036 record under `recipe-discovery.conditions`, with a `zod/mini` schema and every storage access wrapped; no new dependency. It is not used by the UI yet, so the app still writes nothing new.
+- Cuisines, equipment, and allergens are stored as strings and checked against the current lists on restore, so that a value removed by a later release is dropped with a notice instead of deleting the record. Strings are limited to 64 characters and lists to 100 items.
+- With version 1 as the first version, a record with a lower version fails the schema and is deleted; a higher version is reported as unsupported and kept (ADR-036 D5).
+- A group key is restored only while the ingredient search offers that group (more than one food), so restored choices match what the user can pick.
+- `npm run check`: 60 test files, 856 tests (18 new), content validation, and the production build pass.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in

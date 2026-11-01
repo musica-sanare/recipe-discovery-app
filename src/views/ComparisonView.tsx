@@ -92,7 +92,7 @@ export function ComparisonView({ search }: { readonly search: SearchState }) {
       <p id="comparison-caption" className="-mb-2 text-sm text-muted">
         {t("comparison.caption")}
       </p>
-      <div role="region" aria-labelledby="comparison-caption" tabIndex={0} className="overflow-x-auto rounded border border-border">
+      <div role="region" aria-labelledby="comparison-caption" tabIndex={0} className="panel overflow-x-auto">
         <table className="w-full min-w-[32rem] border-collapse">
           <caption className="sr-only">{t("comparison.caption")}</caption>
           <thead>
@@ -133,7 +133,7 @@ export function ComparisonView({ search }: { readonly search: SearchState }) {
               onClick={() => {
                 dispatch({ type: "toggledCompare", recipe: entry.recipe });
               }}
-              className="rounded border border-border px-3 py-2 text-sm"
+              className="btn-secondary text-sm"
             >
               {t("comparison.remove", { recipe: name })}
             </button>

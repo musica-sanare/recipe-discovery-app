@@ -15,6 +15,7 @@ import { exclusionText, listText, minutesText, relaxationText } from "./candidat
 import { defaultDraft, draftToRequest, relaxedDraft } from "./targets/draft";
 import { contradictionMessage } from "./targets/errors";
 import { useTextContext } from "./useTextContext";
+import { Icon, Illustration } from "../components/icons/Icon";
 
 /** Candidates, close alternatives, re-suggestion, and the exceptional states (docs/en/UI_DESIGN.md §3.2, ADR-030 D5, D7). */
 export function CandidatesView({ search: current }: { readonly search: SearchState }) {
@@ -146,13 +147,13 @@ export function CandidatesView({ search: current }: { readonly search: SearchSta
 
       {warnings.map((contradiction) => (
         <p key={contradiction.severity} className="m-0 notice-warning">
-          <span aria-hidden="true">⚠ </span>
+          <Icon name="warning" size={18} className="mr-1 inline align-[-3px]" />
           {contradictionMessage(contradiction, t, locale)}
         </p>
       ))}
 
       {current.notice === "all_shown" && (
-        <div role="status" className="flex flex-col items-start gap-2 rounded border border-border bg-surface-muted p-3">
+        <div role="status" className="flex flex-col items-start gap-2 rounded-2xl bg-sky p-4">
           <p className="m-0">{current.heldAlternatives.length > 0 || selection.candidates.length === 0 ? t("candidates.allShown") : t("candidates.allShownRepeat")}</p>
           {current.heldAlternatives.length > 0 && (
             <button
@@ -173,15 +174,16 @@ export function CandidatesView({ search: current }: { readonly search: SearchSta
       )}
 
       {candidates.length === 0 ? (
-        <section aria-labelledby="none-heading" className="flex flex-col gap-2">
-          <h2 id="none-heading" className="m-0 text-xl font-bold">
+        <section aria-labelledby="none-heading" className="panel flex flex-col items-center gap-2 p-6 text-center">
+          <Illustration name="no_results" className="w-48" />
+          <h2 id="none-heading" className="m-0 text-xl font-extrabold">
             {t("candidates.noneHeading")}
           </h2>
           <p className="m-0">{t("candidates.noneMet")}</p>
         </section>
       ) : (
         <>
-          <h2 id="candidates-heading" className="m-0 text-xl font-bold">
+          <h2 id="candidates-heading" className="m-0 text-xl font-extrabold">
             {t("candidates.listHeading", { label: t("candidates.listLabel"), count: t("candidates.count", { count: candidates.length }) })}
           </h2>
           <ol aria-labelledby="candidates-heading" className="m-0 grid list-none gap-4 p-0 md:grid-cols-2 xl:grid-cols-3">
@@ -190,7 +192,7 @@ export function CandidatesView({ search: current }: { readonly search: SearchSta
           <button type="button" onClick={onDifferentType} className="self-start btn-outline">
             {t("candidates.differentType")}
           </button>
-          <div className="sticky bottom-0 z-10 -mx-4 border-t border-border bg-surface">
+          <div className="sticky bottom-0 z-10 -mx-4 border-t border-surface-muted bg-bg">
             <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-3 px-4 py-3">
               <button
                 type="button"
@@ -210,7 +212,7 @@ export function CandidatesView({ search: current }: { readonly search: SearchSta
 
       {showHeld && current.heldAlternatives.length > 0 && (
         <section aria-labelledby="held-heading" className="flex flex-col gap-2">
-          <h2 id="held-heading" className="m-0 text-xl font-bold">
+          <h2 id="held-heading" className="m-0 text-xl font-extrabold">
             {t("candidates.alternativesHeading")}
           </h2>
           <ol className="m-0 grid list-none gap-4 p-0 md:grid-cols-2 xl:grid-cols-3">{current.heldAlternatives.map((entry) => card(entry, "alternative"))}</ol>
@@ -218,8 +220,8 @@ export function CandidatesView({ search: current }: { readonly search: SearchSta
       )}
 
       {alternatives.length > 0 && (
-        <section aria-labelledby="alternatives-heading" className="flex flex-col gap-2 border-t-4 border-border pt-4">
-          <h2 id="alternatives-heading" className="m-0 text-xl font-bold">
+        <section aria-labelledby="alternatives-heading" className="flex flex-col gap-2 border-t-2 border-surface-muted pt-4">
+          <h2 id="alternatives-heading" className="m-0 text-xl font-extrabold">
             {t("candidates.alternativesHeading")}
           </h2>
           <p className="m-0 text-sm text-muted">{t("candidates.alternativesHint")}</p>
@@ -229,14 +231,14 @@ export function CandidatesView({ search: current }: { readonly search: SearchSta
 
       {fewer && selection.relaxations.length > 0 && (
         <section aria-labelledby="relax-heading" className="flex flex-col gap-2">
-          <h2 id="relax-heading" className="m-0 text-xl font-bold">
+          <h2 id="relax-heading" className="m-0 text-xl font-extrabold">
             {t("candidates.relaxHeading")}
           </h2>
           <ul className="m-0 flex list-none flex-col gap-2 p-0">
             {selection.relaxations.map((relaxation) => {
               const texts = relaxationText(relaxation, context);
               return (
-                <li key={JSON.stringify(relaxation)} className="flex flex-wrap items-center justify-between gap-2 rounded border border-border p-3">
+                <li key={JSON.stringify(relaxation)} className="panel flex flex-wrap items-center justify-between gap-2 p-4">
                   <span>{t("candidates.relaxItem", { action: texts.action, gains: texts.gains })}</span>
                   <button
                     type="button"
@@ -266,7 +268,7 @@ export function CandidatesView({ search: current }: { readonly search: SearchSta
 
       {fewer && exclusions.length > 0 && (
         <section aria-labelledby="exclusions-heading" className="flex flex-col gap-2">
-          <h2 id="exclusions-heading" className="m-0 text-xl font-bold">
+          <h2 id="exclusions-heading" className="m-0 text-xl font-extrabold">
             {t("candidates.exclusionsHeading")}
           </h2>
           <p className="m-0 text-sm text-muted">{t("candidates.exclusionsHint")}</p>

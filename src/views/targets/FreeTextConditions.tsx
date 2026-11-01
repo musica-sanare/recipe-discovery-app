@@ -62,9 +62,9 @@ export function FreeTextConditions({ locale, onApply, onShowAllergens }: FreeTex
   };
 
   return (
-    <details className="rounded border border-border">
-      <summary className="cursor-pointer p-3 font-medium">{t("freeText.summary")}</summary>
-      <div className="flex flex-col gap-2 p-3">
+    <details className="rounded-3xl border border-transparent bg-sky">
+      <summary className="cursor-pointer rounded-3xl p-4 font-bold">{t("freeText.summary")}</summary>
+      <div className="flex flex-col gap-2 p-4 pt-0">
         <label htmlFor={id} className="font-medium">
           {t("freeText.label")}
         </label>

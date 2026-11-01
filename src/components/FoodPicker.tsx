@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import type { Locale } from "../../shared/locales";
 import type { FoodChoice } from "../views/targets/draft";
 import { searchFoods, type FoodOption } from "../views/targets/foodSearch";
+import { Icon } from "./icons/Icon";
 
 export interface FoodPickerProps {
   readonly id?: string;
@@ -167,7 +168,7 @@ export function FoodPicker({ id: givenId, label, hint, locale, options, chosen, 
         <div id={errorId} className="text-sm text-not-met">
           {errors.map((error) => (
             <p key={error} className="m-0">
-              <span aria-hidden="true">✕ </span>
+              <Icon name="status_not_met" size={16} className="mr-1 inline align-[-3px]" />
               {error}
             </p>
           ))}

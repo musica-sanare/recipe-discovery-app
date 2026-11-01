@@ -8,6 +8,7 @@ import { useAppState, useLoadedContent } from "../state/context";
 import { removedAction } from "./shopping/changes";
 import { amountText, entrySummary, itemName, shoppingText, uncheckedCount } from "./shopping/text";
 import { useTextContext } from "./useTextContext";
+import { Illustration } from "../components/icons/Icon";
 
 const SECTIONS: readonly ShoppingSection[] = ["ingredients", "pantry"];
 
@@ -52,8 +53,9 @@ export function ShoppingListView() {
 
   if (entries.length === 0 || !built.ok) {
     return (
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col items-start gap-4">
         <ViewHeading title={title} focusOnMount={navigated} />
+        <Illustration name="empty_list" className="w-48" />
         <p className="m-0">{t("shopping.empty")}</p>
         <p className="m-0">
           <ViewLink to={{ name: "targets" }} className="text-primary underline">
@@ -98,8 +100,8 @@ export function ShoppingListView() {
       </div>
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
         <div className="flex flex-col gap-4">
-          <section aria-labelledby="shopping-recipes-heading" className="flex flex-col gap-3">
-            <h2 id="shopping-recipes-heading" className="m-0 text-xl font-bold">
+          <section aria-labelledby="shopping-recipes-heading" className="panel flex flex-col gap-3 p-4">
+            <h2 id="shopping-recipes-heading" className="m-0 text-xl font-extrabold">
               {t("shopping.fromRecipes", { count: entries.length })}
             </h2>
             <ul className="m-0 flex list-none flex-col gap-3 p-0">
@@ -214,8 +216,8 @@ export function ShoppingListView() {
             const items = list.items.filter((item) => item.section === section);
             if (items.length === 0) return null;
             return (
-              <section key={section} aria-labelledby={`shopping-${section}-heading`} className="flex flex-col gap-2">
-                <h2 id={`shopping-${section}-heading`} className="m-0 text-xl font-bold">
+              <section key={section} aria-labelledby={`shopping-${section}-heading`} className="panel flex flex-col gap-2 p-4 print:p-0">
+                <h2 id={`shopping-${section}-heading`} className="m-0 text-xl font-extrabold">
                   {t(`shopping.sections.${section}`)}
                 </h2>
                 <ul className="m-0 flex list-none flex-col gap-2 p-0">

@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { Icon } from "../../components/icons/Icon";
 import { useAppState } from "../../state/context";
 import { deleteSavedConditions, saveDraft } from "../../state/savedConditions";
 import type { TargetsDraft } from "./draft";
@@ -18,8 +19,11 @@ export function SaveConditions({ draft }: { readonly draft: TargetsDraft }) {
   };
 
   return (
-    <fieldset className="flex flex-col gap-2 rounded border border-border p-3">
-      <legend className="px-1 font-medium">{t("saved.legend")}</legend>
+    <fieldset className="flex flex-col gap-2 rounded-3xl border border-transparent bg-butter p-4">
+      <legend className="float-left mb-1 flex w-full items-center gap-2 font-bold">
+        <Icon name="save" size={22} />
+        {t("saved.legend")}
+      </legend>
       <label className="flex min-h-10 items-center gap-2">
         <input
           type="checkbox"

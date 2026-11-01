@@ -8,6 +8,15 @@ import { effortKey } from "../../i18n/engineCodes";
 import { ViewLink } from "../../navigation/ViewLink";
 import { adjustmentItems, allergenNotices, cardReasons, gapReasons, missedBound, targetLines } from "./display";
 import { boundText, listText, minutesText, nutrientText, preciseNutrientText, rangeText, reasonText, type TextContext } from "./texts";
+import { Icon } from "../../components/icons/Icon";
+
+/** Each nutrient keeps one pastel; the label, not the color, tells them apart (ADR-037 D1). */
+const TILE: Readonly<Record<"kcal" | "protein" | "fat" | "carbohydrate", string>> = {
+  kcal: "bg-butter",
+  protein: "bg-mint",
+  fat: "bg-peach",
+  carbohydrate: "bg-sky",
+};
 
 export interface RecipeCardProps {
   readonly entry: Recommended;
@@ -51,26 +60,34 @@ export function RecipeCard({ entry, recipe, calc, text, targets, context, mode, 
   });
 
   return (
-    <article aria-labelledby={headingId} className="flex flex-col gap-3 rounded border border-border p-4">
-      <h3 id={headingId} tabIndex={-1} className="m-0 text-lg font-bold leading-snug">
-        <ViewLink to={{ name: "detail", recipe: entry.recipe }} className="text-text underline decoration-1 underline-offset-4">
-          {name}
-        </ViewLink>
-      </h3>
-      <p className="m-0 text-sm text-muted">
-        {t("card.minutesEffort", { minutes: minutesText(t, locale, entry.minutes), effort: t(`effort.${effortKey(entry.effort)}`), cuisine: t(`cuisine.${entry.attributes.cuisine}`) })}
-      </p>
+    <article aria-labelledby={headingId} className="panel flex flex-col gap-3 p-4">
+      <div className="flex items-start gap-3">
+        <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-surface-muted">
+          <Icon name={entry.attributes.proteinGroup} size={26} />
+        </span>
+        <div className="flex flex-col gap-1">
+          <h3 id={headingId} tabIndex={-1} className="m-0 text-lg font-extrabold leading-snug">
+            <ViewLink to={{ name: "detail", recipe: entry.recipe }} className="text-text underline decoration-1 underline-offset-4">
+              {name}
+            </ViewLink>
+          </h3>
+          <p className="m-0 flex items-start gap-1 text-sm text-muted">
+            <Icon name="time" size={18} className="mt-0.5" />
+            {t("card.minutesEffort", { minutes: minutesText(t, locale, entry.minutes), effort: t(`effort.${effortKey(entry.effort)}`), cuisine: t(`cuisine.${entry.attributes.cuisine}`) })}
+          </p>
+        </div>
+      </div>
       <p className="m-0">
         <StatusMarker status={fit.tier} label={t(`tier.${fit.tier}`)} />
       </p>
       {adjustments.length > 0 && (
         <p className="m-0 text-sm">
-          <span className="mr-2 rounded bg-surface-muted px-2 py-0.5 font-medium">{t("card.adjusted")}</span>
+          <span className="chip mr-2 font-semibold">{t("card.adjusted")}</span>
           {listText(t, adjustmentText)}
         </p>
       )}
 
-      <dl aria-label={t("card.nutrientsLabel")} className="m-0 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1">
+      <dl aria-label={t("card.nutrientsLabel")} className="m-0 grid grid-cols-2 gap-2">
         {targetLines(entry).map(({ target, nutrient, fit: line }) => {
           const value = nutrition.perServing[nutrient];
           const range = nutrition.ranges[nutrient];
@@ -78,17 +95,17 @@ export function RecipeCard({ entry, recipe, calc, text, targets, context, mode, 
           const note = bound === undefined || value === null ? undefined : boundaryNote(nutrient, value, bound);
           const valueText = note === undefined || value === null ? nutrientText(t, locale, nutrient, value) : preciseNutrientText(t, locale, nutrient, value);
           return (
-            <div key={target} className="contents">
-              <dt className="font-medium">{t(`target.${target}`)}</dt>
-              <dd className="m-0 flex flex-wrap items-baseline gap-x-2">
-                <span>{valueText}</span>
-                {range?.shown === true && <span className="text-sm text-muted">{rangeText(t, locale, nutrient, range.low, range.high)}</span>}
+            <div key={target} className={`flex flex-col gap-0.5 rounded-2xl p-2.5 ${TILE[target]}`}>
+              <dt className="text-sm text-muted">{t(`target.${target}`)}</dt>
+              <dd className="m-0 flex flex-col items-start gap-0.5 text-sm">
+                <span className="text-xl font-extrabold tabular-nums leading-tight">{valueText}</span>
+                {range?.shown === true && <span className="text-xs text-muted">{rangeText(t, locale, nutrient, range.low, range.high)}</span>}
                 {line === undefined ? (
-                  <span className="text-sm text-muted">{t("status.noTarget")}</span>
+                  <span className="text-xs text-muted">{t("status.noTarget")}</span>
                 ) : (
                   <>
                     <StatusMarker status={line.status} label={note === undefined ? undefined : t(`status.${note}`)} />
-                    <span className="text-sm text-muted">{boundText(t, locale, targets, line)}</span>
+                    <span className="text-xs text-muted">{boundText(t, locale, targets, line)}</span>
                   </>
                 )}
               </dd>
@@ -99,7 +116,7 @@ export function RecipeCard({ entry, recipe, calc, text, targets, context, mode, 
 
       {reasons.length > 0 &&
         (mode === "candidate" ? (
-          <p className="m-0">{listText(t, reasons)}</p>
+          <p className="m-0 rounded-2xl bg-surface-muted px-3 py-2 text-sm">{listText(t, reasons)}</p>
         ) : (
           <div>
             <p className="m-0 text-sm font-medium">{t("card.gapsLabel")}</p>
@@ -115,13 +132,13 @@ export function RecipeCard({ entry, recipe, calc, text, targets, context, mode, 
       <div className="flex flex-wrap gap-2 text-sm">
         {nutrition.class !== "exact" && (
           <span className="rounded border border-border px-2 py-0.5">
-            <span aria-hidden="true">◐ </span>
+            <Icon name="info" size={18} className="mr-1 inline align-[-3px]" />
             {t(`card.uncertainty.${nutrition.class}`)}
           </span>
         )}
         {allergens.length > 0 && (
           <span className="rounded border border-warning px-2 py-0.5">
-            <span aria-hidden="true">⚠ </span>
+            <Icon name="warning" size={18} className="mr-1 inline align-[-3px]" />
             {t("card.allergens", {
               list: listText(
                 t,
@@ -132,7 +149,7 @@ export function RecipeCard({ entry, recipe, calc, text, targets, context, mode, 
         )}
         {unknownFoods.length > 0 && (
           <span className="rounded border border-warning px-2 py-0.5">
-            <span aria-hidden="true">⚠ </span>
+            <Icon name="warning" size={18} className="mr-1 inline align-[-3px]" />
             {t("card.allergenUnknown")}
           </span>
         )}
@@ -151,7 +168,7 @@ export function RecipeCard({ entry, recipe, calc, text, targets, context, mode, 
           </label>
         )}
         {onExclude !== undefined && (
-          <button type="button" onClick={onExclude} className="rounded border border-border px-3 py-2">
+          <button type="button" onClick={onExclude} className="btn-secondary">
             <span aria-hidden="true">{t("candidates.excludeShort")}</span>
             <span className="sr-only">{t("candidates.exclude", { recipe: name })}</span>
           </button>

@@ -21,7 +21,7 @@ export function ViewHeading({ title, focusOnMount, children }: { readonly title:
   }, [focusOnMount]);
 
   return (
-    <h1 id="view-heading" ref={heading} tabIndex={-1} className="text-2xl font-bold leading-snug">
+    <h1 id="view-heading" ref={heading} tabIndex={-1} className="m-0 text-3xl font-black leading-snug">
       {children ?? title}
     </h1>
   );

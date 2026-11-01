@@ -6,6 +6,7 @@ import { ViewLink } from "../../navigation/ViewLink";
 import { useAppState, useLoadedContent } from "../../state/context";
 import { removedAction, sameState, savedAction } from "./changes";
 import { servingsText } from "./text";
+import { Icon } from "../../components/icons/Icon";
 
 /**
  * The detail view's shopping list block (docs/en/UI_DESIGN.md §3.4, ADR-032 D2): adds the
@@ -26,8 +27,9 @@ export function DetailShoppingBlock({ recipe, recipeState }: { readonly recipe: 
   };
 
   return (
-    <section aria-labelledby="shopping-heading" className="flex flex-col gap-3 print:hidden">
-      <h2 id="shopping-heading" className="m-0 text-xl font-bold">
+    <section aria-labelledby="shopping-heading" className="panel flex flex-col gap-3 p-4 print:hidden">
+      <h2 id="shopping-heading" className="m-0 flex items-center gap-2 text-xl font-extrabold">
+        <Icon name="shopping" size={26} />
         {t("shopping.detailHeading")}
       </h2>
       {entry === undefined ? (

@@ -158,6 +158,42 @@ describe.each(LOCALES)("saved conditions (%s)", (locale) => {
     expect(await axeViolations(document.body)).toEqual([]);
   });
 
+  it("opens More conditions only when restored values are inside it (ADR-037 D6)", async () => {
+    const record = (extra: object) =>
+      JSON.stringify({
+        version: 1,
+        preset: "maintain",
+        numbers: { kcalMin: "550", kcalMax: "750", proteinMin: "30", fatMax: "20", carbohydrateMin: "", carbohydrateMax: "", maxMinutes: "30", servings: "1" },
+        cuisines: [],
+        equipmentMode: "no_limit",
+        equipment: [],
+        required: [],
+        excluded: [],
+        ...extra,
+      });
+    // Rendered without the `open` helper, which opens the section itself.
+    const i18n = createI18n(locale);
+    const show = async () => {
+      render(
+        <I18nextProvider i18n={i18n}>
+          <App contentUrls={fixtureUrls} />
+        </I18nextProvider>,
+      );
+      await screen.findByRole("heading", { level: 1 });
+      return document.querySelector<HTMLDetailsElement>("#targets-advanced")?.open;
+    };
+    localStorage.setItem(SAVED_CONDITIONS_STORAGE_KEY, record({}));
+    expect(await show()).toBe(false);
+
+    cleanup();
+    localStorage.setItem(SAVED_CONDITIONS_STORAGE_KEY, record({ excluded: ["potato"] }));
+    expect(await show()).toBe(true);
+    const t = i18n.t.bind(i18n);
+    for (const group of ["targets", "cooking", "foods", "allergens"]) {
+      expect(screen.getByRole("heading", { level: 2, name: t(`targets.groups.${group}`) })).toBeDefined();
+    }
+  });
+
   it("deletes an invalid record silently", async () => {
     localStorage.setItem(SAVED_CONDITIONS_STORAGE_KEY, "{broken");
     const t = await open(locale);

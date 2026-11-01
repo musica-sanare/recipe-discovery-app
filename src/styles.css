@@ -166,6 +166,10 @@
   background-color: var(--color-surface);
   box-shadow: var(--shadow-soft);
   border: 1px solid transparent;
+
+  @media print {
+    box-shadow: none;
+  }
 }
 
 @utility notice-warning {

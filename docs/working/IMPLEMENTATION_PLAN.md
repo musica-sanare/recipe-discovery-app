@@ -180,7 +180,7 @@ Acceptance: the decisions recorded; the feature optional and confirmed by the us
 
 ## Phase 13 — Saved targets and conditions
 
-Status: **In progress (2026-11-01)**: Stage 13.1 decisions recorded in ADR-036. Prompt: `prompts/13-saved-conditions.md`. The owner chose opt-in saving of targets and conditions in the browser as the next phase, followed by Phases 14 and 15.
+Status: **Complete (2026-11-01)**: opt-in saved targets and conditions (ADR-036), released in release 10 by the owner's merge into `main`. Logs: [DECISIONS.md](DECISIONS.md) "Phase 13 start: saved conditions" to "Phase 13 acceptance". Prompt: `prompts/13-saved-conditions.md`. The owner chose opt-in saving of targets and conditions in the browser as the next phase, followed by Phases 14 and 15.
 
 - Decisions before implementation: what is saved (including whether allergens are), the mechanism (`localStorage` recommended), the opt-in switch and delete action, when to save and restore, validation and versioning of the record, and the privacy docs (revisions of ADR-030 D9 and ADR-015, [SPEC.md](../en/SPEC.md) §3 and §13).
 - A storage module with a runtime schema, failure handling, and tests; the UI in four locales with E2E; release 10.

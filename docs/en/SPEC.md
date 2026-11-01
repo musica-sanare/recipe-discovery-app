@@ -46,7 +46,7 @@ Out of target: people following medically prescribed diets (for example protein 
 ### Added after the MVP
 - Shopping list (Phase 8, ADR-032): section 18.
 - Optional free-text conditions (Phase 12, ADR-034; released in release 9): the user describes a request in their own words, and the app reads conditions from the text with deterministic rules and shows them to apply or discard. No AI is used. Targets, allergens, and every calculation stay deterministic, and the app works fully without it.
-- Saved targets and conditions (Phase 13, ADR-036; planned, not released): the user can turn on saving in the targets view. The form is then kept in this browser on this device and restored into the form on the next visit, without starting a search. Allergen choices are saved only with a separate checkbox. Saving is off by default, and turning it off or the delete action removes what was saved.
+- Saved targets and conditions (Phase 13, ADR-036; released in release 10): the user can turn on saving in the targets view. The form is then kept in this browser on this device and restored into the form on the next visit, without starting a search. Allergen choices are saved only with a separate checkbox. Saving is off by default, and turning it off or the delete action removes what was saved.
 
 ### Out of scope for MVP
 - User accounts, server-side storage, daily or weekly meal planning.

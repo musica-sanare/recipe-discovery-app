@@ -1257,6 +1257,22 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - Storage after each flow on the production build: only the locale key with saving off; one record with saving on (allergens only with their checkbox); the locale key alone after turning saving off. Details in [RELEASE_READINESS.md](RELEASE_READINESS.md) §1.
 - Open: CI on the release commit after the owner pushes, the owner's merge into `main` (a deploy), and the post-deployment checks.
 
+### Release 10 and tenth production deployment (2026-11-01)
+- Release commit: `6288bd7` on `dev` (documentation only on top of `a5e9230`, which passed the checks of "Release 10 preparation"). The owner pushed `dev` and merged it into `main` locally (`a93902d`, 2026-11-01 01:49 UTC, a merge commit with the same tree as `6288bd7`). Workers Builds deployed it; the owner reports version `d0574e40…` in the dashboard. CI on `6288bd7` was not reported (要確認).
+- The served `index-CgzjGBWD.js`, `index-DkDAl0lf.css`, `calc-oesgdhVr.json`, and `text-fr-Cq5Dty5G.json` are byte-identical to the local build of `a5e9230` (SHA-256).
+- Post-deployment checks (`curl` and the built-in browser, 2026-11-01): `/`, `/recipes/beef_potato_tomato_stew`, `/recipes/tortilla_espanola`, `/about`, `/recipes/no_such_recipe`, an unknown path, `/third-party-licenses.txt`, and `/_headers` (the app's HTML) return 200 with the CSP, `X-Content-Type-Options`, `Referrer-Policy`, and `Permissions-Policy`; assets have `Cache-Control: public, max-age=31536000, immutable`, documents `public, max-age=0, must-revalidate`. `/recipes/no_such_recipe` shows the not-found state; the about page shows the new privacy text.
+- Saved conditions in production at 375 px in Spanish: with the time limit at 25 minutes, turning saving on and searching wrote one `recipe-discovery.conditions` record without allergens; after a reload, the form was restored with the restored notice and the shorter reload notice, without a search; a search gave the same five cards as before the reload; turning saving off and reloading left only the locale key and the default form. No cookies, no requests to another origin, no console messages, no page overflow.
+- Rollback target: `f296aaf` (release 9, version `9f5b65ef…`).
+- Not checked: real devices, Safari's seven-day deletion, and the dashboard rollback (ADR-035 要確認).
+
+### Phase 13 acceptance (2026-11-01)
+- Decisions recorded: ADR-036, with revisions of ADR-015 and ADR-030 D9; SPEC §3 and §13, UI_DESIGN, and ARCHITECTURE updated with their translations.
+- With saving off, nothing new is stored and the app behaves as release 9 (`test/ui/savedConditions.test.tsx`, `e2e/savedConditions.spec.ts`, production check); with saving on, the form is restored after a reload and gives the same results (unit, UI, and E2E tests; production check).
+- Storage failures and invalid, foreign, older, or newer records never break the app (unit and UI tests).
+- The UI is complete in four locales and passes axe-core in jsdom and in real browsers.
+- `npm run check` and `npm run test:e2e` pass; release 10 was deployed by the owner's merge into `main`. CI on the release commit is 要確認 until the owner reports it.
+- Open after Phase 13: consent for user-enabled storage without legal review (ADR-036 D7, 要確認); `es` and `fr` texts without a native reviewer (open questions 9 and 23); restored values inside "More conditions" stay collapsed; `i18next` 26.6.0 waits for a dedicated update under ADR-016.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in
@@ -1578,7 +1594,7 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - Risks and 要確認: the name check accepts a config passed with `--config` while the root directory has none (confirmed by the first build). Still open: what happens on Workers Free when the build minutes run out; whether a dashboard rollback restores static assets; the Wrangler dependency tree is not locked (installed fresh per build without install scripts); whether the automatically created token can be narrowed (it has no billing permission in the documented list).
 
 ## ADR-036: Opt-in saved targets and conditions
-- Status: **Accepted** (owner, 2026-11-01, Phase 13 Stage 13.1); not built yet.
+- Status: **Accepted** (owner, 2026-11-01, Phase 13 Stage 13.1); built in Stages 13.2 and 13.3 and released in release 10 (2026-11-01, "Phase 13 acceptance").
 - Scope: a user can keep the targets and conditions form on their own device and find it again on the next visit. No account, sync, server, cookie, URL, or network request is involved (principle 20, ADR-015 revised). With saving off, the app behaves as release 9 and writes nothing new to storage.
 - Decisions:
   - **D1. What is saved**: the targets and conditions form (`TargetsDraft`): the preset, the four target fields, servings, the time limit, effort, cuisines, the equipment mode and items, and the required and excluded foods. Allergens are saved only when the user also ticks a separate checkbox, which is off by default and says that allergen choices will be saved on this device. Not saved: the free text of Phase 12, search results, the comparison, the adjustments, the shopping list, viewed recipes, and the locale (which keeps its own key). No timestamp is stored.

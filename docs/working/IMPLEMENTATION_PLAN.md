@@ -19,6 +19,7 @@ Status: **Draft (2026-10-18)**. Each phase ends with checks, a summary to the ow
 | 10 — Library expansion | `prompts/10-library-expansion.md` |
 | 11 — French locale | `prompts/11-french-locale.md` |
 | 12 — AI assistance | `prompts/12-ai-assistance.md` |
+| 13 — Saved targets and conditions | `prompts/13-saved-conditions.md` |
 
 `prompts/FIRST_MESSAGE.md` is the kickoff message for a new Claude Code session.
 
@@ -177,6 +178,31 @@ Status: **Complete (2026-11-01)**: the free-text conditions, read by a determini
 
 Acceptance: the decisions recorded; the feature optional and confirmed by the user, with the app unchanged when AI is disabled or failing; the evaluation thresholds met or the owner's decision; no secret in the repository or the bundle; checks and CI pass.
 
+## Phase 13 — Saved targets and conditions
+
+Status: **Planned (2026-11-01)**. Prompt: `prompts/13-saved-conditions.md`. The owner chose opt-in saving of targets and conditions in the browser as the next phase, followed by Phases 14 and 15.
+
+- Decisions before implementation: what is saved (including whether allergens are), the mechanism (`localStorage` recommended), the opt-in switch and delete action, when to save and restore, validation and versioning of the record, and the privacy docs (revisions of ADR-030 D9 and ADR-015, [SPEC.md](../en/SPEC.md) §3 and §13).
+- A storage module with a runtime schema, failure handling, and tests; the UI in four locales with E2E; release 10.
+
+Acceptance: with saving off, nothing new is stored and the app behaves as release 9; with saving on, a reload restores the form with the same results; storage failures never break the app; four locales; checks and CI pass.
+
+## Phase 14 — UI/UX redesign
+
+Status: **Planned (2026-11-01)**; prompt to be written after Phase 13. The current look is a minimal proof of concept. The owner wants a modern design that makes people want to cook and eat, with a healthy feel: cool but pop and playful, and suited to the app's purpose.
+
+- Several design directions proposed by Claude for the owner to choose from, then design tokens (color, type, spacing) applied view by view with screenshots.
+- Icons and illustrations are drawn by Claude as original SVG; no third-party images or recipe photos (principle 11). Fonts only if self-hosted with a compatible license (the CSP allows `'self'` only).
+- Contrast and the accessibility checks in four locales stay as they are; dark mode; no health or efficacy claims in visual wording (principle 15).
+
+## Phase 15 — French and French-speaking cuisines
+
+Status: **Planned (2026-11-01)**; prompt to be written later. Recipes from France and from French-speaking regions such as West and North Africa, to match the French locale.
+
+- First check which ingredients the MEXT tables cover and how many approximations each dish would need; drop dishes that would need too many.
+- Decide whether to add cuisine codes (for example French or West African) or keep the current ones, with labels in four locales.
+- Original recipes reviewed in four locales as in Phases 10 and 11; can run in parallel with Phase 14, since they touch different files except the cuisine labels.
+
 ## Later (not MVP)
 
-Optional AI features (structured parsing of free-text input, explanation text; the owner chose AI assistance as the Phase 11 candidate after Phase 10, 2026-10-31), browser history features, meal planning. Each needs its own design, evaluation in every supported locale, and approval.
+Explanation text (an optional AI feature not built in Phase 12), browser history features, meal planning. Each needs its own design, evaluation in every supported locale, and approval.

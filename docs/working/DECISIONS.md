@@ -1446,6 +1446,22 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - Secret scan: gitleaks 8.30.1, `gitleaks git --log-opts=--all --redact` (180 commits, 4.91 MB) and `gitleaks dir --redact` on the tracked files (`git archive HEAD`, 3.72 MB): no leaks (07:46 UTC). The only `.env*` path in the history is the removed `.env.example` of Phase 12 with placeholders; no commit touches `data/raw`, `*.xlsx`, or `*.pdf`.
 - Open: CI on the release commit after the owner pushes, the owner's merge into `main` (a deploy), and the post-deployment checks.
 
+### Release 12 and twelfth production deployment (2026-11-01)
+- Release commit: `cc1bf80` on `dev` (documentation only on top of `974d037`, which passed the checks of "Release 12 preparation"). The owner pushed `dev` and merged it into `main` (`4a265dd`, 2026-11-01 08:03 UTC, a merge commit with the same tree as `cc1bf80`); Workers Builds deployed it. CI passed on `cc1bf80` (owner's report). The dashboard version was not reported.
+- Every served asset (`index-ClIaeCmA.js`, `index-DiFKrOrh.css`, the calculation bundle, and the four text bundles) is byte-identical to the local build of `974d037` (SHA-256).
+- Post-deployment checks (`curl` and the desktop app's browser pane, 2026-11-01): `/`, `/recipes/beef_potato_tomato_stew`, `/recipes/poulet_yassa`, `/recipes/harira_boeuf`, `/about`, `/recipes/no_such_recipe`, an unknown path, `/third-party-licenses.txt`, and `/_headers` (the app's HTML) return 200 with the CSP, `X-Content-Type-Options`, `Referrer-Policy`, and `Permissions-Policy`; assets have `Cache-Control: public, max-age=31536000, immutable`, documents `public, max-age=0, must-revalidate`.
+- In production at 375 px in French (light mode): `/recipes/poulet_basquaise` shows the dish with the `french` cuisine label and no overflow; a search with the default targets and the `french` preference lists `poulet_basquaise` first; the language switch from Spanish to French works; no request to another origin, no console messages, no cookies, and only `recipe-discovery.locale` stored.
+- Rollback target: `dc0f099` (release 11).
+- Not checked: real devices, the dashboard rollback (ADR-035 要確認).
+
+### Phase 15 acceptance (2026-11-01)
+- Decisions recorded: "Stage 15.1 decisions", ADR-038 (revising ADR-026), ADR-023 revised to about 150 recipes, open question 12 extended (ham, beer), [CONTENT_POLICY.md](../en/CONTENT_POLICY.md) §3 rules for marinades and alcohol with the translation.
+- 20 new recipes in two batches pass content validation (130 → 150 recipes, 117 → 139 foods); every dish's approximations were stated and approved (0–2 per dish); their `en`, `es`, and `fr` texts were reviewed by the owner with back-translated safety-relevant texts (no findings; fixes by Claude before the reviews N1 and O1); every snapshot diff was explained and approved.
+- ADR-023 as revised is met: cut 51, maintain 65, bulk 38; each protein group 20–30; 67 % quick; 2.7 % fried; Japanese 29 %; no cuisine above half.
+- A full recommendation stays within about 70 ms p90 at 4× ("Stage 15.3 batch 2: recipes", "Release 12 preparation").
+- `npm run check` and `npm run test:e2e` pass; CI passed on the release commit; release 12 was deployed by the owner's merge into `main`.
+- Open after Phase 15: `galette_complete` and `croque_monsieur` reach only near for maintain; `es` and `fr` texts without a native reviewer (open questions 9 and 23).
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in
@@ -1796,7 +1812,7 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - Limits: pastel tiles must never be the only way to tell nutrients or statuses apart; every new color pair joins the contrast test in Stage 14.2.
 
 ## ADR-038: Cuisine values for French-speaking regions
-- Status: **Accepted** (owner, 2026-11-01, Phase 15 Stage 15.1); revises ADR-026.
+- Status: **Accepted** (owner, 2026-11-01, Phase 15 Stage 15.1); revises ADR-026. Applied in Stages 15.2 and 15.3 and released in release 12 (2026-11-01, "Phase 15 acceptance").
 - Decision: `CUISINES` adds `french`, `north_african`, and `west_african`.
   - `french` covers dishes from France. Dishes from Belgium, Switzerland, and Québec stay `western`, because a cuisine value names the region a dish comes from (ADR-026) and these are not French dishes.
   - `north_african` covers the Maghreb (Morocco, Algeria, Tunisia); `west_african` covers West Africa (for example Senegal, Mali, Côte d'Ivoire).

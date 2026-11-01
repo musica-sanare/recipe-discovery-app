@@ -198,7 +198,7 @@ Status: **Complete (2026-11-01)**: the "soft pop" redesign (ADR-037), released i
 
 ## Phase 15 — French and French-speaking cuisines
 
-Status: **In progress (2026-11-01)**: Stage 15.1 decided (20 recipes in two batches, the cuisine values of ADR-038); batches 1 and 2 added, for 150 recipes; release 12 prepared and waiting for the owner's merge into `main` ([DECISIONS.md](DECISIONS.md) "Phase 15 start" to "Release 12 preparation"). Prompt: `prompts/15-french-speaking-cuisines.md` (written after Phase 14, 2026-11-01). Recipes from France and from French-speaking regions such as West and North Africa, to match the French locale.
+Status: **Complete (2026-11-01)**: 20 recipes from France and French-speaking regions and the cuisine values of ADR-038, for 150 recipes, released in release 12 by the owner's merge into `main`. Logs: [DECISIONS.md](DECISIONS.md) "Phase 15 start" to "Phase 15 acceptance". Prompt: `prompts/15-french-speaking-cuisines.md` (written after Phase 14, 2026-11-01). Recipes from France and from French-speaking regions such as West and North Africa, to match the French locale.
 
 - First check which ingredients the MEXT tables cover and how many approximations each dish would need; drop dishes that would need too many.
 - Decide whether to add cuisine codes (for example French or West African) or keep the current ones, with labels in four locales.

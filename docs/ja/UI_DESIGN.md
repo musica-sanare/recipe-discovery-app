@@ -1,4 +1,4 @@
-<!-- source: docs/en/UI_DESIGN.md blob b627f4bf43c7e7b0c75ab828146f2d0d4fd9c37b -->
+<!-- source: docs/en/UI_DESIGN.md blob 3197613abe0f751def6c37c12b853ee373cad220 -->
 [English](../en/UI_DESIGN.md) | 日本語 · [目次に戻る](README.md)
 
 > この文書は[英語版](../en/UI_DESIGN.md)の翻訳。内容が異なる場合は英語版が優先する。
@@ -56,46 +56,44 @@ flowchart LR
 │ Recipe Discovery   [Language ▾] │
 ├─────────────────────────────────┤
 │ h1 Targets and conditions       │
+│ Tagline        (hero art ≥ 640) │
 │ (i) If you follow advice from a │
 │     doctor or dietitian, …      │
 │                                 │
-│ Example targets (presets)       │
-│ (•) Cut example 450–650 kcal …  │
-│ ( ) Maintain …  ( ) Bulk …      │
-│ "Examples, not recommendations" │
-│                                 │
+│ ╭ panel: Example targets ─────╮ │
+│ │ "Examples, not recommendations"│
+│ │ ( ) Cut example 450–650 kcal │ │
+│ │ (•) Maintain … (tinted card) │ │
+│ │ ( ) Bulk …                   │ │
+│ ╰─────────────────────────────╯ │
 │ Max. cooking time [20] min [-][+]│
 │                                 │
-│ > Describe in your own words    │
-│   [text…]  [Read conditions]    │
-│   Read: foods, time, … [Apply]  │
-│   [Discard]                     │
-│                                 │
-│ > More conditions (collapsible) │
-│   Energy [450]–[650] kcal       │
-│   Protein min. [35] g           │
-│   Fat max. [15] g               │
-│   Carbohydrate [  ]–[  ] g      │
-│   Servings [1] [-][+]           │
-│   Effort ( )any ( )1 ( )2 ( )3  │
-│   Cuisine [ ]Japanese [ ]Chinese│
-│   Equipment (•)no limit         │
-│     ( )microwave only ( )choose │
-│   Use these foods [search…] chips│
-│   Leave out foods [search…] chips│
-│   Allergens [ ]egg [ ]milk …    │
-│   (!) Allergen info is best …   │
-│                                 │
+│ ╭ sky: > Describe in your own words╮
+│ │ [text…]  [Read conditions]   │ │
+│ ╰─────────────────────────────╯ │
+│ ╭ panel: > More conditions ───╮ │
+│ │ ◎ Targets per meal           │ │
+│ │   Energy [450]–[650] kcal    │ │
+│ │   Protein min. [35] g …      │ │
+│ │   Servings [1] [-][+]        │ │
+│ │ ◎ Cooking                    │ │
+│ │   Effort · Cuisine · Equipment│ │
+│ │ ◎ Foods                      │ │
+│ │   Use these / Leave out chips│ │
+│ │ ◎ Allergens                  │ │
+│ │   (!) best effort …  [ ]egg …│ │
+│ ╰─────────────────────────────╯ │
 │ [(!) warning / (x) cannot search]│
-│ Save on this device             │
-│ [ ] Save these targets and …    │
-│   [ ] Also save the allergens … │
-│ "Stays in this browser; anyone… │
-│ [Delete saved conditions]       │
-│ [        Find recipes         ] │
+│ ╭ butter: ◎ Save on this device╮ │
+│ │ [ ] Save these targets and … │ │
+│ │   [ ] Also save the allergens│ │
+│ │ "Stays in this browser; …"   │ │
+│ ╰─────────────────────────────╯ │
+├─────────────────────────────────┤
+│ [ ◎ Find recipes ] (sticky bar) │
 └─────────────────────────────────┘
 ```
-デスクトップ（≥ 1024 px）：同じフォームを 2 列にする（左に目標、右に条件）。検索ボタンと矛盾のメッセージは、両方の列の下に置く。
+デスクトップ（≥ 1024 px）：同じ順序で 1 列に並べ、見出しの横にイラストを置く。「詳細な条件」の中のグループは 2 列か 3 列にする。768 px 以上では、検索ボタンはフォームの下の普通のボタンになる。◎ は ADR-037 の飾りの 2 色アイコンを表す。
 
 状態：
 - 入力エラー（`InputError`）は、フォーカスが外れたときと送信したときに、その欄の横に出す（`aria-describedby`）。送信したときは、各欄へのリンクを持つエラーの要約にフォーカスが移る。
@@ -113,19 +111,23 @@ flowchart LR
 │ h1 Candidates (5)  [Edit conditions]│
 │ Summary: 450–650 kcal, P ≥ 35 … │
 ├─────────────────────────────────┤
-│ ┌ card ───────────────────────┐ │
-│ │ h2 Lemon-herb chicken breast │ │
-│ │ 25 min · effort 2 · Japanese │ │
+│ ╭ card (panel) ───────────────╮ │
+│ │ [◎] h3 Lemon-herb chicken    │ │
+│ │     ◷ 25 min · effort 2 · …  │ │
 │ │ ✓ Meets all targets          │ │
 │ │ Adjusted: chicken 120→160 g  │ │
-│ │ Energy 520 kcal ✓ in range   │ │
-│ │ Protein 43 g ✓ min. 35       │ │
-│ │ Fat 8 g ✓ max. 15            │ │
-│ │ Carbohydrate 52 g – no target│ │
-│ │ Lowest fat of these          │ │
-│ │ ◐ includes approx. (!) allergens│
-│ │ [Details] [☐ Compare] [Exclude]│
-│ └─────────────────────────────┘ │
+│ │ ┌ butter ────┐ ┌ mint ──────┐│ │
+│ │ │Energy      │ │Protein     ││ │
+│ │ │520 kcal    │ │43 g        ││ │
+│ │ │✓ in range  │ │✓ min. 35   ││ │
+│ │ └────────────┘ └────────────┘│ │
+│ │ ┌ peach ─────┐ ┌ sky ───────┐│ │
+│ │ │Fat 8 g ✓   │ │Carb. 52 g  ││ │
+│ │ └────────────┘ └────────────┘│ │
+│ │ ( Lowest fat of these )      │ │
+│ │ (i) includes approx. (!) allergens│
+│ │ (Details) [☐ Compare] (Exclude)│
+│ ╰─────────────────────────────╯ │
 │ … more cards …                  │
 │ [Show a different type]         │
 │ [Compare (2)]  (sticky bar)     │
@@ -140,7 +142,7 @@ flowchart LR
 │ Values are estimates …          │
 └─────────────────────────────────┘
 ```
-デスクトップ：カードを 2 列か 3 列のグリッドに並べる。比較のバーは下に固定したままにする。
+デスクトップ：カードを 2 列か 3 列のグリッドに並べる。比較のバーは下に固定したままにする。各カードには主なたんぱく源のアイコンを付け、4 つの栄養素をラベルつきのパステルのタイルで示す（ADR-037 D1）。判定は今までどおり印の形とテキストで示す。
 
 状態：
 - **候補が 3〜5 件**：カードだけ。
@@ -345,7 +347,7 @@ Amounts are the edible portion (without skin, bones, or shells) or the weight as
 
 ### ビジュアルアイデンティティ（フェーズ 14）
 
-方向性は「やわらかポップ」（ADR-037）。市場のような温かく落ち着いた土台に、パステルの差し色、2 色づかいのアイコン、栄養の数字を載せる色つきのタイルを足す。ステージ 14.2 で、下のトークン、14 px の既定の角丸、`src/styles.css` の基本コンポーネント用ユーティリティ（`btn-primary`、`btn-lg`、`btn-secondary`、`btn-outline`、`panel`、`notice-warning`、`chip`）を適用した。`warning` と `warning-surface` は、`near` と `peach` と同じ値のトークンとして残す。ステージ 14.3 で、アイコンとイラストを `src/components/icons/` に加えた。形はデータ（`iconData.ts`、`illustrationData.ts`）で持ち、`Icon.tsx` の `Icon` と `Illustration` が描く。ステージ 14.4 で、すべての画面に適用した。パネル、2 色づかいのアイコン、SVG の判定の印、候補カードの色つきの栄養タイル、イラスト、3 つのレイアウトの変更だ。「詳細な条件」は「1 食あたりの目標」「調理の条件」（手間、料理の種類、器具）「食材」「アレルゲン」に分ける。時間の上限はすぐ入力できるよう外に残す。§3 のワイヤーフレームはステージ 14.5 で更新する。
+方向性は「やわらかポップ」（ADR-037）。市場のような温かく落ち着いた土台に、パステルの差し色、2 色づかいのアイコン、栄養の数字を載せる色つきのタイルを足す。ステージ 14.2 で、下のトークン、14 px の既定の角丸、`src/styles.css` の基本コンポーネント用ユーティリティ（`btn-primary`、`btn-lg`、`btn-secondary`、`btn-outline`、`panel`、`notice-warning`、`chip`）を適用した。`warning` と `warning-surface` は、`near` と `peach` と同じ値のトークンとして残す。ステージ 14.3 で、アイコンとイラストを `src/components/icons/` に加えた。形はデータ（`iconData.ts`、`illustrationData.ts`）で持ち、`Icon.tsx` の `Icon` と `Illustration` が描く。ステージ 14.4 で、すべての画面に適用した。パネル、2 色づかいのアイコン、SVG の判定の印、候補カードの色つきの栄養タイル、イラスト、3 つのレイアウトの変更だ。「詳細な条件」は「1 食あたりの目標」「調理の条件」（手間、料理の種類、器具）「食材」「アレルゲン」に分ける。時間の上限はすぐ入力できるよう外に残す。§3 のワイヤーフレームは新しいレイアウトを示す（ステージ 14.5 で更新）。
 
 | トークン | ライト | ダーク | 用途 |
 |---|---|---|---|

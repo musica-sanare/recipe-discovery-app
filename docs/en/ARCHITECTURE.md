@@ -43,7 +43,7 @@ flowchart TD
 | `shared` | Content schemas and types, IDs, units, constants used by build tools, domain, and UI; the contract and output validation of the free-text conditions (`shared/suggestion.ts`, §7); the deterministic free-text parser and its word lists (`shared/freeText/`, ADR-034 revised again) and the search normalization (`shared/search.ts`), used by the UI and by Node tools | UI, platform |
 | `content/` (data) | Recipes, food dictionary, allergen links, substitutions, localized texts, glossary | — |
 | `tools/` (build time) | Composition extraction, content validation, policy lint, nutrition snapshots, header generation | UI |
-| `src/` (UI) | React app, navigation, i18n, formatting, state, accessibility ([UI_DESIGN.md](UI_DESIGN.md)) | Platform-specific APIs |
+| `src/` (UI) | React app, navigation, i18n, formatting, state, accessibility, design tokens and base styles (`src/styles.css`), and original SVG icons and illustrations kept as path data (`src/components/icons/`, ADR-037) ([UI_DESIGN.md](UI_DESIGN.md)) | Platform-specific APIs |
 | `platform/` | Hosting configuration (Cloudflare) and generated security headers | Domain logic |
 
 Lint import restrictions and a boundary test enforce these boundaries, as in the owner's other projects. The directory layout: [DEVELOPMENT.md](DEVELOPMENT.md) "Layout (current)".
@@ -135,7 +135,7 @@ The user may describe the dish in their own words. A deterministic parser in the
 - Content validation and policy lint run in CI and in the build.
 - Nutrition snapshot tests.
 - UI tests with jsdom: `src/**/*.test.tsx` with fixtures, and `test/ui/` with the repository content.
-- Accessibility checks (axe-core, without the contrast rule) in every locale for every view and exceptional state. A contrast test covers the color tokens (`test/node/styles.test.ts`).
+- Accessibility checks (axe-core, without the contrast rule) in every locale for every view and exceptional state. A contrast test covers the color tokens, including every text and status color on each pastel (`test/node/styles.test.ts`); icon tests check that icons and illustrations are plain path data without text and follow the label rule (`test/ui/icons.test.tsx`).
 - E2E tests (`e2e/`, Playwright) on the production build with its headers:
   - browsers: desktop Chromium, and Chromium and WebKit at 375 px, in every locale;
   - coverage: the full flow, exceptional states, locale switching, deep links, the about page, keyboard operation, axe-core with color contrast in light and dark, security headers, no request to another origin, and no CSP violation.

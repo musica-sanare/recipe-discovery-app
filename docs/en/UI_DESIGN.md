@@ -51,46 +51,44 @@ Mobile (375 px):
 │ Recipe Discovery   [Language ▾] │
 ├─────────────────────────────────┤
 │ h1 Targets and conditions       │
+│ Tagline        (hero art ≥ 640) │
 │ (i) If you follow advice from a │
 │     doctor or dietitian, …      │
 │                                 │
-│ Example targets (presets)       │
-│ (•) Cut example 450–650 kcal …  │
-│ ( ) Maintain …  ( ) Bulk …      │
-│ "Examples, not recommendations" │
-│                                 │
+│ ╭ panel: Example targets ─────╮ │
+│ │ "Examples, not recommendations"│
+│ │ ( ) Cut example 450–650 kcal │ │
+│ │ (•) Maintain … (tinted card) │ │
+│ │ ( ) Bulk …                   │ │
+│ ╰─────────────────────────────╯ │
 │ Max. cooking time [20] min [-][+]│
 │                                 │
-│ > Describe in your own words    │
-│   [text…]  [Read conditions]    │
-│   Read: foods, time, … [Apply]  │
-│   [Discard]                     │
-│                                 │
-│ > More conditions (collapsible) │
-│   Energy [450]–[650] kcal       │
-│   Protein min. [35] g           │
-│   Fat max. [15] g               │
-│   Carbohydrate [  ]–[  ] g      │
-│   Servings [1] [-][+]           │
-│   Effort ( )any ( )1 ( )2 ( )3  │
-│   Cuisine [ ]Japanese [ ]Chinese│
-│   Equipment (•)no limit         │
-│     ( )microwave only ( )choose │
-│   Use these foods [search…] chips│
-│   Leave out foods [search…] chips│
-│   Allergens [ ]egg [ ]milk …    │
-│   (!) Allergen info is best …   │
-│                                 │
+│ ╭ sky: > Describe in your own words╮
+│ │ [text…]  [Read conditions]   │ │
+│ ╰─────────────────────────────╯ │
+│ ╭ panel: > More conditions ───╮ │
+│ │ ◎ Targets per meal           │ │
+│ │   Energy [450]–[650] kcal    │ │
+│ │   Protein min. [35] g …      │ │
+│ │   Servings [1] [-][+]        │ │
+│ │ ◎ Cooking                    │ │
+│ │   Effort · Cuisine · Equipment│ │
+│ │ ◎ Foods                      │ │
+│ │   Use these / Leave out chips│ │
+│ │ ◎ Allergens                  │ │
+│ │   (!) best effort …  [ ]egg …│ │
+│ ╰─────────────────────────────╯ │
 │ [(!) warning / (x) cannot search]│
-│ Save on this device             │
-│ [ ] Save these targets and …    │
-│   [ ] Also save the allergens … │
-│ "Stays in this browser; anyone… │
-│ [Delete saved conditions]       │
-│ [        Find recipes         ] │
+│ ╭ butter: ◎ Save on this device╮ │
+│ │ [ ] Save these targets and … │ │
+│ │   [ ] Also save the allergens│ │
+│ │ "Stays in this browser; …"   │ │
+│ ╰─────────────────────────────╯ │
+├─────────────────────────────────┤
+│ [ ◎ Find recipes ] (sticky bar) │
 └─────────────────────────────────┘
 ```
-Desktop (≥ 1024 px): the same form in two columns (targets left, conditions right); the search button and the contradiction message sit below both columns.
+Desktop (≥ 1024 px): the same order in one column, with the hero illustration next to the heading and the groups inside "More conditions" in two or three columns; from 768 px the search button is a normal button below the form. Icons marked ◎ are the decorative two-tone icons of ADR-037.
 
 States:
 - Input errors (`InputError`) appear next to their field (`aria-describedby`) on blur and on submit; on submit, focus moves to an error summary that links to each field.
@@ -108,19 +106,23 @@ Mobile:
 │ h1 Candidates (5)  [Edit conditions]│
 │ Summary: 450–650 kcal, P ≥ 35 … │
 ├─────────────────────────────────┤
-│ ┌ card ───────────────────────┐ │
-│ │ h2 Lemon-herb chicken breast │ │
-│ │ 25 min · effort 2 · Japanese │ │
+│ ╭ card (panel) ───────────────╮ │
+│ │ [◎] h3 Lemon-herb chicken    │ │
+│ │     ◷ 25 min · effort 2 · …  │ │
 │ │ ✓ Meets all targets          │ │
 │ │ Adjusted: chicken 120→160 g  │ │
-│ │ Energy 520 kcal ✓ in range   │ │
-│ │ Protein 43 g ✓ min. 35       │ │
-│ │ Fat 8 g ✓ max. 15            │ │
-│ │ Carbohydrate 52 g – no target│ │
-│ │ Lowest fat of these          │ │
-│ │ ◐ includes approx. (!) allergens│
-│ │ [Details] [☐ Compare] [Exclude]│
-│ └─────────────────────────────┘ │
+│ │ ┌ butter ────┐ ┌ mint ──────┐│ │
+│ │ │Energy      │ │Protein     ││ │
+│ │ │520 kcal    │ │43 g        ││ │
+│ │ │✓ in range  │ │✓ min. 35   ││ │
+│ │ └────────────┘ └────────────┘│ │
+│ │ ┌ peach ─────┐ ┌ sky ───────┐│ │
+│ │ │Fat 8 g ✓   │ │Carb. 52 g  ││ │
+│ │ └────────────┘ └────────────┘│ │
+│ │ ( Lowest fat of these )      │ │
+│ │ (i) includes approx. (!) allergens│
+│ │ (Details) [☐ Compare] (Exclude)│
+│ ╰─────────────────────────────╯ │
 │ … more cards …                  │
 │ [Show a different type]         │
 │ [Compare (2)]  (sticky bar)     │
@@ -135,7 +137,7 @@ Mobile:
 │ Values are estimates …          │
 └─────────────────────────────────┘
 ```
-Desktop: cards in a grid of two or three columns; the comparison bar stays at the bottom.
+Desktop: cards in a grid of two or three columns; the comparison bar stays at the bottom. Each card shows the main protein group's icon and the four nutrients as labelled pastel tiles (ADR-037 D1); statuses keep their marker shapes and texts.
 
 States:
 - **Three to five candidates**: cards only.
@@ -340,7 +342,7 @@ Japanese and Spanish use the same structure, for example `買い物リスト（2
 
 ### Visual identity (Phase 14)
 
-The "soft pop" direction (ADR-037): the calm, warm base of a fresh market with pastel accents, two-tone icons, and colored tiles for the nutrition numbers. Stage 14.2 applied the tokens below, a 14 px default radius, and the base component utilities in `src/styles.css` (`btn-primary`, `btn-lg`, `btn-secondary`, `btn-outline`, `panel`, `notice-warning`, `chip`); `warning` and `warning-surface` remain as tokens equal to `near` and `peach`. Stage 14.3 added the icons and illustrations in `src/components/icons/`: the shapes are data (`iconData.ts`, `illustrationData.ts`), drawn by `Icon` and `Illustration` in `Icon.tsx`. Stage 14.4 applied the identity to every view: panels, two-tone icons, SVG status markers, colored nutrient tiles on candidate cards, illustrations, and the three layout changes. "More conditions" is grouped under targets per meal, cooking (effort, cuisines, equipment), foods, and allergens; the time limit stays outside as a quick input. The wireframes of §3 are updated in Stage 14.5.
+The "soft pop" direction (ADR-037): the calm, warm base of a fresh market with pastel accents, two-tone icons, and colored tiles for the nutrition numbers. Stage 14.2 applied the tokens below, a 14 px default radius, and the base component utilities in `src/styles.css` (`btn-primary`, `btn-lg`, `btn-secondary`, `btn-outline`, `panel`, `notice-warning`, `chip`); `warning` and `warning-surface` remain as tokens equal to `near` and `peach`. Stage 14.3 added the icons and illustrations in `src/components/icons/`: the shapes are data (`iconData.ts`, `illustrationData.ts`), drawn by `Icon` and `Illustration` in `Icon.tsx`. Stage 14.4 applied the identity to every view: panels, two-tone icons, SVG status markers, colored nutrient tiles on candidate cards, illustrations, and the three layout changes. "More conditions" is grouped under targets per meal, cooking (effort, cuisines, equipment), foods, and allergens; the time limit stays outside as a quick input. The wireframes of §3 show the new layout (updated in Stage 14.5).
 
 | Token | Light | Dark | Use |
 |---|---|---|---|

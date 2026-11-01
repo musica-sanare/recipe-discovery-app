@@ -1308,6 +1308,16 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - New strings: `targets.groups.*` in four locales. New test: the section stays closed for a restored time limit only and opens for a restored excluded food, with the four group headings, in four locales.
 - Checks: `npm run check` (62 test files, 996 tests), `npm run test:e2e` (164 passed, 1 skipped; axe-core with color contrast in real browsers). CSS 22.0 kB (gzip 5.5 kB); JavaScript 566,967 bytes (gzip 170 kB), about 10 kB more than release 10 for the icons and illustrations now in use. Screenshots of the targets view (closed and open), candidates, detail, not found, and about in `ja` and `fr` at 375 px and 1280 px in light and dark mode: no horizontal overflow.
 
+### Stage 14.5 quality (2026-11-01)
+- Checks on the production build of `ad676fe` (`vite preview`, Playwright with Chromium, 2026-11-01):
+  - 320 px in `ja` and `fr`: the targets view with "More conditions" open, candidates, comparison of two recipes, detail, shopping list, and about have no horizontal overflow.
+  - Print media on the shopping list: no panel keeps its shadow; the list stays readable in black and white (backgrounds are dropped by the browser's print default).
+  - Forced colors (`forcedColors: "active"`): `btn-primary` draws a 2 px solid border and `panel` a 1 px border in the system text color, so buttons and panels keep their edges; status markers keep their shapes and texts. Icon fills stay in their pastel colors; outlines follow the system color.
+  - Reduced motion: the button transition resolves to 0.01 ms.
+  - Keyboard: the E2E keyboard path (skip link, search by keyboard, visible focus) passes unchanged.
+- Phone-class timing (`npm run test:e2e:timing`, alternating with release 10's code `a93902d` extracted with `git archive` and run with the same `node_modules`, two rounds, 2026-11-01 04:30–04:34 UTC, 1-minute load average 2.5–3.2, 15 runs; median / p90, ms): search cut 63.6–66.5 / 69.7–71.5 and bulk 61.1–63.0 / 68.8–70.1 at 4× against 61.8–63.2 / 66.5–67.4 and 57.7–60.5 / 67.9–81.6 for release 10; re-suggestion 23.6–24.2 against 20.6–21.8; recalculation 9.3–10.0 against 8.9–9.8; search cut 95.0–104.0 at 6× against 90.3–94.3. The redesign adds about 2–4 ms to a search at 4× (rendering the tiles and icons), within the ADR-030 D10 threshold of about 100 ms.
+- [UI_DESIGN.md](../en/UI_DESIGN.md) §3.1 and §3.2 show the new layout; [ARCHITECTURE.md](../en/ARCHITECTURE.md) §2 and §9 name the tokens, the icon data, and their tests; both with their Japanese twins.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in

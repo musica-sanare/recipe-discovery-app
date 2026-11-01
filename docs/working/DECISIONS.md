@@ -1530,6 +1530,23 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - Secret scan: gitleaks 8.30.1, `gitleaks git --log-opts=--all --redact` (187 commits, 5.01 MB) and `gitleaks dir --redact` on the tracked files (`git archive HEAD`, 3.79 MB): no leaks (10:40 UTC). The only `.env*` path in the history is the removed `.env.example` of Phase 12 with placeholders; no commit touches `data/raw`, `*.xlsx`, or `*.pdf`.
 - Open: CI on the release commit after the owner pushes, the owner's merge into `main` (a deploy), and the post-deployment checks with a cold load in `fr` and a language switch in production.
 
+### Release 13 and thirteenth production deployment (2026-11-01)
+- Release commit: `84c2e41` on `dev` (documentation only on top of `95f0c44`, which passed the checks of "Release 13 preparation"). The owner pushed `dev` and merged it into `main` (`4768cad`, 2026-11-01 11:24 UTC, a merge commit with the same tree as `84c2e41`); Workers Builds deployed it. CI passed on `84c2e41` (owner's report). The dashboard version was not reported.
+- Every served asset (`index-Crf0imZo.js`, the four locale chunks, `index-B9Ku4GKA.css`, the calculation bundle, and the four text bundles) and `index.html` are byte-identical to the local build of `95f0c44` (SHA-256).
+- Post-deployment checks (`curl`, the desktop app's browser pane, and fresh Playwright browser contexts, 2026-11-01): `/`, `/recipes/beef_potato_tomato_stew`, `/recipes/poulet_yassa`, `/about`, `/recipes/no_such_recipe`, an unknown path, `/third-party-licenses.txt`, and `/_headers` (the app's HTML) return 200 with the CSP, `X-Content-Type-Options`, `Referrer-Policy`, and `Permissions-Policy`; assets have `Cache-Control: public, max-age=31536000, immutable`, documents `public, max-age=0, must-revalidate`.
+- Cold load in French (a fresh browser context with an empty cache and the browser language `fr-FR`, 375 px, Chromium and WebKit): the page loads `index`, the CSS, the `fr` chunk, the calculation bundle, and the French text bundle, and no other locale's chunk; `lang="fr"`; the page shows the French header first and then the French view heading, with no other language and no message key; no request to another origin, no cookies, nothing stored. Chromium logs nothing; WebKit logs only the known `style-src` report for `<select>` ("Stage 5.4 E2E suite and phone-class timing"), which release 12 logs as well (checked on both builds with `vite preview`).
+- In the browser pane at 375 px: `/recipes/poulet_yassa` in French shows the header logo and the nutrition tiles without overflow; switching to Japanese loads the `ja` chunk and the Japanese text bundle, shows the Japanese name and labels with `lang="ja"`, no error, stores only `recipe-discovery.locale`, and logs nothing.
+- Rollback target: `4a265dd` (release 12).
+- Not checked: real devices, Firefox, the dashboard rollback (ADR-035 要確認).
+
+### Phase 16 acceptance (2026-11-01)
+- Decisions recorded: "Stage 16.1 decisions" and ADR-039 (revising ADR-030, closing "Bundle-size warning accepted").
+- Bundle: the startup chunk is 457,369 bytes (release 12: 568,294) and each locale chunk 26,566–30,556 bytes; no chunk exceeds Vite's 500 kB warning.
+- Calculations, rankings, snapshots, and stored data are unchanged (snapshot tests unchanged; content version `2026-11-01.2`). The first render and the language switch work in four locales without message keys or another language (`e2e/localeLoading.spec.ts`, and in production in `fr` and `ja`).
+- The header shows the original logo; the detail view shows nutrition tiles with every value, range, and note of release 12, plus the ingredients that lack data for an unknown value.
+- Accessibility checks pass in four locales (axe-core in unit tests and in the E2E suite); `npm run check`, `npm run test:e2e`, and CI pass; release 13 was deployed by the owner's merge into `main`.
+- Open after Phase 16: the es and fr texts of `detail.missingFoods` have no native reviewer (open questions 9 and 23); the retry of a failed `import()` in Firefox (要確認); UI_DESIGN §3.4 still describes a sticky desktop column that was never built.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in
@@ -1892,7 +1909,7 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - Alternatives: keep the current values (French dishes as `western`, Maghreb dishes as `mediterranean`; West African dishes would have no value and be dropped); one value per country or region (five or six values with two to four recipes each, 15 filter choices, a finer diversification attribute).
 
 ## ADR-039: Per-locale UI catalogs and free-text word lists
-- Status: **Accepted** (owner, 2026-11-01, Phase 16 Stage 16.1); revises ADR-030 (startup path) and closes "Bundle-size warning accepted". Applied in Stage 16.2.
+- Status: **Accepted** (owner, 2026-11-01, Phase 16 Stage 16.1); revises ADR-030 (startup path) and closes "Bundle-size warning accepted". Applied in Stage 16.2 and released in release 13 (2026-11-01, "Phase 16 acceptance").
 - Decisions:
   - **D1. Split**: each locale's UI catalog (`src/i18n/messages/<locale>.ts`) and free-text word list (moved to `shared/freeText/lexicon/<locale>.ts`) form one dynamically imported chunk. Node tools and tests keep a static index of all four locales. Icon and illustration data stay in the main bundle.
   - **D2. First render**: `main.tsx` resolves the locale (stored, then browser, then `ja`), imports that locale's chunk, and renders only after it has loaded; no other language and no message key is shown.

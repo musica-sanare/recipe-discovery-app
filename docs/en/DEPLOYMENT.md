@@ -7,7 +7,7 @@ This runbook explains how to deploy Recipe Discovery: what the build contains, t
 > [!IMPORTANT]
 > Every push to `main` is a production deploy. Only the owner pushes `main`. Cloudflare Workers Builds builds and deploys it; nobody deploys from a local machine (ADR-035).
 
-Status: **In use (2026-10-24)**. First deployment: https://recipe-discovery.musica-sanare.workers.dev ([DECISIONS.md](../working/DECISIONS.md) "Production deployment"). Deployed by Workers Builds since the migration of ADR-035 (first build 2026-10-31). The public hostname `recipe-discovery.apps.musica-sanare.com` is configured (ADR-040) and attached by the next merge into `main`; `workers.dev` stays reachable. The record of each release is in [RELEASE_READINESS.md](../working/RELEASE_READINESS.md).
+Status: **In use (2026-10-24)**. First deployment: https://recipe-discovery.musica-sanare.workers.dev ([DECISIONS.md](../working/DECISIONS.md) "Production deployment"). Deployed by Workers Builds since the migration of ADR-035 (first build 2026-10-31). Since release 14 (2026-11-03) the public URL is https://recipe-discovery.apps.musica-sanare.com (ADR-040); `workers.dev` stays reachable. The record of each release is in [RELEASE_READINESS.md](../working/RELEASE_READINESS.md).
 
 The MVP is a static single-page application. `npm run build` writes everything to `dist/`, and no server code runs (ADR-001). Cloudflare is the first host. Other static hosts work if they can send response headers and serve `index.html` for unknown paths.
 
@@ -120,7 +120,11 @@ The Worker serves `recipe-discovery.apps.musica-sanare.com` as a Workers Custom 
 
 `localStorage` is per origin. The locale preference and the saved conditions (ADR-036) of one URL are not available on the other.
 
-First attachment (owner steps, once):
+Cloudflare Web Analytics stays disabled for the zone. Its automatic setup injects a beacon script into the HTML of proxied hostnames, which the custom domain is and `workers.dev` is not. The owner disabled it for the whole zone on 2026-11-03 (ADR-040). The CSP blocks the script anyway, but it would log an error in the console.
+
+Attaching the domain (owner steps):
+
+Done on 2026-11-03 with release 14 ([DECISIONS.md](../working/DECISIONS.md) "Release 14 and fourteenth production deployment"). For another attachment, for example after a rollback:
 
 1. Before the merge: in the zone's DNS records, confirm that no record exists for `recipe-discovery.apps.musica-sanare.com`.
 2. Merge `dev` into `main` as in "Release to production". The deployment attaches the custom domain.
@@ -134,13 +138,14 @@ First attachment (owner steps, once):
 
 ### Verify after a deploy
 
-On https://recipe-discovery.apps.musica-sanare.com once the domain is attached, and on https://recipe-discovery.musica-sanare.workers.dev:
+On https://recipe-discovery.apps.musica-sanare.com and on https://recipe-discovery.musica-sanare.workers.dev:
 
 - `/`, `/recipes/beef_potato_tomato_stew`, and `/about` return 200 with the security headers (`curl -I`).
 - `/recipes/no_such_recipe` shows the "not found" state; an unknown path shows the targets view.
 - A file under `/assets/` has `Cache-Control: public, max-age=31536000, immutable`; `index.html` does not.
 - The SPA fallback responses for `/recipes/<id>`, `/about`, and unknown paths carry the `_headers` values (*Verified* on the first deployment, 2026-10-24). Check again after a change of `platform/headers.ts`.
 - The page makes no request to another origin and logs nothing in the console; the language switch works.
+- The HTML contains no script that the build did not write, such as the Cloudflare Web Analytics beacon. Fetch it with a browser `User-Agent` and `Accept: text/html`, because the beacon is injected only for browsers: `curl -s -A 'Mozilla/5.0 (Macintosh) AppleWebKit/605.1.15 Safari/605.1.15' -H 'Accept: text/html' <URL> | grep -c cloudflareinsights` prints `0`.
 
 ### Rollback
 

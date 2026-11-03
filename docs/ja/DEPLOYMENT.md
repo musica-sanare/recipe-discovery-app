@@ -1,4 +1,4 @@
-<!-- source: docs/en/DEPLOYMENT.md blob 71fa93fc5b45f720666aa706a72caa6ea3b3f900 -->
+<!-- source: docs/en/DEPLOYMENT.md blob 6f46270a5b0af1dfffba2eac43243546a3615d31 -->
 [English](../en/DEPLOYMENT.md) | 日本語 · [目次に戻る](README.md)
 
 > この文書は[英語版](../en/DEPLOYMENT.md)の翻訳。内容が異なる場合は英語版が優先する。
@@ -10,7 +10,7 @@ Recipe Discovery をデプロイする手順だ。ビルドの中身、リリー
 > [!IMPORTANT]
 > `main` への push はすべて本番のデプロイになる。`main` に push するのはオーナーだけだ。ビルドとデプロイは Cloudflare Workers Builds が行い、ローカルのマシンからはデプロイしない（ADR-035）。
 
-状態：**運用中（2026-10-24）**。最初のデプロイ先は https://recipe-discovery.musica-sanare.workers.dev だ（[DECISIONS.md](../working/DECISIONS.md)（英語のみ）"Production deployment"）。ADR-035 の移行後は Workers Builds がデプロイする（最初のビルドは 2026-10-31）。公開用のホスト名 `recipe-discovery.apps.musica-sanare.com` は設定済みで（ADR-040）、次に `main` へマージしたときに付く。`workers.dev` もそのまま使える。リリースごとの記録は [RELEASE_READINESS.md](../working/RELEASE_READINESS.md)（英語のみ）にある。
+状態：**運用中（2026-10-24）**。最初のデプロイ先は https://recipe-discovery.musica-sanare.workers.dev だ（[DECISIONS.md](../working/DECISIONS.md)（英語のみ）"Production deployment"）。ADR-035 の移行後は Workers Builds がデプロイする（最初のビルドは 2026-10-31）。リリース 14（2026-11-03）からの公開 URL は https://recipe-discovery.apps.musica-sanare.com だ（ADR-040）。`workers.dev` もそのまま使える。リリースごとの記録は [RELEASE_READINESS.md](../working/RELEASE_READINESS.md)（英語のみ）にある。
 
 MVP は静的なシングルページアプリケーションだ。`npm run build` がすべてを `dist/` に書き出し、サーバーのコードは動かない（ADR-001）。最初のホストは Cloudflare だ。レスポンスヘッダーを送れて、未知のパスに `index.html` を返せるなら、ほかの静的ホストでも動く。
 
@@ -123,7 +123,11 @@ Worker は `recipe-discovery.apps.musica-sanare.com` を Workers Custom Domain �
 
 `localStorage` はオリジンごとに分かれる。片方の URL で保存した言語の設定と条件（ADR-036）は、もう片方では使えない。
 
-最初に付けるとき（オーナーの手順、1 回だけ）：
+ゾーンの Cloudflare Web Analytics は無効のままにする。自動設定が有効だと、プロキシを通るホスト名の HTML にビーコンのスクリプトが差し込まれる。カスタムドメインはこれに当たり、`workers.dev` は当たらない。オーナーが 2026-11-03 にゾーン全体で無効にした（ADR-040）。スクリプトは CSP が止めるが、コンソールにエラーが出る。
+
+ドメインを付ける手順（オーナー）：
+
+2026-11-03 にリリース 14 で済んだ（[DECISIONS.md](../working/DECISIONS.md)（英語のみ）"Release 14 and fourteenth production deployment"）。ロールバックのあとなどでもう一度付けるときは次のとおり：
 
 1. マージの前に、ゾーンの DNS レコードに `recipe-discovery.apps.musica-sanare.com` のレコードがないことを確かめる。
 2. 「本番へのリリース」と同じ手順で `dev` を `main` にマージする。このデプロイでカスタムドメインが付く。
@@ -137,13 +141,14 @@ Worker は `recipe-discovery.apps.musica-sanare.com` を Workers Custom Domain �
 
 ### デプロイ後の確認
 
-ドメインが付いたあとの https://recipe-discovery.apps.musica-sanare.com と、https://recipe-discovery.musica-sanare.workers.dev で次を確かめる：
+https://recipe-discovery.apps.musica-sanare.com と、https://recipe-discovery.musica-sanare.workers.dev で次を確かめる：
 
 - `/`、`/recipes/beef_potato_tomato_stew`、`/about` が、セキュリティヘッダー付きで 200 を返す（`curl -I`）。
 - `/recipes/no_such_recipe` で「見つかりません」の状態を示し、未知のパスでは目標の画面を示す。
 - `/assets/` の下のファイルには `Cache-Control: public, max-age=31536000, immutable` があり、`index.html` にはない。
 - `/recipes/<id>`、`/about`、未知のパスに対する SPA のフォールバックのレスポンスに `_headers` の値が付く（最初のデプロイ、2026-10-24 に *検証済み*）。`platform/headers.ts` を変えたら確かめ直す。
 - ページが別のオリジンへリクエストを送らず、コンソールに何も出さない。言語の切り替えが動く。
+- HTML に、ビルドが書いていないスクリプト（Cloudflare Web Analytics のビーコンなど）がない。ビーコンはブラウザにだけ差し込まれるので、ブラウザの `User-Agent` と `Accept: text/html` を付けて取得する：`curl -s -A 'Mozilla/5.0 (Macintosh) AppleWebKit/605.1.15 Safari/605.1.15' -H 'Accept: text/html' <URL> | grep -c cloudflareinsights` が `0` を出す。
 
 ### ロールバック
 

@@ -8,7 +8,7 @@ The repository is private. Making it public is the owner's decision and action. 
 
 - [x] `git ls-remote origin` listed (2026-11-03): `refs/heads/main` (`4768cad`), `refs/heads/dev` (`84c2e41`), `refs/pull/1/head` (`75f58c9`); no tags. The owner decided to publish `main` and `dev` (2026-11-03). No ref needs deleting.
 - [x] `refs/pull/*` reviewed: `75f58c9` is contained in `dev`, so the scan below covers it.
-- [ ] Local branches to publish are pushed: `dev` is ahead of `origin/dev` by the Phase 17 documentation commits (owner push; a push to `dev` does not deploy).
+- [x] Local branches to publish are pushed: the owner pushed `dev` (`1cecbda`, 2026-11-03); `main` is `4768cad`.
 
 ## 2. History
 
@@ -25,7 +25,7 @@ The repository is private. Making it public is the owner's decision and action. 
 - [x] References to the owner's other repositories (`claude-shared-rules`, `musica-sanare-home`, `travel-discovery-app` with `~/repos/...` paths in `prompts/11`, `prompts/17`, DECISIONS, and IMPLEMENTATION_PLAN): kept by owner decision (2026-11-03). They hold no secrets.
 - [x] Third-party material and licenses: the MEXT-derived subset in `data/composition/` with attribution ([DATA_SOURCES.md](../en/DATA_SOURCES.md)); no images, fonts, or copied recipe text; dependency licenses checked by `npm run check:licenses` in every `npm run check`.
 - [x] Internal notes: `CLAUDE.md`, `prompts/`, and `.claude/launch.json` stay public (owner, 2026-10-25, re-confirmed 2026-11-03); they hold instructions and plans, not conversation logs.
-- [ ] GitHub-side data reviewed by the owner: pull request #1 text and comments, issues, CI run logs and failure artifacts (`playwright-report/` and `test-results/`, kept 7 days), releases, wiki. Claude cannot see them (no GitHub CLI on this machine).
+- [x] GitHub-side data reviewed by the owner (2026-11-03, no problem): pull request #1 text and comments, issues, CI run logs and failure artifacts (`playwright-report/` and `test-results/`, kept 7 days), releases, wiki.
 
 ## 4. Presentation
 
@@ -36,9 +36,9 @@ The repository is private. Making it public is the owner's decision and action. 
 
 ## 5. Final checks
 
-- [ ] Tests, lint, and build pass on the commit to publish; CI green after the owner's push.
-- [ ] Dependency audit clean for production dependencies (`npm audit --omit=dev`).
-- [ ] Secret scan repeated on the final commit.
+- [x] Tests, lint, and build pass on the commit to publish (`1cecbda`, 2026-11-03 05:35–05:38 UTC): `npm ci`, `npm run check` (64 test files with 1,023 tests, content validation, production build), `npm run test:e2e` (194 passed, 1 skipped by design); CI green after the owner's push (owner's report).
+- [x] Dependency audit clean for production dependencies: `npm audit --omit=dev` found 0 vulnerabilities (2026-11-03).
+- [x] Secret scan repeated on the final commit: `gitleaks git --log-opts="--all" --redact .` on `1cecbda`, 192 commits, 5.06 MB, no leaks (2026-11-03 05:35 UTC). A later commit before the switch (for example the custom domain) needs the scan again.
 
 ## 6. Switch (owner)
 
@@ -49,10 +49,10 @@ The repository is private. Making it public is the owner's decision and action. 
 - [ ] Private vulnerability reporting.
 - [ ] Secret scanning push protection.
 - [ ] Dependabot alerts (npm dependencies).
-- [ ] Ruleset on `main`: no force push, no deletion, the CI checks required; it must not block the owner's merge or Workers Builds.
+- [ ] Ruleset on `main`: **Restrict deletions** and **Block force pushes**, enforcement **Active**, empty bypass list. **Require status checks to pass** is left out: the owner's local merge creates a new merge commit without checks, so a required check would reject that push (要確認), and CI on `dev` already gates every release (ADR-035). A ruleset does not stop Workers Builds.
 - [ ] Actions: allow only the actions the workflow uses (`actions/checkout`, `actions/setup-node`, `actions/upload-artifact`), keep the default `GITHUB_TOKEN` read-only, and require approval for workflow runs from outside contributors' pull requests (`ci.yml` runs on every `pull_request`).
 - [ ] Unused features (Wiki, Projects, Discussions, Issues) turned off unless the owner wants them.
-- [ ] Setting names checked against GitHub Docs on: date.
+- [x] Setting names checked against GitHub Docs on 2026-11-03 (private vulnerability reporting, push protection, rulesets, Actions settings). Dependabot alerts and the exact rule labels of rulesets were not on the pages read (要確認 on screen).
 
 ## 8. Verification
 

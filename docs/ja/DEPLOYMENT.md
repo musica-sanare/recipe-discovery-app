@@ -1,4 +1,4 @@
-<!-- source: docs/en/DEPLOYMENT.md blob df78ed9c90463d9680fe58f08ab0011c700f73b3 -->
+<!-- source: docs/en/DEPLOYMENT.md blob 71fa93fc5b45f720666aa706a72caa6ea3b3f900 -->
 [English](../en/DEPLOYMENT.md) | 日本語 · [目次に戻る](README.md)
 
 > この文書は[英語版](../en/DEPLOYMENT.md)の翻訳。内容が異なる場合は英語版が優先する。
@@ -10,7 +10,7 @@ Recipe Discovery をデプロイする手順だ。ビルドの中身、リリー
 > [!IMPORTANT]
 > `main` への push はすべて本番のデプロイになる。`main` に push するのはオーナーだけだ。ビルドとデプロイは Cloudflare Workers Builds が行い、ローカルのマシンからはデプロイしない（ADR-035）。
 
-状態：**運用中（2026-10-24）**。最初のデプロイ先は https://recipe-discovery.musica-sanare.workers.dev だ（[DECISIONS.md](../working/DECISIONS.md)（英語のみ）"Production deployment"）。ADR-035 の移行後は Workers Builds がデプロイする（最初のビルドは 2026-10-31）。リリースごとの記録は [RELEASE_READINESS.md](../working/RELEASE_READINESS.md)（英語のみ）にある。
+状態：**運用中（2026-10-24）**。最初のデプロイ先は https://recipe-discovery.musica-sanare.workers.dev だ（[DECISIONS.md](../working/DECISIONS.md)（英語のみ）"Production deployment"）。ADR-035 の移行後は Workers Builds がデプロイする（最初のビルドは 2026-10-31）。公開用のホスト名 `recipe-discovery.apps.musica-sanare.com` は設定済みで（ADR-040）、次に `main` へマージしたときに付く。`workers.dev` もそのまま使える。リリースごとの記録は [RELEASE_READINESS.md](../working/RELEASE_READINESS.md)（英語のみ）にある。
 
 MVP は静的なシングルページアプリケーションだ。`npm run build` がすべてを `dist/` に書き出し、サーバーのコードは動かない（ADR-001）。最初のホストは Cloudflare だ。レスポンスヘッダーを送れて、未知のパスに `index.html` を返せるなら、ほかの静的ホストでも動く。
 
@@ -42,7 +42,7 @@ MVP は静的なシングルページアプリケーションだ。`npm run buil
 
 サイトは Cloudflare Workers Builds がデプロイする。`main` に push するたびに、Cloudflare がそのコミットをビルドして本番にデプロイする。ローカルのマシンからはデプロイせず、Wrangler にログインしたままのマシンも置かない（ADR-035）。
 
-Worker はアセットだけで、スクリプトを持たない。`platform/cloudflare/wrangler.jsonc` は `name`、`compatibility_date`、`directory` と `not_found_handling: "single-page-application"` を持つ `assets` を定め、`main` は持たない（2026-10-18 と 2026-10-24 に *検証済み*。[DECISIONS.md](../working/DECISIONS.md)（英語のみ）"Stage 5.1 release plan" P9）。静的アセットへのリクエストは無料で無制限だ（2026-10-31 に *検証済み*）。
+Worker はアセットだけで、スクリプトを持たない。`platform/cloudflare/wrangler.jsonc` は `name`、`compatibility_date`、`directory` と `not_found_handling: "single-page-application"` を持つ `assets` を定め、`main` は持たない。URL は `routes`、`workers_dev`、`preview_urls` で決まる（「公開用のホスト名」を参照）（2026-10-18 と 2026-10-24 に *検証済み*。[DECISIONS.md](../working/DECISIONS.md)（英語のみ）"Stage 5.1 release plan" P9）。静的アセットへのリクエストは無料で無制限だ（2026-10-31 に *検証済み*）。
 
 ### 本番へのリリース
 
@@ -108,9 +108,36 @@ node platform/cloudflare/deploy.ts --dry-run
 
 `compatibility_date` は、レビューを通すコミットでだけ変える。自動では変えず、未来の日付にもしない。push だけでデプロイされ、デプロイ用の別の手順がないので、デプロイの日付にはもう合わせない。Worker のスクリプトが新しいランタイムの動作を必要としたときに、古い日付と新しい日付の間の互換性フラグを読んでから更新する。Worker がアセットだけのうちは、古い日付のままでかまわない。ランタイムは古い日付をずっとサポートする（2026-10-31 に *検証済み*）。
 
+### 公開用のホスト名
+
+Worker は `recipe-discovery.apps.musica-sanare.com` を Workers Custom Domain として配信する。設定元は `platform/cloudflare/wrangler.jsonc` の `routes` だ（ADR-040）。ホスト名はオーナーの `musica-sanare-home` リポジトリのドメイン計画に従い、その登録簿に載っている。設定は Workers Builds のデプロイのたびに反映される。
+
+| 設定 | 値 | 理由 |
+|---|---|---|
+| `routes` | `{ "pattern": "recipe-discovery.apps.musica-sanare.com", "custom_domain": true }` | DNS レコードと証明書は Cloudflare が作る |
+| `workers_dev` | `true` | 以前のリンクを使い続けられる。`routes` を書くと既定ではオフになる |
+| `preview_urls` | `false` | サイトの公開コピーを増やさない。本番以外のビルドもない（ADR-035） |
+
+> [!WARNING]
+> `recipe-discovery.apps.musica-sanare.com` の DNS レコードを手で作らない。2 階層目のホスト名は Universal SSL の対象外で、既存のレコードがあるとカスタムドメインを付けられない。
+
+`localStorage` はオリジンごとに分かれる。片方の URL で保存した言語の設定と条件（ADR-036）は、もう片方では使えない。
+
+最初に付けるとき（オーナーの手順、1 回だけ）：
+
+1. マージの前に、ゾーンの DNS レコードに `recipe-discovery.apps.musica-sanare.com` のレコードがないことを確かめる。
+2. 「本番へのリリース」と同じ手順で `dev` を `main` にマージする。このデプロイでカスタムドメインが付く。
+3. ビルドのあとで次を確かめる：
+   - `https://recipe-discovery.apps.musica-sanare.com/` が有効な証明書でアプリを表示する。
+   - Worker の **Settings** → **Domains & Routes** にこのホスト名がカスタムドメインとして載り、`workers.dev` も有効のままだ。
+   - ほかの Worker にカスタムドメインが増えていない。
+   - 両方の URL で「デプロイ後の確認」が通る。
+4. 翌日、Billing を開いて新しい請求がないことを確かめる。請求があれば、`dev` で `routes` を revert して同じ手順でマージする。カスタムドメインが **Domains & Routes** に残っていれば外し（要確認：設定から消したデプロイで外れるかどうか）、[DECISIONS.md](../working/DECISIONS.md)（英語のみ）に記録する。
+5. 結果を `musica-sanare-home` に伝える（その `prompts/publish-app-on-domain.md` の Phase B）。そこでホスト名が `live` になる。
+
 ### デプロイ後の確認
 
-https://recipe-discovery.musica-sanare.workers.dev で次を確かめる：
+ドメインが付いたあとの https://recipe-discovery.apps.musica-sanare.com と、https://recipe-discovery.musica-sanare.workers.dev で次を確かめる：
 
 - `/`、`/recipes/beef_potato_tomato_stew`、`/about` が、セキュリティヘッダー付きで 200 を返す（`curl -I`）。
 - `/recipes/no_such_recipe` で「見つかりません」の状態を示し、未知のパスでは目標の画面を示す。

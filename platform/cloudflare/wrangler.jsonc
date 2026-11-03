@@ -4,11 +4,18 @@
 // `assets.directory` resolves relative to this file when it is passed with `--config`
 // (verified with `wrangler deploy --dry-run`, docs/working/DECISIONS.md "Deployment
 // preparation and dry run").
+// The public hostname is a Workers Custom Domain from `routes` (ADR-040). A `routes` entry
+// turns `workers_dev` off by default, so both URL settings are explicit.
 {
   "name": "recipe-discovery",
   "compatibility_date": "2026-10-31",
   "assets": {
     "directory": "../../dist",
     "not_found_handling": "single-page-application"
-  }
+  },
+  "routes": [
+    { "pattern": "recipe-discovery.apps.musica-sanare.com", "custom_domain": true }
+  ],
+  "workers_dev": true,
+  "preview_urls": false
 }

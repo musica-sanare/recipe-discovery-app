@@ -7,7 +7,7 @@ This runbook explains how to deploy Recipe Discovery: what the build contains, t
 > [!IMPORTANT]
 > Every push to `main` is a production deploy. Only the owner pushes `main`. Cloudflare Workers Builds builds and deploys it; nobody deploys from a local machine (ADR-035).
 
-Status: **In use (2026-10-24)**. First deployment: https://recipe-discovery.musica-sanare.workers.dev ([DECISIONS.md](../working/DECISIONS.md) "Production deployment"). Deployed by Workers Builds since the migration of ADR-035 (first build 2026-10-31). The record of each release is in [RELEASE_READINESS.md](../working/RELEASE_READINESS.md).
+Status: **In use (2026-10-24)**. First deployment: https://recipe-discovery.musica-sanare.workers.dev ([DECISIONS.md](../working/DECISIONS.md) "Production deployment"). Deployed by Workers Builds since the migration of ADR-035 (first build 2026-10-31). The public hostname `recipe-discovery.apps.musica-sanare.com` is configured (ADR-040) and attached by the next merge into `main`; `workers.dev` stays reachable. The record of each release is in [RELEASE_READINESS.md](../working/RELEASE_READINESS.md).
 
 The MVP is a static single-page application. `npm run build` writes everything to `dist/`, and no server code runs (ADR-001). Cloudflare is the first host. Other static hosts work if they can send response headers and serve `index.html` for unknown paths.
 
@@ -39,7 +39,7 @@ Every response needs the headers of `platform/headers.ts`:
 
 Cloudflare Workers Builds deploys the site: every push to `main` builds the pushed commit in Cloudflare and deploys it to production. Nobody deploys from a local machine, and no machine keeps a Wrangler login (ADR-035).
 
-The Worker is assets-only. `platform/cloudflare/wrangler.jsonc` sets `name`, `compatibility_date`, and `assets` with `directory` and `not_found_handling: "single-page-application"`, without `main` (*Verified* 2026-10-18 and 2026-10-24; [DECISIONS.md](../working/DECISIONS.md) "Stage 5.1 release plan" P9). Requests to static assets are free and unlimited (*Verified* 2026-10-31).
+The Worker is assets-only. `platform/cloudflare/wrangler.jsonc` sets `name`, `compatibility_date`, and `assets` with `directory` and `not_found_handling: "single-page-application"`, without `main`; `routes`, `workers_dev`, and `preview_urls` set the URLs (see "Public hostname") (*Verified* 2026-10-18 and 2026-10-24; [DECISIONS.md](../working/DECISIONS.md) "Stage 5.1 release plan" P9). Requests to static assets are free and unlimited (*Verified* 2026-10-31).
 
 ### Release to production
 
@@ -105,9 +105,36 @@ Confirm that it reads `dist/` and uploads assets only. `assets.directory` resolv
 
 `compatibility_date` changes only in a reviewed commit, never automatically and never to a future date. It no longer follows the deployment date, because a push deploys without a separate step. Update it when a Worker script needs newer runtime behavior, after reading the compatibility flags between the old and new dates. While the Worker is assets-only, an old date is fine: the runtime supports old dates indefinitely (*Verified* 2026-10-31).
 
+### Public hostname
+
+The Worker serves `recipe-discovery.apps.musica-sanare.com` as a Workers Custom Domain, from `routes` in `platform/cloudflare/wrangler.jsonc` (ADR-040). The hostname follows the domain plan of the owner's `musica-sanare-home` repository, which lists it in its registry. Each Workers Builds deployment applies the config.
+
+| Setting | Value | Why |
+|---|---|---|
+| `routes` | `{ "pattern": "recipe-discovery.apps.musica-sanare.com", "custom_domain": true }` | Cloudflare creates the DNS record and the certificate |
+| `workers_dev` | `true` | Earlier links keep working; a `routes` entry would turn it off by default |
+| `preview_urls` | `false` | No further public copies of the site; no non-production builds (ADR-035) |
+
+> [!WARNING]
+> Never create a DNS record for `recipe-discovery.apps.musica-sanare.com` by hand. A second-level hostname is not covered by Universal SSL, and an existing record blocks the custom domain.
+
+`localStorage` is per origin. The locale preference and the saved conditions (ADR-036) of one URL are not available on the other.
+
+First attachment (owner steps, once):
+
+1. Before the merge: in the zone's DNS records, confirm that no record exists for `recipe-discovery.apps.musica-sanare.com`.
+2. Merge `dev` into `main` as in "Release to production". The deployment attaches the custom domain.
+3. After the build:
+   - `https://recipe-discovery.apps.musica-sanare.com/` loads the app with a valid certificate.
+   - The Worker's **Settings** → **Domains & Routes** lists the hostname as a custom domain, and `workers.dev` is still enabled.
+   - No other Worker gained a custom domain.
+   - "Verify after a deploy" passes on both URLs.
+4. The next day: open Billing and confirm that no new charge appears. If one appears, revert the `routes` entry on `dev` and merge it the same way, remove the custom domain in **Domains & Routes** if it stays (要確認: whether a deployment without the entry detaches it), and record it in [DECISIONS.md](../working/DECISIONS.md).
+5. Report the result in `musica-sanare-home` (Phase B of its `prompts/publish-app-on-domain.md`), which marks the hostname `live`.
+
 ### Verify after a deploy
 
-On https://recipe-discovery.musica-sanare.workers.dev:
+On https://recipe-discovery.apps.musica-sanare.com once the domain is attached, and on https://recipe-discovery.musica-sanare.workers.dev:
 
 - `/`, `/recipes/beef_potato_tomato_stew`, and `/about` return 200 with the security headers (`curl -I`).
 - `/recipes/no_such_recipe` shows the "not found" state; an unknown path shows the targets view.

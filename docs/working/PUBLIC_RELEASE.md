@@ -2,7 +2,7 @@
 
 # Public release checklist
 
-The repository is private. Making it public is the owner's decision and action. Every item below covers all refs that will be visible on GitHub, not only the current tree. The procedure behind each item is the shared `claude-shared-rules` doc `docs/en/PUBLIC_RELEASE.md`; this list is Stage 17.3 of Phase 17 (`prompts/17-custom-domain-and-publication.md`). Details of each check are in [DECISIONS.md](DECISIONS.md) "Stage 17.3 public-release check".
+The repository was made public by the owner on 2026-11-03. Every item below covers all refs that will be visible on GitHub, not only the current tree. The procedure behind each item is the shared `claude-shared-rules` doc `docs/en/PUBLIC_RELEASE.md`; this list is Stage 17.3 of Phase 17 (`prompts/17-custom-domain-and-publication.md`). Details of each check are in [DECISIONS.md](DECISIONS.md) "Stage 17.3 public-release check".
 
 ## 1. Scope
 
@@ -42,21 +42,21 @@ The repository is private. Making it public is the owner's decision and action. 
 
 ## 6. Switch (owner)
 
-- [ ] Visibility changed to public on: date.
+- [x] Visibility changed to public on 2026-11-03 (owner); confirmed without credentials through the GitHub API (`"visibility": "public"`).
 
 ## 7. GitHub settings right after (owner)
 
-- [ ] Private vulnerability reporting.
-- [ ] Secret scanning push protection.
-- [ ] Dependabot alerts (npm dependencies).
-- [ ] Ruleset on `main`: **Restrict deletions** and **Block force pushes**, enforcement **Active**, empty bypass list. **Require status checks to pass** is left out: the owner's local merge creates a new merge commit without checks, so a required check would reject that push (要確認), and CI on `dev` already gates every release (ADR-035). A ruleset does not stop Workers Builds.
-- [ ] Actions: allow only the actions the workflow uses (`actions/checkout`, `actions/setup-node`, `actions/upload-artifact`), keep the default `GITHUB_TOKEN` read-only, and require approval for workflow runs from outside contributors' pull requests (`ci.yml` runs on every `pull_request`).
-- [ ] Unused features (Wiki, Projects, Discussions, Issues) turned off unless the owner wants them.
+- [x] Private vulnerability reporting. Enabled by the owner (2026-11-03).
+- [x] Secret scanning push protection. Enabled by the owner (2026-11-03).
+- [x] Dependabot alerts (npm dependencies). Enabled by the owner (2026-11-03).
+- [x] Ruleset on `main` (owner, 2026-11-03): **Restrict deletions** and **Block force pushes**, enforcement **Active**, empty bypass list. **Require status checks to pass** is left out: the owner's local merge creates a new merge commit without checks, so a required check would reject that push (要確認), and CI on `dev` already gates every release (ADR-035). A ruleset does not stop Workers Builds.
+- [x] Actions (owner, 2026-11-03): allow only the actions the workflow uses (`actions/checkout`, `actions/setup-node`, `actions/upload-artifact`), keep the default `GITHUB_TOKEN` read-only, and require approval for workflow runs from outside contributors' pull requests (`ci.yml` runs on every `pull_request`).
+- [x] Unused features turned off: the GitHub API reports Issues, Projects, Wiki, and Discussions disabled (2026-11-03).
 - [x] Setting names checked against GitHub Docs on 2026-11-03 (private vulnerability reporting, push protection, rulesets, Actions settings). Dependabot alerts and the exact rule labels of rulesets were not on the pages read (要確認 on screen).
 
 ## 8. Verification
 
-- [ ] Signed-out browser shows only `main`, `dev`, and the intended files.
-- [ ] README quick start works from a clean directory after an HTTPS clone without credentials.
-- [ ] No secret scanning alerts (owner's report).
-- [ ] README status updated.
+- [x] Signed out (GitHub API without credentials, 2026-11-03): branches `main` and `dev` only, no tags, no releases, pull request #1 closed, license MIT.
+- [x] HTTPS clone without credentials into an empty directory (2026-11-03): `npm ci` and `npm run check` (1,023 tests, production build) pass.
+- [x] No secret scanning alerts (owner's report, 2026-11-03).
+- [x] README status updated (release 13, 2026-11-03); it changes again with the custom domain.

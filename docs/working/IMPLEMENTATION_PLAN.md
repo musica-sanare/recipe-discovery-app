@@ -207,7 +207,7 @@ Status: **Complete (2026-11-01)**: 20 recipes from France and French-speaking re
 
 ## Phase 16 — Polish and bundle size
 
-Status: **In progress (2026-11-01)**: Stage 16.1 decided (ADR-039; [DECISIONS.md](DECISIONS.md) "Stage 16.1 decisions"); Stage 16.2 per-locale loading done ("Stage 16.2 per-locale loading"); Stage 16.3 logo and detail nutrition tiles done ("Stage 16.3 logo and detail nutrition tiles"); release 13 prepared and waiting for the owner's merge into `main` ("Release 13 preparation"). Prompt: `prompts/16-polish-and-bundle.md` (written after Phase 15, 2026-11-01). The owner chose this phase next, before Phase 17.
+Status: **Complete (2026-11-01)**: per-locale UI catalogs and free-text word lists (ADR-039), the header logo, and the detail nutrition tiles, released in release 13 by the owner's merge into `main`. Logs: [DECISIONS.md](DECISIONS.md) "Phase 16 start" to "Phase 16 acceptance". Prompt: `prompts/16-polish-and-bundle.md` (written after Phase 15, 2026-11-01). The owner chose this phase next, before Phase 17.
 
 - Load the UI catalog and free-text word list of the active locale only, so the startup bundle drops below Vite's 500 kB warning ("Bundle-size warning accepted").
 - An original logo in the header and nutrition tiles in the detail view (open after Phase 14).
@@ -215,9 +215,9 @@ Status: **In progress (2026-11-01)**: Stage 16.1 decided (ADR-039; [DECISIONS.md
 
 ## Phase 17 — Custom domain and repository publication
 
-Status: **Planned (2026-11-01)**; the prompt is written after Phase 16. The owner wants the production site on a custom domain and the repository made public.
+Status: **Planned (2026-11-01)**. Prompt: `prompts/17-custom-domain-and-publication.md` (written after Phase 16, 2026-11-01). The owner wants the production site on a custom domain and the repository made public.
 
-- Custom domain: the owner provides a domain they control (要確認: which domain, and whether it is already registered). Registration, renewal, and any plan change are paid actions the owner decides and performs (shared `paid-services.md`); Claude does not propose a registrar. Claude prepares the owner steps for attaching the domain to the Worker (current Cloudflare documentation checked at the start of the phase), the checks afterwards, and the doc updates (production URL in [DEPLOYMENT.md](../en/DEPLOYMENT.md), README, and RELEASE_READINESS, with translations); whether the `workers.dev` address stays reachable is decided then. No code change is expected (all URLs in the app are relative; the CSP uses `'self'`).
+- Custom domain: `recipe-discovery.apps.musica-sanare.com` on the owner's existing domain, following the domain plan of the owner's `musica-sanare-home` repository (zone on the Cloudflare Free plan; no registration or zone change). It is attached as a Workers Custom Domain through `routes` in `platform/cloudflare/wrangler.jsonc`, with `workers.dev` kept; the merge that attaches it waits until the owner has confirmed the Billing check of the first `*.apps.` custom domain. Claude prepares the config change, the owner steps, the checks afterwards, and the doc updates (production URL in [DEPLOYMENT.md](../en/DEPLOYMENT.md), README, and RELEASE_READINESS, with translations). No app code change is expected (all URLs in the app are relative; the CSP uses `'self'`).
 - Repository publication: repeat the pre-publication check of 2026-10-25 on the full history ("Pre-publication check"): secret scan, authors and committers, personal data, local paths, account identifiers, Claude-only files; the owner decides on every doubtful item and changes the visibility on GitHub. `main` already holds the released history.
 
 ## Later (not MVP)

@@ -21,6 +21,7 @@ This index lists every document about Recipe Discovery. Product and content revi
 |---|---|
 | [Local development](DEVELOPMENT.md) | Setup, commands, repository layout, and adding content and UI text. |
 | [Deployment runbook](DEPLOYMENT.md) | Deployment to Cloudflare and other static hosts. |
+| [Security policy](../../SECURITY.md) | How to report a vulnerability, and the scope. |
 
 ## Working docs (English only)
 
@@ -29,3 +30,4 @@ This index lists every document about Recipe Discovery. Product and content revi
 | [Architecture decision records](../working/DECISIONS.md) | Verification log, ADRs, stage records, and open questions. |
 | [Implementation plan](../working/IMPLEMENTATION_PLAN.md) | Phased plan with acceptance criteria. |
 | [Release readiness](../working/RELEASE_READINESS.md) | Release record, acceptance evidence, known limitations, and manual checks. |
+| [Public release checklist](../working/PUBLIC_RELEASE.md) | Checks and owner steps for making the repository public. |

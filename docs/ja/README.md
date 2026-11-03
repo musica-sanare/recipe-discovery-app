@@ -1,4 +1,4 @@
-<!-- source: docs/en/README.md blob 874067b7a2e59db479f7f7e67edb8c2b17645ff8 -->
+<!-- source: docs/en/README.md blob fb1ac9751868a5319d56c467665f37f3a65571a1 -->
 [English](../en/README.md) | 日本語 · [リポジトリの README](../../README.ja.md)
 
 > この文書は[英語版](../en/README.md)の翻訳。内容が異なる場合は英語版が優先する。
@@ -24,6 +24,7 @@ Recipe Discovery に関する文書をすべて並べた索引だ。プロダク
 |---|---|
 | [ローカル開発](DEVELOPMENT.md) | 環境の準備、コマンド、リポジトリの構成、コンテンツと UI テキストの追加 |
 | [デプロイ手順](DEPLOYMENT.md) | Cloudflare とその他の静的ホストへのデプロイ |
+| [Security policy](../../SECURITY.md)（英語のみ） | 脆弱性の報告方法と対象範囲 |
 
 ## 作業用ドキュメント（英語のみ）
 
@@ -32,3 +33,4 @@ Recipe Discovery に関する文書をすべて並べた索引だ。プロダク
 | [Architecture decision records](../working/DECISIONS.md)（英語のみ） | 検証ログ、ADR、ステージごとの記録、未解決の質問 |
 | [Implementation plan](../working/IMPLEMENTATION_PLAN.md)（英語のみ） | 受け入れ基準つきの段階的な計画 |
 | [Release readiness](../working/RELEASE_READINESS.md)（英語のみ） | リリースの記録、受け入れの根拠、既知の制限、手動確認 |
+| [Public release checklist](../working/PUBLIC_RELEASE.md)（英語のみ） | リポジトリを公開するための確認項目とオーナーの手順 |

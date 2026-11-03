@@ -1547,6 +1547,19 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - Accessibility checks pass in four locales (axe-core in unit tests and in the E2E suite); `npm run check`, `npm run test:e2e`, and CI pass; release 13 was deployed by the owner's merge into `main`.
 - Open after Phase 16: the es and fr texts of `detail.missingFoods` have no native reviewer (open questions 9 and 23); the retry of a failed `import()` in Firefox (要確認); UI_DESIGN §3.4 still describes a sticky desktop column that was never built.
 
+### Phase 17 start: custom domain and repository publication (2026-11-03)
+- Starting point: `dev` at `741f3d1` (Phase 17 prompt `prompts/17-custom-domain-and-publication.md`, rewritten for the owner's existing domain). Release 13 (`84c2e41`, merged as `4768cad`) is in production; `4a265dd` stays the rollback target.
+- Hostname: `recipe-discovery.apps.musica-sanare.com`, following the domain plan of the owner's `musica-sanare-home` repository, attached later as a Workers Custom Domain through `routes` in `platform/cloudflare/wrangler.jsonc` with `workers_dev` kept (Stage 17.1, still to be recorded as an ADR). The owner waits for the next-day Billing check of the first `*.apps.` custom domain (Travel Discovery) before the merge that attaches this one, so the publication preparation (Stage 17.3) goes first.
+- Cloudflare documentation read on 2026-11-01: [Custom Domains](https://developers.cloudflare.com/workers/configuration/routing/custom-domains/) (updated 2026-09-29), [workers.dev](https://developers.cloudflare.com/workers/configuration/routing/workers-dev/) (updated 2026-09-22), [Wrangler configuration](https://developers.cloudflare.com/workers/wrangler/configuration/) (updated 2026-10-29), [CNAME setup](https://developers.cloudflare.com/dns/zone-setups/partial-setup/). With a `routes` entry, `workers_dev` defaults to `false`, so it is set explicitly.
+
+### Stage 17.3 public-release check (2026-11-03)
+- Procedure: the shared `claude-shared-rules` doc `docs/en/PUBLIC_RELEASE.md`; results and open owner steps in [PUBLIC_RELEASE.md](PUBLIC_RELEASE.md). No history change; no GitHub setting changed.
+- Scope (`git ls-remote origin`): `refs/heads/main` (`4768cad`), `refs/heads/dev` (`84c2e41`), `refs/pull/1/head` (`75f58c9`, contained in `dev`); no tags. The owner publishes `main` and `dev`; local `dev` is ahead of `origin/dev` by documentation commits only.
+- Secret scan (01:41 UTC): gitleaks 8.30.1 from Homebrew, the latest GitHub release (2026-03-21), default rules. `gitleaks git --log-opts="--all" --redact .` (191 commits, 5.05 MB), `gitleaks dir --redact` on `git archive HEAD` (3.82 MB) and on `dist/` (1.78 MB): no leaks.
+- Manual review of the full history: 199 commits by `musica-sanare` with the GitHub `noreply` address, plus the pull request #1 merge `42f7d77` (author name `MusicaSanare`, same address; committer `GitHub`); no AI co-author lines; the only `.env*` path is the removed `.env.example` with placeholders; no build output, test output, images, logs, `*.xlsx`, or `*.pdf`; paths only elided (`/Users/…/`); email addresses only the `noreply` address and the public MEXT contact.
+- Owner decisions (2026-11-03), as recommended: publish `main` and `dev`; keep the nine Worker version IDs (now also in `prompts/09`, `10`, `12`, `13`), both hostnames, the references to the owner's other repositories, and the Claude-only files; add `SECURITY.md` (private vulnerability reporting); no `CONTRIBUTING.md`; update the README status now and again with the custom domain.
+- Open: the owner's review of GitHub-side data (pull request #1, CI logs and failure artifacts, issues, releases, wiki), the final checks on the commit to publish, the visibility switch, and the GitHub settings right after it.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in

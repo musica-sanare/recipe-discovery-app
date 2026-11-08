@@ -220,6 +220,15 @@ Status: **Complete (2026-11-08)**: the repository is public (2026-11-03), and re
 - Custom domain: `recipe-discovery.apps.musica-sanare.com` on the owner's existing domain, following the domain plan of the owner's `musica-sanare-home` repository (zone on the Cloudflare Free plan; no registration or zone change). It is attached as a Workers Custom Domain through `routes` in `platform/cloudflare/wrangler.jsonc`, with `workers.dev` kept; the merge that attaches it waits until the owner has confirmed the Billing check of the first `*.apps.` custom domain. Claude prepares the config change, the owner steps, the checks afterwards, and the doc updates (production URL in [DEPLOYMENT.md](../en/DEPLOYMENT.md), README, and RELEASE_READINESS, with translations). No app code change is expected (all URLs in the app are relative; the CSP uses `'self'`).
 - Repository publication: repeat the pre-publication check of 2026-10-25 on the full history ("Pre-publication check"): secret scan, authors and committers, personal data, local paths, account identifiers, Claude-only files; the owner decides on every doubtful item and changes the visibility on GitHub. `main` already holds the released history.
 
+## Phase 18 — UI refresh
+
+Status: **Planned (2026-11-08)**. Prompt: `prompts/18-ui-refresh.md` (written after Phase 17, 2026-11-08). The owner finds dark mode hard to read and wants more character, playfulness, and a modern feel; the work runs in its own session.
+
+- Dark mode: surface steps, tile colors that keep their hue, and a warning color of its own (today `peach` and `warning-surface` share one value in both schemes).
+- Character and modern feel: directions chosen by the owner in Stage 18.1 from options such as a self-hosted display typeface, original illustrations or badges, motion with reduced motion respected, illustrated loading states, nutrition bars against the target range, an in-app theme switch, and the two-column desktop detail view.
+- The stepper row in the detail view wraps its [+] button at 375 px; fixed in Stage 18.2.
+- Stages: 18.1 direction; 18.2 dark mode and the stepper fix; 18.3 character and components; 18.4 motion and finish; 18.5 release 15. No calculation, ranking, content, or meaning change.
+
 ## Later (not MVP)
 
 Explanation text (an optional AI feature not built in Phase 12), browser history features, meal planning. Each needs its own design, evaluation in every supported locale, and approval.

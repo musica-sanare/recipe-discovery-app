@@ -2,7 +2,7 @@
 
 # Release Readiness — Recipe Discovery
 
-Status: **Release 15 deployed (2026-11-08)** at https://recipe-discovery.apps.musica-sanare.com and https://recipe-discovery.musica-sanare.workers.dev from commit `394704b`, merged into `main` as `6e2ce04` and deployed by Workers Builds: the UI refresh of Phase 18 (ADR-041) on top of release 14. The post-deployment checks passed on both URLs ([DECISIONS.md](DECISIONS.md) "Release 15 and fifteenth production deployment"). `0a5afff` (release 14) is the rollback target. Release 14 was deployed (2026-11-03) at https://recipe-discovery.apps.musica-sanare.com and https://recipe-discovery.musica-sanare.workers.dev from commit `cf4ef7e`, merged into `main` as `0a5afff` and deployed by Workers Builds: the app of release 13 on the public hostname (Phase 17, ADR-040). The post-deployment checks passed on both URLs ([DECISIONS.md](DECISIONS.md) "Release 14 and fourteenth production deployment"). `4768cad` (release 13) is the rollback target. Release 13 was deployed at https://recipe-discovery.musica-sanare.workers.dev from commit `84c2e41`, merged into `main` as `4768cad` and deployed by Workers Builds: per-locale UI catalogs and free-text word lists, the header logo, and the detail nutrition tiles (Phase 16, ADR-039) on top of release 12. The post-deployment checks passed ([DECISIONS.md](DECISIONS.md) "Release 13 and thirteenth production deployment"). `4a265dd` (release 12) was its rollback target. Release 12 was deployed from commit `cc1bf80`, merged into `main` as `4a265dd` and deployed by Workers Builds: 20 recipes from France and French-speaking regions with three new cuisine values (Phase 15, ADR-038) on top of release 11 ([DECISIONS.md](DECISIONS.md) "Release 12 and twelfth production deployment"); `dc0f099` (release 11) was its rollback target. Release 11 was deployed from commit `04134e0`, merged into `main` as `dc0f099` and deployed by Workers Builds: the "soft pop" redesign of Phase 14 (ADR-037) on top of release 10 ([DECISIONS.md](DECISIONS.md) "Release 11 and eleventh production deployment"); `a93902d` (release 10) was its rollback target. Release 10 was deployed at https://recipe-discovery.musica-sanare.workers.dev from commit `6288bd7`, merged into `main` as `a93902d` (version `d0574e40…`) and deployed by Workers Builds: the opt-in saved conditions of Phase 13 (ADR-036) on top of release 9. The post-deployment checks passed ([DECISIONS.md](DECISIONS.md) "Release 10 and tenth production deployment"). `f296aaf` (release 9) is the rollback target. Release 9 was deployed at https://recipe-discovery.musica-sanare.workers.dev from commit `9a5120c`, merged into `main` as `f296aaf` (version `9f5b65ef-b9f8-44d7-8f19-b55c79b2893d`) and deployed by Cloudflare Workers Builds (ADR-035): the free-text conditions of Phase 12, read by a deterministic parser in the browser (ADR-034, revised twice), on top of release 8. The post-deployment checks passed ([DECISIONS.md](DECISIONS.md) "Release 9 and ninth production deployment"). `36e5e3e` (version `4f323282…`, the first Workers Builds deployment, the same app as release 8) is the rollback target. Update this document for every release; release 1 is recorded in [DECISIONS.md](DECISIONS.md) ("Stage 5.1 release plan" to "Manual checks"), release 2 in "Stage 6.6" and "Second production deployment", release 3 in "Stage 7.4" and "Third production deployment", release 4 in "Stage 8.4" and "Fourth production deployment", release 5 in "Stage 9.4" and "Fifth production deployment", release 6 in "Release 6 preparation" and "Sixth production deployment", release 7 in "Release 7 preparation" and "Seventh production deployment", release 8 in "Release 8 preparation" and "Eighth production deployment", release 9 in "First Workers Builds deployment" and "Release 9 and ninth production deployment".
+Status: **Release 16 deployed (2026-11-08)** at https://recipe-discovery.apps.musica-sanare.com and https://recipe-discovery.musica-sanare.workers.dev from commit `ef03259`, the first release by fast-forward: `main` and `dev` point to the same commit (ADR-035, revised; [DECISIONS.md](DECISIONS.md) "Releases by fast-forward"). It adds the dependency updates after release 15 and the WebKit legend fix. The post-deployment checks passed on both URLs ([DECISIONS.md](DECISIONS.md) "Release 16 and sixteenth production deployment"). `6e2ce04` (release 15) is the rollback target. Release 15 was deployed (2026-11-08) at https://recipe-discovery.apps.musica-sanare.com and https://recipe-discovery.musica-sanare.workers.dev from commit `394704b`, merged into `main` as `6e2ce04` and deployed by Workers Builds: the UI refresh of Phase 18 (ADR-041) on top of release 14. The post-deployment checks passed on both URLs ([DECISIONS.md](DECISIONS.md) "Release 15 and fifteenth production deployment"). `0a5afff` (release 14) is the rollback target. Release 14 was deployed (2026-11-03) at https://recipe-discovery.apps.musica-sanare.com and https://recipe-discovery.musica-sanare.workers.dev from commit `cf4ef7e`, merged into `main` as `0a5afff` and deployed by Workers Builds: the app of release 13 on the public hostname (Phase 17, ADR-040). The post-deployment checks passed on both URLs ([DECISIONS.md](DECISIONS.md) "Release 14 and fourteenth production deployment"). `4768cad` (release 13) is the rollback target. Release 13 was deployed at https://recipe-discovery.musica-sanare.workers.dev from commit `84c2e41`, merged into `main` as `4768cad` and deployed by Workers Builds: per-locale UI catalogs and free-text word lists, the header logo, and the detail nutrition tiles (Phase 16, ADR-039) on top of release 12. The post-deployment checks passed ([DECISIONS.md](DECISIONS.md) "Release 13 and thirteenth production deployment"). `4a265dd` (release 12) was its rollback target. Release 12 was deployed from commit `cc1bf80`, merged into `main` as `4a265dd` and deployed by Workers Builds: 20 recipes from France and French-speaking regions with three new cuisine values (Phase 15, ADR-038) on top of release 11 ([DECISIONS.md](DECISIONS.md) "Release 12 and twelfth production deployment"); `dc0f099` (release 11) was its rollback target. Release 11 was deployed from commit `04134e0`, merged into `main` as `dc0f099` and deployed by Workers Builds: the "soft pop" redesign of Phase 14 (ADR-037) on top of release 10 ([DECISIONS.md](DECISIONS.md) "Release 11 and eleventh production deployment"); `a93902d` (release 10) was its rollback target. Release 10 was deployed at https://recipe-discovery.musica-sanare.workers.dev from commit `6288bd7`, merged into `main` as `a93902d` (version `d0574e40…`) and deployed by Workers Builds: the opt-in saved conditions of Phase 13 (ADR-036) on top of release 9. The post-deployment checks passed ([DECISIONS.md](DECISIONS.md) "Release 10 and tenth production deployment"). `f296aaf` (release 9) is the rollback target. Release 9 was deployed at https://recipe-discovery.musica-sanare.workers.dev from commit `9a5120c`, merged into `main` as `f296aaf` (version `9f5b65ef-b9f8-44d7-8f19-b55c79b2893d`) and deployed by Cloudflare Workers Builds (ADR-035): the free-text conditions of Phase 12, read by a deterministic parser in the browser (ADR-034, revised twice), on top of release 8. The post-deployment checks passed ([DECISIONS.md](DECISIONS.md) "Release 9 and ninth production deployment"). `36e5e3e` (version `4f323282…`, the first Workers Builds deployment, the same app as release 8) is the rollback target. Update this document for every release; release 1 is recorded in [DECISIONS.md](DECISIONS.md) ("Stage 5.1 release plan" to "Manual checks"), release 2 in "Stage 6.6" and "Second production deployment", release 3 in "Stage 7.4" and "Third production deployment", release 4 in "Stage 8.4" and "Fourth production deployment", release 5 in "Stage 9.4" and "Fifth production deployment", release 6 in "Release 6 preparation" and "Sixth production deployment", release 7 in "Release 7 preparation" and "Seventh production deployment", release 8 in "Release 8 preparation" and "Eighth production deployment", release 9 in "First Workers Builds deployment" and "Release 9 and ninth production deployment".
 
 Commit hashes in this document are those after the history rewrite of 2026-10-25; older records in [DECISIONS.md](DECISIONS.md) use the earlier hashes ("History rewrite (2026-10-25)").
 
@@ -22,9 +22,18 @@ Commit hashes in this document are those after the history rewrite of 2026-10-25
 | 12 (Phase 15) | `cc1bf80` (merged as `4a265dd`) | `2026-11-01.2` | Deployed by Workers Builds 2026-11-01 after the merge at 08:03 UTC; replaced by release 13 |
 | 13 (Phase 16) | `84c2e41` (merged as `4768cad`) | `2026-11-01.2` | Deployed by Workers Builds 2026-11-01 after the merge at 11:24 UTC; replaced by release 14 |
 | 14 (Phase 17) | `cf4ef7e` (merged as `0a5afff`) | `2026-11-01.2` | Deployed by Workers Builds 2026-11-03 after the merge at 09:12 UTC; replaced by release 15 |
-| 15 (Phase 18) | `394704b` (merged as `6e2ce04`) | `2026-11-01.2` | Deployed by Workers Builds 2026-11-08 after the merge at 03:26 UTC |
+| 15 (Phase 18) | `394704b` (merged as `6e2ce04`) | `2026-11-01.2` | Deployed by Workers Builds 2026-11-08 after the merge at 03:26 UTC; replaced by release 16 |
+| 16 (Phase 18 follow-up) | `ef03259` (`main` fast-forwarded) | `2026-11-01.2` | Deployed by Workers Builds 2026-11-08 after the push at about 06:40 UTC |
 
-## 0. What changes in release 15
+## 0. What changes in release 16
+
+| Change | Visible to users |
+|---|---|
+| Dependency updates: minor and patch releases of the build and test tools, `i18next` 26.7.2, `react-i18next` 17.1.13, and `jsdom` 31 ([DECISIONS.md](DECISIONS.md) "ADR-016 dependency update after release 15") | None intended; the startup chunk grows to 467 kB |
+| The legends of the targets panels stay inside their panels in WebKit ("Phase 18 legend fix") | The preset and saved-conditions headings on Safari |
+| Releases fast-forward `main` to `dev` ("Releases by fast-forward") | None |
+
+## 0a. What changed in release 15
 
 | Stage | Change | Visible to users |
 |---|---|---|
@@ -34,7 +43,7 @@ Commit hashes in this document are those after the history rewrite of 2026-10-25
 
 Unchanged: the engines, formulas, rounding, ranking, and every calculated value and existing text; the content and its version (`2026-11-01.2`); stored data (the locale preference and the opt-in saved conditions); the security headers (`platform/`); the dependencies.
 
-## 0a. What changed in release 14
+## 0b. What changed in release 14
 
 | Stage | Change | Visible to users |
 |---|---|---|
@@ -42,7 +51,7 @@ Unchanged: the engines, formulas, rounding, ranking, and every calculated value 
 
 Unchanged: `dist/`, the app, the content and its version (`2026-11-01.2`), the headers, and the dependencies. The only file outside the docs that changed since release 13 is `platform/cloudflare/wrangler.jsonc`.
 
-## 0b. What changed in release 13
+## 0c. What changed in release 13
 
 | Stage | Change | Visible to users |
 |---|---|---|
@@ -51,7 +60,7 @@ Unchanged: `dist/`, the app, the content and its version (`2026-11-01.2`), the h
 
 Unchanged: the engines, formulas, rounding, ranking, and every calculated value; the content and its version (`2026-11-01.2`); recipe and food IDs; the saved-conditions record; the security headers (`platform/`); the dependencies except `react-i18next` 17.1.10 ("Dependency update: react-i18next 17.1.10").
 
-## 0c. What changed in release 12
+## 0d. What changed in release 12
 
 | Stage | Change | Visible to users |
 |---|---|---|
@@ -60,6 +69,8 @@ Unchanged: the engines, formulas, rounding, ranking, and every calculated value;
 | 15.2 | CONTENT_POLICY §3 rules for marinades and for wine and beer | Notes on the recipes concerned |
 
 ## 1. Acceptance criteria ([SPEC.md](../en/SPEC.md) §15 and §18)
+
+Release 16 was checked on `d099d10` on 2026-11-08 (06:14–06:17 UTC): `npm ci`, `npm run check` (65 test files with 1,050 tests), `npm run test:e2e` (227 passed, 1 skipped by design), and `npm audit --omit=dev` (0 vulnerabilities); `npm audit` reports the 10 moderate findings of the accepted `minimatch` advisory; the phone-class timing of the new lockfile against the old is within the machine's variation ([DECISIONS.md](DECISIONS.md) "Release 16 and sixteenth production deployment").
 
 Release 15 was checked on `c4aef83` on 2026-11-08 (about 03:16–03:19 UTC): `npm ci`, `npm run check` (65 test files with 1,050 tests, content validation, production build), `npm run test:e2e` (215 passed, 1 skipped by design; new: the stepper rows per locale at 320 and 375 px, motion, reduced motion, and forced colors), and `npm audit --omit=dev` (0 vulnerabilities); `npm audit` reports the 10 moderate findings of the accepted `minimatch` advisory. The phone-class timing against release 14 shows the search at 4× about 2–6 ms slower (about 70–74 ms median for cut), within the ADR-030 D10 threshold ([DECISIONS.md](DECISIONS.md) "Stage 18.3", "Stage 18.4"). `npm outdated` lists newer versions of several dependencies (要確認, "Release 15 preparation").
 
@@ -95,6 +106,8 @@ Release 8 was checked on `c2d56d0` on 2026-10-31 (10:41–10:45 UTC): `npm ci`, 
 
 | Item | Status | What is needed |
 |---|---|---|
+| CI on the release commit (release 16) | **要確認** | CI on `ef03259` before the fast-forward (owner's report) |
+| Secret scan of the release history (release 16) | **Passed** on `d099d10` | gitleaks 8.30.1: `gitleaks git --log-opts=--all --redact` (209 commits, 5.24 MB) and `gitleaks dir --redact` on the tracked files (3.94 MB): no leaks (2026-11-08 06:17 UTC) |
 | CI on the release commit (release 15) | **Passed** | Both jobs passed on `394704b` (owner's report, 2026-11-08) |
 | Secret scan of the release history (release 15) | **Passed** on `c4aef83` | gitleaks 8.30.1: `gitleaks git --log-opts=--all --redact` (203 commits, 5.19 MB) and `gitleaks dir --redact` on the tracked files (`git archive HEAD`, 3.92 MB): no leaks (2026-11-08 03:19 UTC) |
 | CI on the release commit (release 14) | **Passed** | Both jobs passed on `cf4ef7e` (owner's report, 2026-11-08); the Workers Builds build of `0a5afff` passed (owner's report, 2026-11-03) |
@@ -158,7 +171,10 @@ Release 15 (optional, after deployment): on an iPhone in light and dark mode, a 
 
 Release 11 (optional, after deployment): on an iPhone in light and dark mode, the targets view (the search bar at the bottom while scrolling), a candidate card's tiles, the detail page, and the shopping list; on Windows, high contrast mode if available.
 
-## 5. Deployment (release 15, deployed on 2026-11-08)
+## 5. Deployment (release 16, deployed on 2026-11-08)
+
+Release 16: the first release by fast-forward. The owner pushed `dev` and fast-forwarded `main` to `ef03259`, and Workers Builds deployed it. Claude ran the post-deployment checks of [DEPLOYMENT.md](../en/DEPLOYMENT.md) §3 on both URLs and the app in Chromium and WebKit in production. Rollback: revert on `dev` and fast-forward `main`, or for urgency the dashboard rollback to `6e2ce04` (release 15). Cost: Workers Free. Data and privacy: unchanged.
+
 
 Release 15: the owner merged `dev` (`394704b`) into `main` (`6e2ce04`), and Workers Builds deployed it. Claude ran the post-deployment checks of [DEPLOYMENT.md](../en/DEPLOYMENT.md) §3 on both URLs plus a search, a card, a detail page with an adjustment, "not found", and a language switch in light and dark mode in `ja` and `fr` at 375 px in production. Rollback: revert on `dev` and merge again, or for urgency the dashboard rollback to `0a5afff` (release 14). Cost: Workers Free. Data and privacy: unchanged; the "new to you" list stays in memory.
 

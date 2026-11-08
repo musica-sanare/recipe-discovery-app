@@ -23,20 +23,12 @@ export function t(locale: Locale, key: string, vars: Readonly<Record<string, str
 }
 
 /**
- * WebKit reports `style-src-attr` for every `<select>` under a strict CSP, even on a page
- * without inline styles (its internal shadow DOM; reproduced with a minimal page, Chromium
- * reports nothing). Only that report, with an empty sample, is tolerated in WebKit
- * (docs/working/DECISIONS.md "Stage 5.4").
- */
-const WEBKIT_SELECT_REPORT = /^style-src-attr inline \S+ $/;
-
-/**
  * Every test fails if the page requests another origin or reports a CSP violation
  * (docs/en/ARCHITECTURE.md §8).
  */
 export const test = base.extend<{ guard: undefined }>({
   guard: [
-    async ({ page, baseURL, browserName }, use) => {
+    async ({ page, baseURL }, use) => {
       const origin = new URL(baseURL ?? "http://localhost").origin;
       const external: string[] = [];
       page.on("request", (request) => {
@@ -53,7 +45,7 @@ export const test = base.extend<{ guard: undefined }>({
       await use(undefined);
       expect(external, "requests to another origin").toEqual([]);
       const violations = await page.evaluate(() => (window as unknown as { __cspViolations?: string[] }).__cspViolations ?? []).catch(() => []);
-      expect(violations.filter((violation) => !(browserName === "webkit" && WEBKIT_SELECT_REPORT.test(violation))), "CSP violations").toEqual([]);
+      expect(violations, "CSP violations").toEqual([]);
     },
     { auto: true },
   ],

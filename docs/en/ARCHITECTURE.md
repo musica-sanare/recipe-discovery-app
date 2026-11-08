@@ -96,6 +96,7 @@ The schema is `shared/content.ts` (ADR-026). Calculation rules are in [NUTRITION
 5. Recalculate on every adjustment in the detail view (`src/views/DetailView.tsx`). Timing is in the next list.
 6. State stays in memory (`src/state/`, ADR-015, ADR-030 D9). When the user turns on saving, `src/state/savedConditions.ts` keeps the targets form in one versioned `localStorage` record and restores it once after the content loads, checked against the current content (ADR-036). Only the recipe detail and the about page have their own URLs (`src/navigation/`, ADR-030 D2).
 7. The shopping list (ADR-032) keeps the recipe states the user added in memory. `domain/shopping` aggregates them only when the list changes or is shown, never during a recommendation.
+8. The targets view is in the startup chunks; the candidates, comparison, detail, shopping list, and about views load on demand (`src/views/lazyViews.ts`, ADR-043). The candidates chunk is preloaded after the first view. While a chunk loads, the loading state shows. If it cannot be loaded, `src/views/ViewBoundary.tsx` shows the error with a retry; the state above stays, so the search and the shopping list survive.
 
 Timing measured in the browser:
 - Desktop (Stage 4.7): a full recommendation about 25 ms inside the UI; a re-suggestion about 2 ms and a recalculation about 3 ms from click to layout.

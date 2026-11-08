@@ -1787,6 +1787,16 @@ The owner approved every recommendation of the proposal on 2026-11-08. Prototype
 - Print and forced colors (Chromium, with the dark choice): the bars are hidden in both; the comparison prints with the light tokens and nothing hidden at 1280 px emulation width (PDF read).
 - Not checked: real devices; a "just below" note and an unknown value in the comparison view on screen (they use the functions and markers of the cards, but no test reaches them in this view); paper print; and WebKit in forced colors.
 
+### Stage 19.4 startup chunk (2026-11-08)
+- Implemented as ADR-043: `src/views/lazyViews.ts`, `src/views/ViewBoundary.tsx`, and `src/App.tsx`. No new catalog key: the loading state and the retry reuse `content.loading`, `content.error`, and `content.retry`, which exist in four locales.
+- Checked in Stage 19.1 as 要確認: a rejected `lazy` stays rejected. `e2e/viewLoading.spec.ts` confirms it in both engines: after the chunk is allowed again, opening the view still shows the error until the retry creates the views again. The retry then loads the chunk, so `import()` is not stuck on the failed fetch in Chromium 158 and WebKit 27.2.
+- Sizes (raw kB; Vite's gzip kB in parentheses). JavaScript of a first view without the locale chunk: 470.3 in Stage 19.3 → 413.6 in 7 files (gzip -9 132.6, the measure of "Stage 19.1 decisions"), which meets the target of 420. Largest chunk: 470.34 → 285.69 (gzip 143.48 → 89.92), which meets the target of 300 and leaves 214.3 kB below the 500 kB warning. Other startup chunks: `ViewHeading` 73.04 (25.00), `useTextContext` 39.99 (13.04), `list` 6.07 (2.27), `engineCodes` 4.66 (2.03), `engine` 3.54 (1.49), `rolldown-runtime` 0.59 (0.36). Chunks that load later: `CandidatesView` 14.05 (4.23), `DetailView` 22.45 (6.50), `ShoppingListView` 7.02 (2.27), `ComparisonView` 5.31 (2.02), `AboutView` 3.34 (0.90), `nutritionBar` 4.21 (1.81), `texts` 3.04 (1.14), `text` 2.16 (0.97), `NutrientLine` 1.84 (0.61). CSS and locale chunks are unchanged. All JavaScript except locale chunks grows from 470.3 to 477.1 kB.
+- Requests in Chromium: a page load with the preload requests 13 script files, 468.0 kB including `ja` and `theme-init.js` (about 498 kB as one chunk with `ja` before); the first search requests no script; the first detail view requests `DetailView` and `text`, 24.6 kB.
+- Phone-class timing (`npm run test:e2e:timing`, release 16's code against this stage, alternating in two rounds, 1-minute load average 5.3–10.8; median / p90 at 4×, ms, release 16 → this stage): search "cut" 75.2 / 86.2 and 71.1 / 77.1 → 75.0 / 79.4 and 74.3 / 80.9; "bulk" 74.8 / 89.4 and 70.5 / 77.9 → 72.7 / 78.6 and 72.4 / 83.0; recalculation 9.8 / 10.6 and 9.2 / 10.0 → 10.2 / 13.5 and 9.6 / 10.1; startup to the view heading in `ja` 260.6 and 230.5 → 220.9 and 232.5, in `fr` 256.6 and 237.7 → 232.7 and 238.2; language switch 63.2 and 68.3 → 65.1 and 62.1. The ADR-030 D10 threshold holds. Startup on a local server shows no clear gain: the second round, under similar load, is equal, so the gain of this stage is room below the warning, as ADR-043 expected. A slow network is not measured.
+- Checks (2026-11-08): `npm run check` passes (67 test files, 1,076 tests, licenses, content validation, production build); `npm run test:e2e` 455 passed and 1 skipped by design (456 tests, in the three projects).
+- Browser check on the production build: the failure of the candidates chunk and the loading state of the detail chunk at 320, 375, and 1280 px, in `ja` and `fr`, in light and dark, in Chromium and WebKit: the catalog text in each locale, no page overflow, no page error. `e2e/viewLoading.spec.ts` checks the failure and the retry of the candidates and detail chunks in four locales, and of the comparison and shopping list chunks in `ja`, with the search and the list kept.
+- Not checked: a failed about chunk (it uses the same code), browsers other than Chromium 158 and WebKit 27.2, real devices, and a deployment that removes old chunks while a page is open (the retry would fail until a reload; Stage 19.5 does not test it).
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in
@@ -2210,6 +2220,20 @@ The owner approved every recommendation of the proposal on 2026-11-08. Prototype
 - Alternatives: applying in `src/main.tsx` only (a visible flash on slow networks); an inline script (blocked by the CSP); a hashed file under `/assets/` (no revalidation, but needs a build plugin and a separate path in the dev server); `light-dark()` (changes every token and the contrast test); icon radios (a taller header from `md`, three new icons); a footer control (hard to find).
 - Limits: storage is best effort, as in ADR-036. Forced colors keep overriding the palette. The cost of the revalidation on a real network is not measured.
 - Correction to ADR-041: its rationale says that bars shorten the cards. Measured under equal conditions, the cards of release 15 are 2–13 % taller than those of release 14 ("Stage 19.1 decisions").
+
+## ADR-043: Views load on demand
+- Status: **Accepted** (owner, 2026-11-08, Phase 19 Stage 19.1); extends ADR-039. Built in Stage 19.4.
+- Context: the startup chunk was 467 kB, 33 kB below Vite's 500 kB warning, and held every view. `react-dom` alone is 207 kB, and `zod` and the engines are needed at or right after the first view, so only the views can move.
+- Decisions:
+  - **D1. Split**: the candidates, comparison, detail, shopping list, and about views load through React `lazy` (`src/views/lazyViews.ts`). The targets view stays in the startup chunks.
+  - **D2. Target**: at most 420 kB of JavaScript for a first view without the locale chunk, and no chunk above 300 kB.
+  - **D3. Preload**: the candidates chunk starts loading after the first view, so the first search waits for no request. The other views load when they open.
+  - **D4. Loading**: the existing loading state shows while a chunk loads. The heading takes focus when the view mounts, as before.
+  - **D5. Failure**: `src/views/ViewBoundary.tsx` shows the existing content error with a retry, only for a failed chunk; any other error passes through. The retry creates the lazy views again without reloading the page, because a reload would lose the search and the shopping list. Each view has its own boundary, so another view still opens.
+  - **D6. Unchanged**: same-origin hashed chunks under `/assets/`, the immutable cache rule, the CSP and headers, the catalogs, and every calculation. No new dependency.
+- Rationale: only the views can move, and five views together win back the room for later features. The size of `index-*.js` alone misleads, because Rolldown moves shared code into chunks that the entry imports statically ("Stage 19.1 decisions").
+- Alternatives: only the comparison, shopping list, and about views (11.6 kB less and no gain in gzip); the free text too (10 kB more, but it needs its own loading state inside the targets form); manual vendor chunks (the warning goes away, but no byte is saved); a higher `chunkSizeWarningLimit` (the same).
+- Limits: the transfer of a first view drops only about 6 %, so the main gain is room below the warning. Opening the detail view for the first time, or a direct link to it, needs one more request. A browser that caches a failed `import()` keeps failing until a page reload, per the Vite documentation; Chromium 158 and WebKit 27.2 do not.
 
 ---
 

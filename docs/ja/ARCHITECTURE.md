@@ -1,4 +1,4 @@
-<!-- source: docs/en/ARCHITECTURE.md blob 9677c7ed840ae7ee70a749a96c71827917f41947 -->
+<!-- source: docs/en/ARCHITECTURE.md blob e08b152bbdea27d81979ffc8f3643a8815958199 -->
 [English](../en/ARCHITECTURE.md) | 日本語 · [目次に戻る](README.md)
 
 > この文書は[英語版](../en/ARCHITECTURE.md)の翻訳。内容が異なる場合は英語版が優先する。
@@ -99,6 +99,7 @@ flowchart TD
 5. 詳細画面では調整のたびに再計算する（`src/views/DetailView.tsx`）。時間は次の一覧にまとめた。
 6. 状態はメモリに保つ（`src/state/`、ADR-015、ADR-030 D9）。利用者が保存をオンにすると、`src/state/savedConditions.ts` が目標のフォームをバージョンつきの `localStorage` のレコード 1 件に残す。コンテンツを読み込んだ後に一度だけ、今のコンテンツと照らして復元する（ADR-036）。専用の URL を持つのはレシピの詳細と「このアプリについて」のページだけだ（`src/navigation/`、ADR-030 D2）。
 7. 買い物リスト（ADR-032）は、利用者が追加したレシピの状態をメモリに保つ。`domain/shopping` が集計するのはリストが変わったときと表示するときだけで、推薦の最中には集計しない。
+8. 目標の画面は起動時のチャンクに含める。候補、比較、詳細、買い物リスト、「このアプリについて」の画面は必要になったときに読む（`src/views/lazyViews.ts`、ADR-043）。候補のチャンクは最初の画面のあとに先読みする。チャンクを読んでいる間は読み込み中の表示を出す。読めなければ、`src/views/ViewBoundary.tsx` がエラーと再試行の操作を示す。状態はその外側にあるので、検索結果と買い物リストは失われない。
 
 ブラウザで測った時間：
 - デスクトップ（Stage 4.7）：推薦全体は UI の中で約 25 ms。再提案は約 2 ms、再計算は約 3 ms（クリックからレイアウトまで）。

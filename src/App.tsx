@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useState } from "react";
+import { Suspense, useEffect, useLayoutEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { DEFAULT_LOCALE, isLocale } from "../shared/locales";
 import { Attribution } from "./components/Attribution";
@@ -15,14 +15,11 @@ import { useNavigation } from "./navigation/context";
 import { NavigationProvider } from "./navigation/Navigation";
 import { ViewLink } from "./navigation/ViewLink";
 import { useAppState } from "./state/context";
-import { AboutView } from "./views/AboutView";
 import { AppStateProvider, ContentProvider } from "./state/providers";
 import { useRestoreSavedConditions } from "./state/useRestoreSavedConditions";
-import { CandidatesView } from "./views/CandidatesView";
-import { ComparisonView } from "./views/ComparisonView";
-import { DetailView } from "./views/DetailView";
-import { ShoppingListView } from "./views/ShoppingListView";
+import { lazyViews, preloadCandidates } from "./views/lazyViews";
 import { TargetsView } from "./views/TargetsView";
+import { ViewBoundary } from "./views/ViewBoundary";
 
 export interface AppProps {
   readonly contentUrls: ContentUrls;
@@ -152,6 +149,7 @@ function ShoppingListLink() {
  * shopping list is empty after a reload too; emptied by the user, it shows its empty state.
  */
 function CurrentView() {
+  const { t } = useTranslation();
   const { view, navigate, navigated } = useNavigation();
   const { state } = useAppState();
   useRestoreSavedConditions();
@@ -169,7 +167,26 @@ function CurrentView() {
     if (lost) navigate({ name: "targets" }, { replace: true });
   }, [lost, navigate]);
 
+  // After the first view, so that it does not compete with it (ADR-043).
+  useEffect(() => {
+    preloadCandidates();
+  }, []);
+
   if (lost) return <TargetsView reloaded />;
+  return (
+    // A new boundary per view: moving to another view leaves a failure behind.
+    <ViewBoundary key={view.name} renderFailure={(retry) => <LoadError message={t("content.error")} retryLabel={t("content.retry")} onRetry={retry} />}>
+      <Suspense fallback={<Loading message={t("content.loading")} />}>
+        <LoadedView reloadNotice={reloadNotice} />
+      </Suspense>
+    </ViewBoundary>
+  );
+}
+
+function LoadedView({ reloadNotice }: { readonly reloadNotice: boolean }) {
+  const { view } = useNavigation();
+  const { state } = useAppState();
+  const { AboutView, CandidatesView, ComparisonView, DetailView, ShoppingListView } = lazyViews();
   switch (view.name) {
     case "targets":
       return <TargetsView reloaded={reloadNotice} />;

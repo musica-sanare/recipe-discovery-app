@@ -106,7 +106,7 @@ Release 8 was checked on `c2d56d0` on 2026-10-31 (10:41–10:45 UTC): `npm ci`, 
 
 | Item | Status | What is needed |
 |---|---|---|
-| CI on the release commit (release 16) | **要確認** | CI on `ef03259` before the fast-forward (owner's report) |
+| CI on the release commit (release 16) | **Passed** | Both jobs passed on `ef03259` (owner's report, 2026-11-08) |
 | Secret scan of the release history (release 16) | **Passed** on `d099d10` | gitleaks 8.30.1: `gitleaks git --log-opts=--all --redact` (209 commits, 5.24 MB) and `gitleaks dir --redact` on the tracked files (3.94 MB): no leaks (2026-11-08 06:17 UTC) |
 | CI on the release commit (release 15) | **Passed** | Both jobs passed on `394704b` (owner's report, 2026-11-08) |
 | Secret scan of the release history (release 15) | **Passed** on `c4aef83` | gitleaks 8.30.1: `gitleaks git --log-opts=--all --redact` (203 commits, 5.19 MB) and `gitleaks dir --redact` on the tracked files (`git archive HEAD`, 3.92 MB): no leaks (2026-11-08 03:19 UTC) |

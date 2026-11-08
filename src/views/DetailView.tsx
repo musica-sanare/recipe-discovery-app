@@ -272,6 +272,8 @@ function DetailBody({ recipe, recipeState, nutrition, fit, previous, onChange, o
               const bound = line === undefined || targets === undefined ? undefined : missedBound(targets, line);
               const note = bound === undefined || value === null ? undefined : boundaryNote(nutrient, value, bound);
               const bar = line === undefined || targets === undefined ? undefined : nutrientBar(nutrient, value, note !== undefined, range ?? undefined, targetBounds(targets, line.target));
+              const changed = previous !== undefined && Boolean(displayedDifference(nutrient, previous.nutrition.perServing[nutrient], value));
+              const nowMet = line?.status === "met" && previous?.fit !== undefined && previous.fit.nutrients.find((candidate) => candidate.target === line.target)?.status !== "met";
               return (
                 <NutrientLine
                   key={nutrient}
@@ -280,10 +282,14 @@ function DetailBody({ recipe, recipeState, nutrition, fit, previous, onChange, o
                   bar={bar}
                   fill={BAND[nutrient] ?? ""}
                   size="detail"
+                  changed={changed}
                 >
                   {line !== undefined && targets !== undefined && (
                     <>
-                      <StatusMarker status={line.status} label={note === undefined ? undefined : t(`status.${note}`)} />
+                      {/* A target that the last adjustment met gets a short pop (ADR-041 D5); the change summary says it in words. */}
+                      <span key={nowMet ? "met-now" : "steady"} className={`inline-flex origin-left ${nowMet ? "motion-safe:animate-pop" : ""}`}>
+                        <StatusMarker status={line.status} label={note === undefined ? undefined : t(`status.${note}`)} />
+                      </span>
                       <span>{boundText(t, locale, targets, line)}</span>
                     </>
                   )}

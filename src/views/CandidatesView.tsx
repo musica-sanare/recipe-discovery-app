@@ -90,12 +90,13 @@ export function CandidatesView({ search: current }: { readonly search: SearchSta
     t("candidates.servings", { count: request.servings }),
   ].filter((part) => part !== undefined);
 
-  const card = (entry: Recommended, mode: "candidate" | "alternative") => {
+  const card = (entry: Recommended, mode: "candidate" | "alternative", index: number) => {
     const recipe = recipes.get(entry.recipe);
     if (recipe === undefined) return null;
     const checked = state.compare.includes(entry.recipe);
     return (
-      <li key={entry.recipe}>
+      // A card that enters deals in; kept cards keep their element and do not move (ADR-041 D5).
+      <li key={entry.recipe} className="motion-safe:animate-deal-in" style={{ animationDelay: `${String(index * 60)}ms` }}>
         <RecipeCard
           entry={entry}
           recipe={recipe}
@@ -188,7 +189,7 @@ export function CandidatesView({ search: current }: { readonly search: SearchSta
             {t("candidates.listHeading", { label: t("candidates.listLabel"), count: t("candidates.count", { count: candidates.length }) })}
           </h2>
           <ol aria-labelledby="candidates-heading" className="m-0 grid list-none gap-4 p-0 md:grid-cols-2 xl:grid-cols-3">
-            {candidates.map((entry) => card(entry, "candidate"))}
+            {candidates.map((entry, index) => card(entry, "candidate", index))}
           </ol>
           <button type="button" onClick={onDifferentType} className="self-start btn-outline">
             {t("candidates.differentType")}
@@ -216,7 +217,7 @@ export function CandidatesView({ search: current }: { readonly search: SearchSta
           <h2 id="held-heading" className="m-0 text-xl font-extrabold">
             {t("candidates.alternativesHeading")}
           </h2>
-          <ol className="m-0 grid list-none gap-4 p-0 md:grid-cols-2 xl:grid-cols-3">{current.heldAlternatives.map((entry) => card(entry, "alternative"))}</ol>
+          <ol className="m-0 grid list-none gap-4 p-0 md:grid-cols-2 xl:grid-cols-3">{current.heldAlternatives.map((entry, index) => card(entry, "alternative", index))}</ol>
         </section>
       )}
 
@@ -226,7 +227,7 @@ export function CandidatesView({ search: current }: { readonly search: SearchSta
             {t("candidates.alternativesHeading")}
           </h2>
           <p className="m-0 text-sm text-muted">{t("candidates.alternativesHint")}</p>
-          <ol className="m-0 grid list-none gap-4 p-0 md:grid-cols-2 xl:grid-cols-3">{alternatives.map((entry) => card(entry, "alternative"))}</ol>
+          <ol className="m-0 grid list-none gap-4 p-0 md:grid-cols-2 xl:grid-cols-3">{alternatives.map((entry, index) => card(entry, "alternative", index))}</ol>
         </section>
       )}
 

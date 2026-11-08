@@ -79,6 +79,8 @@ export async function expectNoHorizontalOverflow(page: Page): Promise<void> {
 
 /** axe-core in the real browser, including color contrast (WCAG 2.2 AA). */
 export async function expectNoAxeViolations(page: Page): Promise<void> {
+  // Contrast is checked on the final state: cards that are still dealing in (ADR-041 D5) are partly transparent.
+  await page.evaluate(() => Promise.all(document.getAnimations().map((animation) => animation.finished.catch(() => undefined))));
   const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"]).analyze();
   expect(results.violations.map((violation) => `${violation.id}: ${violation.nodes.map((node) => node.target.join(" ")).join(", ")}`)).toEqual([]);
 }

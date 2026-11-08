@@ -44,24 +44,32 @@ The Worker is assets-only. `platform/cloudflare/wrangler.jsonc` sets `name`, `co
 ### Release to production
 
 1. The release commit is on `dev`, and CI passed on it.
-2. The owner merges `dev` into `main` by hand, in one of two ways. The update of `main` deploys.
-   - Locally, then push:
+2. The owner fast-forwards `main` to `dev` by hand and pushes. The update of `main` deploys.
 
-     ```bash
-     git switch main
-     ```
+   ```bash
+   git switch main
+   ```
 
-     ```bash
-     git merge dev
-     ```
+   ```bash
+   git pull --ff-only origin main
+   ```
 
-     ```bash
-     git push origin main
-     ```
+   ```bash
+   git merge --ff-only dev
+   ```
 
-   - Through a GitHub pull request from `dev` to `main`, merged with a merge commit. Do not squash or rebase: that would put commits on `main` that are not on `dev`.
+   ```bash
+   git push origin main
+   ```
 
-   Either way, `main` gets a merge commit with the same files as the `dev` commit. Nothing else is committed to `main`.
+   ```bash
+   git switch dev
+   ```
+
+   `main` then points to the same commit as `dev`, the one CI checked. Nothing is committed to `main` itself, so `main` never has a commit that `dev` lacks. Do not merge through a GitHub pull request: every GitHub merge method creates new commits on `main`.
+
+   > [!WARNING]
+   > If `git merge --ff-only dev` refuses, `main` has a commit that `dev` lacks. Stop and find out why; never force-push `main` (the ruleset blocks it anyway).
 
 3. Workers Builds runs the build command, then the deploy command (see "Build settings"). The build log is under the Worker's **Deployments** in the dashboard, and the GitHub commit gets a check run.
 4. Verify the deployed site (see "Verify after a deploy").
@@ -133,7 +141,7 @@ Done on 2026-11-03 with release 14 ([DECISIONS.md](../working/DECISIONS.md) "Rel
    - The Worker's **Settings** → **Domains & Routes** lists the hostname as a custom domain, and `workers.dev` is still enabled.
    - No other Worker gained a custom domain.
    - "Verify after a deploy" passes on both URLs.
-4. The next day: open Billing and confirm that no new charge appears. If one appears, revert the `routes` entry on `dev` and merge it the same way, remove the custom domain in **Domains & Routes** if it stays (要確認: whether a deployment without the entry detaches it), and record it in [DECISIONS.md](../working/DECISIONS.md).
+4. The next day: open Billing and confirm that no new charge appears. If one appears, revert the `routes` entry on `dev` and release it the same way, remove the custom domain in **Domains & Routes** if it stays (要確認: whether a deployment without the entry detaches it), and record it in [DECISIONS.md](../working/DECISIONS.md).
 5. Report the result in `musica-sanare-home` (Phase B of its `prompts/publish-app-on-domain.md`), which marks the hostname `live`.
 
 ### Verify after a deploy
@@ -149,7 +157,7 @@ On https://recipe-discovery.apps.musica-sanare.com and on https://recipe-discove
 
 ### Rollback
 
-The primary rollback goes through Git: revert the change on `dev`, wait for CI, then merge `dev` into `main` as in "Release to production". Workers Builds deploys the result.
+The primary rollback goes through Git: revert the change on `dev`, wait for CI, then fast-forward `main` to `dev` as in "Release to production". Workers Builds deploys the result.
 
 For an urgent rollback, the owner can pick an earlier version in the dashboard under **Deployments** → **Rollback** (the 100 most recent versions). The next push to `main` deploys `main` again, so follow up with the Git revert. Whether a dashboard rollback also restores that version's static assets is 要確認.
 

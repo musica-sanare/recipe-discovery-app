@@ -1,4 +1,4 @@
-<!-- source: docs/en/DEPLOYMENT.md blob 6f46270a5b0af1dfffba2eac43243546a3615d31 -->
+<!-- source: docs/en/DEPLOYMENT.md blob d69e757c8c722b3b1a94da799febfd7375184d59 -->
 [English](../en/DEPLOYMENT.md) | 日本語 · [目次に戻る](README.md)
 
 > この文書は[英語版](../en/DEPLOYMENT.md)の翻訳。内容が異なる場合は英語版が優先する。
@@ -47,24 +47,32 @@ Worker はアセットだけで、スクリプトを持たない。`platform/clo
 ### 本番へのリリース
 
 1. リリースするコミットが `dev` にあり、そのコミットで CI が通っている。
-2. オーナーが手作業で `dev` を `main` にマージする。方法は次の 2 つのどちらかだ。`main` が更新されるとデプロイになる。
-   - ローカルでマージして push する：
+2. オーナーが手作業で `main` を `dev` まで早送り（fast-forward）して push する。`main` が更新されるとデプロイになる。
 
-     ```bash
-     git switch main
-     ```
+   ```bash
+   git switch main
+   ```
 
-     ```bash
-     git merge dev
-     ```
+   ```bash
+   git pull --ff-only origin main
+   ```
 
-     ```bash
-     git push origin main
-     ```
+   ```bash
+   git merge --ff-only dev
+   ```
 
-   - GitHub で `dev` から `main` への pull request を作り、マージコミットでマージする。squash や rebase は使わない。`dev` にないコミットが `main` にできてしまうからだ。
+   ```bash
+   git push origin main
+   ```
 
-   どちらでも、`main` には `dev` のコミットと同じファイルを持つマージコミットができる。それ以外のコミットは `main` に入れない。
+   ```bash
+   git switch dev
+   ```
+
+   これで `main` は、CI が確かめた `dev` と同じコミットを指す。`main` には直接コミットしないので、`dev` にないコミットが `main` にできることはない。GitHub の pull request ではマージしない。GitHub のマージ方法は、どれも `main` に新しいコミットを作るからだ。
+
+   > [!WARNING]
+   > `git merge --ff-only dev` が失敗したら、`main` に `dev` にないコミットがある。そこで止めて原因を調べる。`main` に force push はしない（ルールセットでも禁止している）。
 
 3. Workers Builds がビルドコマンドを実行し、続けてデプロイコマンドを実行する（「ビルドの設定」を参照）。ビルドのログはダッシュボードの Worker の **Deployments** にあり、GitHub のコミットにはチェックが付く。
 4. デプロイしたサイトを確かめる（「デプロイ後の確認」を参照）。
@@ -136,7 +144,7 @@ Worker は `recipe-discovery.apps.musica-sanare.com` を Workers Custom Domain �
    - Worker の **Settings** → **Domains & Routes** にこのホスト名がカスタムドメインとして載り、`workers.dev` も有効のままだ。
    - ほかの Worker にカスタムドメインが増えていない。
    - 両方の URL で「デプロイ後の確認」が通る。
-4. 翌日、Billing を開いて新しい請求がないことを確かめる。請求があれば、`dev` で `routes` を revert して同じ手順でマージする。カスタムドメインが **Domains & Routes** に残っていれば外し（要確認：設定から消したデプロイで外れるかどうか）、[DECISIONS.md](../working/DECISIONS.md)（英語のみ）に記録する。
+4. 翌日、Billing を開いて新しい請求がないことを確かめる。請求があれば、`dev` で `routes` を revert して同じ手順でリリースする。カスタムドメインが **Domains & Routes** に残っていれば外し（要確認：設定から消したデプロイで外れるかどうか）、[DECISIONS.md](../working/DECISIONS.md)（英語のみ）に記録する。
 5. 結果を `musica-sanare-home` に伝える（その `prompts/publish-app-on-domain.md` の Phase B）。そこでホスト名が `live` になる。
 
 ### デプロイ後の確認
@@ -152,7 +160,7 @@ https://recipe-discovery.apps.musica-sanare.com と、https://recipe-discovery.m
 
 ### ロールバック
 
-主な方法は Git を通す。`dev` で変更を revert し、CI を待ってから「本番へのリリース」と同じ手順で `dev` を `main` にマージする。その結果を Workers Builds がデプロイする。
+主な方法は Git を通す。`dev` で変更を revert し、CI を待ってから「本番へのリリース」と同じ手順で `main` を `dev` まで早送りする。その結果を Workers Builds がデプロイする。
 
 急ぐときは、オーナーがダッシュボードの **Deployments** → **Rollback** で前の版を選べる（直近 100 版まで）。次に `main` へ push すると `main` の内容がまたデプロイされるので、あとで Git の revert も行う。ダッシュボードのロールバックでその版の静的アセットまで戻るかは要確認。
 

@@ -19,6 +19,12 @@ export const en: Messages = {
     },
     loading: "Switching language…",
   },
+  theme: {
+    label: "Theme",
+    system: "System",
+    light: "Light",
+    dark: "Dark",
+  },
   common: {
     skipToContent: "Skip to main content",
     unknown: "Unknown",
@@ -639,7 +645,7 @@ export const en: Messages = {
     privacy: {
       title: "Privacy",
       noTracking: "No analytics, cookies, or ads are used, and the app makes no requests to external services.",
-      storage: "Your browser keeps your language choice. If you turn on saving, it also keeps your targets and conditions on this device, and your allergens only if you choose; anyone who uses this browser can see them.",
+      storage: "Your browser keeps your language choice and, if you choose light or dark, your theme. If you turn on saving, it also keeps your targets and conditions on this device, and your allergens only if you choose; anyone who uses this browser can see them.",
       memory: "Otherwise, the targets and conditions you enter stay in your browser's memory while the page is open. They are never sent or put in the URL.",
       shoppingList: "The shopping list also stays in memory only while the page is open. It is neither saved nor sent.",
     },

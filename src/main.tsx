@@ -11,7 +11,12 @@ import { BootError } from "./BootError";
 import { createI18n } from "./i18n/createI18n";
 import { loadLocaleData } from "./i18n/localeData";
 import { resolveInitialLocale } from "./i18n/localePreference";
+import { applyTheme, readStoredTheme } from "./theme/themePreference";
 import "./styles.css";
+
+// `theme-init.js` normally did this before the first paint; if that file failed to load, the
+// page and the theme choice still agree from here on (ADR-042).
+applyTheme(readStoredTheme(), document.documentElement);
 
 const root = document.getElementById("root");
 if (!root) {

@@ -6,6 +6,7 @@ import { ContentVersions } from "./components/ContentVersions";
 import { DocumentMetadata } from "./components/DocumentMetadata";
 import { LanguageSwitcher } from "./components/LanguageSwitcher";
 import { LoadError } from "./components/LoadError";
+import { ThemeSwitcher } from "./components/ThemeSwitcher";
 import { Illustration, Logo } from "./components/icons/Icon";
 import { useContent, type ContentUrls } from "./content/useContent";
 import { loadLocaleData, type LoadLocaleData } from "./i18n/localeData";
@@ -72,6 +73,7 @@ function Shell({ contentUrls, loadLocale }: { readonly contentUrls: ContentUrls;
                 void localeSwitch.switchTo(next);
               }}
             />
+            <ThemeSwitcher />
           </div>
         </div>
       </header>

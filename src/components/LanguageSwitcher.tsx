@@ -14,7 +14,7 @@ export function LanguageSwitcher({ state, onSelect }: { readonly state: LocaleSw
       <label htmlFor={id}>{t("language.label")}</label>
       <select
         id={id}
-        className="rounded border border-border bg-surface px-2 py-1 text-text"
+        className="h-8 rounded border border-border bg-surface px-2 text-text"
         value={loading ? state.locale : i18n.resolvedLanguage}
         aria-busy={loading}
         onChange={(event) => {

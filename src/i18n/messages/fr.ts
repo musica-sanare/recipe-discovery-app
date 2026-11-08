@@ -20,6 +20,12 @@ export const fr: Messages = {
     },
     loading: "Changement de langue…",
   },
+  theme: {
+    label: "Thème",
+    system: "Système",
+    light: "Clair",
+    dark: "Sombre",
+  },
   common: {
     skipToContent: "Aller au contenu principal",
     unknown: "Inconnu",
@@ -640,7 +646,7 @@ export const fr: Messages = {
     privacy: {
       title: "Confidentialité",
       noTracking: "Aucun outil d'analyse, cookie ni publicité n'est utilisé, et l'app n'envoie aucune requête à des services externes.",
-      storage: "Votre navigateur conserve la langue choisie. Si vous activez l'enregistrement, il conserve aussi vos objectifs et vos conditions sur cet appareil, et vos allergènes seulement si vous le choisissez ; toute personne qui utilise ce navigateur peut les voir.",
+      storage: "Votre navigateur conserve la langue choisie et, si vous choisissez clair ou sombre, le thème. Si vous activez l'enregistrement, il conserve aussi vos objectifs et vos conditions sur cet appareil, et vos allergènes seulement si vous le choisissez ; toute personne qui utilise ce navigateur peut les voir.",
       memory: "Sinon, les objectifs et les conditions que vous saisissez restent dans la mémoire du navigateur tant que la page est ouverte. Ils ne sont jamais envoyés ni placés dans l'URL.",
       shoppingList: "La liste de courses reste elle aussi en mémoire tant que la page est ouverte. Elle n'est ni enregistrée ni envoyée.",
     },

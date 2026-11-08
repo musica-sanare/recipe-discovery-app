@@ -19,6 +19,12 @@ export const es: Messages = {
     },
     loading: "Cambiando de idioma…",
   },
+  theme: {
+    label: "Tema",
+    system: "Sistema",
+    light: "Claro",
+    dark: "Oscuro",
+  },
   common: {
     skipToContent: "Ir al contenido principal",
     unknown: "Desconocido",
@@ -639,7 +645,7 @@ export const es: Messages = {
     privacy: {
       title: "Privacidad",
       noTracking: "No se usan herramientas de análisis, cookies ni anuncios, y la app no hace solicitudes a servicios externos.",
-      storage: "Tu navegador guarda el idioma elegido. Si activas el guardado, también guarda tus objetivos y condiciones en este dispositivo, y los alérgenos solo si lo eliges; cualquiera que use este navegador puede verlos.",
+      storage: "Tu navegador guarda el idioma elegido y, si eliges claro u oscuro, el tema. Si activas el guardado, también guarda tus objetivos y condiciones en este dispositivo, y los alérgenos solo si lo eliges; cualquiera que use este navegador puede verlos.",
       memory: "Si no, los objetivos y las condiciones que introduces se quedan en la memoria del navegador mientras la página está abierta. Nunca se envían ni se ponen en la URL.",
       shoppingList: "La lista de la compra también se queda en la memoria solo mientras la página está abierta. No se guarda ni se envía.",
     },

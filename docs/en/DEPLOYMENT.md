@@ -16,6 +16,7 @@ The MVP is a static single-page application. `npm run build` writes everything t
 | Path | Purpose | Caching |
 |---|---|---|
 | `index.html` | The app shell for every route | Revalidate on every request (host default) |
+| `theme-init.js` | Applies the stored theme choice before the first paint (ADR-042) | Revalidate on every request (host default) |
 | `assets/*` | Content-hashed JavaScript, CSS, and content bundles | `public, max-age=31536000, immutable` |
 | `third-party-licenses.txt` | Licenses of the bundled dependencies (about page) | Host default |
 | `_headers` | Cloudflare/Netlify header rules generated from `platform/headers.ts` | Not served |
@@ -150,7 +151,7 @@ On https://recipe-discovery.apps.musica-sanare.com and on https://recipe-discove
 
 - `/`, `/recipes/beef_potato_tomato_stew`, and `/about` return 200 with the security headers (`curl -I`).
 - `/recipes/no_such_recipe` shows the "not found" state; an unknown path shows the targets view.
-- A file under `/assets/` has `Cache-Control: public, max-age=31536000, immutable`; `index.html` does not.
+- A file under `/assets/` has `Cache-Control: public, max-age=31536000, immutable`; `index.html` and `/theme-init.js` do not.
 - The SPA fallback responses for `/recipes/<id>`, `/about`, and unknown paths carry the `_headers` values (*Verified* on the first deployment, 2026-10-24). Check again after a change of `platform/headers.ts`.
 - The page makes no request to another origin and logs nothing in the console; the language switch works.
 - The HTML contains no script that the build did not write, such as the Cloudflare Web Analytics beacon. Fetch it with a browser `User-Agent` and `Accept: text/html`, because the beacon is injected only for browsers: `curl -s -A 'Mozilla/5.0 (Macintosh) AppleWebKit/605.1.15 Safari/605.1.15' -H 'Accept: text/html' <URL> | grep -c cloudflareinsights` prints `0`.

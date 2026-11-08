@@ -10,6 +10,7 @@ import { createTestI18n, testLocaleData } from "./testing/i18n";
 import { LOCALE_STORAGE_KEY } from "./i18n/localePreference";
 import { resources } from "./i18n/resources";
 import { axeViolations } from "./testing/axe";
+import { THEME_STORAGE_KEY } from "./theme/themePreference";
 
 beforeEach(() => {
   vi.stubGlobal("fetch", vi.fn(fixtureFetch));
@@ -19,6 +20,7 @@ beforeEach(() => {
 afterEach(() => {
   cleanup();
   localStorage.clear();
+  delete document.documentElement.dataset.theme;
   vi.unstubAllGlobals();
 });
 
@@ -130,6 +132,54 @@ describe("App shell", () => {
     expect(await screen.findByText(versions)).toBeDefined();
     expect(document.title).toBe(`${resources[locale].translation.nav.views.targets} — Recipe Discovery`);
     expect(fetch).toHaveBeenCalledWith(fixtureUrls.text[locale]);
+  });
+});
+
+describe("App theme choice (ADR-042)", () => {
+  it.each([
+    ["ja", "テーマ", ["端末の設定", "ライト", "ダーク"]],
+    ["en", "Theme", ["System", "Light", "Dark"]],
+    ["es", "Tema", ["Sistema", "Claro", "Oscuro"]],
+    ["fr", "Thème", ["Système", "Clair", "Sombre"]],
+  ] as const)("names the control and its three choices in %s, starting on system", async (locale, label, options) => {
+    renderApp(locale);
+    const select = await screen.findByLabelText<HTMLSelectElement>(label);
+    expect(select.value).toBe("system");
+    expect([...select.options].map((option) => option.text)).toEqual(options);
+    expect(localStorage.getItem(THEME_STORAGE_KEY)).toBeNull();
+    expect(document.documentElement.dataset.theme).toBeUndefined();
+  });
+
+  it("applies and stores a choice, and system removes it", async () => {
+    renderApp();
+    const select = await screen.findByLabelText("テーマ");
+
+    fireEvent.change(select, { target: { value: "dark" } });
+    expect(document.documentElement.dataset.theme).toBe("dark");
+    expect(localStorage.getItem(THEME_STORAGE_KEY)).toBe("dark");
+
+    fireEvent.change(select, { target: { value: "system" } });
+    expect(document.documentElement.dataset.theme).toBeUndefined();
+    expect(localStorage.getItem(THEME_STORAGE_KEY)).toBeNull();
+  });
+
+  it("shows the stored choice", async () => {
+    localStorage.setItem(THEME_STORAGE_KEY, "light");
+    renderApp();
+    expect((await screen.findByLabelText<HTMLSelectElement>("テーマ")).value).toBe("light");
+  });
+
+  it("keeps the choice for the page when storage fails", async () => {
+    renderApp();
+    const select = await screen.findByLabelText<HTMLSelectElement>("テーマ");
+    vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => {
+      throw new DOMException("denied", "QuotaExceededError");
+    });
+
+    fireEvent.change(select, { target: { value: "dark" } });
+
+    expect(select.value).toBe("dark");
+    expect(document.documentElement.dataset.theme).toBe("dark");
   });
 });
 

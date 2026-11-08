@@ -231,12 +231,12 @@ Status: **Complete (2026-11-08)**: direction B (ADR-041), released in release 15
 
 ## Phase 19 — Theme switch and polish
 
-Status: **Planned (2026-11-08)**. Prompt: `prompts/19-theme-and-polish.md` (written after Phase 18, 2026-11-08). The owner wants the in-app theme switch left out of Phase 18 and the Phase 18 follow-ups; the display typeface stays out because of its license work.
+Status: **In progress (2026-11-08)**: Stage 19.1 approved ("Stage 19.1 decisions" in [DECISIONS.md](DECISIONS.md)); Stage 19.2 done. Prompt: `prompts/19-theme-and-polish.md` (written after Phase 18, 2026-11-08). The owner wants the in-app theme switch left out of Phase 18 and the Phase 18 follow-ups; the display typeface stays out because of its license work.
 
 - Theme switch: system, light, or dark, with one new `localStorage` key that needs an ADR; "system" stores nothing.
 - Comparison view: the nutrition bars of Phase 18.
 - Desktop ingredient table: no sideways scrolling inside the two-column detail view at common widths, if an approved layout allows it.
-- Card height: measured against release 14 under equal conditions.
+- Card height: measured against release 14 under equal conditions. The cards of release 15 are taller, so Stage 19.3 also moves the bar onto the label row.
 - Startup chunk: more room below the 500 kB warning (467 kB today), for example by loading later views on demand.
 - Stages: 19.1 direction; 19.2 theme switch; 19.3 comparison view and ingredient table; 19.4 startup chunk; 19.5 release 17. No calculation, ranking, content, or meaning change. `i18next` 27 and `react-i18next` 18 are a separate stage (ADR-016 exception 2).
 

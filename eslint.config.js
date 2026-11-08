@@ -82,4 +82,9 @@ export default tseslint.config(
     files: ["**/*.js"],
     extends: [tseslint.configs.disableTypeChecked],
   },
+  {
+    // Classic scripts that run in the browser as they are (ADR-042).
+    files: ["public/**/*.js"],
+    languageOptions: { sourceType: "script", globals: globals.browser },
+  },
 );

@@ -1,4 +1,4 @@
-<!-- source: docs/en/DEPLOYMENT.md blob d69e757c8c722b3b1a94da799febfd7375184d59 -->
+<!-- source: docs/en/DEPLOYMENT.md blob 42cd82c028a9fe070d752af1491b7ff0045599f0 -->
 [English](../en/DEPLOYMENT.md) | 日本語 · [目次に戻る](README.md)
 
 > この文書は[英語版](../en/DEPLOYMENT.md)の翻訳。内容が異なる場合は英語版が優先する。
@@ -19,6 +19,7 @@ MVP は静的なシングルページアプリケーションだ。`npm run buil
 | パス | 用途 | キャッシュ |
 |---|---|---|
 | `index.html` | すべてのルートで使うアプリの外枠 | 毎回のリクエストで再検証（ホストの既定） |
+| `theme-init.js` | 保存したテーマの選択を最初の描画より前に適用する（ADR-042） | 毎回のリクエストで再検証（ホストの既定） |
 | `assets/*` | 内容のハッシュ付きの JavaScript、CSS、コンテンツのバンドル | `public, max-age=31536000, immutable` |
 | `third-party-licenses.txt` | 同梱した依存パッケージのライセンス（「このアプリについて」のページ） | ホストの既定 |
 | `_headers` | `platform/headers.ts` から生成した Cloudflare／Netlify のヘッダーのルール | 配信しない |
@@ -153,7 +154,7 @@ https://recipe-discovery.apps.musica-sanare.com と、https://recipe-discovery.m
 
 - `/`、`/recipes/beef_potato_tomato_stew`、`/about` が、セキュリティヘッダー付きで 200 を返す（`curl -I`）。
 - `/recipes/no_such_recipe` で「見つかりません」の状態を示し、未知のパスでは目標の画面を示す。
-- `/assets/` の下のファイルには `Cache-Control: public, max-age=31536000, immutable` があり、`index.html` にはない。
+- `/assets/` の下のファイルには `Cache-Control: public, max-age=31536000, immutable` があり、`index.html` と `/theme-init.js` にはない。
 - `/recipes/<id>`、`/about`、未知のパスに対する SPA のフォールバックのレスポンスに `_headers` の値が付く（最初のデプロイ、2026-10-24 に *検証済み*）。`platform/headers.ts` を変えたら確かめ直す。
 - ページが別のオリジンへリクエストを送らず、コンソールに何も出さない。言語の切り替えが動く。
 - HTML に、ビルドが書いていないスクリプト（Cloudflare Web Analytics のビーコンなど）がない。ビーコンはブラウザにだけ差し込まれるので、ブラウザの `User-Agent` と `Accept: text/html` を付けて取得する：`curl -s -A 'Mozilla/5.0 (Macintosh) AppleWebKit/605.1.15 Safari/605.1.15' -H 'Accept: text/html' <URL> | grep -c cloudflareinsights` が `0` を出す。

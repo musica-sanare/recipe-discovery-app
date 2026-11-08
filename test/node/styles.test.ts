@@ -6,7 +6,9 @@ import { describe, expect, it } from "vitest";
  * jsdom cannot compute contrast, so the axe checks skip it; this test checks the
  * token pairs of src/styles.css instead (WCAG 2.2 AA: 4.5:1 for text, 3:1 for borders and focus rings),
  * including every status and text color on each pastel (ADR-037) and the warning colors,
- * which must differ from every pastel (ADR-041 D2).
+ * which must differ from every pastel (ADR-041 D2). The dark tokens sit once under
+ * `@variant dark`, which serves both the OS setting and the choice (ADR-042);
+ * e2e/theme.spec.ts checks that the built CSS gives both the same values.
  */
 const css = readFileSync(path.join(import.meta.dirname, "..", "..", "src", "styles.css"), "utf8");
 
@@ -92,7 +94,7 @@ const PAIRS: readonly (readonly [string, string, number])[] = [
 
 describe.each([
   ["light", tokens(blockAfter("@theme"))],
-  ["dark", tokens(blockAfter("@media (prefers-color-scheme: dark)"))],
+  ["dark", tokens(blockAfter("@variant dark"))],
 ])("%s color tokens", (_scheme, palette) => {
   it("define every token used in the pairs", () => {
     const missing = PAIRS.flatMap(([a, b]) => [a, b]).filter((name) => !palette.has(name));

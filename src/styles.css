@@ -70,14 +70,48 @@
   --font-sans: system-ui, -apple-system, "Segoe UI", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic UI", sans-serif;
 }
 
+/*
+ * The dark scheme applies with the OS setting unless the user chose light, and with the
+ * choice dark (ADR-042). The tokens below sit in one place and the build expands them to both.
+ * On screen only: light text on paper would be unreadable, so print always uses the light tokens.
+ */
+@custom-variant dark {
+  @media screen and (prefers-color-scheme: dark) {
+    &:not([data-theme="light"]) {
+      @slot;
+    }
+  }
+  @media screen {
+    &[data-theme="dark"] {
+      @slot;
+    }
+  }
+}
+
 @layer base {
   :root {
     color-scheme: light dark;
     --shadow-soft: 0 8px 28px rgb(60 40 10 / 0.09);
   }
 
-  @media (prefers-color-scheme: dark) {
+  :root[data-theme="light"] {
+    color-scheme: light;
+  }
+
+  @media screen {
+    :root[data-theme="dark"] {
+      color-scheme: dark;
+    }
+  }
+
+  @media print {
     :root {
+      color-scheme: light;
+    }
+  }
+
+  :root {
+    @variant dark {
       --color-bg: #0f1114;
       --color-surface: #21252c;
       --color-surface-muted: #2d323b;

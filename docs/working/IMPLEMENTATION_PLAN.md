@@ -222,7 +222,7 @@ Status: **Complete (2026-11-08)**: the repository is public (2026-11-03), and re
 
 ## Phase 18 — UI refresh
 
-Status: **In progress (2026-11-08)**: Stage 18.1 decided direction B (ADR-041); Stages 18.2 to 18.4 are done, and release 15 was deployed by the owner's merge into `main` (2026-11-08) after CI passed on the release commit. Logs: [DECISIONS.md](DECISIONS.md) "Phase 18 start" and following. Prompt: `prompts/18-ui-refresh.md` (written after Phase 17, 2026-11-08). The owner finds dark mode hard to read and wants more character, playfulness, and a modern feel; the work runs in its own session.
+Status: **Complete (2026-11-08)**: direction B (ADR-041), released in release 15 by the owner's merge into `main` after CI passed; a WebKit legend fix found after the release waits for the next merge. Logs: [DECISIONS.md](DECISIONS.md) "Phase 18 start" to "Phase 18 acceptance". Logs: [DECISIONS.md](DECISIONS.md) "Phase 18 start" and following. Prompt: `prompts/18-ui-refresh.md` (written after Phase 17, 2026-11-08). The owner finds dark mode hard to read and wants more character, playfulness, and a modern feel; the work runs in its own session.
 
 - Dark mode: surface steps, tile colors that keep their hue, and a warning color of its own (today `peach` and `warning-surface` share one value in both schemes).
 - Character and modern feel (ADR-041): nutrition bars against the target range, a "new this session" mark, an illustrated loading state, a translucent header and bottom bar, the two-column desktop detail view, and CSS motion with reduced motion respected. Left out: a display typeface, an in-app theme switch, and cuisine badges.

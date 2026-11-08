@@ -42,11 +42,27 @@ function toggled<T>(list: readonly T[], item: T): T[] {
 }
 
 function Fieldset({ legend, hint, panel = false, children }: { readonly legend: string; readonly hint?: string; readonly panel?: boolean; readonly children: ReactNode }) {
-  return (
-    <fieldset className={panel ? "panel flex flex-col gap-2 p-4" : "flex flex-col gap-2 rounded-2xl border-2 border-surface-muted p-3"}>
-      <legend className={panel ? "float-left mb-1 w-full font-bold" : "px-1 font-bold"}>{legend}</legend>
+  const body = (
+    <>
       {hint !== undefined && <p className="m-0 text-sm text-muted">{hint}</p>}
       {children}
+    </>
+  );
+  if (!panel) {
+    return (
+      <fieldset className="flex flex-col gap-2 rounded-2xl border-2 border-surface-muted p-3">
+        <legend className="px-1 font-bold">{legend}</legend>
+        {body}
+      </fieldset>
+    );
+  }
+  // A panel shows its legend inside, as a heading: the fieldset stays a block and the layout
+  // moves to an inner element, because WebKit draws the floated legend of a flex fieldset in the
+  // border (docs/working/DECISIONS.md "Release 15 and fifteenth production deployment").
+  return (
+    <fieldset className="panel p-4">
+      <legend className="float-left mb-2 w-full font-bold">{legend}</legend>
+      <div className="clear-left flex flex-col gap-2">{body}</div>
     </fieldset>
   );
 }

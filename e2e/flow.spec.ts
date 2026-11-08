@@ -102,6 +102,18 @@ for (const locale of LOCALES) {
       }
     });
 
+    test("the legends of the targets panels stay inside their panels", async ({ page }) => {
+      await openTargets(page, locale);
+      const outside = await page.locator("fieldset.panel, fieldset.bg-butter").evaluateAll((fieldsets) =>
+        fieldsets.flatMap((fieldset) => {
+          const legend = fieldset.querySelector(":scope > legend");
+          if (legend === null) return [];
+          return legend.getBoundingClientRect().top < fieldset.getBoundingClientRect().top + 1 ? [legend.textContent] : [];
+        }),
+      );
+      expect(outside).toEqual([]);
+    });
+
     test("free-text conditions are read in the browser and applied before a search (ADR-034)", async ({ page }) => {
       const requests: string[] = [];
       page.on("request", (request) => requests.push(request.url()));

@@ -1589,6 +1589,11 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - The owner reported no new charge the day after, the Domains & Routes listing, CI on `cf4ef7e`, and Phase B in `musica-sanare-home` as done without problems (2026-11-08). Phase 17 is complete.
 - Open after Phase 17: 要確認 from ADR-040 (detaching the domain on rollback, the build-log wording) and from "Stage 17.1 decisions" (a UI notice about per-origin storage).
 
+### Phase 16 open items closed (2026-11-08)
+- UI_DESIGN §3.4: the desktop detail view is the single column of the mobile layout within the page width; the text no longer describes the two-column layout with a sticky nutrition column, which was never built. No app change.
+- Firefox and the retry of a failed `import()` (要確認 of "Stage 16.1 decisions", open after "Stage 16.2 per-locale loading"): `e2e/localeLoading.spec.ts` passed in Firefox 157.0 (Playwright build v1555, Playwright 1.64.1, desktop 1280 × 800) on `bd4da9c` plus the UI_DESIGN change, 2026-11-08 01:18–01:19 UTC: 10 passed, including the aborted chunk at the first render in four locales and on a language switch, where the retry loads the chunk without a reload. The owner approved the one-time browser download (105.7 MiB). The run used a temporary config that added a `desktop-firefox` project and was deleted afterwards; Firefox stays out of the E2E projects and CI.
+- Still open from Phase 16: the es and fr texts of `detail.missingFoods` have no native reviewer (open questions 9 and 23).
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in

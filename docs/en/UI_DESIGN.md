@@ -218,7 +218,7 @@ Mobile:
 │ Data 2026-03-27 · content …     │
 └─────────────────────────────────┘
 ```
-Desktop: two columns; the nutrition summary and adjustment controls stay in a sticky right column while ingredients and steps scroll on the left.
+Desktop: the same single column in the same order, within the page width (`max-w-5xl`); the nutrition tiles show four to a row from `md`. A two-column layout with a sticky nutrition column was planned but never built (checked after Phase 16).
 
 States:
 - Without a search (direct link or reload): default amounts, no fit statuses, no "fit to my targets".

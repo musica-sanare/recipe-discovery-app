@@ -222,10 +222,10 @@ Status: **Complete (2026-11-08)**: the repository is public (2026-11-03), and re
 
 ## Phase 18 — UI refresh
 
-Status: **Planned (2026-11-08)**. Prompt: `prompts/18-ui-refresh.md` (written after Phase 17, 2026-11-08). The owner finds dark mode hard to read and wants more character, playfulness, and a modern feel; the work runs in its own session.
+Status: **In progress (2026-11-08)**: Stage 18.1 decided direction B (ADR-041). Logs: [DECISIONS.md](DECISIONS.md) "Phase 18 start" and following. Prompt: `prompts/18-ui-refresh.md` (written after Phase 17, 2026-11-08). The owner finds dark mode hard to read and wants more character, playfulness, and a modern feel; the work runs in its own session.
 
 - Dark mode: surface steps, tile colors that keep their hue, and a warning color of its own (today `peach` and `warning-surface` share one value in both schemes).
-- Character and modern feel: directions chosen by the owner in Stage 18.1 from options such as a self-hosted display typeface, original illustrations or badges, motion with reduced motion respected, illustrated loading states, nutrition bars against the target range, an in-app theme switch, and the two-column desktop detail view.
+- Character and modern feel (ADR-041): nutrition bars against the target range, a "new this session" mark, an illustrated loading state, a translucent header and bottom bar, the two-column desktop detail view, and CSS motion with reduced motion respected. Left out: a display typeface, an in-app theme switch, and cuisine badges.
 - The stepper row in the detail view wraps its [+] button at 375 px; fixed in Stage 18.2.
 - Stages: 18.1 direction; 18.2 dark mode and the stepper fix; 18.3 character and components; 18.4 motion and finish; 18.5 release 15. No calculation, ranking, content, or meaning change.
 

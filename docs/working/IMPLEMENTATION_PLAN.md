@@ -229,6 +229,17 @@ Status: **Complete (2026-11-08)**: direction B (ADR-041), released in release 15
 - The stepper row in the detail view wraps its [+] button at 375 px; fixed in Stage 18.2.
 - Stages: 18.1 direction; 18.2 dark mode and the stepper fix; 18.3 character and components; 18.4 motion and finish; 18.5 release 15. No calculation, ranking, content, or meaning change.
 
+## Phase 19 — Theme switch and polish
+
+Status: **Planned (2026-11-08)**. Prompt: `prompts/19-theme-and-polish.md` (written after Phase 18, 2026-11-08). The owner wants the in-app theme switch left out of Phase 18 and the Phase 18 follow-ups; the display typeface stays out because of its license work.
+
+- Theme switch: system, light, or dark, with one new `localStorage` key that needs an ADR; "system" stores nothing.
+- Comparison view: the nutrition bars of Phase 18.
+- Desktop ingredient table: no sideways scrolling inside the two-column detail view at common widths, if an approved layout allows it.
+- Card height: measured against release 14 under equal conditions.
+- Startup chunk: more room below the 500 kB warning (467 kB today), for example by loading later views on demand.
+- Stages: 19.1 direction; 19.2 theme switch; 19.3 comparison view and ingredient table; 19.4 startup chunk; 19.5 release 17. No calculation, ranking, content, or meaning change. `i18next` 27 and `react-i18next` 18 are a separate stage (ADR-016 exception 2).
+
 ## Later (not MVP)
 
 Explanation text (an optional AI feature not built in Phase 12), browser history features, meal planning. Each needs its own design, evaluation in every supported locale, and approval.

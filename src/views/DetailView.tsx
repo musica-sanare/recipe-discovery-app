@@ -36,13 +36,13 @@ const SHOWN_NUTRIENTS: readonly Nutrient[] = ["ENERC_KCAL", "PROT-", "FAT-", "CH
 const TABLE_NUTRIENTS: readonly Nutrient[] = ["ENERC_KCAL", "PROT-", "FAT-", "CHOCDF-"];
 /**
  * Nutrient tiles keep the pastels of the candidate cards; the label, not the color, tells
- * them apart (ADR-037 D1). Energy spans the row, the other four follow two (phones) or
+ * them apart (ADR-037 D1, ADR-041 D2). Energy spans the row, the other four follow two (phones) or
  * four (from `md`) to a row. Salt equivalent has no target.
  */
 const TILE: Readonly<Partial<Record<Nutrient, string>>> = {
   ENERC_KCAL: "col-span-2 bg-butter md:col-span-4",
   "PROT-": "bg-mint",
-  "FAT-": "bg-peach",
+  "FAT-": "bg-lilac",
   "CHOCDF-": "bg-sky",
   NACL_EQ: "bg-surface-muted",
 };
@@ -61,31 +61,34 @@ function Section({ id, title, children }: { readonly id: string; readonly title:
 function Stepper({ label, value, onStep, decrease, increase }: { readonly label: string; readonly value: string; readonly onStep: (direction: 1 | -1) => void; readonly decrease: string; readonly increase: string }) {
   const button = "flex size-10 items-center justify-center rounded border border-border bg-surface-muted text-lg leading-none";
   return (
-    <div className="flex flex-wrap items-center gap-2">
-      <span className="min-w-40 font-medium">{label}</span>
-      <button
-        type="button"
-        className={button}
-        aria-label={decrease}
-        onClick={() => {
-          onStep(-1);
-        }}
-      >
-        −
-      </button>
-      <output className="min-w-16 text-center" aria-live="off">
-        {value}
-      </output>
-      <button
-        type="button"
-        className={button}
-        aria-label={increase}
-        onClick={() => {
-          onStep(1);
-        }}
-      >
-        +
-      </button>
+    // The label wraps inside its column, so the buttons never wrap away from the value (ADR-041).
+    <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2">
+      <span className="font-medium break-words">{label}</span>
+      <span className="flex items-center gap-2">
+        <button
+          type="button"
+          className={button}
+          aria-label={decrease}
+          onClick={() => {
+            onStep(-1);
+          }}
+        >
+          −
+        </button>
+        <output className="min-w-16 text-center" aria-live="off">
+          {value}
+        </output>
+        <button
+          type="button"
+          className={button}
+          aria-label={increase}
+          onClick={() => {
+            onStep(1);
+          }}
+        >
+          +
+        </button>
+      </span>
     </div>
   );
 }
@@ -266,18 +269,18 @@ function DetailBody({ recipe, recipeState, nutrition, fit, previous, onChange, o
             const note = bound === undefined || value === null ? undefined : boundaryNote(nutrient, value, bound);
             return (
               <div key={nutrient} className={`flex flex-col gap-0.5 rounded-2xl border border-transparent p-3 ${TILE[nutrient] ?? ""}`}>
-                <dt className="text-sm text-muted">{t(`nutrient.${nutrient}`)}</dt>
+                <dt className="text-sm">{t(`nutrient.${nutrient}`)}</dt>
                 <dd className="m-0 flex flex-col items-start gap-0.5 text-sm">
                   <span className="text-[1.75rem] font-extrabold tabular-nums leading-tight">{note === undefined || value === null ? nutrientText(t, locale, nutrient, value) : preciseNutrientText(t, locale, nutrient, value)}</span>
-                  {range?.shown === true && <span className="text-xs text-muted">{rangeText(t, locale, nutrient, range.low, range.high)}</span>}
+                  {range?.shown === true && <span className="text-[0.8125rem]">{rangeText(t, locale, nutrient, range.low, range.high)}</span>}
                   {value === null && nutrition.incomplete[nutrient].length > 0 && (
-                    <span className="text-xs text-muted">{t("detail.missingFoods", { list: listText(t, nutrition.incomplete[nutrient].map(ingredientName)) })}</span>
+                    <span className="text-[0.8125rem]">{t("detail.missingFoods", { list: listText(t, nutrition.incomplete[nutrient].map(ingredientName)) })}</span>
                   )}
-                  {fit !== undefined && line === undefined && nutrient !== "NACL_EQ" && <span className="text-xs text-muted">{t("status.noTarget")}</span>}
+                  {fit !== undefined && line === undefined && nutrient !== "NACL_EQ" && <span className="text-[0.8125rem]">{t("status.noTarget")}</span>}
                   {line !== undefined && targets !== undefined && (
                     <>
                       <StatusMarker status={line.status} label={note === undefined ? undefined : t(`status.${note}`)} />
-                      <span className="text-xs text-muted">{boundText(t, locale, targets, line)}</span>
+                      <span className="text-[0.8125rem]">{boundText(t, locale, targets, line)}</span>
                     </>
                   )}
                 </dd>

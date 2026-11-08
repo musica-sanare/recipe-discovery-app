@@ -83,6 +83,25 @@ for (const locale of LOCALES) {
       await heading1(page, t(locale, "nav.views.about"));
     });
 
+    test("stepper rows keep both buttons on the value's line at 320 and 375 px (ADR-041)", async ({ page }) => {
+      const label = (key: string) => new RegExp(`^${t(locale, key, { field: "\u0000" }).replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace("\u0000", ".+")}$`);
+      for (const width of [320, 375]) {
+        await page.setViewportSize({ width, height: 800 });
+        await page.goto("/recipes/beef_potato_tomato_stew");
+        await expect(page.getByRole("heading", { level: 2, name: t(locale, "detail.perServing") })).toBeVisible();
+        const decrease = page.getByRole("button", { name: label("adjust.decrease") });
+        const increase = page.getByRole("button", { name: label("adjust.increase") });
+        const count = await decrease.count();
+        expect(count).toBeGreaterThan(1);
+        await expect(increase).toHaveCount(count);
+        for (let index = 0; index < count; index += 1) {
+          const [down, up] = await Promise.all([decrease.nth(index).boundingBox(), increase.nth(index).boundingBox()]);
+          expect(up?.y, `row ${String(index)} at ${String(width)} px`).toBe(down?.y);
+        }
+        await expectNoHorizontalOverflow(page);
+      }
+    });
+
     test("free-text conditions are read in the browser and applied before a search (ADR-034)", async ({ page }) => {
       const requests: string[] = [];
       page.on("request", (request) => requests.push(request.url()));

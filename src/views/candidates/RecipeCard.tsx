@@ -10,11 +10,11 @@ import { adjustmentItems, allergenNotices, cardReasons, gapReasons, missedBound,
 import { boundText, listText, minutesText, nutrientText, preciseNutrientText, rangeText, reasonText, type TextContext } from "./texts";
 import { Icon } from "../../components/icons/Icon";
 
-/** Each nutrient keeps one pastel; the label, not the color, tells them apart (ADR-037 D1). */
+/** Each nutrient keeps one pastel; the label, not the color, tells them apart (ADR-037 D1, ADR-041 D2). */
 const TILE: Readonly<Record<"kcal" | "protein" | "fat" | "carbohydrate", string>> = {
   kcal: "bg-butter",
   protein: "bg-mint",
-  fat: "bg-peach",
+  fat: "bg-lilac",
   carbohydrate: "bg-sky",
 };
 
@@ -96,16 +96,16 @@ export function RecipeCard({ entry, recipe, calc, text, targets, context, mode, 
           const valueText = note === undefined || value === null ? nutrientText(t, locale, nutrient, value) : preciseNutrientText(t, locale, nutrient, value);
           return (
             <div key={target} className={`flex flex-col gap-0.5 rounded-2xl p-2.5 ${TILE[target]}`}>
-              <dt className="text-sm text-muted">{t(`target.${target}`)}</dt>
+              <dt className="text-sm">{t(`target.${target}`)}</dt>
               <dd className="m-0 flex flex-col items-start gap-0.5 text-sm">
                 <span className="text-xl font-extrabold tabular-nums leading-tight">{valueText}</span>
-                {range?.shown === true && <span className="text-xs text-muted">{rangeText(t, locale, nutrient, range.low, range.high)}</span>}
+                {range?.shown === true && <span className="text-[0.8125rem]">{rangeText(t, locale, nutrient, range.low, range.high)}</span>}
                 {line === undefined ? (
-                  <span className="text-xs text-muted">{t("status.noTarget")}</span>
+                  <span className="text-[0.8125rem]">{t("status.noTarget")}</span>
                 ) : (
                   <>
                     <StatusMarker status={line.status} label={note === undefined ? undefined : t(`status.${note}`)} />
-                    <span className="text-xs text-muted">{boundText(t, locale, targets, line)}</span>
+                    <span className="text-[0.8125rem]">{boundText(t, locale, targets, line)}</span>
                   </>
                 )}
               </dd>

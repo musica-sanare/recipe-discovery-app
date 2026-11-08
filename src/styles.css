@@ -3,7 +3,8 @@
 /*
  * Design tokens of the "soft pop" identity (docs/en/UI_DESIGN.md §5, ADR-037). Only these
  * colors exist; the default palette is removed so that every color passes the contrast
- * test in test/node/styles.test.ts. Pastels and `sun` carry no meaning by themselves.
+ * test in test/node/styles.test.ts. Pastels and `sun` carry no meaning by themselves; the
+ * warning colors differ from every pastel, so a notice never looks like a nutrient (ADR-041 D2).
  */
 @theme {
   --color-*: initial;
@@ -21,14 +22,17 @@
   --color-butter: #ffedb8;
   --color-sky: #dcebfb;
   --color-peach: #fce3da;
+  --color-lilac: #ece6fb;
   --color-sun: #f2b33d;
   --color-on-sun: #2a2722;
   --color-met: #23692e;
   --color-near: #9a5300;
   --color-not-met: #b3261e;
   --color-unknown: #5f584d;
-  --color-warning: #9a5300;
-  --color-warning-surface: #fce3da;
+  --color-warning: #8a4700;
+  --color-warning-surface: #ffdcc6;
+  --color-warning-edge: #b35f00;
+  --color-edge: #e6ddcf;
 
   --radius: 0.875rem;
 
@@ -44,29 +48,32 @@
 
   @media (prefers-color-scheme: dark) {
     :root {
-      --color-bg: #191815;
-      --color-surface: #23211d;
-      --color-surface-muted: #2d2a25;
-      --color-text: #f2ede4;
-      --color-muted: #c4bbad;
-      --color-border: #8f8678;
+      --color-bg: #0f1114;
+      --color-surface: #21252c;
+      --color-surface-muted: #2d323b;
+      --color-text: #f1f3f5;
+      --color-muted: #c3cad4;
+      --color-border: #8a93a1;
       --color-focus: #8ab4f8;
-      --color-primary: #93d19a;
-      --color-on-primary: #13240f;
-      --color-accent: #ff9478;
-      --color-mint: #1f3320;
-      --color-butter: #3a3120;
-      --color-sky: #1c2b3b;
-      --color-peach: #3e2620;
-      --color-sun: #f2b33d;
-      --color-on-sun: #2a2722;
-      --color-met: #7fd48a;
-      --color-near: #f2b45c;
-      --color-not-met: #ff8f87;
-      --color-unknown: #c4bbad;
-      --color-warning: #f2b45c;
-      --color-warning-surface: #3e2620;
-      --shadow-soft: none;
+      --color-primary: #8fdc9f;
+      --color-on-primary: #0e2414;
+      --color-accent: #ff9a7e;
+      --color-mint: #123a2b;
+      --color-butter: #3b3108;
+      --color-sky: #11304d;
+      --color-peach: #4a2416;
+      --color-lilac: #2f2550;
+      --color-sun: #f5c04a;
+      --color-on-sun: #1f1a10;
+      --color-met: #86e09a;
+      --color-near: #f7bd63;
+      --color-not-met: #ff9b93;
+      --color-unknown: #c3cad4;
+      --color-warning: #ffc46b;
+      --color-warning-surface: #4b1d1d;
+      --color-warning-edge: #ffb347;
+      --color-edge: #343944;
+      --shadow-soft: inset 0 1px 0 rgb(255 255 255 / 0.04), 0 10px 30px rgb(0 0 0 / 0.45);
     }
   }
 
@@ -165,7 +172,7 @@
   border-radius: 1.5rem;
   background-color: var(--color-surface);
   box-shadow: var(--shadow-soft);
-  border: 1px solid transparent;
+  border: 1px solid var(--color-edge);
 
   @media print {
     box-shadow: none;
@@ -174,7 +181,7 @@
 
 @utility notice-warning {
   border-radius: 1rem;
-  border-left: 4px solid var(--color-warning);
+  border-left: 4px solid var(--color-warning-edge);
   background-color: var(--color-warning-surface);
   padding: 0.75rem 1rem;
 }

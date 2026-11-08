@@ -112,11 +112,9 @@ Mobile:
 │ │     (★ New to you)           │ │
 │ │ ✓ Meets all targets          │ │
 │ │ Adjusted: chicken 120→160 g  │ │
-│ │ Energy             520 kcal  │ │
-│ │ [····(▓▓▓─●▓▓)·····]         │ │
+│ │ Energy  [··(▓─●▓)··] 520 kcal│ │
 │ │ ✓ in range  target 450–650   │ │
-│ │ Protein               43 g   │ │
-│ │ [··········(▓▓●▓▓▓▓▓]        │ │
+│ │ Protein [····(▓●▓▓▓]    43 g │ │
 │ │ ✓ in range  min. 35 g        │ │
 │ │ Fat 8 g … · Carb. 52 g …     │ │
 │ │ ( Lowest fat of these )      │ │
@@ -137,9 +135,9 @@ Mobile:
 │ Values are estimates …          │
 └─────────────────────────────────┘
 ```
-Desktop: cards in a grid of two or three columns; the comparison bar stays at the bottom. Each card shows the main protein group's icon and the four nutrients as labelled lines (Stage 18.3, ADR-041 D4): the label and the value on one line, a bar when the nutrient has a target, then the status, the target or "no target", and the estimate range. Statuses keep their marker shapes and texts.
+Desktop: cards in a grid of two or three columns; the comparison bar stays at the bottom. Each card shows the main protein group's icon and the four nutrients as labelled lines (Stage 18.3, ADR-041 D4; revised in Stage 19.3): the label, a bar when the nutrient has a target, and the value on one row, then the status, the target or "no target", and the estimate range. When the inside of a card is narrower than 17 rem, the bar takes its own row below the label and the value. Statuses keep their marker shapes and texts.
 
-- **Nutrition bar**: the target band in the nutrient's pastel (energy butter, protein mint, fat lilac, carbohydrate sky) with edges in `muted` on the sides the user set; the estimate range as a line when it is shown; the value as a dot. The scale runs from zero to 1.25 times the largest number among the value, the range, and the target (`src/views/nutritionBar.ts`). The bar is drawn from the displayed numbers, so a value with "just below the target" sits left of the band. It is decorative (`aria-hidden`) and hidden in forced colors and in print; no bar is drawn without a target or for an unknown value.
+- **Nutrition bar**: the target band in the nutrient's pastel (energy butter, protein mint, fat lilac, carbohydrate sky) with edges in `muted` on the sides the user set; the estimate range as a line when it is shown; the value as a dot. The scale runs from zero to 1.25 times the largest number among the value, the range, and the target (`src/views/nutritionBar.ts`); in the comparison view, the largest number of the whole row. The bar is drawn from the displayed numbers, so a value with "just below the target" sits left of the band. It is decorative (`aria-hidden`) and hidden in forced colors and in print; no bar is drawn without a target or for an unknown value.
 - **"New to you"**: a sun-colored chip under the time line on candidates that no earlier set of this page showed. The first set of a page has none. The list of shown recipes lives in memory (`seen` in `src/state/reducer.ts`) and survives a new search, not a reload.
 
 States:
@@ -159,10 +157,12 @@ Mobile: a table with one column per recipe (2–3), horizontally scrollable with
 │ ┌──────────┬────────┬────────┐  │
 │ │          │ Recipe A│ Recipe B│ │
 │ │ Time     │ 25 min │ 15 min │  │
-│ │ Energy   │ 520 ✓  │ 610 ✓  │  │
-│ │ Protein  │ 43 ✓   │ 36 ✓   │  │
-│ │ Fat      │ 8 ✓    │ 14 ✓   │  │
-│ │ Carb.    │ 52     │ 70     │  │
+│ │ Energy   │520 kcal│610 kcal│  │
+│ │ 450–650  │[·(●)·] │[·(─●)] │  │
+│ │          │ ✓ met  │ ✓ met  │  │
+│ │ Protein  │ 43 g … │ 36 g … │  │
+│ │ Fat      │ 8 g …  │ 14 g … │  │
+│ │ Carb.    │ 52 g … │ 70 g … │  │
 │ │ Adjusted │ yes    │ no     │  │
 │ │ Approx.  │ yes    │ no     │  │
 │ │          │[Details]│[Details]│ │
@@ -170,6 +170,12 @@ Mobile: a table with one column per recipe (2–3), horizontally scrollable with
 └─────────────────────────────────┘
 ```
 Desktop: the same table without horizontal scrolling.
+
+Nutrient rows (Stage 19.3):
+- Each cell holds the value, the bar when a target is set, the status with "just below" or "just above" as on the cards, and the shown range. Unknown values have no bar.
+- The row header names the target once, or "no target", because every recipe has the same target.
+- The bars of a row share one scale, so their positions can be compared.
+- Columns are fixed: the row headers are 116 px wide on phones and 176 px from `lg`, and the recipe columns are equal and at least 152 px wide.
 
 ### 3.4 Recipe detail and adjustment
 
@@ -223,7 +229,7 @@ Mobile:
 │ Data 2026-03-27 · content …     │
 └─────────────────────────────────┘
 ```
-Desktop (Stage 18.3, ADR-041 D4): from `lg`, the nutrition section moves to a right column of up to 22 rem and sticks below the header while the page scrolls, when the window is at least 48 rem high. The allergen notice, the adjustment, the shopping list, the ingredients, the steps, the safety notes, and the basis stay in the left column, so the values stay in view next to the steppers. The DOM order is the order of the mobile layout. Only the nutrition sticks: a sticky adjustment would hide a focused stepper under the nutrition panel when moving backwards (WCAG 2.4.11). The ingredient table is narrower and scrolls inside its region at 1024–1280 px.
+Desktop (Stage 18.3, ADR-041 D4): from `lg`, the nutrition section moves to a right column of up to 22 rem and sticks below the header while the page scrolls, when the window is at least 48 rem high. The allergen notice, the adjustment, and the shopping list stay in the left column, so the values stay in view next to the steppers. The ingredients, the steps, the safety notes, and the basis follow below both columns at full width (Stage 19.3), so the ingredient table shows every column without scrolling from 1024 px. The DOM order is the order of the mobile layout. Only the nutrition sticks: a sticky adjustment would hide a focused stepper under the nutrition panel when moving backwards (WCAG 2.4.11).
 
 States:
 - Without a search (direct link or reload): default amounts, no fit statuses, no "fit to my targets".

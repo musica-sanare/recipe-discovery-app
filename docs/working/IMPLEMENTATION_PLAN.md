@@ -231,7 +231,7 @@ Status: **Complete (2026-11-08)**: direction B (ADR-041), released in release 15
 
 ## Phase 19 — Theme switch and polish
 
-Status: **In progress (2026-11-08)**: Stage 19.1 approved ("Stage 19.1 decisions" in [DECISIONS.md](DECISIONS.md)); Stage 19.2 done. Prompt: `prompts/19-theme-and-polish.md` (written after Phase 18, 2026-11-08). The owner wants the in-app theme switch left out of Phase 18 and the Phase 18 follow-ups; the display typeface stays out because of its license work.
+Status: **In progress (2026-11-08)**: Stage 19.1 approved ("Stage 19.1 decisions" in [DECISIONS.md](DECISIONS.md)); Stages 19.2 and 19.3 done. Prompt: `prompts/19-theme-and-polish.md` (written after Phase 18, 2026-11-08). The owner wants the in-app theme switch left out of Phase 18 and the Phase 18 follow-ups; the display typeface stays out because of its license work.
 
 - Theme switch: system, light, or dark, with one new `localStorage` key that needs an ADR; "system" stores nothing.
 - Comparison view: the nutrition bars of Phase 18.

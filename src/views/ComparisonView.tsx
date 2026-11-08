@@ -1,14 +1,17 @@
 import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
+import { NutrientBar } from "../components/NutrientBar";
 import { StatusMarker } from "../components/StatusMarker";
 import { ViewHeading } from "../components/ViewHeading";
+import { boundaryNote } from "../format/format";
 import { effortKey } from "../i18n/engineCodes";
 import { useNavigation } from "../navigation/context";
 import { ViewLink } from "../navigation/ViewLink";
 import { useAppState, useLoadedContent } from "../state/context";
 import type { SearchState } from "../state/reducer";
-import { adjustmentItems, allergenNotices, targetLines } from "./candidates/display";
-import { listText, minutesText, nutrientText, rangeText } from "./candidates/texts";
+import { adjustmentItems, allergenNotices, missedBound, targetBounds, targetLines } from "./candidates/display";
+import { boundText, listText, minutesText, nutrientText, preciseNutrientText, rangeText } from "./candidates/texts";
+import { nutrientBar, shownLargest, TARGET_BAND } from "./nutritionBar";
 import { useTextContext } from "./useTextContext";
 
 /** Two or three candidates side by side (docs/en/UI_DESIGN.md §3.3). */
@@ -41,29 +44,48 @@ export function ComparisonView({ search }: { readonly search: SearchState }) {
     );
   }
 
-  const cell = "border-b border-border px-3 py-2 align-top";
-  const header = `${cell} bg-surface-muted text-left font-medium`;
-  const rows: { readonly key: string; readonly label: string; readonly cells: readonly ReactNode[] }[] = [
+  const targets = search.pool.request.targets;
+  const cell = "border-b border-border px-3 py-2 align-top wrap-anywhere";
+  const header = "border-b border-border bg-surface-muted px-2 py-2 text-left align-top text-sm font-medium wrap-anywhere lg:px-3 lg:text-base";
+  const rows: { readonly key: string; readonly label: string; readonly note?: string; readonly cells: readonly ReactNode[] }[] = [
     { key: "time", label: t("comparison.time"), cells: entries.map(({ entry }) => minutesText(t, locale, entry.minutes)) },
     { key: "effort", label: t("comparison.effort"), cells: entries.map(({ entry }) => t(`effort.${effortKey(entry.effort)}`)) },
     { key: "cuisine", label: t("comparison.cuisine"), cells: entries.map(({ entry }) => t(`cuisine.${entry.attributes.cuisine}`)) },
-    ...(["kcal", "protein", "fat", "carbohydrate"] as const).map((target) => ({
-      key: target,
-      label: t(`target.${target}`),
-      cells: entries.map(({ entry }) => {
+    ...(["kcal", "protein", "fat", "carbohydrate"] as const).map((target) => {
+      const lines = entries.map(({ entry }) => {
         const line = targetLines(entry).find((candidate) => candidate.target === target);
-        if (line === undefined) return null;
+        if (line === undefined) return undefined;
         const value = entry.solution.nutrition.perServing[line.nutrient];
-        const range = entry.solution.nutrition.ranges[line.nutrient];
-        return (
-          <div className="flex flex-col">
-            <span>{nutrientText(t, locale, line.nutrient, value)}</span>
-            {range?.shown === true && <span className="text-sm text-muted">{rangeText(t, locale, line.nutrient, range.low, range.high)}</span>}
-            {line.fit === undefined ? <span className="text-sm text-muted">{t("status.noTarget")}</span> : <StatusMarker status={line.fit.status} />}
-          </div>
-        );
-      }),
-    })),
+        const bound = line.fit === undefined || value === null ? undefined : missedBound(targets, line.fit);
+        const note = bound === undefined || value === null ? undefined : boundaryNote(line.nutrient, value, bound);
+        return { ...line, value, range: entry.solution.nutrition.ranges[line.nutrient], note };
+      });
+      const rowLargest = Math.max(...lines.map((line) => (line === undefined ? 0 : shownLargest(line.nutrient, line.value, line.note !== undefined, line.range ?? undefined))));
+      // The target is the same for every recipe, so the row header names it once.
+      const fit = lines.find((line) => line?.fit !== undefined)?.fit;
+      return {
+        key: target,
+        label: t(`target.${target}`),
+        note: fit === undefined ? t("status.noTarget") : boundText(t, locale, targets, fit),
+        cells: lines.map((line) => {
+          if (line === undefined) return null;
+          const { nutrient, value, range, note } = line;
+          const bar = line.fit === undefined ? undefined : nutrientBar(nutrient, value, note !== undefined, range ?? undefined, targetBounds(targets, target), rowLargest);
+          return (
+            <div className="flex flex-col gap-1">
+              <span className="text-lg font-extrabold tabular-nums leading-tight">{note === undefined || value === null ? nutrientText(t, locale, nutrient, value) : preciseNutrientText(t, locale, nutrient, value)}</span>
+              {bar !== undefined && <NutrientBar geometry={bar} fill={TARGET_BAND[target]} />}
+              {line.fit !== undefined && (
+                <span className="text-[0.8125rem]">
+                  <StatusMarker status={line.fit.status} label={note === undefined ? undefined : t(`status.${note}`)} />
+                </span>
+              )}
+              {range?.shown === true && <span className="text-[0.8125rem] text-muted">{rangeText(t, locale, nutrient, range.low, range.high)}</span>}
+            </div>
+          );
+        }),
+      };
+    }),
     { key: "adjusted", label: t("comparison.adjusted"), cells: entries.map(({ entry, recipe }) => (adjustmentItems(entry, recipe).length > 0 ? t("comparison.yes") : t("comparison.no"))) },
     {
       key: "uncertainty",
@@ -93,11 +115,12 @@ export function ComparisonView({ search }: { readonly search: SearchState }) {
         {t("comparison.caption")}
       </p>
       <div role="region" aria-labelledby="comparison-caption" tabIndex={0} className="panel overflow-x-auto">
-        <table className="w-full min-w-[32rem] border-collapse">
+        {/* Fixed columns: equal recipe columns give bars of equal length, and row headers keep their width in WebKit. */}
+        <table className={`w-full table-fixed border-collapse ${entries.length === 3 ? "min-w-[35.75rem]" : "min-w-[26.25rem]"}`}>
           <caption className="sr-only">{t("comparison.caption")}</caption>
           <thead>
             <tr>
-              <th scope="col" className={`${header} sticky left-0`}>
+              <th scope="col" className={`${header} sticky left-0 w-[7.25rem] lg:w-44`}>
                 {t("comparison.item")}
               </th>
               {entries.map(({ entry, name }) => (
@@ -114,6 +137,7 @@ export function ComparisonView({ search }: { readonly search: SearchState }) {
               <tr key={row.key}>
                 <th scope="row" className={`${header} sticky left-0`}>
                   {row.label}
+                  {row.note !== undefined && <span className="block text-[0.8125rem] font-normal">{row.note}</span>}
                 </th>
                 {row.cells.map((content, index) => (
                   <td key={entries[index]?.entry.recipe ?? index} className={cell}>

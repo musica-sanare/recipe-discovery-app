@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { barGeometry } from "./nutritionBar";
+import { barGeometry, shownLargest } from "./nutritionBar";
 
 describe("barGeometry", () => {
   it("places a range target, the estimate range, and the value on one scale", () => {
@@ -28,5 +28,20 @@ describe("barGeometry", () => {
 
   it("draws zero at the start of the track", () => {
     expect(barGeometry({ value: 0, target: { max: 0 } })).toMatchObject({ value: 0, band: { from: 0, to: 0 } });
+  });
+
+  it("gives bars of one comparison row one scale, so that positions can be compared", () => {
+    const target = { min: 30 };
+    const rowLargest = Math.max(shownLargest("PROT-", 38, false, undefined), shownLargest("PROT-", 54, false, undefined));
+    const [low, high] = [barGeometry({ value: 38, target, rowLargest }), barGeometry({ value: 54, target, rowLargest })];
+    expect(low.band).toEqual(high.band);
+    expect(high.value).toBe(80);
+    expect(low.value).toBeCloseTo((38 / 54) * 80, 0);
+  });
+
+  it("counts the shown range and ignores an unknown value or a hidden range in the row's largest number", () => {
+    expect(shownLargest("PROT-", 38, false, { high: 41, shown: true })).toBe(41);
+    expect(shownLargest("PROT-", 38, false, { high: 41, shown: false })).toBe(38);
+    expect(shownLargest("PROT-", null, false, undefined)).toBe(0);
   });
 });

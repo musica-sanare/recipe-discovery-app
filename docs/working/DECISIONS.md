@@ -1763,6 +1763,30 @@ The owner approved every recommendation of the proposal on 2026-11-08. Prototype
 - Forced colors (Chromium emulation): every choice follows the forced palette, which comes from the OS setting. WebKit in Playwright does not apply forced colors, so it is not checked there.
 - Not checked: real devices, the cost of the revalidation of `theme-init.js` on Cloudflare (Stage 19.5 checks the header), paper print, and es and fr wording by a native reviewer (open questions 9 and 23).
 
+### Stage 19.3 comparison view, ingredient table, and cards (2026-11-08)
+- Comparison view: as approved in "Stage 19.1 decisions". `nutrientBar` takes the largest shown number of the row (`shownLargest`), so the geometry still uses only displayed numbers. The "just below" and "just above" notes and their one-decimal values are new in this view and come from the same functions as on the cards. "No target" moves from each cell to the row header. Long words break inside their cells (`wrap-anywhere`), because a fixed table does not widen for them.
+- Ingredient table: as approved. Value cells do not wrap (`whitespace-nowrap`). A phone still scrolls inside the region: 333 px at 375 px, as before, and 388 px at 320 px.
+- Cards: the `dl` sets the columns and each line takes them through `subgrid`, so the bars of a card line up. A container query keeps the bar on its own row when the inside of the card is narrower than 17 rem (272 px).
+- Pitfall: Tailwind's `row-span-*` sets the `grid-row` shorthand, so a variant `@min-[17rem]:row-span-2` also resets `row-start-1`, and the value and the bar fell to a second row. `e2e/layout.spec.ts` caught it; the variant now sets `row-start-1` too.
+- Card height on the production build (mean natural height, px; three presets, four locales; the same recipes in all 36 conditions per engine):
+
+  | Engine, width | Release 14 | Release 16 | This stage | Conditions taller than release 14 |
+  |---|---|---|---|---|
+  | Chromium 320 | 826 | 865 | 833 | 9 of 12 |
+  | Chromium 375 | 708 | 774 | 692 | 1 of 12 |
+  | Chromium 1280 | 766 | 827 | 745 | 3 of 12 |
+  | WebKit 320 | 815 | 860 | 832 | 9 of 12 |
+  | WebKit 375 | 703 | 768 | 690 | 1 of 12 |
+  | WebKit 1280 | 765 | 815 | 737 | 0 of 12 |
+
+  At 375 and 1280 px, the cards are shorter than in release 14. At 320 px, which keeps the bar on its own row (254 px wide instead of 44 px), they stay about 1–2 % taller than in release 14 and 3–4 % shorter than in release 16. The smallest bar is 99 px at 375 px and 76 px at 1280 px.
+- Sizes (raw kB, gzip kB, against Stage 19.2): startup chunk 468.27, 142.98 → 470.34, 143.48, 29.7 kB below the 500 kB warning; CSS 28.80, 6.72 → 29.80, 6.92; locale chunks unchanged. Stage 19.4 wins this back.
+- Phone-class timing (`npm run test:e2e:timing`, release 16's code against this stage, alternating in two rounds, 1-minute load average 4.9–7.8; median / p90 at 4×, ms, release 16 → this stage): search "cut" 94.6 / 104.6 and 77.5 / 87.9 → 81.6 / 86.9 and 75.6 / 87.8; "bulk" 92.7 / 99.4 and 73.5 / 83.6 → 76.4 / 85.3 and 77.2 / 86.5; recalculation 11.2 / 12.2 and 10.3 / 11.3 → 10.5 / 12.0 and 10.8 / 12.0; startup to the view heading in `ja` 324.7 and 256.2 → 259.7 and 257.2. Release 16's first round ran under the highest load, so the second round is the fairer comparison; the stage stays within the variation of the machine, and the ADR-030 D10 threshold holds.
+- Checks (2026-11-08): `npm run check` passes (67 test files, 1,076 tests, licenses, content validation, production build); `npm run test:e2e` 419 passed and 1 skipped by design (420 tests, in the three projects). `test/ui/candidates.test.tsx` now expects the target in the row headers of the comparison.
+- Browser check on the production build: cards, detail, and a comparison of three recipes at 320, 375, and 1280 px, in `ja` and `fr`, in light and dark, in Chromium and WebKit: no page overflow and no page error; the ingredient table hides nothing at 1280 px, and `e2e/layout.spec.ts` checks 1024, 1152, and 1280 px in four locales.
+- Print and forced colors (Chromium, with the dark choice): the bars are hidden in both; the comparison prints with the light tokens and nothing hidden at 1280 px emulation width (PDF read).
+- Not checked: real devices; a "just below" note and an unknown value in the comparison view on screen (they use the functions and markers of the cards, but no test reaches them in this view); paper print; and WebKit in forced colors.
+
 ---
 
 ## ADR-001: Static site on Cloudflare with low platform lock-in
@@ -2165,7 +2189,7 @@ The owner approved every recommendation of the proposal on 2026-11-08. Prototype
     - A "new this session" mark on candidates not shown before in the session, held in memory only (ADR-030 D9); new text in four catalogs.
     - An illustrated loading state with a skeleton instead of the bare loading text.
     - A translucent, blurred header and bottom bar, with an opaque fallback where `backdrop-filter` is not supported and in forced colors.
-    - The two-column desktop detail view with the nutrition in a sticky right column next to the adjustment (UI_DESIGN §3.4). Revised (owner, 2026-11-08, after Stage 18.3): only the nutrition sticks; a sticky adjustment would hide a focused stepper under the nutrition when moving backwards (WCAG 2.4.11).
+    - The two-column desktop detail view with the nutrition in a sticky right column next to the adjustment (UI_DESIGN §3.4). Revised (owner, 2026-11-08, after Stage 18.3): only the nutrition sticks; a sticky adjustment would hide a focused stepper under the nutrition when moving backwards (WCAG 2.4.11). Revised (owner, 2026-11-08, Phase 19 Stage 19.1): the ingredients, the steps, the safety notes, and the basis follow below both columns at full width, and on cards the bar shares the row of the label and the value ("Stage 19.1 decisions").
   - **D5. Motion** (Stage 18.4): a short shuffle on "show a different type", a short confirmation when an adjustment makes a target met (reusing the status-change texts of ADR-030 D8), and a short highlight of changed values. CSS only, no animation library; none with `prefers-reduced-motion`.
   - **D6. Unchanged**: system fonts only (ADR-037 D2); icon rules (ADR-037 D3); the theme follows the OS setting with no in-app switch and no new storage key; CSP and headers; no calculation, ranking, content, or stored-data change. Revised (owner, 2026-11-08, Phase 19 Stage 19.1): the theme may be chosen in the app, with one new storage key (ADR-042).
 - Rationale: the cool base and surface steps fix the readability problem without changing the identity; separating the warning color is a safety point (principle 14); bars shorten the cards and show where a value sits in the target range at a glance, while the texts keep the meaning; the discovery touches add play where the product's value lies, discovering new dishes, without loud styling on dense views.

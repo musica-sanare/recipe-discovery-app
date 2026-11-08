@@ -10,15 +10,7 @@ import { adjustmentItems, allergenNotices, cardReasons, gapReasons, missedBound,
 import { boundText, listText, minutesText, nutrientText, preciseNutrientText, rangeText, reasonText, type TextContext } from "./texts";
 import { Icon } from "../../components/icons/Icon";
 import { NutrientLine } from "../../components/NutrientLine";
-import { nutrientBar } from "../nutritionBar";
-
-/** Each nutrient keeps one pastel for its target band; the label, not the color, tells them apart (ADR-037 D1, ADR-041 D2). */
-const BAND: Readonly<Record<"kcal" | "protein" | "fat" | "carbohydrate", string>> = {
-  kcal: "bg-butter",
-  protein: "bg-mint",
-  fat: "bg-lilac",
-  carbohydrate: "bg-sky",
-};
+import { nutrientBar, TARGET_BAND } from "../nutritionBar";
 
 export interface RecipeCardProps {
   readonly entry: Recommended;
@@ -99,7 +91,8 @@ export function RecipeCard({ entry, recipe, calc, text, targets, context, mode, 
         </p>
       )}
 
-      <dl aria-label={t("card.nutrientsLabel")} className="m-0 flex flex-col gap-3">
+      <div className="@container">
+      <dl aria-label={t("card.nutrientsLabel")} className="m-0 grid grid-cols-[minmax(0,1fr)_auto] gap-x-2 gap-y-2 @min-[17rem]:grid-cols-[auto_minmax(2.5rem,1fr)_auto]">
         {targetLines(entry).map(({ target, nutrient, fit: line }) => {
           const value = nutrition.perServing[nutrient];
           const range = nutrition.ranges[nutrient];
@@ -108,7 +101,7 @@ export function RecipeCard({ entry, recipe, calc, text, targets, context, mode, 
           const valueText = note === undefined || value === null ? nutrientText(t, locale, nutrient, value) : preciseNutrientText(t, locale, nutrient, value);
           const bar = line === undefined ? undefined : nutrientBar(nutrient, value, note !== undefined, range ?? undefined, targetBounds(targets, target));
           return (
-            <NutrientLine key={target} label={t(`target.${target}`)} value={valueText} bar={bar} fill={BAND[target]} size="card">
+            <NutrientLine key={target} label={t(`target.${target}`)} value={valueText} bar={bar} fill={TARGET_BAND[target]} size="card">
               {line === undefined ? (
                 <span>{t("status.noTarget")}</span>
               ) : (
@@ -122,6 +115,7 @@ export function RecipeCard({ entry, recipe, calc, text, targets, context, mode, 
           );
         })}
       </dl>
+      </div>
 
       {reasons.length > 0 &&
         (mode === "candidate" ? (

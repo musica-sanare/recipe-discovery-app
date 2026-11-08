@@ -44,12 +44,9 @@ const BAND: Readonly<Partial<Record<Nutrient, string>>> = {
   "CHOCDF-": "bg-sky",
 };
 
-/** Full class names, so that Tailwind generates each row span (5–7 items in the left column). */
-const NUTRITION_ROWS: Readonly<Record<number, string>> = { 5: "lg:row-span-5", 6: "lg:row-span-6", 7: "lg:row-span-7" };
-
-function Section({ id, title, children }: { readonly id: string; readonly title: string; readonly children: ReactNode }) {
+function Section({ id, title, wide = false, children }: { readonly id: string; readonly title: string; readonly wide?: boolean; readonly children: ReactNode }) {
   return (
-    <section aria-labelledby={id} className="panel flex flex-col gap-3 p-4">
+    <section aria-labelledby={id} className={`panel flex flex-col gap-3 p-4 ${wide ? "lg:col-span-2" : ""}`}>
       <h2 id={id} className="m-0 text-xl font-extrabold">
         {title}
       </h2>
@@ -228,8 +225,6 @@ function DetailBody({ recipe, recipeState, nutrition, fit, previous, onChange, o
     return ingredient === undefined ? key : foodName(ingredient.food);
   };
 
-  // Notice, adjustment, shopping list, ingredients, steps, safety, and basis share the left column.
-  const leftItems = 5 + (allergens.length > 0 || unknownFoods.length > 0 ? 1 : 0) + (safety.length > 0 ? 1 : 0);
   const changes = previous === undefined ? [] : differenceTexts(t, locale, previous.nutrition, nutrition);
   const statusChanges =
     previous?.fit === undefined || fit === undefined
@@ -261,8 +256,9 @@ function DetailBody({ recipe, recipeState, nutrition, fit, previous, onChange, o
         </div>
       )}
 
-      {/* From `lg` the nutrition sticks in the right column next to the adjustment; the DOM order stays (ADR-041 D4). */}
-      <div className={`lg:col-start-2 lg:row-start-1 [@media(min-height:48rem)]:lg:sticky [@media(min-height:48rem)]:lg:top-20 ${NUTRITION_ROWS[leftItems] ?? ""}`}>
+      {/* From `lg` the nutrition sticks in the right column next to the notice, the adjustment, and the shopping
+          list; the sections after them are full width, so the ingredient table fits. The DOM order stays (ADR-041 D4). */}
+      <div className={`lg:col-start-2 lg:row-start-1 [@media(min-height:48rem)]:lg:sticky [@media(min-height:48rem)]:lg:top-20 ${allergens.length > 0 || unknownFoods.length > 0 ? "lg:row-span-3" : "lg:row-span-2"}`}>
         <Section id="nutrition-heading" title={t("detail.perServing")}>
           <dl className="m-0 flex flex-col gap-4">
             {SHOWN_NUTRIENTS.map((nutrient) => {
@@ -420,7 +416,7 @@ function DetailBody({ recipe, recipeState, nutrition, fit, previous, onChange, o
 
       <DetailShoppingBlock recipe={recipe.id} recipeState={recipeState} />
 
-      <Section id="ingredients-heading" title={t("detail.ingredientsHeading", { servings: servingsText })}>
+      <Section id="ingredients-heading" wide title={t("detail.ingredientsHeading", { servings: servingsText })}>
         {/* The visible caption stays outside the scrolling region so that it does not scroll with the table. */}
         <p id="ingredients-caption" className="m-0 text-sm text-muted">
           {t("detail.ingredientsCaption", { servings: servingsText })}
@@ -440,7 +436,7 @@ function DetailBody({ recipe, recipeState, nutrition, fit, previous, onChange, o
                   {t("detail.sourceColumn")}
                 </th>
                 {TABLE_NUTRIENTS.map((nutrient) => (
-                  <th key={nutrient} scope="col" className="px-2 py-2 text-right">
+                  <th key={nutrient} scope="col" className="whitespace-nowrap px-2 py-2 text-right">
                     {t(`nutrient.${nutrient}`)}
                   </th>
                 ))}
@@ -480,7 +476,7 @@ function DetailBody({ recipe, recipeState, nutrition, fit, previous, onChange, o
                       </td>
                       {ingredient.counted ? (
                         TABLE_NUTRIENTS.map((nutrient) => (
-                          <td key={nutrient} className="px-2 py-2 text-right">
+                          <td key={nutrient} className="whitespace-nowrap px-2 py-2 text-right">
                             {nutrientText(t, locale, nutrient, ingredient.amounts[nutrient])}
                           </td>
                         ))
@@ -501,7 +497,7 @@ function DetailBody({ recipe, recipeState, nutrition, fit, previous, onChange, o
                   {t("detail.total", { servings: servingsText })}
                 </th>
                 {TABLE_NUTRIENTS.map((nutrient) => (
-                  <td key={nutrient} className="px-2 py-2 text-right">
+                  <td key={nutrient} className="whitespace-nowrap px-2 py-2 text-right">
                     {nutrientText(t, locale, nutrient, nutrition.total[nutrient])}
                   </td>
                 ))}
@@ -511,7 +507,7 @@ function DetailBody({ recipe, recipeState, nutrition, fit, previous, onChange, o
                   {t("detail.perServingRow")}
                 </th>
                 {TABLE_NUTRIENTS.map((nutrient) => (
-                  <td key={nutrient} className="px-2 py-2 text-right">
+                  <td key={nutrient} className="whitespace-nowrap px-2 py-2 text-right">
                     {nutrientText(t, locale, nutrient, nutrition.perServing[nutrient])}
                   </td>
                 ))}
@@ -521,7 +517,7 @@ function DetailBody({ recipe, recipeState, nutrition, fit, previous, onChange, o
         </div>
       </Section>
 
-      <Section id="steps-heading" title={t("detail.stepsHeading")}>
+      <Section id="steps-heading" wide title={t("detail.stepsHeading")}>
         <ol className="m-0 flex list-decimal flex-col gap-2 pl-6">
           {steps.steps.map((step) => {
             const stepTexts = texts?.steps[step.key];
@@ -542,7 +538,7 @@ function DetailBody({ recipe, recipeState, nutrition, fit, previous, onChange, o
       </Section>
 
       {safety.length > 0 && (
-        <Section id="safety-heading" title={t("detail.safetyHeading")}>
+        <Section id="safety-heading" wide title={t("detail.safetyHeading")}>
           <ul className="m-0 flex list-none flex-col gap-2 p-0">
             {safety.map((item) => (
               <li key={`${item.key}-${item.substitution ?? ""}`} className="notice-warning">
@@ -554,7 +550,7 @@ function DetailBody({ recipe, recipeState, nutrition, fit, previous, onChange, o
         </Section>
       )}
 
-      <Section id="basis-heading" title={t("detail.basisHeading")}>
+      <Section id="basis-heading" wide title={t("detail.basisHeading")}>
         <p className="m-0">{t("detail.basisIntro")}</p>
         <BasisLists basis={basis} nutrition={nutrition} ingredientName={ingredientName} />
         <p className="m-0">{t("assumption.energyFromTable")}</p>

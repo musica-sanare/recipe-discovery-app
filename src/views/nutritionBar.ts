@@ -15,6 +15,8 @@ export interface BarInput {
   readonly range?: { readonly low: number; readonly high: number } | undefined;
   /** The user's target; at least one side is set. */
   readonly target: { readonly min?: number | undefined; readonly max?: number | undefined };
+  /** The largest shown number of a comparison row, so that bars side by side share one scale. */
+  readonly rowLargest?: number | undefined;
 }
 
 export interface BarGeometry {
@@ -24,6 +26,14 @@ export interface BarGeometry {
   readonly range: { readonly from: number; readonly to: number } | undefined;
   readonly value: number;
 }
+
+/** Each nutrient keeps one pastel for its target band; the label, not the color, tells them apart (ADR-037 D1, ADR-041 D2). */
+export const TARGET_BAND: Readonly<Record<"kcal" | "protein" | "fat" | "carbohydrate", string>> = {
+  kcal: "bg-butter",
+  protein: "bg-mint",
+  fat: "bg-lilac",
+  carbohydrate: "bg-sky",
+};
 
 /** Room after the largest number, so that a value at the top of the scale stays inside the track. */
 const HEADROOM = 1.25;
@@ -42,17 +52,24 @@ export function nutrientBar(
   precise: boolean,
   range: { readonly low: number; readonly high: number; readonly shown: boolean } | undefined,
   target: { readonly min?: number; readonly max?: number } | undefined,
+  rowLargest?: number,
 ): BarGeometry | undefined {
   if (value === null || target === undefined || (target.min === undefined && target.max === undefined)) return undefined;
   return barGeometry({
     value: displayedValue(nutrient, value, precise),
     range: range?.shown === true ? { low: roundForDisplay(nutrient, range.low), high: roundForDisplay(nutrient, range.high) } : undefined,
     target,
+    rowLargest,
   });
 }
 
-export function barGeometry({ value, range, target }: BarInput): BarGeometry {
-  const largest = Math.max(value, range?.high ?? 0, target.max ?? 0, target.min ?? 0);
+/** The largest number one recipe shows for a nutrient: an input of `rowLargest`. An unknown value adds nothing. */
+export function shownLargest(nutrient: Nutrient, value: number | null, precise: boolean, range: { readonly high: number; readonly shown: boolean } | undefined): number {
+  return Math.max(value === null ? 0 : displayedValue(nutrient, value, precise), range?.shown === true ? roundForDisplay(nutrient, range.high) : 0);
+}
+
+export function barGeometry({ value, range, target, rowLargest = 0 }: BarInput): BarGeometry {
+  const largest = Math.max(value, range?.high ?? 0, target.max ?? 0, target.min ?? 0, rowLargest);
   const scale = largest > 0 ? largest * HEADROOM : 1;
   const position = (number: number) => percent(number, scale);
   return {

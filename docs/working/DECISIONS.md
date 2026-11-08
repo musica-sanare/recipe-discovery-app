@@ -1572,13 +1572,13 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - Per-origin storage: the locale preference and the opt-in saved conditions (ADR-036) on `workers.dev` do not carry over to the new hostname. Recorded in ADR-040 and [DEPLOYMENT.md](../en/DEPLOYMENT.md) "Public hostname"; no notice in the UI (要確認: whether the owner wants one).
 
 ### Release 14 and fourteenth production deployment (2026-11-03)
-- Release commit: `cf4ef7e` on `dev` (the `routes`, `workers_dev`, and `preview_urls` settings of ADR-040 and the docs). The owner merged `dev` into `main` locally (`0a5afff`, 2026-11-03 09:12 UTC, a merge commit with the same tree as `cf4ef7e`) and pushed; the `main` ruleset (Stage 17.3) accepted the push, which closes its 要確認 on local merges. Workers Builds built and deployed it (owner's report). The local dry run was skipped by the owner's choice: a failed build leaves production unchanged. CI on `cf4ef7e`: 要確認 (owner).
+- Release commit: `cf4ef7e` on `dev` (the `routes`, `workers_dev`, and `preview_urls` settings of ADR-040 and the docs). The owner merged `dev` into `main` locally (`0a5afff`, 2026-11-03 09:12 UTC, a merge commit with the same tree as `cf4ef7e`) and pushed; the `main` ruleset (Stage 17.3) accepted the push, which closes its 要確認 on local merges. Workers Builds built and deployed it (owner's report). The local dry run was skipped by the owner's choice: a failed build leaves production unchanged. CI passed on `cf4ef7e` (owner's report, 2026-11-08).
 - Checks before the release, on `cf4ef7e` (2026-11-03 09:43–09:47 UTC): `npm ci`, `npm run check` (64 test files with 1,023 tests, content validation, production build), `npm run test:e2e` (194 passed, 1 skipped by design), `npm audit --omit=dev` (0 vulnerabilities; `npm audit` the same 12 moderate `minimatch` findings), gitleaks 8.30.1 over all refs (195 commits, 5.08 MB, no leaks). These ran after the deployment, on the same tree.
 - Certificate of `recipe-discovery.apps.musica-sanare.com`: Google Trust Services (WE1), SAN `musica-sanare.com`, `recipe-discovery.apps.musica-sanare.com`, `*.recipe-discovery.apps.musica-sanare.com`, valid 2026-11-03 to 2027-02-01; HTTP/2 on Cloudflare addresses. No DNS record was created by hand.
 - [DEPLOYMENT.md](../en/DEPLOYMENT.md) §3 on both URLs (curl and the built-in browser): `/`, `/recipes/beef_potato_tomato_stew`, `/about`, `/recipes/no_such_recipe`, and an unknown path return 200 with the CSP, `X-Content-Type-Options`, `Referrer-Policy`, and `Permissions-Policy` values of `platform/headers.ts`; `index.html` has `max-age=0, must-revalidate`, `/assets/index-Crf0imZo.js` `public, max-age=31536000, immutable`; the HTML is identical on both URLs; `no_such_recipe` shows the "not found" state; the language switch works (es → ja).
 - Finding: on the new hostname only, the HTML served to browsers contained the Cloudflare Web Analytics beacon (automatic setup of the zone; `travel-discovery.apps.musica-sanare.com` had it too). The CSP blocked it and logged an error; no beacon data was sent. The owner disabled Web Analytics for the whole zone; from 09:41 UTC the HTML of both `*.apps.` hosts had no beacon, and the page loaded only same-origin resources. Recorded in ADR-040; DEPLOYMENT "Verify after a deploy" now checks the HTML for it. The Travel Discovery repository has no record of it (not edited here).
 - `workers.dev` still serves the same build with no request to another origin and no console message.
-- Owner, still open: the **Domains & Routes** listing (custom domain, `workers.dev` enabled, no other Worker changed); the Billing check on 2026-11-04; Phase B in `musica-sanare-home`.
+- Owner's checks (reported 2026-11-08, no problem): the **Domains & Routes** listing (custom domain, `workers.dev` enabled, no other Worker changed); no new charge in Billing the day after; Phase B in `musica-sanare-home`, where commit `5882b07` marks the hostname `live` and lists the app on the hub.
 - Rollback target: `4768cad` (release 13).
 
 ### Phase 17 acceptance (2026-11-03)
@@ -1586,7 +1586,8 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - DEPLOYMENT (with its Japanese twin), README (both languages), RELEASE_READINESS, IMPLEMENTATION_PLAN, and DECISIONS name the new URL; older records keep the URL they used.
 - [PUBLIC_RELEASE.md](PUBLIC_RELEASE.md) has every item done; the owner made the repository public and applied the GitHub settings; the signed-out check and the clean clone passed ("Stage 17.3 public-release check").
 - `npm run check` and `npm run test:e2e` pass on the final release commit; nothing was deployed except by the owner's merge into `main`.
-- Open: the owner's next-day Billing check (the last acceptance item of the prompt), the Domains & Routes report, CI on `cf4ef7e`, and Phase B in `musica-sanare-home`; 要確認 from ADR-040 (detaching the domain on rollback, the build-log wording) and from "Stage 17.1 decisions" (a UI notice about per-origin storage).
+- The owner reported no new charge the day after, the Domains & Routes listing, CI on `cf4ef7e`, and Phase B in `musica-sanare-home` as done without problems (2026-11-08). Phase 17 is complete.
+- Open after Phase 17: 要確認 from ADR-040 (detaching the domain on rollback, the build-log wording) and from "Stage 17.1 decisions" (a UI notice about per-origin storage).
 
 ---
 
@@ -1963,7 +1964,7 @@ The owner approved the plan below as recommended (P1–P10) and the egg rule in 
 - Limits: the first render waits for one more small request; Stage 16.2 measures startup and switching. Whether a failed `import()` is retried by browsers is 要確認 ("Stage 16.1 decisions").
 
 ## ADR-040: Public hostname on musica-sanare.com
-- Status: **Accepted** (owner, 2026-11-03). Configured in `platform/cloudflare/wrangler.jsonc` and attached by the deployment of release 14 (2026-11-03, "Release 14 and fourteenth production deployment"). The registry of `musica-sanare-home` lists it as `planned` until the owner's next-day Billing check and Phase B there.
+- Status: **Accepted** (owner, 2026-11-03). Configured in `platform/cloudflare/wrangler.jsonc` and attached by the deployment of release 14 (2026-11-03, "Release 14 and fourteenth production deployment"). The registry of `musica-sanare-home` lists it as `live` since Phase B there (`5882b07`), after the owner's next-day Billing check showed no new charge.
 - Context: the owner serves the hub page and every web app under `musica-sanare.com`; the `musica-sanare-home` repository owns the hostname rules and the registry (its ADR-0001 and `docs/en/DOMAINS.md`), and app repositories record only their own decision. The zone is on the Cloudflare Free plan. The site so far ran only on `workers.dev` (ADR-035).
 - Decision:
   - The Worker `recipe-discovery` serves **`recipe-discovery.apps.musica-sanare.com`**, the name the hub's rule `<full-app-name>.apps.musica-sanare.com` gives the product name in full.

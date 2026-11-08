@@ -82,7 +82,7 @@ Release 8 was checked on `c2d56d0` on 2026-10-31 (10:41–10:45 UTC): `npm ci`, 
 
 | Item | Status | What is needed |
 |---|---|---|
-| CI on the release commit (release 14) | **要確認** | The owner reported the Workers Builds build of `0a5afff` as passed (2026-11-03); CI on `cf4ef7e` is still to be confirmed by the owner. The same checks passed locally (§1) |
+| CI on the release commit (release 14) | **Passed** | Both jobs passed on `cf4ef7e` (owner's report, 2026-11-08); the Workers Builds build of `0a5afff` passed (owner's report, 2026-11-03) |
 | Secret scan of the release history (release 14) | **Passed** on `cf4ef7e` | gitleaks 8.30.1: `gitleaks git --log-opts=--all --redact` (195 commits, 5.08 MB): no leaks (2026-11-03 09:46 UTC) |
 | CI on the release commit (release 13) | **Passed** | Both jobs passed on `84c2e41` (owner's report, 2026-11-01) |
 | Secret scan of the release history (release 13) | **Passed** on `95f0c44` | gitleaks 8.30.1: `gitleaks git --log-opts=--all --redact` (187 commits, 5.01 MB) and `gitleaks dir --redact` on the tracked files (`git archive HEAD`, 3.79 MB): no leaks (2026-11-01 10:40 UTC). The only `.env*` path in the history is the removed `.env.example` of Phase 12 with placeholders |
@@ -234,6 +234,6 @@ Since ADR-035, a release is the owner's merge into `main`; Workers Builds builds
 | Production deployment approved | 13 | 2026-11-01 | Owner (merged `dev` into `main`, `4768cad`) |
 | Deployed and checked | 13 | 2026-11-01 | Workers Builds; checked by Claude ([DECISIONS.md](DECISIONS.md) "Release 13 and thirteenth production deployment") |
 | Acceptance criteria checked | 14 | 2026-11-03 | Claude (§1) |
-| Release blockers resolved | 14 | 2026-11-03 | Claude (local checks, secret scan; `minimatch` unchanged); CI on `cf4ef7e` 要確認 (owner) |
+| Release blockers resolved | 14 | 2026-11-03 | Owner (CI passed, reported 2026-11-08) and Claude (secret scan; `minimatch` unchanged) |
 | Production deployment approved | 14 | 2026-11-03 | Owner (merged `dev` into `main`, `0a5afff`) |
 | Deployed and checked | 14 | 2026-11-03 | Workers Builds; checked by Claude ([DECISIONS.md](DECISIONS.md) "Release 14 and fourteenth production deployment") |

@@ -7,7 +7,7 @@ import { calculateNutrition, type RecipeNutrition } from "../../domain/nutrition
 import type { CalcBundle } from "../../shared/bundle.ts";
 import type { Locale } from "../../shared/locales.ts";
 import { App } from "../../src/App.tsx";
-import { formatDifference, formatNutrient } from "../../src/format/format.ts";
+import { displayedDifference, formatDifference, formatNutrient } from "../../src/format/format.ts";
 import { createTestI18n } from "../../src/testing/i18n.ts";
 import { axeViolations } from "../../src/testing/axe.ts";
 import { repositoryEngine, validationBundleInput } from "../../tools/content/repository.ts";
@@ -55,6 +55,14 @@ async function openDetail(id: string, locale: Locale = "ja") {
 }
 
 /** The per-serving values as shown, by nutrient label. */
+function valueElements(): Record<string, Element> {
+  const list = within(screen.getByRole("region", { name: /1人分の栄養|Per serving|Por ración|Par portion/ })).getAllByRole("term");
+  return Object.fromEntries(list.flatMap((term) => {
+    const value = term.nextElementSibling?.querySelector("span");
+    return value ? [[term.textContent, value]] : [];
+  }));
+}
+
 function shownValues(): Record<string, string> {
   const list = within(screen.getByRole("region", { name: /1人分の栄養|Per serving|Por ración|Par portion/ })).getAllByRole("term");
   return Object.fromEntries(list.map((term) => [term.textContent, term.nextElementSibling?.querySelector("span")?.textContent ?? ""]));
@@ -86,15 +94,11 @@ describe("recipe detail without a search", () => {
     expect(screen.getByText(/エネルギーは成分表の値を使っているため/)).toBeDefined();
   });
 
-  it("shows the nutrients as tiles, with energy across the row (Stage 16.1 decisions)", async () => {
+  it("lists the five nutrients with their values and draws no bar without a target (ADR-041 D4)", async () => {
     await openDetail("chicken_lemon_herb_grill");
-    const tiles = within(screen.getByRole("region", { name: "1人分の栄養（推定値）" }))
-      .getAllByRole("term")
-      .map((term) => term.parentElement?.className ?? "");
-    expect(tiles).toHaveLength(5);
-    expect(tiles[0]).toContain("col-span-2");
-    // Forced colors keep an edge on every tile.
-    for (const tile of tiles) expect(tile).toContain("border-transparent");
+    const region = screen.getByRole("region", { name: "1人分の栄養（推定値）" });
+    expect(within(region).getAllByRole("term").map((term) => term.textContent)).toEqual(["エネルギー", "たんぱく質", "脂質", "炭水化物", "食塩相当量"]);
+    expect(region.querySelectorAll('div[aria-hidden="true"]')).toHaveLength(0);
   });
 
   it("shows an unknown value with the ingredients that lack data, never zero", async () => {
@@ -122,11 +126,18 @@ describe("recipe detail without a search", () => {
     expect(shownValues()["たんぱく質"]).toBe(`${formatNutrient("ja", "PROT-", after.perServing["PROT-"]) ?? ""} g`);
     const protein = formatDifference("ja", "PROT-", before.perServing["PROT-"], after.perServing["PROT-"]) ?? "";
     expect(screen.getByText(new RegExp(`^前回から：.*たんぱく質 ${protein.replace("+", "\\+")} g`))).toBeDefined();
+    // Only values whose displayed number changed get the short highlight (ADR-041 D5).
+    const highlighted = () => Object.entries(valueElements()).filter(([, element]) => element.className.includes("animate-flash")).map(([name]) => name);
+    const names = { ENERC_KCAL: "エネルギー", "PROT-": "たんぱく質", "FAT-": "脂質", "CHOCDF-": "炭水化物", NACL_EQ: "食塩相当量" } as const;
+    const changed = (Object.keys(names) as (keyof typeof names)[]).filter((nutrient) => displayedDifference(nutrient, before.perServing[nutrient], after.perServing[nutrient]) !== 0).map((nutrient) => names[nutrient]);
+    expect(changed).toContain("たんぱく質");
+    expect(highlighted()).toEqual(changed);
 
     fireEvent.click(screen.getByRole("button", { name: "人数を増やす" }));
     expect(screen.getByRole("heading", { level: 2, name: "材料（2人分）" })).toBeDefined();
     // Per-serving values do not depend on servings (ADR-028 F).
     expect(screen.getByText("前回から変化はありません。")).toBeDefined();
+    expect(highlighted()).toEqual([]);
 
     fireEvent.click(screen.getByRole("button", { name: "元の量に戻す" }));
     expect(shownValues()["たんぱく質"]).toBe(`${formatNutrient("ja", "PROT-", before.perServing["PROT-"]) ?? ""} g`);
@@ -191,6 +202,9 @@ describe("recipe detail after a search", () => {
 
     expect(shownValues()["たんぱく質"]).toBe(cardProtein);
     expect(screen.getAllByText(/目標の範囲内|目標に近い|目標外/).length).toBeGreaterThan(0);
+    // The preset sets energy, protein, and fat; carbohydrate and salt equivalent have no bar.
+    const region = screen.getByRole("region", { name: "1人分の栄養（推定値）" });
+    expect(region.querySelectorAll('div[aria-hidden="true"]')).toHaveLength(3);
     fireEvent.click(screen.getByRole("button", { name: "元の量に戻す" }));
     fireEvent.click(screen.getByRole("button", { name: "目標に合わせる" }));
     expect(shownValues()["たんぱく質"]).toBe(cardProtein);

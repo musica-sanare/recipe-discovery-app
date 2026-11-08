@@ -96,6 +96,14 @@ export function boundaryNote(nutrient: Nutrient, value: number, bound: { readonl
   return undefined;
 }
 
+/**
+ * The number a value is shown as: the display rounding, or one decimal finer with a boundary
+ * note. Drawings use it so that they match the text next to them (ADR-041 D4).
+ */
+export function displayedValue(nutrient: Nutrient, value: number, precise: boolean): number {
+  return precise ? Number(value.toFixed(DISPLAY_DECIMALS[nutrient] + 1)) : roundForDisplay(nutrient, value);
+}
+
 /** The value one decimal finer than the display unit, for values with a boundary note. */
 export function formatPrecise(locale: Locale, nutrient: Nutrient, value: number): string {
   return formatNumber(locale, value, DISPLAY_DECIMALS[nutrient] + 1);

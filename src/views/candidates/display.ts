@@ -46,15 +46,23 @@ export function targetLines(entry: PoolEntry): TargetLine[] {
   return (["kcal", "protein", "fat", "carbohydrate"] as const).map((target) => ({ target, nutrient: TARGET_NUTRIENT[target], fit: fits.get(target) }));
 }
 
+/** The user's bounds for one target; a side the user did not set is absent. */
+export function targetBounds(targets: Targets, target: TargetKey): { readonly min?: number; readonly max?: number } {
+  switch (target) {
+    case "kcal":
+      return targets.kcal;
+    case "protein":
+      return targets.proteinMin === undefined ? {} : { min: targets.proteinMin };
+    case "fat":
+      return targets.fatMax === undefined ? {} : { max: targets.fatMax };
+    case "carbohydrate":
+      return targets.carbohydrate ?? {};
+  }
+}
+
 /** The bound a boundary note refers to: the one the full value is outside of. */
 export function missedBound(targets: Targets, fit: NutrientFit): { readonly side: "min" | "max"; readonly value: number } | undefined {
-  const bounds: Readonly<Record<TargetKey, { readonly min?: number; readonly max?: number }>> = {
-    kcal: targets.kcal,
-    protein: targets.proteinMin === undefined ? {} : { min: targets.proteinMin },
-    fat: targets.fatMax === undefined ? {} : { max: targets.fatMax },
-    carbohydrate: targets.carbohydrate ?? {},
-  };
-  const bound = bounds[fit.target];
+  const bound = targetBounds(targets, fit.target);
   if (fit.position === "below_min" && bound.min !== undefined) return { side: "min", value: bound.min };
   if (fit.position === "above_max" && bound.max !== undefined) return { side: "max", value: bound.max };
   return undefined;

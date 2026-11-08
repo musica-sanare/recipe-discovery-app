@@ -30,7 +30,7 @@ The repository was made public by the owner on 2026-11-03. Every item below cove
 ## 4. Presentation
 
 - [x] `LICENSE`: MIT (ADR-031), except the MEXT-derived data; dependency licenses checked by `npm run check:licenses`.
-- [x] README status and quick start accurate (English and Japanese): status updated to release 13 (2026-11-03); the quick start needs no private resource. The URL changes again with the custom domain (Stage 17.2).
+- [x] README status and quick start accurate (English and Japanese): status updated to release 13 (2026-11-03) and to release 14 with the custom domain (2026-11-03); the quick start needs no private resource.
 - [x] `SECURITY.md`: added (2026-11-03), pointing to private vulnerability reporting.
 - [x] `CONTRIBUTING.md` and templates: not wanted (owner, 2026-11-03).
 
@@ -38,7 +38,7 @@ The repository was made public by the owner on 2026-11-03. Every item below cove
 
 - [x] Tests, lint, and build pass on the commit to publish (`1cecbda`, 2026-11-03 05:35–05:38 UTC): `npm ci`, `npm run check` (64 test files with 1,023 tests, content validation, production build), `npm run test:e2e` (194 passed, 1 skipped by design); CI green after the owner's push (owner's report).
 - [x] Dependency audit clean for production dependencies: `npm audit --omit=dev` found 0 vulnerabilities (2026-11-03).
-- [x] Secret scan repeated on the final commit: `gitleaks git --log-opts="--all" --redact .` on `1cecbda`, 192 commits, 5.06 MB, no leaks (2026-11-03 05:35 UTC). A later commit before the switch (for example the custom domain) needs the scan again.
+- [x] Secret scan repeated on the final commit: `gitleaks git --log-opts="--all" --redact .` on `1cecbda`, 192 commits, 5.06 MB, no leaks (2026-11-03 05:35 UTC). Repeated after the switch on `cf4ef7e` (release 14, the custom domain): 195 commits, 5.08 MB, no leaks (2026-11-03 09:46 UTC).
 
 ## 6. Switch (owner)
 
@@ -59,4 +59,4 @@ The repository was made public by the owner on 2026-11-03. Every item below cove
 - [x] Signed out (GitHub API without credentials, 2026-11-03): branches `main` and `dev` only, no tags, no releases, pull request #1 closed, license MIT.
 - [x] HTTPS clone without credentials into an empty directory (2026-11-03): `npm ci` and `npm run check` (1,023 tests, production build) pass.
 - [x] No secret scanning alerts (owner's report, 2026-11-03).
-- [x] README status updated (release 13, 2026-11-03); it changes again with the custom domain.
+- [x] README status updated (release 13, 2026-11-03; release 14 with the custom domain, 2026-11-03).

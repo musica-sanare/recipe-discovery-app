@@ -215,10 +215,19 @@ Status: **Complete (2026-11-01)**: per-locale UI catalogs and free-text word lis
 
 ## Phase 17 — Custom domain and repository publication
 
-Status: **Planned (2026-11-01)**. Prompt: `prompts/17-custom-domain-and-publication.md` (written after Phase 16, 2026-11-01). The owner wants the production site on a custom domain and the repository made public.
+Status: **Complete (2026-11-08)**: the repository is public (2026-11-03), and release 14 serves the site on `recipe-discovery.apps.musica-sanare.com` with `workers.dev` kept (ADR-040); no new charge the day after, and the hub lists the hostname as `live`. Logs: [DECISIONS.md](DECISIONS.md) "Phase 17 start" to "Phase 17 acceptance", and [PUBLIC_RELEASE.md](PUBLIC_RELEASE.md). Prompt: `prompts/17-custom-domain-and-publication.md` (written after Phase 16, 2026-11-01). The owner wants the production site on a custom domain and the repository made public.
 
 - Custom domain: `recipe-discovery.apps.musica-sanare.com` on the owner's existing domain, following the domain plan of the owner's `musica-sanare-home` repository (zone on the Cloudflare Free plan; no registration or zone change). It is attached as a Workers Custom Domain through `routes` in `platform/cloudflare/wrangler.jsonc`, with `workers.dev` kept; the merge that attaches it waits until the owner has confirmed the Billing check of the first `*.apps.` custom domain. Claude prepares the config change, the owner steps, the checks afterwards, and the doc updates (production URL in [DEPLOYMENT.md](../en/DEPLOYMENT.md), README, and RELEASE_READINESS, with translations). No app code change is expected (all URLs in the app are relative; the CSP uses `'self'`).
 - Repository publication: repeat the pre-publication check of 2026-10-25 on the full history ("Pre-publication check"): secret scan, authors and committers, personal data, local paths, account identifiers, Claude-only files; the owner decides on every doubtful item and changes the visibility on GitHub. `main` already holds the released history.
+
+## Phase 18 — UI refresh
+
+Status: **In progress (2026-11-08)**: Stage 18.1 decided direction B (ADR-041); Stages 18.2 to 18.4 are done, and release 15 is prepared and waits for CI and the owner's merge into `main`. Logs: [DECISIONS.md](DECISIONS.md) "Phase 18 start" and following. Prompt: `prompts/18-ui-refresh.md` (written after Phase 17, 2026-11-08). The owner finds dark mode hard to read and wants more character, playfulness, and a modern feel; the work runs in its own session.
+
+- Dark mode: surface steps, tile colors that keep their hue, and a warning color of its own (today `peach` and `warning-surface` share one value in both schemes).
+- Character and modern feel (ADR-041): nutrition bars against the target range, a "new this session" mark, an illustrated loading state, a translucent header and bottom bar, the two-column desktop detail view, and CSS motion with reduced motion respected. Left out: a display typeface, an in-app theme switch, and cuisine badges.
+- The stepper row in the detail view wraps its [+] button at 375 px; fixed in Stage 18.2.
+- Stages: 18.1 direction; 18.2 dark mode and the stepper fix; 18.3 character and components; 18.4 motion and finish; 18.5 release 15. No calculation, ranking, content, or meaning change.
 
 ## Later (not MVP)
 

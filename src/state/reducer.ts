@@ -85,9 +85,25 @@ export interface AppState {
   /** Kept by a new search; lost on reload like everything else. */
   readonly shoppingList: ShoppingListState;
   readonly saved: SavedConditionsState;
+  /**
+   * Recipes shown in earlier candidate sets of this page, for the "new to you" mark
+   * (ADR-041 D4). Memory only, like everything else here (ADR-030 D9).
+   */
+  readonly seen: readonly RecipeId[];
 }
 
-export const INITIAL_STATE: AppState = { draft: undefined, search: undefined, compare: [], adjustments: {}, shoppingList: EMPTY_SHOPPING_LIST, saved: INITIAL_SAVED };
+export const INITIAL_STATE: AppState = { draft: undefined, search: undefined, compare: [], adjustments: {}, shoppingList: EMPTY_SHOPPING_LIST, saved: INITIAL_SAVED, seen: [] };
+
+/** `seen` with the set that leaves the screen added. */
+function seenWith(seen: readonly RecipeId[], leaving: readonly RecipeId[]): readonly RecipeId[] {
+  const added = leaving.filter((recipe) => !seen.includes(recipe));
+  return added.length === 0 ? seen : [...seen, ...added];
+}
+
+/** A candidate is new to the user when an earlier set exists and did not show it. */
+export function isNewToUser(seen: readonly RecipeId[], recipe: RecipeId): boolean {
+  return seen.length > 0 && !seen.includes(recipe);
+}
 
 export type AppAction =
   | { readonly type: "draftChanged"; readonly draft: TargetsDraft }
@@ -128,6 +144,7 @@ export function appReducer(state: AppState, action: AppAction): AppState {
         adjustments: {},
         shoppingList: state.shoppingList,
         saved: state.saved.notice === "restored" ? { ...state.saved, notice: undefined, dropped: 0 } : state.saved,
+        seen: seenWith(state.seen, state.search?.order ?? []),
       };
     case "resuggested": {
       const search = state.search;
@@ -149,6 +166,7 @@ export function appReducer(state: AppState, action: AppAction): AppState {
           heldAlternatives: [],
         },
         compare: state.compare.filter((recipe) => onScreen.has(recipe)),
+        seen: seenWith(state.seen, search.order),
       };
     }
     case "toggledCompare": {
@@ -192,7 +210,7 @@ export function appReducer(state: AppState, action: AppAction): AppState {
     case "savedChanged":
       return { ...state, saved: { ...state.saved, on: action.on, allergens: action.allergens, notice: action.notice, dropped: 0 } };
     case "cleared":
-      return { ...INITIAL_STATE, saved: state.saved };
+      return { ...INITIAL_STATE, saved: state.saved, seen: state.seen };
   }
 }
 

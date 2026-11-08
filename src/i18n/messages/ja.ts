@@ -189,6 +189,7 @@ export const ja = {
     replaced: "{{old}}を除外し、{{new}}を表示しました。",
   },
   card: {
+    newToYou: "はじめて表示",
     adjusted: "分量を調整",
     adjustedAmount: "{{food}} {{from}} → {{to}}",
     sideOff: "{{side}}なし",

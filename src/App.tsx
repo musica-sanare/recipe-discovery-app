@@ -6,7 +6,7 @@ import { ContentVersions } from "./components/ContentVersions";
 import { DocumentMetadata } from "./components/DocumentMetadata";
 import { LanguageSwitcher } from "./components/LanguageSwitcher";
 import { LoadError } from "./components/LoadError";
-import { Logo } from "./components/icons/Icon";
+import { Illustration, Logo } from "./components/icons/Icon";
 import { useContent, type ContentUrls } from "./content/useContent";
 import { loadLocaleData, type LoadLocaleData } from "./i18n/localeData";
 import { useLocaleSwitch } from "./i18n/useLocaleSwitch";
@@ -58,7 +58,7 @@ function Shell({ contentUrls, loadLocale }: { readonly contentUrls: ContentUrls;
       <a className="absolute -top-12 left-4 z-10 bg-surface px-4 py-2 focus:top-4" href="#main">
         {t("common.skipToContent")}
       </a>
-      <header className="border-b border-border print:hidden">
+      <header className="glass z-20 border-b border-border print:hidden md:sticky md:top-0">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-3">
           <ViewLink to={{ name: "targets" }} className="inline-flex items-center gap-2 font-bold text-text no-underline">
             <Logo />
@@ -82,7 +82,7 @@ function Shell({ contentUrls, loadLocale }: { readonly contentUrls: ContentUrls;
             <LoadError message={t("content.error")} retryLabel={t("content.retry")} onRetry={localeSwitch.retry} />
           </div>
         )}
-        {state.status === "loading" && <p role="status">{t("content.loading")}</p>}
+        {state.status === "loading" && <Loading message={t("content.loading")} />}
         {state.status === "error" && <LoadError message={t("content.error")} retryLabel={t("content.retry")} onRetry={retry} />}
         {state.status === "ready" && (
           <ContentProvider calc={state.calc} text={state.text}>
@@ -103,6 +103,30 @@ function Shell({ contentUrls, loadLocale }: { readonly contentUrls: ContentUrls;
           </div>
         </footer>
       )}
+    </div>
+  );
+}
+
+/**
+ * The loading state (ADR-041 D4): the illustration and the status text, then a skeleton of
+ * a card that is hidden from assistive technology.
+ */
+function Loading({ message }: { readonly message: string }) {
+  const block = "rounded-2xl bg-surface-muted";
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="panel flex flex-col items-center gap-3 p-6 text-center">
+        <Illustration name="hero" className="w-40" />
+        <p role="status" className="m-0 font-bold">
+          {message}
+        </p>
+      </div>
+      <div aria-hidden="true" className="panel flex flex-col gap-3 p-4">
+        <div className={`${block} h-5 w-3/5`} />
+        <div className={`${block} h-3 w-2/5`} />
+        <div className={`${block} h-14`} />
+        <div className={`${block} h-14`} />
+      </div>
     </div>
   );
 }

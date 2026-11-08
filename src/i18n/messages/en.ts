@@ -188,6 +188,7 @@ export const en: Messages = {
     replaced: "Removed {{old}} and showed {{new}}.",
   },
   card: {
+    newToYou: "New to you",
     adjusted: "Amounts adjusted",
     adjustedAmount: "{{food}} {{from}} → {{to}}",
     sideOff: "Without {{side}}",

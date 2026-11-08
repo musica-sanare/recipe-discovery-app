@@ -91,6 +91,7 @@ describe("candidates", () => {
   it("shows 3–5 cards with statuses as text, a reason line, and links to the details", async () => {
     await searchWith("ja", cut);
     expect(cards()).toHaveLength(5);
+    expect(screen.queryByText("はじめて表示")).toBeNull();
     for (const card of cards()) {
       const scope = within(card);
       expect(scope.getByText(/目標をすべて満たす/)).toBeDefined();
@@ -123,6 +124,8 @@ describe("candidates", () => {
     expect([after[0], ...after.slice(2)]).toEqual([before[0], ...before.slice(2)]);
     expect(document.activeElement?.textContent).toBe(after[1]);
     expect(screen.getByText(`${removed}を除外し、${after[1] ?? ""}を表示しました。`)).toBeDefined();
+    // Only the card that no earlier set showed carries the "new to you" mark (ADR-041 D4).
+    expect(cards().map((card) => within(card).queryByText("はじめて表示") !== null)).toEqual(after.map((_, index) => index === 1));
   });
 
   it("keeps the set on screen when no other recipe meets the targets and offers close alternatives (P4)", async () => {

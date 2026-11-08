@@ -9,7 +9,7 @@ import { useNavigation } from "../navigation/context";
 import { ViewLink } from "../navigation/ViewLink";
 import { useAppState, useLoadedContent } from "../state/context";
 import { differentType, excludeOne, search } from "../state/recommendation";
-import { MAX_COMPARE, type SearchState } from "../state/reducer";
+import { isNewToUser, MAX_COMPARE, type SearchState } from "../state/reducer";
 import { RecipeCard } from "./candidates/RecipeCard";
 import { exclusionText, listText, minutesText, relaxationText } from "./candidates/texts";
 import { defaultDraft, draftToRequest, relaxedDraft } from "./targets/draft";
@@ -116,6 +116,7 @@ export function CandidatesView({ search: current }: { readonly search: SearchSta
                 onExclude: () => {
                   onExclude(entry.recipe);
                 },
+                isNew: isNewToUser(state.seen, entry.recipe),
               }
             : {})}
         />
@@ -192,7 +193,7 @@ export function CandidatesView({ search: current }: { readonly search: SearchSta
           <button type="button" onClick={onDifferentType} className="self-start btn-outline">
             {t("candidates.differentType")}
           </button>
-          <div className="sticky bottom-0 z-10 -mx-4 border-t border-surface-muted bg-bg">
+          <div className="sticky bottom-0 z-10 -mx-4 border-t border-surface-muted glass">
             <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-3 px-4 py-3">
               <button
                 type="button"

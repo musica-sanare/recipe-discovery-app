@@ -6,12 +6,14 @@ import { StatusMarker } from "../../components/StatusMarker";
 import { boundaryNote, formatNumber } from "../../format/format";
 import { effortKey } from "../../i18n/engineCodes";
 import { ViewLink } from "../../navigation/ViewLink";
-import { adjustmentItems, allergenNotices, cardReasons, gapReasons, missedBound, targetLines } from "./display";
+import { adjustmentItems, allergenNotices, cardReasons, gapReasons, missedBound, targetBounds, targetLines } from "./display";
 import { boundText, listText, minutesText, nutrientText, preciseNutrientText, rangeText, reasonText, type TextContext } from "./texts";
 import { Icon } from "../../components/icons/Icon";
+import { NutrientLine } from "../../components/NutrientLine";
+import { nutrientBar } from "../nutritionBar";
 
-/** Each nutrient keeps one pastel; the label, not the color, tells them apart (ADR-037 D1, ADR-041 D2). */
-const TILE: Readonly<Record<"kcal" | "protein" | "fat" | "carbohydrate", string>> = {
+/** Each nutrient keeps one pastel for its target band; the label, not the color, tells them apart (ADR-037 D1, ADR-041 D2). */
+const BAND: Readonly<Record<"kcal" | "protein" | "fat" | "carbohydrate", string>> = {
   kcal: "bg-butter",
   protein: "bg-mint",
   fat: "bg-lilac",
@@ -29,10 +31,12 @@ export interface RecipeCardProps {
   readonly mode: "candidate" | "alternative";
   readonly compare?: { readonly checked: boolean; readonly disabled: boolean; readonly onToggle: () => void };
   readonly onExclude?: () => void;
+  /** Not shown in an earlier set of this page (ADR-041 D4). */
+  readonly isNew?: boolean;
 }
 
 /** A candidate card (docs/en/SPEC.md §7, docs/en/UI_DESIGN.md §3.2). */
-export function RecipeCard({ entry, recipe, calc, text, targets, context, mode, compare, onExclude }: RecipeCardProps) {
+export function RecipeCard({ entry, recipe, calc, text, targets, context, mode, compare, onExclude, isNew = false }: RecipeCardProps) {
   const { t } = useTranslation();
   const { locale } = context;
   const texts = text.recipes[entry.recipe];
@@ -75,6 +79,14 @@ export function RecipeCard({ entry, recipe, calc, text, targets, context, mode, 
             <Icon name="time" size={18} className="mt-0.5" />
             {t("card.minutesEffort", { minutes: minutesText(t, locale, entry.minutes), effort: t(`effort.${effortKey(entry.effort)}`), cuisine: t(`cuisine.${entry.attributes.cuisine}`) })}
           </p>
+          {isNew && (
+            <p className="m-0">
+              <span className="chip bg-sun text-sm font-bold text-on-sun">
+                <Icon name="search" size={16} />
+                {t("card.newToYou")}
+              </span>
+            </p>
+          )}
         </div>
       </div>
       <p className="m-0">
@@ -87,29 +99,26 @@ export function RecipeCard({ entry, recipe, calc, text, targets, context, mode, 
         </p>
       )}
 
-      <dl aria-label={t("card.nutrientsLabel")} className="m-0 grid grid-cols-2 gap-2">
+      <dl aria-label={t("card.nutrientsLabel")} className="m-0 flex flex-col gap-3">
         {targetLines(entry).map(({ target, nutrient, fit: line }) => {
           const value = nutrition.perServing[nutrient];
           const range = nutrition.ranges[nutrient];
           const bound = line === undefined || value === null ? undefined : missedBound(targets, line);
           const note = bound === undefined || value === null ? undefined : boundaryNote(nutrient, value, bound);
           const valueText = note === undefined || value === null ? nutrientText(t, locale, nutrient, value) : preciseNutrientText(t, locale, nutrient, value);
+          const bar = line === undefined ? undefined : nutrientBar(nutrient, value, note !== undefined, range ?? undefined, targetBounds(targets, target));
           return (
-            <div key={target} className={`flex flex-col gap-0.5 rounded-2xl p-2.5 ${TILE[target]}`}>
-              <dt className="text-sm">{t(`target.${target}`)}</dt>
-              <dd className="m-0 flex flex-col items-start gap-0.5 text-sm">
-                <span className="text-xl font-extrabold tabular-nums leading-tight">{valueText}</span>
-                {range?.shown === true && <span className="text-[0.8125rem]">{rangeText(t, locale, nutrient, range.low, range.high)}</span>}
-                {line === undefined ? (
-                  <span className="text-[0.8125rem]">{t("status.noTarget")}</span>
-                ) : (
-                  <>
-                    <StatusMarker status={line.status} label={note === undefined ? undefined : t(`status.${note}`)} />
-                    <span className="text-[0.8125rem]">{boundText(t, locale, targets, line)}</span>
-                  </>
-                )}
-              </dd>
-            </div>
+            <NutrientLine key={target} label={t(`target.${target}`)} value={valueText} bar={bar} fill={BAND[target]} size="card">
+              {line === undefined ? (
+                <span>{t("status.noTarget")}</span>
+              ) : (
+                <>
+                  <StatusMarker status={line.status} label={note === undefined ? undefined : t(`status.${note}`)} />
+                  <span>{boundText(t, locale, targets, line)}</span>
+                </>
+              )}
+              {range?.shown === true && <span className="text-muted">{rangeText(t, locale, nutrient, range.low, range.high)}</span>}
+            </NutrientLine>
           );
         })}
       </dl>

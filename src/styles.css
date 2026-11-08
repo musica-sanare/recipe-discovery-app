@@ -85,6 +85,13 @@
     @apply text-3xl font-black;
   }
 
+  /* The header sticks from `md`; focused and linked elements stay below it (WCAG 2.4.11). */
+  @media (min-width: 48rem) {
+    html {
+      scroll-padding-top: 5rem;
+    }
+  }
+
   :focus-visible {
     outline: 3px solid var(--color-focus);
     outline-offset: 2px;
@@ -184,6 +191,27 @@
   border-left: 4px solid var(--color-warning-edge);
   background-color: var(--color-warning-surface);
   padding: 0.75rem 1rem;
+}
+
+/*
+ * A translucent, blurred bar (ADR-041 D4) for the header and the bottom bars. The page color
+ * stays at 85 %, so text on the bar keeps its contrast whatever scrolls behind it; without
+ * `backdrop-filter` support, and in forced colors, the bar is opaque.
+ */
+@utility glass {
+  background-color: var(--color-bg);
+
+  @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+    background-color: color-mix(in srgb, var(--color-bg) 85%, transparent);
+    -webkit-backdrop-filter: blur(14px) saturate(1.4);
+    backdrop-filter: blur(14px) saturate(1.4);
+  }
+
+  @media (forced-colors: active) {
+    background-color: Canvas;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
 }
 
 @utility chip {

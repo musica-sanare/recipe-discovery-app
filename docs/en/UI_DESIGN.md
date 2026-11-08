@@ -109,16 +109,16 @@ Mobile:
 │ ╭ card (panel) ───────────────╮ │
 │ │ [◎] h3 Lemon-herb chicken    │ │
 │ │     ◷ 25 min · effort 2 · …  │ │
+│ │     (★ New to you)           │ │
 │ │ ✓ Meets all targets          │ │
 │ │ Adjusted: chicken 120→160 g  │ │
-│ │ ┌ butter ────┐ ┌ mint ──────┐│ │
-│ │ │Energy      │ │Protein     ││ │
-│ │ │520 kcal    │ │43 g        ││ │
-│ │ │✓ in range  │ │✓ min. 35   ││ │
-│ │ └────────────┘ └────────────┘│ │
-│ │ ┌ peach ─────┐ ┌ sky ───────┐│ │
-│ │ │Fat 8 g ✓   │ │Carb. 52 g  ││ │
-│ │ └────────────┘ └────────────┘│ │
+│ │ Energy             520 kcal  │ │
+│ │ [····(▓▓▓─●▓▓)·····]         │ │
+│ │ ✓ in range  target 450–650   │ │
+│ │ Protein               43 g   │ │
+│ │ [··········(▓▓●▓▓▓▓▓]        │ │
+│ │ ✓ in range  min. 35 g        │ │
+│ │ Fat 8 g … · Carb. 52 g …     │ │
 │ │ ( Lowest fat of these )      │ │
 │ │ (i) includes approx. (!) allergens│
 │ │ (Details) [☐ Compare] (Exclude)│
@@ -137,7 +137,10 @@ Mobile:
 │ Values are estimates …          │
 └─────────────────────────────────┘
 ```
-Desktop: cards in a grid of two or three columns; the comparison bar stays at the bottom. Each card shows the main protein group's icon and the four nutrients as labelled pastel tiles (ADR-037 D1); statuses keep their marker shapes and texts.
+Desktop: cards in a grid of two or three columns; the comparison bar stays at the bottom. Each card shows the main protein group's icon and the four nutrients as labelled lines (Stage 18.3, ADR-041 D4): the label and the value on one line, a bar when the nutrient has a target, then the status, the target or "no target", and the estimate range. Statuses keep their marker shapes and texts.
+
+- **Nutrition bar**: the target band in the nutrient's pastel (energy butter, protein mint, fat lilac, carbohydrate sky) with edges in `muted` on the sides the user set; the estimate range as a line when it is shown; the value as a dot. The scale runs from zero to 1.25 times the largest number among the value, the range, and the target (`src/views/nutritionBar.ts`). The bar is drawn from the displayed numbers, so a value with "just below the target" sits left of the band. It is decorative (`aria-hidden`) and hidden in forced colors and in print; no bar is drawn without a target or for an unknown value.
+- **"New to you"**: a sun-colored chip under the time line on candidates that no earlier set of this page showed. The first set of a page has none. The list of shown recipes lives in memory (`seen` in `src/state/reducer.ts`) and survives a new search, not a reload.
 
 States:
 - **Three to five candidates**: cards only.
@@ -178,9 +181,11 @@ Mobile:
 │ (!) Allergens: egg (contains) … │
 ├─────────────────────────────────┤
 │ Per serving (estimates)         │
-│ [Energy 520 kcal ✓ (500–540)  ] │
-│ [Protein 43 g ✓][Fat 8 g ✓    ] │
-│ [Carbs 52 g    ][Salt 1.8 g   ] │
+│ Energy                 520 kcal │
+│ [······(▓▓─●▓▓▓)······]         │
+│ ✓ in range  target …  500–540   │
+│ Protein 43 g … Fat 8 g …        │
+│ Carbs 52 g  Salt 1.8 g          │
 │ Since last change: protein +8 g │
 │ Status: fat near → met          │
 ├─────────────────────────────────┤
@@ -218,13 +223,13 @@ Mobile:
 │ Data 2026-03-27 · content …     │
 └─────────────────────────────────┘
 ```
-Desktop: the same single column in the same order, within the page width (`max-w-5xl`); the nutrition tiles show four to a row from `md`. A two-column layout with a sticky nutrition column was planned but never built (checked after Phase 16).
+Desktop (Stage 18.3, ADR-041 D4): from `lg`, the nutrition section moves to a right column of up to 22 rem and sticks below the header while the page scrolls, when the window is at least 48 rem high. The allergen notice, the adjustment, the shopping list, the ingredients, the steps, the safety notes, and the basis stay in the left column, so the values stay in view next to the steppers. The DOM order is the order of the mobile layout. Only the nutrition sticks: a sticky adjustment would hide a focused stepper under the nutrition panel when moving backwards (WCAG 2.4.11). The ingredient table is narrower and scrolls inside its region at 1024–1280 px.
 
 States:
 - Without a search (direct link or reload): default amounts, no fit statuses, no "fit to my targets".
 - An invalid adjustment state cannot be reached through the controls (steppers follow the authored grid and bounds); engine errors are still mapped to messages.
-- Nutrition tiles (Stage 16.3, [DECISIONS.md](../working/DECISIONS.md) "Stage 16.1 decisions"): one tile per nutrient in the pastel of the candidate cards (energy butter, protein mint, fat peach, carbohydrate sky, salt equivalent `surface-muted`). Energy spans the row; the other four follow two to a row on phones and four from `md`. Each tile holds the value (28 px, weight 800), the range, the status marker and text, and the target or "no target"; the label, not the color, names the nutrient. Tiles and the change summary keep a transparent border, so forced colors draw their edges.
-- Unknown values show "unknown" with the ingredients that lack data in their tile, never zero.
+- Nutrition lines (Stage 18.3, replacing the tiles of Stage 16.3): one line per nutrient as on the candidate cards, with the value at 24 px. Each line holds the value, the bar when a target is set, the status marker and text, the target or "no target", and the range; the label, not the color, names the nutrient. Salt equivalent has no target and no bar. The change summary keeps a transparent border, so forced colors draw its edge.
+- Unknown values show "unknown" with the ingredients that lack data on their line, never zero, and no bar.
 - When a rounded value looks like it meets a bound that the full value misses, the value is shown to one decimal with "just below the target" (or "just above").
 - Shopping list (ADR-032): a section of its own after the adjustment section, available with and without a search.
   - "Add to shopping list" copies the current state (servings, amounts, sides, substitutions) into the list.
@@ -351,29 +356,31 @@ Stage 18.2 (ADR-041) revised the dark palette and separated the warning from the
 |---|---|---|---|
 | `bg` | `#FBF6EE` | `#0F1114` | Page background |
 | `surface` | `#FFFFFF` | `#21252C` | Panels, cards, inputs |
-| `surface-muted` | `#F1EADF` | `#2D323B` | Unselected choices, collapsed sections, the salt equivalent tile |
+| `surface-muted` | `#F1EADF` | `#2D323B` | Unselected choices, collapsed sections, the track of nutrition bars |
 | `edge` | `#E6DDCF` | `#343944` | Hairline around panels and cards; decorative |
-| `text` | `#2A2722` | `#F1F3F5` | Body text, small text on tiles, outlines of icons and illustrations |
+| `text` | `#2A2722` | `#F1F3F5` | Body text, small text on colored fills, outlines of icons and illustrations |
 | `muted` | `#5F584D` | `#C3CAD4` | Hints and secondary text |
 | `border` | `#8A8174` | `#8A93A1` | Input and button borders |
 | `primary` | `#2E6B3A` | `#8FDC9F` | Main action, selected choice, brand |
 | `on-primary` | `#FFFFFF` | `#0E2414` | Text on `primary` |
 | `accent` | `#C2452E` | `#FF9A7E` | Tomato coral: illustrations and small accents |
-| `mint`, `butter`, `sky`, `lilac` | `#E2F0DF`, `#FFEDB8`, `#DCEBFB`, `#ECE6FB` | `#123A2B`, `#3B3108`, `#11304D`, `#2F2550` | Pastel fills: nutrient tiles (protein, energy, carbohydrate, fat), icon fills, sections |
+| `mint`, `butter`, `sky`, `lilac` | `#E2F0DF`, `#FFEDB8`, `#DCEBFB`, `#ECE6FB` | `#123A2B`, `#3B3108`, `#11304D`, `#2F2550` | Pastel fills: target bands of the nutrition bars (protein, energy, carbohydrate, fat), icon fills, sections |
 | `peach` | `#FCE3DA` | `#4A2416` | Decoration only: icon and illustration fills |
 | `sun` | `#F2B33D` | `#F5C04A` | Decoration only; text on it uses `on-sun` (`#2A2722`, `#1F1A10`) |
 | `met`, `near`, `not-met` | `#23692E`, `#9A5300`, `#B3261E` | `#86E09A`, `#F7BD63`, `#FF9B93` | Status texts and markers |
 | `warning`, `warning-surface`, `warning-edge` | `#8A4700`, `#FFDCC6`, `#B35F00` | `#FFC46B`, `#4B1D1D`, `#FFB347` | Allergen and safety notices only: text, fill, and left edge |
 | `focus` | `#1E5FCC` | `#8AB4F8` | Focus ring |
 
-- Contrast (checked 2026-11-08, `test/node/styles.test.ts`): text on `bg` 13.8:1 (light) and 17.0:1 (dark); `text` on every tile fill at least 12.2:1 and 11.3:1; `muted` on `surface-muted` 5.9:1 and 7.8:1; `on-primary` on `primary` 6.4:1 and 10.1:1; every status color on `surface` and on each pastel at least 4.78:1 (`near` on `lilac`, light) and 6.22:1 (`not-met` on `mint`, dark); `warning` on `warning-surface` 5.5:1 and 9.0:1; `warning-edge` on `surface` 4.6:1 and 8.6:1; `border` on `surface` 3.8:1 and 5.0:1; `focus` on `bg` 5.5:1 and 9.0:1. In dark mode `surface` stands at 1.23:1 from `bg` (1.10:1 before).
-- Pastels carry no meaning by themselves: nutrient tiles are told apart by their labels, and statuses keep their texts and marker shapes. The test also keeps `warning-surface` at least 0.04 apart in OKLab from every nutrient fill (the light pastels are about 0.06 apart from each other).
+- Contrast (checked 2026-11-08, `test/node/styles.test.ts`): text on `bg` 13.8:1 (light) and 17.0:1 (dark); `text` on every pastel and `surface-muted` at least 12.2:1 and 11.3:1; `muted` on `surface-muted` 5.9:1 and 7.8:1; `on-primary` on `primary` 6.4:1 and 10.1:1; every status color on `surface` and on each pastel at least 4.78:1 (`near` on `lilac`, light) and 6.22:1 (`not-met` on `mint`, dark); `warning` on `warning-surface` 5.5:1 and 9.0:1; `warning-edge` on `surface` 4.6:1 and 8.6:1; `border` on `surface` 3.8:1 and 5.0:1; `focus` on `bg` 5.5:1 and 9.0:1. In dark mode `surface` stands at 1.23:1 from `bg` (1.10:1 before).
+- Pastels carry no meaning by themselves: nutrients are told apart by their labels, and statuses keep their texts and marker shapes. The test also keeps `warning-surface` at least 0.04 apart in OKLab from every nutrient fill (the light pastels are about 0.06 apart from each other).
 - Type: system fonts (no web font). Body 16 px with line height 1.6; hints 13–14 px; `h1` 32 px weight 900 with a short three-color bar below it; `h2` 22 px and `h3` 18 px weight 800; nutrition numbers 28 px weight 800 with `tabular-nums`.
 - Shape: inputs and small tiles 14–16 px radius; panels and cards 24 px; buttons and chips fully rounded. Panels and cards have a hairline `edge` and a soft shadow (a deeper one in dark mode); the main action has a solid 5 px shadow in the text color that shrinks when pressed.
 - Icons: original two-tone SVG on a 24 px grid, 1.8 px round strokes in `currentColor` with pastel fills; decorative ones are `aria-hidden`, meaningful ones have a label from the catalogs; no text inside. Set: protein groups (chicken, pork, beef, fish, egg, soy), equipment (`EQUIPMENT`), time, effort, servings, actions (search, save, delete, compare, shopping list, copy, print, back, language, close), notices (warning, information), and the four status markers redrawn with their current shapes. No icons for cuisines, nutrients, or allergens.
 - Logo (Stage 16.3): the original "discovery bowl", a bowl with a sprout under a rising sun, drawn like the icons on a 32 px grid with 2.2 px strokes (`LOGO` in `iconData.ts`, `Logo` in `Icon.tsx`). 28 px in the header, decorative, no text inside; the product name stays HTML text. In forced colors the outlines take the link color.
 - Illustrations: next to the targets heading (smaller or hidden on phones), in the empty and exceptional states (no candidates, empty shopping list, recipe not found, content error), and next to the about heading. Decorative, without text.
 - Motion: a small press on buttons and a short fade when cards appear; none with `prefers-reduced-motion`.
+- Loading (Stage 18.3): a panel with the targets illustration and the loading text (`role="status"`), then a skeleton of a card in `surface-muted` that is hidden from assistive technology.
+- Translucent bars (Stage 18.3): the header sticks to the top from `md` (on phones it stays in the flow, because it wraps to two rows in long locales), and the bottom bars of the candidates and the targets view are translucent. The `glass` utility keeps the page color at 85 % with a 14 px blur and `saturate(1.4)`, written with and without the `-webkit-` prefix. Without `backdrop-filter`, and in forced colors (`Canvas`), the bars are opaque. From `md`, `scroll-padding-top` keeps focused and linked elements below the header (WCAG 2.4.11).
 - Layout changes: "More conditions" opens when restored saved values are inside it; the targets form is grouped under the headings targets, time and effort, foods, and allergens; on phones, "Find recipes" stays at the bottom of the screen. The flow of views does not change.
 
 ## 6. Catalog structure

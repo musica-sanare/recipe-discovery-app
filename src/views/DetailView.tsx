@@ -13,7 +13,7 @@ import { effortKey } from "../i18n/engineCodes";
 import { useNavigation } from "../navigation/context";
 import { ViewLink } from "../navigation/ViewLink";
 import { useAppState, useLoadedContent } from "../state/context";
-import { allergenNotices, missedBound } from "./candidates/display";
+import { allergenNotices, missedBound, targetBounds } from "./candidates/display";
 import { boundText, listText, minutesText, nutrientText, preciseNutrientText, rangeText } from "./candidates/texts";
 import {
   adjustableAmounts,
@@ -31,21 +31,21 @@ import {
 import { DetailShoppingBlock } from "./shopping/DetailShoppingBlock";
 import { useTextContext } from "./useTextContext";
 import { Icon, Illustration } from "../components/icons/Icon";
+import { NutrientLine } from "../components/NutrientLine";
+import { nutrientBar } from "./nutritionBar";
 
 const SHOWN_NUTRIENTS: readonly Nutrient[] = ["ENERC_KCAL", "PROT-", "FAT-", "CHOCDF-", "NACL_EQ"];
 const TABLE_NUTRIENTS: readonly Nutrient[] = ["ENERC_KCAL", "PROT-", "FAT-", "CHOCDF-"];
-/**
- * Nutrient tiles keep the pastels of the candidate cards; the label, not the color, tells
- * them apart (ADR-037 D1, ADR-041 D2). Energy spans the row, the other four follow two (phones) or
- * four (from `md`) to a row. Salt equivalent has no target.
- */
-const TILE: Readonly<Partial<Record<Nutrient, string>>> = {
-  ENERC_KCAL: "col-span-2 bg-butter md:col-span-4",
+/** Target bands keep the pastels of the candidate cards; the label, not the color, tells them apart (ADR-037 D1, ADR-041 D2, D4). */
+const BAND: Readonly<Partial<Record<Nutrient, string>>> = {
+  ENERC_KCAL: "bg-butter",
   "PROT-": "bg-mint",
   "FAT-": "bg-lilac",
   "CHOCDF-": "bg-sky",
-  NACL_EQ: "bg-surface-muted",
 };
+
+/** Full class names, so that Tailwind generates each row span (5–7 items in the left column). */
+const NUTRITION_ROWS: Readonly<Record<number, string>> = { 5: "lg:row-span-5", 6: "lg:row-span-6", 7: "lg:row-span-7" };
 
 function Section({ id, title, children }: { readonly id: string; readonly title: string; readonly children: ReactNode }) {
   return (
@@ -228,6 +228,8 @@ function DetailBody({ recipe, recipeState, nutrition, fit, previous, onChange, o
     return ingredient === undefined ? key : foodName(ingredient.food);
   };
 
+  // Notice, adjustment, shopping list, ingredients, steps, safety, and basis share the left column.
+  const leftItems = 5 + (allergens.length > 0 || unknownFoods.length > 0 ? 1 : 0) + (safety.length > 0 ? 1 : 0);
   const changes = previous === undefined ? [] : differenceTexts(t, locale, previous.nutrition, nutrition);
   const statusChanges =
     previous?.fit === undefined || fit === undefined
@@ -240,7 +242,7 @@ function DetailBody({ recipe, recipeState, nutrition, fit, previous, onChange, o
         });
 
   return (
-    <>
+    <div className="flex flex-col gap-6 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] lg:items-start lg:gap-x-8">
       {(allergens.length > 0 || unknownFoods.length > 0) && (
         <div className="flex flex-col gap-1 notice-warning">
           {allergens.length > 0 && (
@@ -259,44 +261,49 @@ function DetailBody({ recipe, recipeState, nutrition, fit, previous, onChange, o
         </div>
       )}
 
-      <Section id="nutrition-heading" title={t("detail.perServing")}>
-        <dl className="m-0 grid grid-cols-2 gap-2 md:grid-cols-4">
-          {SHOWN_NUTRIENTS.map((nutrient) => {
-            const value = nutrition.perServing[nutrient];
-            const range = nutrition.ranges[nutrient];
-            const line = fit?.nutrients.find((candidate) => TARGET_NUTRIENT[candidate.target] === nutrient);
-            const bound = line === undefined || targets === undefined ? undefined : missedBound(targets, line);
-            const note = bound === undefined || value === null ? undefined : boundaryNote(nutrient, value, bound);
-            return (
-              <div key={nutrient} className={`flex flex-col gap-0.5 rounded-2xl border border-transparent p-3 ${TILE[nutrient] ?? ""}`}>
-                <dt className="text-sm">{t(`nutrient.${nutrient}`)}</dt>
-                <dd className="m-0 flex flex-col items-start gap-0.5 text-sm">
-                  <span className="text-[1.75rem] font-extrabold tabular-nums leading-tight">{note === undefined || value === null ? nutrientText(t, locale, nutrient, value) : preciseNutrientText(t, locale, nutrient, value)}</span>
-                  {range?.shown === true && <span className="text-[0.8125rem]">{rangeText(t, locale, nutrient, range.low, range.high)}</span>}
-                  {value === null && nutrition.incomplete[nutrient].length > 0 && (
-                    <span className="text-[0.8125rem]">{t("detail.missingFoods", { list: listText(t, nutrition.incomplete[nutrient].map(ingredientName)) })}</span>
-                  )}
-                  {fit !== undefined && line === undefined && nutrient !== "NACL_EQ" && <span className="text-[0.8125rem]">{t("status.noTarget")}</span>}
+      {/* From `lg` the nutrition sticks in the right column next to the adjustment; the DOM order stays (ADR-041 D4). */}
+      <div className={`lg:col-start-2 lg:row-start-1 [@media(min-height:48rem)]:lg:sticky [@media(min-height:48rem)]:lg:top-20 ${NUTRITION_ROWS[leftItems] ?? ""}`}>
+        <Section id="nutrition-heading" title={t("detail.perServing")}>
+          <dl className="m-0 flex flex-col gap-4">
+            {SHOWN_NUTRIENTS.map((nutrient) => {
+              const value = nutrition.perServing[nutrient];
+              const range = nutrition.ranges[nutrient];
+              const line = fit?.nutrients.find((candidate) => TARGET_NUTRIENT[candidate.target] === nutrient);
+              const bound = line === undefined || targets === undefined ? undefined : missedBound(targets, line);
+              const note = bound === undefined || value === null ? undefined : boundaryNote(nutrient, value, bound);
+              const bar = line === undefined || targets === undefined ? undefined : nutrientBar(nutrient, value, note !== undefined, range ?? undefined, targetBounds(targets, line.target));
+              return (
+                <NutrientLine
+                  key={nutrient}
+                  label={t(`nutrient.${nutrient}`)}
+                  value={note === undefined || value === null ? nutrientText(t, locale, nutrient, value) : preciseNutrientText(t, locale, nutrient, value)}
+                  bar={bar}
+                  fill={BAND[nutrient] ?? ""}
+                  size="detail"
+                >
                   {line !== undefined && targets !== undefined && (
                     <>
                       <StatusMarker status={line.status} label={note === undefined ? undefined : t(`status.${note}`)} />
-                      <span className="text-[0.8125rem]">{boundText(t, locale, targets, line)}</span>
+                      <span>{boundText(t, locale, targets, line)}</span>
                     </>
                   )}
-                </dd>
-              </div>
-            );
-          })}
-        </dl>
-        {fit === undefined && <p className="m-0 text-sm text-muted">{t("detail.noSearch")}</p>}
-        {previous !== undefined && (
-          <div className="rounded-2xl border border-transparent bg-surface-muted p-3 text-sm">
-            <p className="m-0">{changes.length > 0 ? t("detail.changes", { list: listText(t, changes) }) : t("detail.noChange")}</p>
-            {statusChanges.length > 0 && <p className="m-0">{t("detail.statusChanges", { list: listText(t, statusChanges) })}</p>}
-          </div>
-        )}
-        <p className="m-0 text-sm text-muted">{t("disclaimer.estimates")}</p>
-      </Section>
+                  {fit !== undefined && line === undefined && nutrient !== "NACL_EQ" && <span>{t("status.noTarget")}</span>}
+                  {range?.shown === true && <span className="text-muted">{rangeText(t, locale, nutrient, range.low, range.high)}</span>}
+                  {value === null && nutrition.incomplete[nutrient].length > 0 && <span>{t("detail.missingFoods", { list: listText(t, nutrition.incomplete[nutrient].map(ingredientName)) })}</span>}
+                </NutrientLine>
+              );
+            })}
+          </dl>
+          {fit === undefined && <p className="m-0 text-sm text-muted">{t("detail.noSearch")}</p>}
+          {previous !== undefined && (
+            <div className="rounded-2xl border border-transparent bg-surface-muted p-3 text-sm">
+              <p className="m-0">{changes.length > 0 ? t("detail.changes", { list: listText(t, changes) }) : t("detail.noChange")}</p>
+              {statusChanges.length > 0 && <p className="m-0">{t("detail.statusChanges", { list: listText(t, statusChanges) })}</p>}
+            </div>
+          )}
+          <p className="m-0 text-sm text-muted">{t("disclaimer.estimates")}</p>
+        </Section>
+      </div>
 
       <Section id="adjust-heading" title={t("detail.adjustHeading")}>
         <Stepper
@@ -553,7 +560,7 @@ function DetailBody({ recipe, recipeState, nutrition, fit, previous, onChange, o
         </p>
         <p className="m-0 text-sm text-muted">{t("disclaimer.strictControl")}</p>
       </Section>
-    </>
+    </div>
   );
 }
 

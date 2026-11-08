@@ -5,7 +5,7 @@ import { evaluatePool, selectCandidates } from "../../domain/recommendation/reco
 import type { Conditions, PoolRequest } from "../../domain/recommendation/types.ts";
 import { presetTargets } from "../../domain/recommendation/validate.ts";
 import { SHOPPING_LIST_MAX_RECIPES } from "../../domain/shopping/list.ts";
-import { appReducer, EMPTY_SESSION, INITIAL_STATE, MAX_COMPARE, type AppState, type SearchState } from "../../src/state/reducer.ts";
+import { appReducer, EMPTY_SESSION, INITIAL_STATE, isNewToUser, MAX_COMPARE, type AppState, type SearchState } from "../../src/state/reducer.ts";
 import { differentType, excludeOne, search } from "../../src/state/recommendation.ts";
 import { repositoryEngine, validationBundleInput } from "../../tools/content/repository.ts";
 
@@ -81,6 +81,35 @@ describe("exclude this one", () => {
     expect(ids(next)).not.toContain(removed);
     expect(ids(next).slice(0, ids(first).length - 1)).toEqual(ids(first).filter((id) => id !== removed));
     expect(ids(next)).toHaveLength(ids(first).length);
+  });
+});
+
+describe("new to you (ADR-041 D4)", () => {
+  it("marks nothing in the first set, then only the recipes no earlier set showed", () => {
+    const first = searched(cut);
+    expect(ids(first).filter((id) => isNewToUser(first.seen, id))).toEqual([]);
+
+    const [removed = ""] = ids(first);
+    const exclusion = excludeOne(current(first), removed);
+    if (!exclusion.ok) throw new Error("exclusion");
+    const second = appReducer(first, { type: "resuggested", ...exclusion.value });
+    const replacement = ids(second).filter((id) => !ids(first).includes(id));
+    expect(replacement).toHaveLength(1);
+    expect(ids(second).filter((id) => isNewToUser(second.seen, id))).toEqual(replacement);
+
+    // A new search keeps what was seen; recipes shown before lose the mark.
+    const result = search(cut, data);
+    if (!result.ok) throw new Error("search failed");
+    const third = appReducer(second, { type: "searched", ...result.value });
+    expect(third.seen).toEqual([...ids(first), ...replacement]);
+    expect(ids(third).filter((id) => isNewToUser(third.seen, id))).toEqual(ids(third).filter((id) => !third.seen.includes(id)));
+  });
+
+  it("keeps the seen list when a re-suggestion leaves the set on screen", () => {
+    const first = searched(p4);
+    const result = differentType(current(first));
+    if (!result.ok) throw new Error("resuggestion");
+    expect(appReducer(first, { type: "resuggested", ...result.value }).seen).toEqual([]);
   });
 });
 

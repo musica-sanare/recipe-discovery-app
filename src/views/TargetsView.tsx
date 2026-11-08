@@ -492,7 +492,7 @@ export function TargetsView({ reloaded }: { readonly reloaded: boolean }) {
         <SaveConditions draft={draft} />
 
         {/* On phones the search button stays at the bottom of the screen (ADR-037 D6). */}
-        <div className="sticky bottom-0 z-10 -mx-4 border-t border-surface-muted bg-bg px-4 py-3 md:static md:mx-0 md:border-0 md:bg-transparent md:p-0">
+        <div className="sticky bottom-0 z-10 -mx-4 border-t border-surface-muted glass px-4 py-3 md:static md:mx-0 md:border-0 md:bg-transparent md:backdrop-filter-none md:p-0">
           <button type="submit" className="btn-primary btn-lg w-full md:w-auto">
             <Icon name="search" size={22} />
             {t("targets.search")}

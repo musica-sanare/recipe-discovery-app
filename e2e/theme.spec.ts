@@ -16,6 +16,19 @@ const expectBackground = (page: Page, color: string) => expect(page.locator("bod
 const storedKeys = (page: Page) => page.evaluate(() => Object.keys(localStorage).sort());
 const tokenValues = (page: Page) => page.evaluate((names) => names.map((name) => `${name}: ${getComputedStyle(document.documentElement).getPropertyValue(name).trim()}`), TOKENS);
 
+/** Scrolls a section heading into view at the top and checks that the sticky header does not cover it. */
+async function expectBelowHeader(page: Page): Promise<void> {
+  await expect
+    .poll(async () => {
+      await page.locator("#ingredients-heading").evaluate((element) => {
+        element.scrollIntoView({ block: "start" });
+      });
+      const [header, heading] = await Promise.all([page.getByRole("banner").boundingBox(), page.locator("#ingredients-heading").boundingBox()]);
+      return header !== null && heading !== null && heading.y >= header.y + header.height;
+    })
+    .toBe(true);
+}
+
 async function storeChoice(page: Page, choice: string): Promise<void> {
   await page.addInitScript(([key, value]) => {
     localStorage.setItem(key ?? "", value ?? "");
@@ -45,9 +58,16 @@ for (const locale of LOCALES) {
       await expectNoHorizontalOverflow(page);
       await page.setViewportSize({ width: 375, height: 800 });
       await expectNoHorizontalOverflow(page);
-      // From md the header sticks, and `scroll-padding-top` keeps focused elements below 80 px of it (WCAG 2.4.11).
+      // From md the header sticks, and `scroll-padding-top` follows its height, so an element
+      // scrolled into view stays below it however many rows the header wraps to (WCAG 2.4.11).
+      // Larger text makes the header wrap on every machine, as wider fonts did on Linux in CI.
       await page.setViewportSize({ width: 768, height: 800 });
-      expect((await page.getByRole("banner").boundingBox())?.height ?? 0).toBeLessThanOrEqual(80);
+      await expectBelowHeader(page);
+      await page.evaluate(() => {
+        document.documentElement.style.fontSize = "24px";
+      });
+      await expect.poll(async () => (await page.getByRole("banner").boundingBox())?.height ?? 0).toBeGreaterThan(100);
+      await expectBelowHeader(page);
     });
 
     for (const { name, os, stored } of [

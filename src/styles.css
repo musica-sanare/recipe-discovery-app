@@ -149,10 +149,14 @@
     @apply text-3xl font-black;
   }
 
-  /* The header sticks from `md`; focused and linked elements stay below it (WCAG 2.4.11). */
+  /*
+   * The header sticks from `md`; focused and linked elements stay below it (WCAG 2.4.11).
+   * `--header-height` comes from `src/components/useHeaderOffset.ts`, because the header
+   * wraps to more rows with long labels, wider fonts, or larger text.
+   */
   @media (min-width: 48rem) {
     html {
-      scroll-padding-top: 5rem;
+      scroll-padding-top: calc(var(--header-height, 3.5rem) + 1.5rem);
     }
   }
 

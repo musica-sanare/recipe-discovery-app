@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useLayoutEffect, useState } from "react";
+import { Suspense, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { DEFAULT_LOCALE, isLocale } from "../shared/locales";
 import { Attribution } from "./components/Attribution";
@@ -7,6 +7,7 @@ import { DocumentMetadata } from "./components/DocumentMetadata";
 import { LanguageSwitcher } from "./components/LanguageSwitcher";
 import { LoadError } from "./components/LoadError";
 import { ThemeSwitcher } from "./components/ThemeSwitcher";
+import { useHeaderOffset } from "./components/useHeaderOffset";
 import { Illustration, Logo } from "./components/icons/Icon";
 import { useContent, type ContentUrls } from "./content/useContent";
 import { loadLocaleData, type LoadLocaleData } from "./i18n/localeData";
@@ -44,6 +45,8 @@ function Shell({ contentUrls, loadLocale }: { readonly contentUrls: ContentUrls;
   const localeSwitch = useLocaleSwitch(prepare, loadLocale);
   const appTitle = t("meta.title");
   const ready = state.status === "ready";
+  const header = useRef<HTMLElement>(null);
+  useHeaderOffset(header);
 
   // Views name the document once content is ready; until then the app title is used.
   useEffect(() => {
@@ -56,7 +59,7 @@ function Shell({ contentUrls, loadLocale }: { readonly contentUrls: ContentUrls;
       <a className="absolute -top-12 left-4 z-10 bg-surface px-4 py-2 focus:top-4" href="#main">
         {t("common.skipToContent")}
       </a>
-      <header className="glass z-20 border-b border-border print:hidden md:sticky md:top-0">
+      <header ref={header} className="glass z-20 border-b border-border print:hidden md:sticky md:top-0">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-3">
           <ViewLink to={{ name: "targets" }} className="inline-flex items-center gap-2 font-bold text-text no-underline">
             <Logo />
